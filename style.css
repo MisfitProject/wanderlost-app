@@ -216,8 +216,17 @@ h1, h2, h3, h4 {
 }
 
 .map-node.hidden-node {
-    opacity: 0;
-    pointer-events: none;
+    opacity: 0.4;
+    border-style: dashed;
+    background: transparent;
+    color: transparent;
+    box-shadow: none;
+    animation: mysteryPulse 3s infinite ease-in-out;
+}
+
+@keyframes mysteryPulse {
+    0%, 100% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.3; }
+    50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.6; }
 }
 
 @keyframes bounceNode {

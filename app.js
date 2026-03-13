@@ -287,10 +287,15 @@ function renderNodes() {
         // Custom elegant marker content
         el.innerHTML = `<span class="marker-text">${index + 1}</span>`;
         
-        // Click to view active or visited locations
+        // Click to view active or visited locations, or interact with mystery spots
         el.addEventListener('click', () => {
             if (node.status === 'active' || node.status === 'visited') {
                 showLocationDetails(node);
+            } else if (node.status === 'hidden') {
+                // Focus user's attention on the scan button
+                idlePrompt.scrollIntoView({ behavior: 'smooth', block: 'end' });
+                btnScan.style.transform = 'scale(1.1)';
+                setTimeout(() => btnScan.style.transform = 'scale(1)', 200);
             }
         });
         
