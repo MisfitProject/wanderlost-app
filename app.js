@@ -1,7 +1,10 @@
 let map;
 window.initMap = function() {
+    // Default coordinates (Zurich)
+    let center = { lat: 47.3769, lng: 8.5417 };
+    
     map = new google.maps.Map(document.getElementById('map-bg'), {
-        center: { lat: 47.3769, lng: 8.5417 },
+        center: center,
         zoom: 14,
         disableDefaultUI: true,
         styles: [
@@ -31,6 +34,16 @@ window.initMap = function() {
             {featureType: 'water', elementType: 'labels.text.fill', stylers: [{color: '#92998d'}]}
         ]
     });
+
+    // Attempt to center on user
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((pos) => {
+            const userPos = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+            map.setCenter(userPos);
+        }, () => {
+            console.log("Map: User denied location, staying on default.");
+        });
+    }
 };
 
 // State Management
