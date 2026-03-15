@@ -1,4 +1,4 @@
-const CACHE_NAME = 'wanderlost-cache-v22';
+const CACHE_NAME = 'wanderlost-cache-v23';
 const urlsToCache = [
   '/wanderlost-app/',
   '/wanderlost-app/index.html',
@@ -34,14 +34,19 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('fetch', event => {
+  // Network-first strategy: always try to get fresh content, fall back to cache
   event.respondWith(
-    caches.match(event.request)
+    fetch(event.request)
       .then(response => {
-        if (response) {
-          return response;
-        }
-        return fetch(event.request).catch(() => {
-          // If both cache and network fail, fall back to index if it's a navigation request
+        // Cache the fresh response for offline
+        const responseClone = response.clone();
+        caches.open(CACHE_NAME).then(cache => cache.put(event.request, responseClone));
+        return response;
+      })
+      .catch(() => {
+        // Network failed, serve from cache
+        return caches.match(event.request).then(cached => {
+          if (cached) return cached;
           if (event.request.mode === 'navigate') {
             return caches.match('/wanderlost-app/index.html');
           }

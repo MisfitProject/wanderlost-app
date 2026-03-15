@@ -143,7 +143,7 @@ const btnCloseProfile = modalProfile.querySelector('.close-btn');
 const modalLegal = document.getElementById('legal-modal');
 const btnCloseLegal = modalLegal.querySelector('.close-btn');
 
-const btnOpenProfile = document.querySelector('.user-profile .avatar'); // Specifically target the clickable avatar box
+const btnOpenProfile = document.getElementById('open-profile-btn');
 const historyList = document.querySelector('.history-list');
 
 const btnStartJourney = document.getElementById('start-journey-btn');

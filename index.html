@@ -41,7 +41,7 @@
                     <span class="ai-badge" style="font-size: 0.5rem; background: var(--accent-vintage); color: #fff; padding: 2px 6px; border-radius: 4px; vertical-align: middle; margin-left: 5px; opacity: 0.8;">AI</span>
                 </div>
                 <!-- ... other HUD elements ... -->
-                <div class="user-profile">
+                <div class="user-profile" id="open-profile-btn" style="cursor: pointer;" title="My Dossier">
                     <div class="avatar"><i class="fa-solid fa-user-astronaut"></i></div>
                     <div class="user-stats">
                         <span class="level">Level 1 Explorer</span>
@@ -324,8 +324,8 @@
             </div>
         </div>
 
-        <!-- Live Map API -->
-        <script src="https://maps.googleapis.com/maps/api/js?callback=initMap" async defer></script>
+        <!-- Live Map API with authenticated key -->
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB1RVtX565j0NYmTtFebx1nmDCrh6X0rYM&callback=initMap" async defer></script>
         <script src="./app.js"></script>
     
     <!-- Service Worker Registration -->
