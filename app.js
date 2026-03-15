@@ -107,6 +107,11 @@ function showConfirm(message, title = "Confirmation", icon = "fa-circle-question
 
 // DOM Elements
 let nodesContainer, trailSvg, fogOverlay;
+let locationCard, idlePrompt, locTitle, locDesc, progressFill, badges, mapBg;
+let btnReady, btnScan, btnSettings, modalSub, btnCloseSub, btnSubscribeNow;
+let modalCheckout, btnCloseCheckout, btnConfirmPayment;
+let modalProfile, btnCloseProfile;
+let modalLegal, btnCloseLegal;
 let historyList, btnStartJourney, modalWelcome;
 
 // Initialize
