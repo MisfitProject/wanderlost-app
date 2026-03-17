@@ -357,17 +357,14 @@
         </div>
     </div>
 
-    <!-- Service Worker Registration -->
+    <!-- Service Worker Registration Bypass (V2 Update) -->
     <script>
       if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('./sw.js')
-            .then(registration => {
-              console.log('ServiceWorker registration successful');
-            })
-            .catch(err => {
-              console.log('ServiceWorker registration failed: ', err);
-            });
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+          for(let registration of registrations) {
+            registration.unregister();
+            console.log('Old ServiceWorker unregistered to allow V2 update.');
+          }
         });
       }
     </script>
