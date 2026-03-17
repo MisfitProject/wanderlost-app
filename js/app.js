@@ -5,6 +5,7 @@
 
 const state = {
     discoveredNodes: [],
+    markers: [],
     isSubscribed: false,
     selectedCategory: 'all',
     trailPath: null,
@@ -40,6 +41,47 @@ window.initMapData = function() {
             {featureType: 'water', elementType: 'geometry.fill', stylers: [{color: '#b9d3c2'}]}
         ]
     });
+
+    window.CustomMarker = class extends google.maps.OverlayView {
+        constructor(latlng, map, isPulse) {
+            super();
+            this.latlng = latlng;
+            this.isPulse = isPulse;
+            this.div = null;
+            this.setMap(map);
+        }
+
+        onAdd() {
+            this.div = document.createElement('div');
+            this.div.className = this.isPulse ? 'map-marker pulse-orange' : 'map-marker solid-green';
+            const panes = this.getPanes();
+            panes.overlayImage.appendChild(this.div); // Correct pane for interacting with map clicks
+        }
+
+        draw() {
+            const overlayProjection = this.getProjection();
+            const pos = overlayProjection.fromLatLngToDivPixel(this.latlng);
+            if (this.div) {
+                // Offset by half dimensions (10px) to center it physically on the point
+                this.div.style.left = (pos.x - 10) + 'px';
+                this.div.style.top = (pos.y - 10) + 'px';
+            }
+        }
+
+        onRemove() {
+            if (this.div) {
+                this.div.parentNode.removeChild(this.div);
+                this.div = null;
+            }
+        }
+
+        setAsVisited() {
+            this.isPulse = false;
+            if (this.div) {
+                this.div.className = 'map-marker solid-green';
+            }
+        }
+    };
 };
 
 // Handle occasional Google Watermark errors
@@ -230,23 +272,26 @@ function setupAccountActions() {
             "Destroy All Data?",
             "fa-trash-can"
         );
-        if (confirmed) {
-            state.discoveredNodes = [];
-            updateBadges();
-            
-            if (window.map) {
-                window.map.panTo({ lat: 47.3769, lng: 8.5417 });
-                window.map.setZoom(14);
-                if (state.trailPath) {
-                    state.trailPath.setMap(null);
-                    state.trailPath = null;
+            // Destroy Data logic
+            if (confirmed) {
+                state.discoveredNodes = [];
+                state.markers.forEach(m => m.setMap(null));
+                state.markers = [];
+                updateBadges();
+                
+                if (window.map) {
+                    window.map.panTo({ lat: 47.3769, lng: 8.5417 });
+                    window.map.setZoom(14);
+                    if (state.trailPath) {
+                        state.trailPath.setMap(null);
+                        state.trailPath = null;
+                    }
                 }
+                
+                refs.modalProfile.classList.add('hidden');
+                refs.btnMap.click();
+                showModalAlert("All your history has been wiped from the Intelligence Rig.", "Data Purged", "fa-fire");
             }
-            
-            refs.modalProfile.classList.add('hidden');
-            refs.btnMap.click();
-            showModalAlert("All your history has been wiped from the Intelligence Rig.", "Data Purged", "fa-fire");
-        }
     });
 }
 
@@ -313,6 +358,16 @@ function displayDiscovery(data, icon) {
     if (window.map) {
         window.map.panTo({ lat: data.lat, lng: data.lng });
         window.map.setZoom(17);
+        
+        // Handle Marker Logic
+        if (state.markers.length > 0) {
+            state.markers[state.markers.length - 1].setAsVisited(); // Turn previous green
+        }
+        
+        const latlng = new google.maps.LatLng(data.lat, data.lng);
+        const newMarker = new window.CustomMarker(latlng, window.map, true); // Create new pulsating orange
+        state.markers.push(newMarker);
+        
         drawTrail();
     }
     
@@ -329,9 +384,17 @@ function drawTrail() {
         state.trailPath = new google.maps.Polyline({
             path: pathCoordinates,
             geodesic: true,
-            strokeColor: '#e07a5f',
-            strokeOpacity: 0.8,
-            strokeWeight: 4,
+            strokeOpacity: 0, // 0 for Dashed lines
+            icons: [{
+                icon: {
+                    path: 'M 0,-1 0,1',
+                    strokeOpacity: 1,
+                    scale: 3,
+                    strokeColor: '#e07a5f'
+                },
+                offset: '0',
+                repeat: '20px'
+            }],
             map: window.map
         });
     }
