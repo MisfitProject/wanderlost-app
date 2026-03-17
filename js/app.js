@@ -6,6 +6,7 @@
 const state = {
     discoveredNodes: [],
     markers: [],
+    colorZones: [],
     isSubscribed: false,
     selectedCategory: 'all',
     trailPath: null,
@@ -31,14 +32,24 @@ window.initMapData = function() {
         zoom: 14,
         disableDefaultUI: true,
         styles: [
-            {elementType: 'geometry', stylers: [{color: '#ebe3cd'}]},
-            {elementType: 'labels.text.fill', stylers: [{color: '#523735'}]},
-            {elementType: 'labels.text.stroke', stylers: [{color: '#f5f1e6'}]},
-            {featureType: 'administrative', elementType: 'geometry.stroke', stylers: [{color: '#c9b2a6'}]},
-            {featureType: 'landscape.natural', elementType: 'geometry', stylers: [{color: '#dfd2ae'}]},
-            {featureType: 'poi', stylers: [{visibility: 'off'}]},
-            {featureType: 'road', elementType: 'geometry', stylers: [{color: '#f5f1e6'}]},
-            {featureType: 'water', elementType: 'geometry.fill', stylers: [{color: '#b9d3c2'}]}
+            {elementType: 'geometry', stylers: [{color: '#f5f5f5'}]},
+            {elementType: 'labels.icon', stylers: [{visibility: 'off'}]},
+            {elementType: 'labels.text.fill', stylers: [{color: '#9e9e9e'}]},
+            {elementType: 'labels.text.stroke', stylers: [{color: '#f5f5f5'}]},
+            {featureType: 'administrative.land_parcel', elementType: 'labels.text.fill', stylers: [{color: '#bdbdbd'}]},
+            {featureType: 'poi', elementType: 'geometry', stylers: [{color: '#eeeeee'}]},
+            {featureType: 'poi', elementType: 'labels.text.fill', stylers: [{color: '#757575'}]},
+            {featureType: 'poi.park', elementType: 'geometry', stylers: [{color: '#e5e5e5'}]},
+            {featureType: 'poi.park', elementType: 'labels.text.fill', stylers: [{color: '#9e9e9e'}]},
+            {featureType: 'road', elementType: 'geometry', stylers: [{color: '#ffffff'}]},
+            {featureType: 'road.arterial', elementType: 'labels.text.fill', stylers: [{color: '#757575'}]},
+            {featureType: 'road.highway', elementType: 'geometry', stylers: [{color: '#dadada'}]},
+            {featureType: 'road.highway', elementType: 'labels.text.fill', stylers: [{color: '#616161'}]},
+            {featureType: 'road.local', elementType: 'labels.text.fill', stylers: [{color: '#9e9e9e'}]},
+            {featureType: 'transit.line', elementType: 'geometry', stylers: [{color: '#e5e5e5'}]},
+            {featureType: 'transit.station', elementType: 'geometry', stylers: [{color: '#eeeeee'}]},
+            {featureType: 'water', elementType: 'geometry', stylers: [{color: '#c9c9c9'}]},
+            {featureType: 'water', elementType: 'labels.text.fill', stylers: [{color: '#9e9e9e'}]}
         ]
     });
 
@@ -277,6 +288,8 @@ function setupAccountActions() {
                 state.discoveredNodes = [];
                 state.markers.forEach(m => m.setMap(null));
                 state.markers = [];
+                state.colorZones.forEach(z => z.setMap(null));
+                state.colorZones = [];
                 updateBadges();
                 
                 if (window.map) {
@@ -368,6 +381,9 @@ function displayDiscovery(data, icon) {
         const newMarker = new window.CustomMarker(latlng, window.map, true); // Create new pulsating orange
         state.markers.push(newMarker);
         
+        // Gamification: Paint the map with color around the discovery
+        revealColorZone(data.lat, data.lng);
+        
         drawTrail();
     }
     
@@ -398,6 +414,45 @@ function drawTrail() {
             map: window.map
         });
     }
+}
+
+function revealColorZone(lat, lng) {
+    // Array of vibrant, playful colors inspired by the geometric map aesthetic
+    const vibrantColors = [
+        '#FF6B6B', '#4ECDC4', '#FFE66D', '#FF9F1C', 
+        '#2AB7CA', '#FE4A90', '#F15BB5', '#00F5D4',
+        '#9B5DE5', '#FEE440'
+    ];
+    const randomColor = vibrantColors[Math.floor(Math.random() * vibrantColors.length)];
+
+    // We draw a semi-transparent colored circle over the monochrome map
+    // The radius is large enough to "paint" a neighborhood block
+    const zone = new google.maps.Circle({
+        strokeColor: randomColor,
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: randomColor,
+        fillOpacity: 0.25,
+        map: window.map,
+        center: { lat, lng },
+        radius: 0 // Start at 0 for animation
+    });
+    
+    state.colorZones.push(zone);
+
+    // Animate the circle radiating outwards
+    let currentRadius = 0;
+    const maxRadius = 350; // Reveal a ~350m radius of "color"
+    
+    const animateCircle = () => {
+        currentRadius += 10;
+        zone.setRadius(currentRadius);
+        if (currentRadius < maxRadius) {
+            requestAnimationFrame(animateCircle);
+        }
+    };
+    
+    requestAnimationFrame(animateCircle);
 }
 
 function updateBadges() {
