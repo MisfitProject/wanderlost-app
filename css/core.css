@@ -1,0 +1,140 @@
+/* WANDERLØST V3 - CORE STYLES */
+
+/* Design Tokens */
+:root {
+    --bg-dark: #121212;
+    --paper-light: #f5f1e6;
+    --ink-dark: #2c2c2c;
+    --ink-light: #7a7a7a;
+    
+    --accent-vintage: #d4a373;
+    --accent-vintage-dim: rgba(212, 163, 115, 0.2);
+    --accent-red: #e07a5f;
+    
+    --glass-bg: rgba(245, 241, 230, 0.85);
+    --glass-border: rgba(44, 44, 44, 0.1);
+    --glass-blur: blur(12px);
+    
+    --font-heading: 'Playfair Display', serif;
+    --font-body: 'Inter', sans-serif;
+    
+    /* Mobile Safe Areas */
+    --safe-area-bottom: env(safe-area-inset-bottom, 20px);
+}
+
+/* Base Resets */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent; /* Remove mobile tap flash */
+}
+
+body, html {
+    width: 100%;
+    height: 100%;
+    overflow: hidden; /* Prevent bounce scrolling */
+    background-color: var(--bg-dark);
+    font-family: var(--font-body);
+    color: var(--ink-dark);
+    overscroll-behavior-y: none; /* Disable pull-to-refresh natively */
+}
+
+/* App Container (Full Viewport viewport-fit=cover support) */
+#app-container {
+    position: relative;
+    width: 100%;
+    height: 100vh; /* Fallback */
+    height: 100dvh; /* Dynamic viewport height for modern mobile browsers */
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* Utility Classes */
+.hidden {
+    display: none !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+/* Typography Base */
+h1, h2, h3, h4 {
+    font-family: var(--font-heading);
+    font-weight: 600;
+}
+
+p {
+    line-height: 1.5;
+    font-size: 0.95rem;
+}
+
+/* Map Layers */
+#map-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    background-color: #ebe3cd; /* Default map color while loading */
+}
+
+#fog-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    box-shadow: inset 0 0 100px rgba(0,0,0,0.4);
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* Top HUD */
+#hud-top {
+    position: absolute;
+    top: env(safe-area-inset-top, 15px);
+    left: 0;
+    width: 100%;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 10;
+    pointer-events: none; /* Let clicks pass through to map */
+}
+
+.hud-brand {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: var(--ink-dark);
+    text-shadow: 0 2px 4px rgba(255,255,255,0.8);
+}
+
+.hud-badges {
+    display: flex;
+    gap: 8px;
+    pointer-events: auto;
+}
+
+.hud-badges i {
+    font-size: 1rem;
+    color: var(--accent-vintage);
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1px solid var(--glass-border);
+}
+
+.hud-badges i.locked {
+    color: var(--ink-light);
+    opacity: 0.5;
+}

@@ -1,0 +1,209 @@
+/* WANDERLØST V3 - COMPONENTS */
+
+/* --- Bottom Navigation Bar --- */
+#bottom-nav {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: calc(70px + var(--safe-area-bottom));
+    padding-bottom: var(--safe-area-bottom);
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border-top: 1px solid var(--glass-border);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 100;
+    box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
+}
+
+.nav-item {
+    background: transparent;
+    border: none;
+    color: var(--ink-light);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+}
+
+.nav-item i {
+    font-size: 1.2rem;
+}
+
+.nav-item span {
+    font-size: 0.7rem;
+    font-weight: 500;
+}
+
+.nav-item.active {
+    color: var(--accent-vintage);
+}
+
+/* Center Scan Button */
+.scan-btn {
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    background: var(--bg-dark);
+    color: var(--accent-vintage);
+    transform: translateY(-20px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2), inset 0 0 0 2px var(--accent-vintage);
+    border: 4px solid var(--paper-light); /* Visually sink into nav bar */
+}
+.scan-btn i {
+    font-size: 1.5rem;
+}
+.scan-btn:active {
+    transform: translateY(-20px) scale(0.95);
+}
+
+/* --- Bottom Sheet (Location Card) --- */
+.bottom-sheet {
+    position: absolute;
+    bottom: calc(70px + var(--safe-area-bottom) + 10px);
+    left: 10px;
+    width: calc(100% - 20px);
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 20px;
+    z-index: 90;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    transform: translateY(0);
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
+}
+
+.bottom-sheet.hidden {
+    display: block !important; /* Override core.css hidden to use transform */
+    transform: translateY(150%);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.sheet-drag-handle {
+    width: 40px;
+    height: 4px;
+    background-color: rgba(0,0,0,0.2);
+    border-radius: 2px;
+    margin: 0 auto 15px auto;
+}
+
+.sheet-header .tag {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--accent-vintage);
+    border: 1px solid var(--accent-vintage);
+    padding: 3px 8px;
+    border-radius: 12px;
+    display: inline-block;
+    margin-bottom: 8px;
+}
+
+.bottom-sheet h2 {
+    font-size: 1.5rem;
+    margin-bottom: 8px;
+}
+
+.bottom-sheet p {
+    color: var(--ink-light);
+    margin-bottom: 20px;
+}
+
+/* --- Buttons --- */
+.primary-btn, .secondary-btn {
+    width: 100%;
+    height: 48px; /* Strict touch target size */
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: var(--font-body);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: none;
+    transition: transform 0.1s ease;
+}
+
+.primary-btn {
+    background-color: var(--ink-dark);
+    color: var(--paper-light);
+}
+
+.primary-btn:active {
+    transform: scale(0.98);
+}
+
+/* --- Scan Indicator --- */
+#scan-indicator {
+    position: absolute;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    padding: 10px 20px;
+    border-radius: 20px;
+    border: 1px solid var(--glass-border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    z-index: 50;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+#scan-indicator i {
+    color: var(--accent-vintage);
+}
+
+/* --- Modals --- */
+.modal-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(5px);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    transition: opacity 0.3s ease;
+}
+
+.modal-card {
+    background: var(--paper-light);
+    width: 100%;
+    max-width: 320px;
+    border-radius: 20px;
+    padding: 25px 20px;
+    text-align: center;
+    transform: scale(1);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.modal-backdrop.hidden .modal-card {
+    transform: scale(0.9);
+}
+
+.modal-icon i {
+    font-size: 2.5rem;
+    color: var(--accent-vintage);
+    margin-bottom: 15px;
+}

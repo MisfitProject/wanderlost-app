@@ -1,6 +1,6 @@
 /**
- * WANDERLØST - Discovery Intelligence Rig (Backend)
- * High-performance discovery engine powered by Google Places & Generative AI.
+ * WANDERLØST V3 - BACKEND DISCOVERY RIG
+ * Re-implemented pure robust logic from previous build.
  */
 
 const express = require('express');
@@ -12,15 +12,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// API Configuration
 const GOOGLE_KEY = process.env.GOOGLE_PLACES_API_KEY;
 const AI_RIG_URL = process.env.AI_RIG_URL;
 const AI_MODEL = process.env.AI_MODEL_NAME || 'llama3';
 
-/**
- * Main Discovery Endpoint
- * Scans for high-rated local gems and validates them via AI cultural analysis.
- */
 app.post('/api/discover', async (req, res) => {
     const { lat, lng } = req.body;
 
@@ -29,14 +24,14 @@ app.post('/api/discover', async (req, res) => {
     }
 
     try {
-        console.log(`[Wanderløst] Scan initiated at: ${lat}, ${lng}`);
+        console.log(`\n[📡 SCAN INITIATED] Coordinates: ${lat}, ${lng}`);
 
-        // 1. SEARCH: Find nearby high-rated places (Places API v1)
+        // 1. SEARCH: Google Places API v1 (2.5km radius, high rating)
         const searchResponse = await axios.post(
             'https://places.googleapis.com/v1/places:searchNearby',
             {
                 locationRestriction: {
-                    circle: { center: { latitude: lat, longitude: lng }, radius: 2500 } // 2.5km
+                    circle: { center: { latitude: lat, longitude: lng }, radius: 2500 }
                 },
                 includedTypes: ['restaurant', 'cafe', 'tourist_attraction', 'park', 'museum', 'book_store'],
                 maxResultCount: 20
@@ -51,20 +46,19 @@ app.post('/api/discover', async (req, res) => {
         );
 
         const places = searchResponse.data.places || [];
-        // Filter for "Hidden Gems" (Rating >= 4.7)
         const candidates = places.filter(p => p.rating >= 4.7);
 
         if (candidates.length === 0) {
+            console.log(`[🚫 NO GEMS] Insufficient rating threshold nearby.`);
             return res.json({ success: false, message: "No local secrets matching our criteria were found in this area." });
         }
 
-        // 2. SELECTION: Randomly pick from candidates to ensure a dynamic experience
+        // 2. SELECTION
         const target = candidates[Math.floor(Math.random() * candidates.length)];
         const strippedId = target.id.replace('places/', '');
-        
-        console.log(`[Wanderløst] Candidate Selected: ${target.displayName.text} (${strippedId})`);
+        console.log(`[🎯 TARGET ACQUIRED] ${target.displayName.text}`);
 
-        // 3. ANALYSIS: Fetch reviews for AI Cultural Validation
+        // 3. AI VALIDATION PREP (Get Reviews)
         const detailsResponse = await axios.get(
             `https://maps.googleapis.com/maps/api/place/details/json?place_id=${strippedId}&fields=reviews&key=${GOOGLE_KEY}`
         );
@@ -72,57 +66,51 @@ app.post('/api/discover', async (req, res) => {
         const reviews = detailsResponse.data.result.reviews || [];
         const combinedReviews = reviews.map(r => r.text).join("\n\n---\n\n");
 
-        // 4. AI VALIDATION: quantifying "Local Favor"
-        let aiAnalysis = { 
-            isLocal: true, 
-            reason: "AI Rig Signal Dim: Verified via high community authenticity score." 
-        };
+        // 4. AI VALIDATION (Is it a tourist trap?)
+        let aiAnalysis = { isLocal: true, reason: "Verified via high community authenticity score." };
 
         try {
             const aiResponse = await axios.post(AI_RIG_URL, {
                 model: AI_MODEL,
-                prompt: `Quantify the "Local Gem" status of this location based on these reviews:
-                ${combinedReviews}
-                
-                Mandatory JSON Output:
-                {"isLocal": boolean, "reason": "1-sentence explaination focusing on hidden/niche/native language signals"}.`,
+                prompt: `Quantify the "Local Gem" status of this location based on these reviews:\n${combinedReviews}\nMandatory JSON Output: {"isLocal": boolean, "reason": "1-sentence explaination"}.`,
                 stream: false,
                 format: 'json',
                 options: { temperature: 0.1 }
-            }, { timeout: 7000 });
+            }, { timeout: 6000 });
 
             if (aiResponse.data && aiResponse.data.response) {
-                aiAnalysis = JSON.parse(aiResponse.data.response);
+                const parsed = JSON.parse(aiResponse.data.response);
+                if (typeof parsed.isLocal !== 'undefined') aiAnalysis = parsed;
             }
         } catch (aiError) {
-            console.warn(`[Wanderløst] AI Rig Bypass: ${aiError.message}`);
+            console.warn(`[⚠️ AI WARN] Analysis Rig Timeout. Proceeding with raw data.`);
         }
 
         // 5. RESPONSE
         if (aiAnalysis.isLocal) {
+            console.log(`[✅ SUCCESS] Delivery: ${target.displayName.text}`);
             res.json({
                 success: true,
                 data: {
                     id: strippedId,
                     title: target.displayName.text,
-                    desc: target.editorialSummary?.text || "A secret spot favored by locals.",
+                    desc: target.editorialSummary?.text || aiAnalysis.reason,
                     lat: target.location.latitude,
                     lng: target.location.longitude,
-                    reason: aiAnalysis.reason
+                    placeId: strippedId
                 }
             });
         } else {
-            console.log(`[Wanderløst] Place Filtered: Tourist activity detected.`);
+            console.log(`[❌ FILTERED] Failed AI Culture Check.`);
             res.json({ success: false, message: "Area currently showing heavy tourist activity. Try another scan." });
         }
 
     } catch (error) {
-        console.error(`[Wanderløst] Discovery Error:`, error.message);
+        console.error(`[🔥 FATAL] Rig Error:`, error.message);
         res.status(500).json({ success: false, message: "Intelligence Rig internal error." });
     }
 });
 
-// START
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`\n====================================================`);
