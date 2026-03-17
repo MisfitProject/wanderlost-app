@@ -1432,35 +1432,46 @@ button {
     }
     
     .modal-content {
-        padding: 24px 15px;
-        width: 95%;
-        max-width: 400px;
-        max-height: 85svh;
-        overflow-y: auto;
+        padding: 24px 20px;
+        width: 92%;
+        max-width: 380px;
+        max-height: 80svh;
+        border-radius: 28px;
     }
     
-    /* Welcome Modal / Poster Typography */
-    .poster-logo-container {
-        padding: 15px 10px;
+    /* Welcome Modal Refinements */
+    .poster-lockup {
+        font-size: 2.2rem;
+        line-height: 1.05;
+    }
+
+    .immersion-text {
+        font-size: 0.9rem;
+        line-height: 1.5;
         margin-bottom: 15px;
     }
-    .poster-lockup {
-        font-size: 2.5rem;
-        line-height: 1.1;
+
+    /* Bottom Information Cards (Mobile Ratio) */
+    #location-card, #idle-prompt {
+        width: 92%;
+        padding: 24px;
+        min-height: 200px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
     }
-    .poster-top-line {
-        letter-spacing: 4px;
-        font-size: 0.65rem;
-        margin-bottom: 5px;
+
+    #location-card h2 {
+        font-size: 1.6rem;
+        margin-bottom: 8px;
+        line-height: 1.2;
     }
-    .poster-bottom-line {
-        letter-spacing: 3px;
-        font-size: 0.65rem;
-        margin-top: 10px;
-    }
-    .immersion-text {
-        font-size: 0.95rem;
-        margin-bottom: 10px;
+
+    /* Status Pill Spacing */
+    #idle-prompt {
+        min-height: auto;
+        padding: 12px 20px;
+        margin-bottom: 30px;
     }
 
     /* Top HUD / Avatar Bar */
@@ -1605,4 +1616,67 @@ button {
     display: flex !important;
     opacity: 1 !important;
     pointer-events: auto !important;
+}
+
+/* Account Modal Styling Refinements */
+.profile-footer-links {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid var(--vintage-border-dim);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.text-link-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    text-align: left;
+    padding: 10px 15px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+}
+
+.text-link-btn i {
+    width: 20px;
+    text-align: center;
+    font-size: 1rem;
+    opacity: 0.7;
+}
+
+.text-link-btn:hover {
+    background: rgba(210, 125, 45, 0.1);
+    color: var(--accent-vintage);
+}
+
+.text-link-btn:hover i {
+    opacity: 1;
+}
+
+.danger-link {
+    color: #cc4444;
+}
+
+.danger-link:hover {
+    background: rgba(204, 68, 68, 0.1);
+    color: #ff5555;
+}
+
+@media (max-width: 600px) {
+    .profile-footer-links {
+        margin-top: 20px;
+        gap: 8px;
+    }
+    .text-link-btn {
+        font-size: 0.85rem;
+        padding: 8px 12px;
+    }
 }
