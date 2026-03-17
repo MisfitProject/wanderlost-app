@@ -17,14 +17,19 @@ const AI_RIG_URL = process.env.AI_RIG_URL;
 const AI_MODEL = process.env.AI_MODEL_NAME || 'llama3';
 
 app.post('/api/discover', async (req, res) => {
-    const { lat, lng } = req.body;
+    const { lat, lng, category } = req.body;
 
     if (!lat || !lng) {
         return res.status(400).json({ success: false, message: "Coordinates missing." });
     }
 
     try {
-        console.log(`\n[📡 SCAN INITIATED] Coordinates: ${lat}, ${lng}`);
+        console.log(`\n[📡 SCAN INITIATED] Coordinates: ${lat}, ${lng} | Category: ${category || 'all'}`);
+
+        let searchTypes = ['restaurant', 'cafe', 'tourist_attraction', 'park', 'museum', 'book_store'];
+        if (category && category !== 'all') {
+            searchTypes = [category];
+        }
 
         // 1. SEARCH: Google Places API v1 (2.5km radius, high rating)
         const searchResponse = await axios.post(
@@ -33,7 +38,7 @@ app.post('/api/discover', async (req, res) => {
                 locationRestriction: {
                     circle: { center: { latitude: lat, longitude: lng }, radius: 2500 }
                 },
-                includedTypes: ['restaurant', 'cafe', 'tourist_attraction', 'park', 'museum', 'book_store'],
+                includedTypes: searchTypes,
                 maxResultCount: 20
             },
             {

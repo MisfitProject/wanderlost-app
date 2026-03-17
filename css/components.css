@@ -170,7 +170,58 @@
     color: var(--accent-vintage);
 }
 
+/* --- Category Selector (Premium) --- */
+#category-scroller {
+    position: absolute;
+    bottom: calc(70px + var(--safe-area-bottom) + 15px);
+    left: 0;
+    width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 0 15px;
+    z-index: 80;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+#category-scroller::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
+}
+
+.cat-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--ink-dark);
+    margin-right: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    transition: all 0.2s ease;
+}
+
+.cat-pill.active {
+    background: var(--ink-dark);
+    color: var(--paper-light);
+    border-color: var(--ink-dark);
+}
+
+.premium-lock {
+    font-size: 0.7rem;
+    color: var(--ink-light);
+}
+
+.cat-pill.active .premium-lock {
+    color: var(--accent-vintage);
+}
+
 /* --- Modals --- */
+
 .modal-backdrop {
     position: absolute;
     top: 0;
@@ -185,6 +236,10 @@
     justify-content: center;
     padding: 20px;
     transition: opacity 0.3s ease;
+}
+
+#alert-modal {
+    z-index: 300; /* Force alert over profile/checkout modals */
 }
 
 .modal-card {
@@ -309,3 +364,51 @@
     z-index: 10;
 }
 
+/* --- Checkout & Premium UI --- */
+.payment-methods {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.pay-btn-apple {
+    background-color: #000;
+    color: #fff;
+}
+
+.pay-btn-google {
+    background-color: #fff;
+    color: #5f6368;
+    border: 1px solid #dadce0;
+}
+
+.pay-divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: var(--ink-light);
+    font-size: 0.85rem;
+    margin: 10px 0;
+}
+
+.pay-divider::before, .pay-divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.pay-divider:not(:empty)::before { margin-right: .5em; }
+.pay-divider:not(:empty)::after { margin-left: .5em; }
+
+.card-input-mock {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid var(--glass-border);
+    margin-bottom: 10px;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    background: #fff;
+}

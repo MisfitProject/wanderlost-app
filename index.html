@@ -55,7 +55,19 @@
             <span id="scan-status-text">Scanning for secrets...</span>
         </div>
 
+        <!-- Category Selector (Premium) -->
+        <div id="category-scroller">
+            <button class="cat-pill active" data-type="all">Surprise Me</button>
+            <button class="cat-pill" data-type="restaurant">Restaurants <i class="fa-solid fa-lock premium-lock"></i></button>
+            <button class="cat-pill" data-type="cafe">Coffee Places <i class="fa-solid fa-lock premium-lock"></i></button>
+            <button class="cat-pill" data-type="bar">Bars & Pubs <i class="fa-solid fa-lock premium-lock"></i></button>
+            <button class="cat-pill" data-type="park">Parks & Nature <i class="fa-solid fa-lock premium-lock"></i></button>
+            <button class="cat-pill" data-type="museum">Museums <i class="fa-solid fa-lock premium-lock"></i></button>
+            <button class="cat-pill" data-type="tourist_attraction">Attractions <i class="fa-solid fa-lock premium-lock"></i></button>
+        </div>
+
         <!-- Fixed Bottom Navigation Bar -->
+
         <nav id="bottom-nav">
             <button class="nav-item" id="nav-profile">
                 <i class="fa-regular fa-user"></i>
@@ -95,7 +107,7 @@
                     <div class="profile-header">
                         <div class="avatar"><i class="fa-solid fa-user-astronaut"></i></div>
                         <h2>Traveler #4802</h2>
-                        <span class="tag">Wanderløst Elite</span>
+                        <span class="tag" id="profile-status-tag">Free Explorer</span>
                     </div>
                     
                     <div class="profile-stats">
@@ -103,22 +115,61 @@
                     </div>
 
                     <div class="profile-footer-links">
-                        <button class="text-link-btn" id="manage-payments-btn"><i class="fa-solid fa-credit-card"></i> Manage Payments</button>
+                        <button class="text-link-btn" id="manage-payments-btn"><i class="fa-solid fa-crown"></i> Upgrade to Premium</button>
                         <button class="text-link-btn" id="terms-btn"><i class="fa-solid fa-file-contract"></i> Terms & Conditions</button>
-                        <button class="text-link-btn danger-link" id="cancel-membership-btn"><i class="fa-solid fa-ban"></i> Cancel Membership</button>
+                        <button class="text-link-btn danger-link hidden" id="cancel-membership-btn"><i class="fa-solid fa-ban"></i> Cancel Membership</button>
                         <button class="text-link-btn danger-link" id="delete-data-btn"><i class="fa-solid fa-trash-can"></i> Delete My Data</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Checkout Modal -->
+            <div id="checkout-modal" class="modal-backdrop hidden">
+                <div class="modal-card">
+                    <button class="close-btn" id="close-checkout-btn" style="background:none; color:var(--ink-dark);"><i class="fa-solid fa-arrow-left"></i></button>
+                    <h2 style="margin-bottom:10px;">Wanderløst Premium</h2>
+                    <p style="color:var(--ink-light); font-size:0.9rem;">Unlock custom category filtering and unlimited hunts.<br><strong>CHF 9.99 / month</strong></p>
+                    
+                    <div class="payment-methods">
+                        <button class="primary-btn pay-btn-apple" id="pay-apple-btn"><i class="fa-brands fa-apple"></i> Pay</button>
+                        <button class="primary-btn pay-btn-google" id="pay-google-btn"><i class="fa-brands fa-google-pay" style="font-size:1.5rem;"></i></button>
+                        
+                        <div class="pay-divider">OR</div>
+                        
+                        <div style="text-align:left;">
+                            <input type="text" class="card-input-mock" placeholder="Card Number" readonly>
+                            <div style="display:flex; gap:10px;">
+                                <input type="text" class="card-input-mock" placeholder="MM/YY" style="flex:1;" readonly>
+                                <input type="text" class="card-input-mock" placeholder="CVC" style="flex:1;" readonly>
+                            </div>
+                            <button class="primary-btn" id="pay-card-btn" style="background:var(--accent-vintage); color:var(--bg-dark);">Pay with Card</button>
+                        </div>
                     </div>
                 </div>
             </div>
             
             <!-- Legal Modal (T&C) -->
             <div id="legal-modal" class="modal-backdrop hidden">
-                <div class="modal-card" style="text-align:left; max-height:80vh; overflow-y:auto;">
+                <div class="modal-card" style="text-align:left; max-height:85vh; overflow-y:auto;">
                     <button class="close-btn" id="close-legal-btn" style="float:right; background:none; border:none; color:var(--ink-dark);"><i class="fa-solid fa-xmark"></i></button>
-                    <h3>Terms & Conditions</h3>
-                    <p style="margin-top:10px; font-size:0.85rem;"><strong>1. GPS Tracking:</strong> Your movement data is never sold to 3rd party advertising exchanges.<br><br><strong>2. Hallucinations:</strong> The 'Intelligence Rig' may occasionally suggest impassable or closed terrain. Wanderløst is not liable for trespassing.</p>
+                    <h3 style="margin-bottom:15px; border-bottom:1px solid var(--glass-border); padding-bottom:10px;">End User License Agreement</h3>
+                    
+                    <p style="margin-top:10px; font-size:0.85rem; color:var(--ink-dark);">
+                        <strong>1. Scavenger Hunt Liability:</strong><br>
+                        Wanderløst uses AI to recommend off-the-beaten-path locations. By utilizing the "Radar" or "Scan" functionality, the User assumes all physical risks. Wanderløst is strictly a digital interface and assumes no liability for injury, trespassing, or property damage resulting from navigating to a suggested coordinate.
+                        <br><br>
+                        <strong>2. Data Privacy & GDPR:</strong><br>
+                        Your coordinate data and movement trails are stored strictly in local memory (`localStorage`) and ephemeral backend state. We do not aggregate, sell, or transmit location profiles to third-party advertising exchanges. "Deleting Data" via the Dossier wipes the device memory instantly.
+                        <br><br>
+                        <strong>3. Google Maps™ & Places API Services:</strong><br>
+                        This application utilizes Google Maps Platform. By using Wanderløst, users are bound by the Google Maps/Google Earth Additional Terms of Service and Google Privacy Policy. The "Intelligence Rig" filter alters the curation of Google Places data but takes no ownership of third-party reviews.
+                        <br><br>
+                        <strong>4. Subscriptions & Billing:</strong><br>
+                        Premium memberships renew automatically. Cancellations take effect at the end of the current billing cycle. No partial refunds are provided for unused hunts.
+                    </p>
                 </div>
             </div>
+
         </div>
 
     </div>

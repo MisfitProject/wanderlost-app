@@ -5,6 +5,9 @@
 
 const state = {
     discoveredNodes: [],
+    isSubscribed: false,
+    selectedCategory: 'all',
+    trailPath: null,
     BACKEND_URL: localStorage.getItem('WANDERLOST_BACKEND_OVERRIDE') || 'https://wanderlost-app.onrender.com'
 };
 
@@ -64,9 +67,12 @@ function bindDOM() {
     refs.modalAlert = document.getElementById('alert-modal');
     refs.modalProfile = document.getElementById('profile-modal');
     refs.modalLegal = document.getElementById('legal-modal');
+    refs.modalCheckout = document.getElementById('checkout-modal');
     
     refs.hudBadges = document.querySelectorAll('.hud-badges i');
     refs.statPlaces = document.getElementById('stat-places');
+    
+    refs.categoryPills = document.querySelectorAll('.cat-pill');
 }
 
 function showModalAlert(message, title = "Notice", icon = "fa-circle-info") {
@@ -153,12 +159,55 @@ function setupNavigation() {
     document.getElementById('close-legal-btn').addEventListener('click', () => {
         refs.modalLegal.classList.add('hidden');
     });
+    
+    document.getElementById('close-checkout-btn').addEventListener('click', () => {
+        refs.modalCheckout.classList.add('hidden');
+    });
+    
+    // Category Selector
+    refs.categoryPills.forEach(pill => {
+        pill.addEventListener('click', () => {
+            const type = pill.dataset.type;
+            if (type !== 'all' && !state.isSubscribed) {
+                // Free users hit the paywall
+                refs.modalCheckout.classList.remove('hidden');
+                return;
+            }
+            
+            // Valid selection
+            refs.categoryPills.forEach(p => p.classList.remove('active'));
+            pill.classList.add('active');
+            state.selectedCategory = type;
+        });
+    });
 }
 
 function setupAccountActions() {
     document.getElementById('manage-payments-btn').addEventListener('click', () => {
-        showModalAlert("CHF 20.00 / month. Billed to card ending in 4242.", "Active Subscription", "fa-credit-card");
+        if (state.isSubscribed) {
+            showModalAlert("Your Premium subscription is active (CHF 9.99/mo).", "Premium Active", "fa-crown");
+        } else {
+            refs.modalCheckout.classList.remove('hidden');
+        }
     });
+
+    const handlePayment = () => {
+        refs.modalCheckout.classList.add('hidden');
+        state.isSubscribed = true;
+        
+        document.getElementById('profile-status-tag').textContent = "Wanderløst Premium";
+        document.getElementById('manage-payments-btn').innerHTML = `<i class="fa-solid fa-credit-card"></i> Manage Subscriptions`;
+        document.getElementById('cancel-membership-btn').classList.remove('hidden');
+        
+        // Remove lock icons
+        document.querySelectorAll('.premium-lock').forEach(icon => icon.classList.add('hidden'));
+        
+        showModalAlert("Payment processed successfully. You are now a Premium Explorer.", "Welcome to Elite", "fa-crown");
+    };
+
+    document.getElementById('pay-apple-btn').addEventListener('click', handlePayment);
+    document.getElementById('pay-google-btn').addEventListener('click', handlePayment);
+    document.getElementById('pay-card-btn').addEventListener('click', handlePayment);
     
     document.getElementById('terms-btn').addEventListener('click', () => {
         refs.modalLegal.classList.remove('hidden');
@@ -188,6 +237,10 @@ function setupAccountActions() {
             if (window.map) {
                 window.map.panTo({ lat: 47.3769, lng: 8.5417 });
                 window.map.setZoom(14);
+                if (state.trailPath) {
+                    state.trailPath.setMap(null);
+                    state.trailPath = null;
+                }
             }
             
             refs.modalProfile.classList.add('hidden');
@@ -213,7 +266,7 @@ function startScan() {
     icon.classList.add('fa-spinner', 'fa-spin');
 
     navigator.geolocation.getCurrentPosition(
-        position => executeDiscovery(position.coords.latitude, position.coords.longitude, icon),
+        position => executeDiscovery(position.coords.latitude, position.coords.longitude, icon, state.selectedCategory),
         error => {
             showModalAlert("Location access denied.", "Scanner Error", "fa-location-dot");
             resetScanBtn(icon);
@@ -222,14 +275,14 @@ function startScan() {
     );
 }
 
-async function executeDiscovery(lat, lng, icon) {
+async function executeDiscovery(lat, lng, icon, category) {
     refs.scanStatusText.textContent = "Connecting to Rig...";
     
     try {
         const response = await fetch(`${state.BACKEND_URL}/api/discover`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ lat, lng })
+            body: JSON.stringify({ lat, lng, category })
         });
         
         const result = await response.json();
@@ -256,14 +309,32 @@ function displayDiscovery(data, icon) {
     refs.locDesc.textContent = data.desc;
     refs.locationSheet.classList.remove('hidden');
     
-    // 3. Pan Map
+    // 3. Pan Map and Draw Trail
     if (window.map) {
         window.map.panTo({ lat: data.lat, lng: data.lng });
         window.map.setZoom(17);
+        drawTrail();
     }
     
     updateBadges();
     resetScanBtn(icon);
+}
+
+function drawTrail() {
+    const pathCoordinates = state.discoveredNodes.map(node => ({ lat: node.lat, lng: node.lng }));
+    
+    if (state.trailPath) {
+        state.trailPath.setPath(pathCoordinates);
+    } else {
+        state.trailPath = new google.maps.Polyline({
+            path: pathCoordinates,
+            geodesic: true,
+            strokeColor: '#e07a5f',
+            strokeOpacity: 0.8,
+            strokeWeight: 4,
+            map: window.map
+        });
+    }
 }
 
 function updateBadges() {
@@ -272,6 +343,11 @@ function updateBadges() {
     
     const badgeCount = Math.floor(count / 3);
     refs.hudBadges.forEach((badge, index) => {
+        // If unlocking a new badge right now
+        if (index === badgeCount - 1 && count > 0 && count % 3 === 0 && badge.classList.contains('locked')) {
+            showModalAlert("You've unlocked a new Elite Badge! Keep exploring to earn them all.", "Milestone Reached", "fa-star");
+        }
+        
         if (index < badgeCount) {
             badge.classList.remove('locked');
         } else {
