@@ -15,6 +15,7 @@ window.addEventListener('DOMContentLoaded', () => {
     bindDOM();
     setupNavigation();
     setupAlertBinds();
+    setupAccountActions();
 });
 
 // Google Maps Callback
@@ -61,6 +62,11 @@ function bindDOM() {
     refs.btnMap = document.getElementById('nav-map');
     
     refs.modalAlert = document.getElementById('alert-modal');
+    refs.modalProfile = document.getElementById('profile-modal');
+    refs.modalLegal = document.getElementById('legal-modal');
+    
+    refs.hudBadges = document.querySelectorAll('.hud-badges i');
+    refs.statPlaces = document.getElementById('stat-places');
 }
 
 function showModalAlert(message, title = "Notice", icon = "fa-circle-info") {
@@ -68,6 +74,28 @@ function showModalAlert(message, title = "Notice", icon = "fa-circle-info") {
     document.getElementById('alert-title').textContent = title;
     document.querySelector('.modal-icon').innerHTML = `<i class="fa-solid ${icon}"></i>`;
     refs.modalAlert.classList.remove('hidden');
+}
+
+function showConfirm(message, title = "Confirmation", icon = "fa-circle-question") {
+    return new Promise((resolve) => {
+        document.getElementById('alert-message').textContent = message;
+        document.getElementById('alert-title').textContent = title;
+        document.querySelector('.modal-icon').innerHTML = `<i class="fa-solid ${icon}"></i>`;
+        
+        const cancelBtn = document.getElementById('alert-cancel-btn');
+        const okBtn = document.getElementById('alert-ok-btn');
+        
+        cancelBtn.classList.remove('hidden');
+        refs.modalAlert.classList.remove('hidden');
+
+        const cleanup = () => {
+            cancelBtn.classList.add('hidden');
+            refs.modalAlert.classList.add('hidden');
+        };
+
+        okBtn.onclick = () => { cleanup(); resolve(true); };
+        cancelBtn.onclick = () => { cleanup(); resolve(false); };
+    });
 }
 
 function setupAlertBinds() {
@@ -86,7 +114,7 @@ function setupNavigation() {
             btn.classList.add('active');
             
             if(btn.id === 'nav-profile') {
-                showModalAlert("Dossier UI is under construction.", "Coming Soon", "fa-person-digging");
+                refs.modalProfile.classList.remove('hidden');
             }
         });
     });
@@ -113,6 +141,59 @@ function setupNavigation() {
     // Tap outside Bottom Sheet to close
     document.getElementById('fog-overlay').addEventListener('click', () => {
         refs.locationSheet.classList.add('hidden');
+    });
+
+    // Close Modals
+    document.getElementById('close-profile-btn').addEventListener('click', () => {
+        refs.modalProfile.classList.add('hidden');
+        refs.btnProfile.classList.remove('active');
+        refs.btnMap.classList.add('active');
+    });
+    
+    document.getElementById('close-legal-btn').addEventListener('click', () => {
+        refs.modalLegal.classList.add('hidden');
+    });
+}
+
+function setupAccountActions() {
+    document.getElementById('manage-payments-btn').addEventListener('click', () => {
+        showModalAlert("CHF 20.00 / month. Billed to card ending in 4242.", "Active Subscription", "fa-credit-card");
+    });
+    
+    document.getElementById('terms-btn').addEventListener('click', () => {
+        refs.modalLegal.classList.remove('hidden');
+    });
+    
+    document.getElementById('cancel-membership-btn').addEventListener('click', async () => {
+        const confirmed = await showConfirm(
+            "Are you sure you want to end your Elite Journey? You will lose access to secret coordinates at the end of this billing cycle.",
+            "Confirm Cancellation",
+            "fa-ban"
+        );
+        if (confirmed) {
+            showModalAlert("Your membership has been cancelled. Access remains active until the end of the period.", "Cancellation Confirmed", "fa-check-circle");
+        }
+    });
+    
+    document.getElementById('delete-data-btn').addEventListener('click', async () => {
+        const confirmed = await showConfirm(
+            "This will permanently delete your 'Travel Trails', earned badges, and discovery history. This cannot be undone.",
+            "Destroy All Data?",
+            "fa-trash-can"
+        );
+        if (confirmed) {
+            state.discoveredNodes = [];
+            updateBadges();
+            
+            if (window.map) {
+                window.map.panTo({ lat: 47.3769, lng: 8.5417 });
+                window.map.setZoom(14);
+            }
+            
+            refs.modalProfile.classList.add('hidden');
+            refs.btnMap.click();
+            showModalAlert("All your history has been wiped from the Intelligence Rig.", "Data Purged", "fa-fire");
+        }
     });
 }
 
@@ -181,7 +262,22 @@ function displayDiscovery(data, icon) {
         window.map.setZoom(17);
     }
     
+    updateBadges();
     resetScanBtn(icon);
+}
+
+function updateBadges() {
+    const count = state.discoveredNodes.length;
+    refs.statPlaces.textContent = count;
+    
+    const badgeCount = Math.floor(count / 3);
+    refs.hudBadges.forEach((badge, index) => {
+        if (index < badgeCount) {
+            badge.classList.remove('locked');
+        } else {
+            badge.classList.add('locked');
+        }
+    });
 }
 
 function resetScanBtn(icon) {

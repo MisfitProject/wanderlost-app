@@ -55,22 +55,23 @@
             <span id="scan-status-text">Scanning for secrets...</span>
         </div>
 
-        <!-- 5. Fixed Bottom Navigation Bar -->
+        <!-- Fixed Bottom Navigation Bar -->
         <nav id="bottom-nav">
             <button class="nav-item" id="nav-profile">
                 <i class="fa-regular fa-user"></i>
-                <span>Dossier</span>
+                <span>My Account</span>
             </button>
             
             <button class="nav-item scan-btn" id="nav-scan">
                 <i class="fa-solid fa-satellite-dish"></i>
             </button>
             
-            <button class="nav-item" id="nav-map">
+            <button class="nav-item active" id="nav-map">
                 <i class="fa-regular fa-map"></i>
                 <span>Radar</span>
             </button>
         </nav>
+
 
         <!-- 6. Modals Container -->
         <div id="modal-container">
@@ -81,17 +82,50 @@
                     <h3 id="alert-title">Notice</h3>
                     <p id="alert-message">System message.</p>
                     <div class="modal-actions">
-                        <button id="alert-cancel-btn" class="secondary-btn hidden">Cancel</button>
+                        <button id="alert-cancel-btn" class="secondary-btn hidden" style="margin-bottom:10px;">Cancel</button>
                         <button id="alert-ok-btn" class="primary-btn">Acknowledge</button>
                     </div>
+                </div>
+            </div>
+
+            <!-- Profile / Account Modal -->
+            <div id="profile-modal" class="modal-backdrop hidden">
+                <div class="modal-card profile-card">
+                    <button class="close-btn" id="close-profile-btn"><i class="fa-solid fa-xmark"></i></button>
+                    <div class="profile-header">
+                        <div class="avatar"><i class="fa-solid fa-user-astronaut"></i></div>
+                        <h2>Traveler #4802</h2>
+                        <span class="tag">Wanderløst Elite</span>
+                    </div>
+                    
+                    <div class="profile-stats">
+                        <div class="stat"><span id="stat-places">0</span><br><small>Discoveries</small></div>
+                    </div>
+
+                    <div class="profile-footer-links">
+                        <button class="text-link-btn" id="manage-payments-btn"><i class="fa-solid fa-credit-card"></i> Manage Payments</button>
+                        <button class="text-link-btn" id="terms-btn"><i class="fa-solid fa-file-contract"></i> Terms & Conditions</button>
+                        <button class="text-link-btn danger-link" id="cancel-membership-btn"><i class="fa-solid fa-ban"></i> Cancel Membership</button>
+                        <button class="text-link-btn danger-link" id="delete-data-btn"><i class="fa-solid fa-trash-can"></i> Delete My Data</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Legal Modal (T&C) -->
+            <div id="legal-modal" class="modal-backdrop hidden">
+                <div class="modal-card" style="text-align:left; max-height:80vh; overflow-y:auto;">
+                    <button class="close-btn" id="close-legal-btn" style="float:right; background:none; border:none; color:var(--ink-dark);"><i class="fa-solid fa-xmark"></i></button>
+                    <h3>Terms & Conditions</h3>
+                    <p style="margin-top:10px; font-size:0.85rem;"><strong>1. GPS Tracking:</strong> Your movement data is never sold to 3rd party advertising exchanges.<br><br><strong>2. Hallucinations:</strong> The 'Intelligence Rig' may occasionally suggest impassable or closed terrain. Wanderløst is not liable for trespassing.</p>
                 </div>
             </div>
         </div>
 
     </div>
 
-    <!-- Google Maps Script (Callback to JS Module) -->
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=API_KEY_PLACEHOLDER&callback=initMapData"></script>
+    <!-- Google Maps Script -->
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB1RVtX565j0NYmTtFebx1nmDCrh6X0rYM&callback=initMapData"></script>
+
     
     <!-- Application Logic -->
     <script src="js/app.js" type="module"></script>
