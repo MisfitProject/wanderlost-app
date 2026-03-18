@@ -48,6 +48,17 @@ app.post('/api/auth/login', (req, res) => {
     res.json({ token: user.token, stateData: user.stateData, message: "Login successful" });
 });
 
+// 2b. Password Recovery
+app.post('/api/auth/recover', (req, res) => {
+    const { email } = req.body;
+    // For security, always return success even if email doesn't exist, to prevent enumeration
+    if (!email) return res.status(400).json({ error: "Email required" });
+    
+    // In a production app, we would send a SendGrid/AWS SES email here with a JWT reset link.
+    // For this prototype, we simulate a successful email dispatch.
+    res.json({ success: true, message: "If an account exists, a recovery link has been sent." });
+});
+
 // 3. Sync State (Update history)
 app.post('/api/sync', (req, res) => {
     const token = req.headers.authorization;

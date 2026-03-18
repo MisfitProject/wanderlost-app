@@ -137,8 +137,11 @@ function bindDOM() {
     
     refs.authEmail = document.getElementById('auth-email');
     refs.authPassword = document.getElementById('auth-password');
+    refs.authPasswordConfirm = document.getElementById('auth-password-confirm');
     refs.authActionBtn = document.getElementById('auth-action-btn');
     refs.authToggleLink = document.getElementById('auth-toggle-link');
+    refs.authForgotLink = document.getElementById('auth-forgot-link');
+    refs.forgotPwContainer = document.getElementById('forgot-pw-container');
     
     refs.hudBadges = document.querySelectorAll('.hud-badges i');
     refs.statPlaces = document.getElementById('stat-places');
@@ -535,51 +538,99 @@ function resetScanBtn(icon) {
 
 // --- CLOUD AUTHENTICATION & SYNC ENGINE ---
 function setupAuth() {
-    let mode = 'login'; // 'login' or 'register'
+    let mode = 'login'; // 'login', 'register', or 'recover'
+    
+    const setMode = (newMode) => {
+        mode = newMode;
+        // Reset Inputs
+        refs.authPassword.value = '';
+        refs.authPasswordConfirm.value = '';
+        
+        if (mode === 'login') {
+            document.getElementById('auth-title').textContent = "Welcome to Wanderløst";
+            refs.authPassword.classList.remove('hidden');
+            refs.authPasswordConfirm.classList.add('hidden');
+            refs.forgotPwContainer.classList.remove('hidden');
+            refs.authActionBtn.textContent = "Log In";
+            refs.authToggleLink.textContent = "Need an account? Register here.";
+            refs.authToggleLink.style.display = 'inline';
+        } else if (mode === 'register') {
+            document.getElementById('auth-title').textContent = "Create an Account";
+            refs.authPassword.classList.remove('hidden');
+            refs.authPasswordConfirm.classList.remove('hidden');
+            refs.forgotPwContainer.classList.add('hidden');
+            refs.authActionBtn.textContent = "Register & Sync";
+            refs.authToggleLink.textContent = "Already have an account? Log in.";
+            refs.authToggleLink.style.display = 'inline';
+        } else if (mode === 'recover') {
+            document.getElementById('auth-title').textContent = "Recover Password";
+            refs.authPassword.classList.add('hidden');
+            refs.authPasswordConfirm.classList.add('hidden');
+            refs.forgotPwContainer.classList.add('hidden');
+            refs.authActionBtn.textContent = "Send Recovery Email";
+            refs.authToggleLink.textContent = "Back to Login";
+            refs.authToggleLink.style.display = 'inline';
+        }
+    };
     
     refs.authToggleLink.addEventListener('click', (e) => {
         e.preventDefault();
-        if (mode === 'login') {
-            mode = 'register';
-            document.getElementById('auth-title').textContent = "Create an Account";
-            refs.authActionBtn.textContent = "Register & Sync";
-            refs.authToggleLink.textContent = "Already have an account? Log in.";
-        } else {
-            mode = 'login';
-            document.getElementById('auth-title').textContent = "Welcome to Wanderløst";
-            refs.authActionBtn.textContent = "Log In";
-            refs.authToggleLink.textContent = "Need an account? Register here.";
-        }
+        if (mode === 'login') setMode('register');
+        else if (mode === 'register') setMode('login');
+        else if (mode === 'recover') setMode('login');
+    });
+    
+    refs.authForgotLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        setMode('recover');
     });
 
     refs.authActionBtn.addEventListener('click', async () => {
         const email = refs.authEmail.value;
         const password = refs.authPassword.value;
+        const passwordConfirm = refs.authPasswordConfirm.value;
         
-        if (!email || !password) {
-            return showModalAlert("Please enter both email and password.", "Missing Fields", "fa-triangle-exclamation");
+        if (!email) {
+            return showModalAlert("Please enter your email.", "Missing Email", "fa-triangle-exclamation");
+        }
+        if (mode !== 'recover' && !password) {
+            return showModalAlert("Please enter your password.", "Missing Password", "fa-triangle-exclamation");
+        }
+        if (mode === 'register' && password !== passwordConfirm) {
+            return showModalAlert("Passwords do not match.", "Input Error", "fa-triangle-exclamation");
         }
         
         refs.authActionBtn.disabled = true;
-        refs.authActionBtn.textContent = "Authenticating...";
+        refs.authActionBtn.textContent = "Processing...";
         
         try {
-            const endpoint = mode === 'login' ? '/api/auth/login' : '/api/auth/register';
+            let endpoint = '';
+            if (mode === 'login') endpoint = '/api/auth/login';
+            else if (mode === 'register') endpoint = '/api/auth/register';
+            else if (mode === 'recover') endpoint = '/api/auth/recover';
+            
             const res = await fetch(`${state.BACKEND_URL}${endpoint}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password })
+                body: JSON.stringify({ email, password }) // password is ignored by recover endpoint
             });
             const data = await res.json();
             
             if (!res.ok) throw new Error(data.error || "Authentication failed.");
             
-            // Success
+            if (mode === 'recover') {
+                showModalAlert(data.message, "Recovery Initiated", "fa-envelope-open");
+                setMode('login');
+                return;
+            }
+            
+            // Login or Register Success
             state.token = data.token;
             localStorage.setItem('wanderlost_token', state.token);
             refs.modalAuth.classList.add('hidden');
+            document.getElementById('login-sync-btn').classList.add('hidden');
+            document.getElementById('logout-btn').classList.remove('hidden');
             
-            // If they just logged in, they might have cloud state to download
             if (mode === 'login') {
                 loadStateFromCloud();
             }
@@ -590,7 +641,9 @@ function setupAuth() {
             showModalAlert(err.message, "Auth Error", "fa-circle-xmark");
         } finally {
             refs.authActionBtn.disabled = false;
-            refs.authActionBtn.textContent = mode === 'login' ? "Log In" : "Register & Sync";
+            // Restore button text simply by calling setMode on the current mode
+            const currentMode = mode;
+            setMode(currentMode);
         }
     });
     
