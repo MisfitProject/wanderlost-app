@@ -297,36 +297,7 @@ function setupNavigation() {
         localStorage.setItem('wanderlost_sounds', state.soundsEnabled);
     });
     
-    // Toggles
-    const toggleDarkMode = document.getElementById('toggle-dark-mode');
-    toggleDarkMode.addEventListener('change', (e) => {
-        if (!window.map) return;
-        if (e.target.checked) {
-            window.map.setOptions({ styles: [
-                { elementType: "geometry", stylers: [{ color: "#212121" }] },
-                { elementType: "labels.icon", stylers: [{ visibility: "off" }] },
-                { elementType: "labels.text.fill", stylers: [{ color: "#757575" }] },
-                { elementType: "labels.text.stroke", stylers: [{ color: "#212121" }] },
-                { featureType: "administrative", elementType: "geometry", stylers: [{ color: "#757575" }] },
-                { featureType: "poi", elementType: "labels.text.fill", stylers: [{ color: "#757575" }] },
-                { featureType: "poi.park", elementType: "geometry", stylers: [{ color: "#181818" }] },
-                { featureType: "road", elementType: "geometry.fill", stylers: [{ color: "#2c2c2c" }] },
-                { featureType: "road", elementType: "labels.text.fill", stylers: [{ color: "#8a8a8a" }] },
-                { featureType: "water", elementType: "geometry", stylers: [{ color: "#000000" }] },
-                { featureType: "water", elementType: "labels.text.fill", stylers: [{ color: "#3d3d3d" }] }
-            ]});
-        } else {
-            // Restore default custom styling
-            window.map.setOptions({ styles: [
-                {elementType: 'geometry', stylers: [{color: '#f5f5f5'}]},
-                {elementType: 'labels.icon', stylers: [{visibility: 'off'}]},
-                {elementType: 'labels.text.fill', stylers: [{color: '#9e9e9e'}]},
-                {elementType: 'labels.text.stroke', stylers: [{color: '#f5f5f5'}]},
-                {featureType: 'water', elementType: 'geometry', stylers: [{color: '#c9c9c9'}]}
-            ]});
-        }
-    });
-    
+
     // Category Selector
     refs.categoryPills.forEach(pill => {
         pill.addEventListener('click', () => {
