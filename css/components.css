@@ -480,9 +480,13 @@
     pointer-events: none;
 }
 
-#splash-screen img {
-    width: 150px;
-    height: 150px;
+#splash-screen .splash-text {
+    font-family: var(--font-logo);
+    font-size: 5rem;
+    font-weight: 400;
+    font-style: normal;
+    color: var(--paper-light);
+    margin: 0;
     opacity: 0;
     transform: scale(0.9);
     animation: splash-logo-in 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;

@@ -14,8 +14,8 @@ def create_icon(size, output_file):
     img = Image.new('RGBA', (size, size), bg_color)
     draw = ImageDraw.Draw(img)
     
-    # Estimate font size to be roughly 80% of image height
-    font_size = int(size * 0.9)
+    # Estimate font size to be roughly 60% of image height to prevent bounding box clipping
+    font_size = int(size * 0.6)
     try:
         font = ImageFont.truetype(font_path, font_size)
     except IOError:
@@ -23,7 +23,6 @@ def create_icon(size, output_file):
         
     text = "W"
     
-    # PIL getsize/textbbox
     if hasattr(font, 'getbbox'):
         bbox = font.getbbox(text)
         text_width = bbox[2] - bbox[0]
@@ -31,9 +30,9 @@ def create_icon(size, output_file):
     else:
         text_width, text_height = draw.textsize(text, font=font)
         
-    # Manual offset adjustment for script fonts (they usually have large ascenders/descenders)
+    # Extra padding and precise centering
     x = (size - text_width) / 2
-    y = (size - text_height) / 2 - (size * 0.1) # Script fonts usually need upward adjustment
+    y = (size - text_height) / 2 - (size * 0.05) 
     
     draw.text((x, y), text, fill=text_color, font=font)
     img.save(output_file, "PNG")
