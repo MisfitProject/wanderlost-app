@@ -16,36 +16,22 @@ const state = {
 };
 
 const BADGE_TYPES = {
-    'cafe': { icon: 'fa-mug-hot', name: 'Coffee Addict' },
+    'cafe': { icon: 'fa-mug-hot', name: 'Coffee Culture' },
     'museum': { icon: 'fa-building-columns', name: 'Historian' },
     'park': { icon: 'fa-tree', name: 'Nature Walker' },
-    'restaurant': { icon: 'fa-utensils', name: 'Foodie' },
+    'restaurant': { icon: 'fa-utensils', name: 'Gastronome' },
     'bar': { icon: 'fa-martini-glass', name: 'Night Owl' },
     'art_gallery': { icon: 'fa-palette', name: 'Art Critic' },
     'church': { icon: 'fa-church', name: 'Spiritual' },
-    'library': { icon: 'fa-book-open', name: 'Bookworm' },
     'tourist_attraction': { icon: 'fa-camera', name: 'Sightseer' },
     'amusement_park': { icon: 'fa-roller-coaster', name: 'Thrillseeker' },
     'aquarium': { icon: 'fa-fish-fins', name: 'Marine Biologist' },
-    'bakery': { icon: 'fa-croissant', name: 'Sweet Tooth' },
     'campground': { icon: 'fa-campground', name: 'Camper' },
-    'clothing_store': { icon: 'fa-shirt', name: 'Fashionista' },
-    'convenience_store': { icon: 'fa-shop', name: 'Pit Stop' },
-    'department_store': { icon: 'fa-store', name: 'Window Shopper' },
-    'electronics_store': { icon: 'fa-laptop', name: 'Techie' },
-    'florist': { icon: 'fa-seedling', name: 'Botanist' },
-    'gym': { icon: 'fa-dumbbell', name: 'Iron Lifter' },
-    'hardware_store': { icon: 'fa-hammer', name: 'DIY Master' },
-    'jewelry_store': { icon: 'fa-gem', name: 'Gemologist' },
-    'liquor_store': { icon: 'fa-wine-bottle', name: 'Sommelier' },
-    'movie_theater': { icon: 'fa-film', name: 'Cinephile' },
     'night_club': { icon: 'fa-music', name: 'Dancer' },
-    'pet_store': { icon: 'fa-dog', name: 'Animal Lover' },
-    'shoe_store': { icon: 'fa-shoe-prints', name: 'Sneakerhead' },
-    'shopping_mall': { icon: 'fa-bag-shopping', name: 'Mall Rat' },
     'spa': { icon: 'fa-spa', name: 'Zen Master' },
     'stadium': { icon: 'fa-futbol', name: 'Sports Fan' },
-    'zoo': { icon: 'fa-hippo', name: 'Zoologist' }
+    'zoo': { icon: 'fa-hippo', name: 'Zoologist' },
+    'point_of_interest': { icon: 'fa-location-dot', name: 'Explorer' }
 };
 
 const AudioEngine = {
