@@ -124,9 +124,9 @@ function bindDOM() {
     refs.scanIndicator = document.getElementById('scan-indicator');
     refs.scanStatusText = document.getElementById('scan-status-text');
     
-    refs.btnScan = document.getElementById('fab-scan'); // Re-mapped to FAB
+    refs.btnScan = document.getElementById('nav-radar');
     refs.btnProfile = document.getElementById('nav-profile');
-    refs.btnSettings = document.getElementById('nav-settings');
+    refs.btnSettings = document.getElementById('nav-settings-profile');
     refs.btnMap = document.getElementById('nav-map');
     
     refs.modalAlert = document.getElementById('alert-modal');
@@ -189,7 +189,7 @@ function setupAlertBinds() {
 // --- NAVIGATION & GESTURES ---
 function setupNavigation() {
     // Nav Active States
-    const navItems = [refs.btnProfile, refs.btnSettings, refs.btnMap];
+    const navItems = [refs.btnProfile, refs.btnMap];
     navItems.forEach(btn => {
         btn.addEventListener('click', () => {
             navItems.forEach(b => b.classList.remove('active'));
@@ -197,13 +197,16 @@ function setupNavigation() {
             
             if(btn.id === 'nav-profile') {
                 refs.modalProfile.classList.remove('hidden');
-            } else if (btn.id === 'nav-settings') {
-                refs.modalSettings.classList.remove('hidden');
             }
         });
     });
 
-    // Scan Button (FAB)
+    // Relocated Settings Gear (Inside Profile Modal)
+    refs.btnSettings.addEventListener('click', () => {
+        refs.modalSettings.classList.remove('hidden');
+    });
+
+    // Scanner Button (Center Nav)
     refs.btnScan.addEventListener('click', () => {
         startScan();
     });
@@ -236,8 +239,7 @@ function setupNavigation() {
     
     document.getElementById('close-settings-btn').addEventListener('click', () => {
         refs.modalSettings.classList.add('hidden');
-        refs.btnSettings.classList.remove('active');
-        refs.btnMap.classList.add('active');
+        // Do not alter nav bar active states, since Settings is now a sub-modal of Profile
     });
     
     document.getElementById('close-legal-btn').addEventListener('click', () => {

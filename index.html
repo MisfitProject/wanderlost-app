@@ -40,11 +40,6 @@
         <div id="map-bg"></div>
         <div id="fog-overlay"></div>
         
-        <!-- Floating Action Button (Scanner) -->
-        <button id="fab-scan" class="scan-btn fab-scan">
-            <i class="fa-solid fa-satellite-dish"></i>
-        </button>
-
         <!-- 2. The HUD / Status Bar (Top) -->
         <header id="hud-top">
             <div class="hud-brand">Wanderløst</div>
@@ -95,11 +90,11 @@
                 <i class="fa-regular fa-user"></i>
                 <span>My Account</span>
             </button>
-            
-            <button class="nav-item scan-btn" id="nav-settings" style="background:var(--ink-dark); color:var(--paper-light); border-color:var(--accent-vintage);">
-                <i class="fa-solid fa-gear"></i>
+            <button class="nav-item scan-btn" id="nav-radar">
+                <i class="fa-solid fa-satellite-dish"></i>
             </button>
-            
+
+
             <button class="nav-item active" id="nav-map">
                 <i class="fa-regular fa-map"></i>
                 <span>Map</span>
@@ -126,7 +121,8 @@
             <div id="profile-modal" class="modal-backdrop hidden">
                 <div class="modal-card profile-card">
                     <button class="close-btn" id="close-profile-btn"><i class="fa-solid fa-xmark"></i></button>
-                    <div class="profile-header">
+                    <div class="profile-header" style="position: relative;">
+                        <button id="nav-settings-profile" style="position:absolute; top:20px; left:20px; background:none; border:none; color:var(--ink-light); font-size:1.4rem; z-index:10;"><i class="fa-solid fa-gear"></i></button>
                         <div class="avatar"><i class="fa-solid fa-user-astronaut"></i></div>
                         <h2 id="profile-identity">Guest Traveler</h2>
                         <span class="tag" id="profile-status-tag">Free Explorer</span>
