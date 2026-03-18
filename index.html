@@ -37,6 +37,11 @@
         <!-- 1. Full-Screen Map Layer -->
         <div id="map-bg"></div>
         <div id="fog-overlay"></div>
+        
+        <!-- Floating Action Button (Scanner) -->
+        <button id="fab-scan" class="scan-btn fab-scan">
+            <i class="fa-solid fa-satellite-dish"></i>
+        </button>
 
         <!-- 2. The HUD / Status Bar (Top) -->
         <header id="hud-top">
@@ -89,13 +94,13 @@
                 <span>My Account</span>
             </button>
             
-            <button class="nav-item scan-btn" id="nav-scan">
-                <i class="fa-solid fa-satellite-dish"></i>
+            <button class="nav-item scan-btn" id="nav-settings" style="background:var(--ink-dark); color:var(--paper-light); border-color:var(--accent-vintage);">
+                <i class="fa-solid fa-gear"></i>
             </button>
             
             <button class="nav-item active" id="nav-map">
                 <i class="fa-regular fa-map"></i>
-                <span>Radar</span>
+                <span>Map</span>
             </button>
         </nav>
 
@@ -296,6 +301,174 @@
                     <p style="margin-top:15px; font-size:0.85rem; color:var(--ink-dark);">
                         <a href="#" id="auth-toggle-link" style="color:var(--accent-orange); text-decoration:none;">Need an account? Register here.</a>
                     </p>
+                </div>
+            </div>
+
+            <!-- Comprehensive Settings Modal -->
+            <div id="settings-modal" class="modal-backdrop hidden">
+                <div class="modal-card settings-card" style="max-height: 85vh; overflow-y: auto;">
+                    <button class="close-btn" id="close-settings-btn" style="float:right; background:none; border:none; color:var(--ink-dark); margin-top:-5px; margin-right:-5px;"><i class="fa-solid fa-xmark"></i></button>
+                    <h2 style="margin-bottom: 20px; text-align: left; padding-left: 10px;">Settings</h2>
+                    
+                    <!-- 1. Account & Security -->
+                    <div class="settings-section">
+                        <h3>Account & Security</h3>
+                        <div class="setting-item" id="set-profile">
+                            <span><i class="fa-regular fa-id-card"></i> Profile Management</span>
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </div>
+                        <div class="setting-item" id="set-manage-sub">
+                            <span><i class="fa-solid fa-crown" style="color:var(--accent-vintage);"></i> Manage Subscription</span>
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </div>
+                        <div class="setting-item" id="set-permissions">
+                            <span><i class="fa-solid fa-location-crosshairs"></i> Privacy Permissions</span>
+                            <i class="fa-solid fa-up-right-from-square"></i>
+                        </div>
+                        <div class="setting-item danger" id="set-delete-account">
+                            <span><i class="fa-solid fa-trash-can"></i> Delete Account</span>
+                        </div>
+                    </div>
+                    
+                    <!-- 2. Game & Map Preferences -->
+                    <div class="settings-section">
+                        <h3>Game & Map Preferences</h3>
+                        <div class="setting-item has-toggle">
+                            <div>
+                                <span style="display:block;"><i class="fa-solid fa-ruler"></i> System of Units</span>
+                                <small>Metric (km) / Imperial (mi)</small>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="toggle-units">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="setting-item has-toggle">
+                            <div>
+                                <span style="display:block;"><i class="fa-solid fa-moon"></i> Dark Mode Map</span>
+                                <small>High Contrast Display</small>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="toggle-dark-mode">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="setting-item has-toggle">
+                            <div>
+                                <span style="display:block;"><i class="fa-solid fa-skull"></i> Hardcore Difficulty</span>
+                                <small>10km search radius (Premium)</small>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="toggle-hardcore" disabled>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="setting-item danger" id="set-burn-evidence">
+                            <span><i class="fa-solid fa-fire"></i> Reset Game Progress (Burn Evidence)</span>
+                        </div>
+                    </div>
+
+                    <!-- 3. Legal & Copy -->
+                    <div class="settings-section">
+                        <h3>Legal</h3>
+                        <div class="setting-item" id="set-tos">
+                            <span><i class="fa-solid fa-file-contract"></i> Terms of Service</span>
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </div>
+                        <div class="setting-item" id="set-privacy">
+                            <span><i class="fa-solid fa-user-shield"></i> Privacy Policy</span>
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </div>
+                        <div class="setting-item" id="set-google-licenses">
+                            <span><i class="fa-brands fa-google"></i> Google Maps Attribution</span>
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+
+            <!-- Comprehensive Settings Modal -->
+            <div id="settings-modal" class="modal-backdrop hidden">
+                <div class="modal-card settings-card" style="max-height: 85vh; overflow-y: auto;">
+                    <button class="close-btn" id="close-settings-btn" style="float:right; background:none; border:none; color:var(--ink-dark); margin-top:-5px; margin-right:-5px;"><i class="fa-solid fa-xmark"></i></button>
+                    <h2 style="margin-bottom: 20px; text-align: left; padding-left: 10px;">Settings</h2>
+                    
+                    <!-- 1. Account & Security -->
+                    <div class="settings-section">
+                        <h3>Account & Security</h3>
+                        <div class="setting-item" id="set-profile">
+                            <span><i class="fa-regular fa-id-card"></i> Profile Management</span>
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </div>
+                        <div class="setting-item" id="set-manage-sub">
+                            <span><i class="fa-solid fa-crown" style="color:var(--accent-vintage);"></i> Manage Subscription</span>
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </div>
+                        <div class="setting-item" id="set-permissions">
+                            <span><i class="fa-solid fa-location-crosshairs"></i> Privacy Permissions</span>
+                            <i class="fa-solid fa-up-right-from-square"></i>
+                        </div>
+                        <div class="setting-item danger" id="set-delete-account">
+                            <span><i class="fa-solid fa-trash-can"></i> Delete Account</span>
+                        </div>
+                    </div>
+                    
+                    <!-- 2. Game & Map Preferences -->
+                    <div class="settings-section">
+                        <h3>Game & Map Preferences</h3>
+                        <div class="setting-item has-toggle">
+                            <div>
+                                <span style="display:block;"><i class="fa-solid fa-ruler"></i> System of Units</span>
+                                <small>Metric (km) / Imperial (mi)</small>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="toggle-units">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="setting-item has-toggle">
+                            <div>
+                                <span style="display:block;"><i class="fa-solid fa-moon"></i> Dark Mode Map</span>
+                                <small>High Contrast Display</small>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="toggle-dark-mode">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="setting-item has-toggle">
+                            <div>
+                                <span style="display:block;"><i class="fa-solid fa-skull"></i> Hardcore Difficulty</span>
+                                <small>10km search radius (Premium)</small>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="toggle-hardcore" disabled>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="setting-item danger" id="set-burn-evidence">
+                            <span><i class="fa-solid fa-fire"></i> Reset Game Progress (Burn Evidence)</span>
+                        </div>
+                    </div>
+
+                    <!-- 3. Legal & Copy -->
+                    <div class="settings-section">
+                        <h3>Legal</h3>
+                        <div class="setting-item" id="set-tos">
+                            <span><i class="fa-solid fa-file-contract"></i> Terms of Service</span>
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </div>
+                        <div class="setting-item" id="set-privacy">
+                            <span><i class="fa-solid fa-user-shield"></i> Privacy Policy</span>
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </div>
+                        <div class="setting-item" id="set-google-licenses">
+                            <span><i class="fa-brands fa-google"></i> Google Maps Attribution</span>
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </div>
+                    </div>
+                    
                 </div>
             </div>
 

@@ -499,3 +499,140 @@
         transform: scale(1) translateY(0);
     }
 }
+
+/* --- Floating Action Scanner (FAB) --- */
+.fab-scan {
+    position: absolute;
+    bottom: calc(70px + var(--safe-area-bottom) + 20px);
+    left: 50%;
+    transform: translateX(-50%) translateY(0) scale(1);
+    z-index: 85; 
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    background: var(--ink-dark);
+    color: var(--accent-vintage);
+    border: 3px solid var(--paper-light);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s ease;
+}
+
+.fab-scan i {
+    font-size: 1.5rem;
+}
+
+.fab-scan:active {
+    transform: translateX(-50%) translateY(5px) scale(0.95);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* --- Settings Modal Specifics --- */
+.settings-section {
+    margin-bottom: 25px;
+    text-align: left;
+}
+
+.settings-section h3 {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+    padding-left: 10px;
+}
+
+.setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 10px;
+    border-bottom: 1px solid var(--glass-border);
+    font-size: 1rem;
+    color: var(--ink-dark);
+    font-weight: 500;
+    transition: background 0.2s ease;
+}
+
+.setting-item.danger {
+    color: var(--accent-red);
+}
+
+.setting-item:last-child {
+    border-bottom: none;
+}
+
+.setting-item:active {
+    background: rgba(0,0,0,0.03);
+    border-radius: 8px;
+}
+
+.setting-item i {
+    width: 25px;
+    text-align: center;
+    margin-right: 10px;
+}
+
+.setting-item.has-toggle {
+    align-items: center;
+}
+
+.setting-item.has-toggle small {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--ink-light);
+    font-weight: 400;
+    margin-top: 2px;
+}
+
+/* --- Custom CSS Toggle Switch --- */
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 46px;
+    height: 26px;
+    flex-shrink: 0;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-switch .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--glass-border);
+    transition: .4s;
+    border-radius: 26px;
+}
+
+.toggle-switch .slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.toggle-switch input:checked + .slider {
+    background-color: var(--ink-dark);
+}
+
+.toggle-switch input:checked + .slider:before {
+    transform: translateX(20px);
+}
+
+.toggle-switch input:disabled + .slider {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

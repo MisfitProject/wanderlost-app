@@ -124,12 +124,14 @@ function bindDOM() {
     refs.scanIndicator = document.getElementById('scan-indicator');
     refs.scanStatusText = document.getElementById('scan-status-text');
     
-    refs.btnScan = document.getElementById('nav-scan');
+    refs.btnScan = document.getElementById('fab-scan'); // Re-mapped to FAB
     refs.btnProfile = document.getElementById('nav-profile');
+    refs.btnSettings = document.getElementById('nav-settings');
     refs.btnMap = document.getElementById('nav-map');
     
     refs.modalAlert = document.getElementById('alert-modal');
     refs.modalProfile = document.getElementById('profile-modal');
+    refs.modalSettings = document.getElementById('settings-modal');
     refs.modalLegal = document.getElementById('legal-modal');
     refs.modalCheckout = document.getElementById('checkout-modal');
     refs.modalSafety = document.getElementById('safety-modal');
@@ -187,7 +189,7 @@ function setupAlertBinds() {
 // --- NAVIGATION & GESTURES ---
 function setupNavigation() {
     // Nav Active States
-    const navItems = [refs.btnProfile, refs.btnMap];
+    const navItems = [refs.btnProfile, refs.btnSettings, refs.btnMap];
     navItems.forEach(btn => {
         btn.addEventListener('click', () => {
             navItems.forEach(b => b.classList.remove('active'));
@@ -195,11 +197,13 @@ function setupNavigation() {
             
             if(btn.id === 'nav-profile') {
                 refs.modalProfile.classList.remove('hidden');
+            } else if (btn.id === 'nav-settings') {
+                refs.modalSettings.classList.remove('hidden');
             }
         });
     });
 
-    // Scan Button
+    // Scan Button (FAB)
     refs.btnScan.addEventListener('click', () => {
         startScan();
     });
@@ -230,6 +234,12 @@ function setupNavigation() {
         refs.btnMap.classList.add('active');
     });
     
+    document.getElementById('close-settings-btn').addEventListener('click', () => {
+        refs.modalSettings.classList.add('hidden');
+        refs.btnSettings.classList.remove('active');
+        refs.btnMap.classList.add('active');
+    });
+    
     document.getElementById('close-legal-btn').addEventListener('click', () => {
         refs.modalLegal.classList.add('hidden');
     });
@@ -246,6 +256,73 @@ function setupNavigation() {
         localStorage.setItem('wanderlost_safety_accepted', 'true');
         refs.modalSafety.classList.add('hidden');
         startScan(); // Resume the scan automatically
+    });
+    
+    // Settings Module Wiring
+    document.getElementById('set-profile').addEventListener('click', () => {
+        refs.modalSettings.classList.add('hidden');
+        refs.modalProfile.classList.remove('hidden');
+    });
+    document.getElementById('set-manage-sub').addEventListener('click', () => {
+        if (state.isSubscribed) {
+            showModalAlert("Manage your active Premium Subscription directly in your device's App Store or Google Play settings.", "Manage Subscription", "fa-crown");
+        } else {
+            refs.modalSettings.classList.add('hidden');
+            refs.modalCheckout.classList.remove('hidden');
+        }
+    });
+    document.getElementById('set-permissions').addEventListener('click', () => {
+        showModalAlert("To adjust Location Services, please open your device's native Settings app.", "System Permissions", "fa-location-crosshairs");
+    });
+    document.getElementById('set-delete-account').addEventListener('click', () => {
+        document.getElementById('delete-data-btn').click(); // Reuse existing destroy logic
+    });
+    document.getElementById('set-burn-evidence').addEventListener('click', async () => {
+        const confirmed = await showConfirm(
+            "This will completely erase your current Scavenger Hunt progress from your device and the cloud. Are you sure?",
+            "Burn Evidence?",
+            "fa-fire"
+        );
+        if (confirmed) {
+            state.discoveredNodes = [];
+            pushStateToCloud();
+            setTimeout(() => location.reload(), 500);
+        }
+    });
+    document.getElementById('set-tos').addEventListener('click', () => { refs.modalLegal.classList.remove('hidden'); });
+    document.getElementById('set-privacy').addEventListener('click', () => { refs.modalLegal.classList.remove('hidden'); });
+    document.getElementById('set-google-licenses').addEventListener('click', () => {
+        showModalAlert("Map data ©2026 Google. Powered by Google Maps Platform.", "Google Licenses", "fa-google");
+    });
+    
+    // Toggles
+    const toggleDarkMode = document.getElementById('toggle-dark-mode');
+    toggleDarkMode.addEventListener('change', (e) => {
+        if (!window.map) return;
+        if (e.target.checked) {
+            window.map.setOptions({ styles: [
+                { elementType: "geometry", stylers: [{ color: "#212121" }] },
+                { elementType: "labels.icon", stylers: [{ visibility: "off" }] },
+                { elementType: "labels.text.fill", stylers: [{ color: "#757575" }] },
+                { elementType: "labels.text.stroke", stylers: [{ color: "#212121" }] },
+                { featureType: "administrative", elementType: "geometry", stylers: [{ color: "#757575" }] },
+                { featureType: "poi", elementType: "labels.text.fill", stylers: [{ color: "#757575" }] },
+                { featureType: "poi.park", elementType: "geometry", stylers: [{ color: "#181818" }] },
+                { featureType: "road", elementType: "geometry.fill", stylers: [{ color: "#2c2c2c" }] },
+                { featureType: "road", elementType: "labels.text.fill", stylers: [{ color: "#8a8a8a" }] },
+                { featureType: "water", elementType: "geometry", stylers: [{ color: "#000000" }] },
+                { featureType: "water", elementType: "labels.text.fill", stylers: [{ color: "#3d3d3d" }] }
+            ]});
+        } else {
+            // Restore default custom styling
+            window.map.setOptions({ styles: [
+                {elementType: 'geometry', stylers: [{color: '#f5f5f5'}]},
+                {elementType: 'labels.icon', stylers: [{visibility: 'off'}]},
+                {elementType: 'labels.text.fill', stylers: [{color: '#9e9e9e'}]},
+                {elementType: 'labels.text.stroke', stylers: [{color: '#f5f5f5'}]},
+                {featureType: 'water', elementType: 'geometry', stylers: [{color: '#c9c9c9'}]}
+            ]});
+        }
     });
     
     // Category Selector
