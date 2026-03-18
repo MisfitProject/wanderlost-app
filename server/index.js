@@ -6,11 +6,74 @@
 const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
+const crypto = require('crypto');
 require('dotenv').config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+// --- IN-MEMORY DATABASE (Prototype Syncer) ---
+// Note: In production, migrate this to MongoDB or PostgreSQL
+const usersDB = {}; // { email: { password, token, stateData } }
+
+// Helper to generate a simple secure token
+function generateToken() {
+    return crypto.randomBytes(32).toString('hex');
+}
+
+// 1. User Registration
+app.post('/api/auth/register', (req, res) => {
+    const { email, password } = req.body;
+    if (!email || !password) return res.status(400).json({ error: "Email and password required" });
+    if (usersDB[email]) return res.status(400).json({ error: "User already exists" });
+    
+    const token = generateToken();
+    usersDB[email] = { password, token, stateData: null };
+    
+    res.json({ token, message: "Registration successful" });
+});
+
+// 2. User Login
+app.post('/api/auth/login', (req, res) => {
+    const { email, password } = req.body;
+    const user = usersDB[email];
+    
+    if (!user || user.password !== password) {
+        return res.status(401).json({ error: "Invalid credentials" });
+    }
+    
+    // Issue a new token on login for security
+    user.token = generateToken();
+    res.json({ token: user.token, stateData: user.stateData, message: "Login successful" });
+});
+
+// 3. Sync State (Update history)
+app.post('/api/sync', (req, res) => {
+    const token = req.headers.authorization;
+    const { stateData } = req.body;
+    
+    if (!token) return res.status(401).json({ error: "Unauthorized" });
+    
+    // Find user by token
+    const user = Object.values(usersDB).find(u => u.token === token);
+    if (!user) return res.status(401).json({ error: "Invalid token" });
+    
+    user.stateData = stateData; // Save their map history
+    res.json({ success: true, message: "State synchronized" });
+});
+
+// 4. Fetch State (On initial load)
+app.get('/api/sync', (req, res) => {
+    const token = req.headers.authorization;
+    
+    if (!token) return res.status(401).json({ error: "Unauthorized" });
+    
+    const user = Object.values(usersDB).find(u => u.token === token);
+    if (!user) return res.status(401).json({ error: "Invalid token" });
+    
+    res.json({ stateData: user.stateData });
+});
 
 const GOOGLE_KEY = process.env.GOOGLE_PLACES_API_KEY;
 const AI_RIG_URL = process.env.AI_RIG_URL;

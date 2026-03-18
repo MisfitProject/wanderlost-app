@@ -10,6 +10,7 @@ const state = {
     isSubscribed: false,
     selectedCategory: 'all',
     trailPath: null,
+    token: localStorage.getItem('wanderlost_token') || null,
     BACKEND_URL: localStorage.getItem('WANDERLOST_BACKEND_OVERRIDE') || 'https://wanderlost-app.onrender.com'
 };
 
@@ -21,6 +22,7 @@ window.addEventListener('DOMContentLoaded', () => {
     setupNavigation();
     setupAlertBinds();
     setupAccountActions();
+    setupAuth();
 });
 
 // Google Maps Callback
@@ -93,6 +95,9 @@ window.initMapData = function() {
             }
         }
     };
+    
+    // Attempt to load cloud state once map is ready
+    loadStateFromCloud();
 };
 
 // Handle occasional Google Watermark errors
@@ -122,6 +127,12 @@ function bindDOM() {
     refs.modalLegal = document.getElementById('legal-modal');
     refs.modalCheckout = document.getElementById('checkout-modal');
     refs.modalSafety = document.getElementById('safety-modal');
+    refs.modalAuth = document.getElementById('auth-modal');
+    
+    refs.authEmail = document.getElementById('auth-email');
+    refs.authPassword = document.getElementById('auth-password');
+    refs.authActionBtn = document.getElementById('auth-action-btn');
+    refs.authToggleLink = document.getElementById('auth-toggle-link');
     
     refs.hudBadges = document.querySelectorAll('.hud-badges i');
     refs.statPlaces = document.getElementById('stat-places');
@@ -419,6 +430,7 @@ function displayDiscovery(data, icon) {
     
     updateBadges();
     resetScanBtn(icon);
+    pushStateToCloud(); // Sync after discovery
 }
 
 function drawTrail() {
@@ -509,4 +521,148 @@ function resetScanBtn(icon) {
     refs.scanIndicator.classList.add('hidden');
     icon.classList.remove('fa-spinner', 'fa-spin');
     icon.classList.add('fa-satellite-dish');
+}
+
+// --- CLOUD AUTHENTICATION & SYNC ENGINE ---
+function setupAuth() {
+    let mode = 'login'; // 'login' or 'register'
+    
+    refs.authToggleLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (mode === 'login') {
+            mode = 'register';
+            document.getElementById('auth-title').textContent = "Create an Account";
+            refs.authActionBtn.textContent = "Register & Sync";
+            refs.authToggleLink.textContent = "Already have an account? Log in.";
+        } else {
+            mode = 'login';
+            document.getElementById('auth-title').textContent = "Welcome to Wanderløst";
+            refs.authActionBtn.textContent = "Log In";
+            refs.authToggleLink.textContent = "Need an account? Register here.";
+        }
+    });
+
+    refs.authActionBtn.addEventListener('click', async () => {
+        const email = refs.authEmail.value;
+        const password = refs.authPassword.value;
+        
+        if (!email || !password) {
+            return showModalAlert("Please enter both email and password.", "Missing Fields", "fa-triangle-exclamation");
+        }
+        
+        refs.authActionBtn.disabled = true;
+        refs.authActionBtn.textContent = "Authenticating...";
+        
+        try {
+            const endpoint = mode === 'login' ? '/api/auth/login' : '/api/auth/register';
+            const res = await fetch(`${state.BACKEND_URL}${endpoint}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+            const data = await res.json();
+            
+            if (!res.ok) throw new Error(data.error || "Authentication failed.");
+            
+            // Success
+            state.token = data.token;
+            localStorage.setItem('wanderlost_token', state.token);
+            refs.modalAuth.classList.add('hidden');
+            
+            // If they just logged in, they might have cloud state to download
+            if (mode === 'login') {
+                loadStateFromCloud();
+            }
+            
+            showModalAlert("You are now connected to the Cloud Sync Rig.", "Authenticated", "fa-cloud");
+            
+        } catch (err) {
+            showModalAlert(err.message, "Auth Error", "fa-circle-xmark");
+        } finally {
+            refs.authActionBtn.disabled = false;
+            refs.authActionBtn.textContent = mode === 'login' ? "Log In" : "Register & Sync";
+        }
+    });
+    
+    document.getElementById('logout-btn').addEventListener('click', () => {
+        localStorage.removeItem('wanderlost_token');
+        location.reload(); // Hard reset local state
+    });
+    
+    // Show auth modal on boot if no token
+    if (!state.token) {
+        refs.modalAuth.classList.remove('hidden');
+    }
+}
+
+async function loadStateFromCloud() {
+    if (!state.token) return;
+    
+    try {
+        const res = await fetch(`${state.BACKEND_URL}/api/sync`, {
+            headers: { 'Authorization': state.token }
+        });
+        if (!res.ok) throw new Error("Invalid token");
+        
+        const data = await res.json();
+        if (data.stateData) {
+            // Unpack remote state
+            state.discoveredNodes = data.stateData.discoveredNodes || [];
+            state.isSubscribed = data.stateData.isSubscribed || false;
+            
+            // Re-render UI
+            if (state.isSubscribed) {
+                document.getElementById('profile-status-tag').textContent = "Wanderløst Premium";
+                document.getElementById('manage-payments-btn').innerHTML = `<i class="fa-solid fa-credit-card"></i> Manage Subscriptions`;
+                document.getElementById('cancel-membership-btn').classList.remove('hidden');
+                document.querySelectorAll('.premium-lock').forEach(icon => icon.classList.add('hidden'));
+            }
+            
+            // Re-render Map Elements
+            if (window.map && state.discoveredNodes.length > 0) {
+                window.map.panTo({ lat: state.discoveredNodes[state.discoveredNodes.length - 1].lat, lng: state.discoveredNodes[state.discoveredNodes.length - 1].lng });
+                
+                state.discoveredNodes.forEach((node, index) => {
+                    const latlng = new google.maps.LatLng(node.lat, node.lng);
+                    const isLast = index === state.discoveredNodes.length - 1;
+                    const marker = new window.CustomMarker(latlng, window.map, isLast);
+                    if (!isLast) marker.setAsVisited();
+                    state.markers.push(marker);
+                    
+                    revealColorZone(node.lat, node.lng);
+                });
+                drawTrail();
+            }
+            updateBadges();
+        }
+    } catch (err) {
+        // Token likely expired or server wiped (prototype memory leak)
+        localStorage.removeItem('wanderlost_token');
+        state.token = null;
+        refs.modalAuth.classList.remove('hidden');
+    }
+}
+
+async function pushStateToCloud() {
+    if (!state.token) return;
+    
+    // Stripped down state payload (exclude complex instances like google maps objects)
+    const payload = {
+        discoveredNodes: state.discoveredNodes,
+        isSubscribed: state.isSubscribed,
+        selectedCategory: state.selectedCategory
+    };
+    
+    try {
+        await fetch(`${state.BACKEND_URL}/api/sync`, {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': state.token 
+            },
+            body: JSON.stringify({ stateData: payload })
+        });
+    } catch (e) {
+        console.error("Failed to sync state to cloud", e);
+    }
 }
