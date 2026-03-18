@@ -17,6 +17,7 @@
     
     --font-heading: 'Playfair Display', serif;
     --font-body: 'Inter', sans-serif;
+    --font-logo: 'Great Vibes', cursive;
     
     /* Mobile Safe Areas */
     --safe-area-bottom: env(safe-area-inset-bottom, 20px);
@@ -106,9 +107,9 @@ p {
 }
 
 .hud-brand {
-    font-family: var(--font-heading);
-    font-size: 1.5rem;
-    font-weight: 600;
+    font-family: var(--font-logo);
+    font-size: 2.2rem;
+    font-weight: 400;
     letter-spacing: 1px;
     color: var(--ink-dark);
     text-shadow: 0 2px 4px rgba(255,255,255,0.8);

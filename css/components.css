@@ -489,12 +489,11 @@
 }
 
 #splash-screen .splash-text {
-    font-family: var(--font-heading);
-    font-size: 3.5rem;
-    font-weight: 600;
-    font-style: italic;
+    font-family: var(--font-logo);
+    font-size: 5rem;
+    font-weight: 400;
+    font-style: normal;
     color: var(--paper-light);
-    letter-spacing: 2px;
     margin: 0;
 }
 
