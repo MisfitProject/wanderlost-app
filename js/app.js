@@ -268,6 +268,23 @@ function setupAccountActions() {
     document.getElementById('pay-apple-btn').addEventListener('click', handlePayment);
     document.getElementById('pay-google-btn').addEventListener('click', handlePayment);
     document.getElementById('pay-card-btn').addEventListener('click', handlePayment);
+
+    document.getElementById('restore-purchases-btn').addEventListener('click', () => {
+        if (state.isSubscribed) {
+            showModalAlert("Your purchases are already restored and active.", "Already Active", "fa-check-circle");
+            return;
+        }
+        
+        // Simulate checking with App Store / Play Store
+        setTimeout(() => {
+            state.isSubscribed = true;
+            document.getElementById('profile-status-tag').textContent = "Wanderløst Premium";
+            document.getElementById('manage-payments-btn').innerHTML = `<i class="fa-solid fa-credit-card"></i> Manage Subscriptions`;
+            document.getElementById('cancel-membership-btn').classList.remove('hidden');
+            document.querySelectorAll('.premium-lock').forEach(icon => icon.classList.add('hidden'));
+            showModalAlert("Purchases restored successfully. Premium features are now active.", "Restored", "fa-rotate");
+        }, 800);
+    });
     
     document.getElementById('terms-btn').addEventListener('click', () => {
         refs.modalLegal.classList.remove('hidden');
