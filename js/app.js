@@ -11,7 +11,71 @@ const state = {
     selectedCategory: 'all',
     trailPath: null,
     token: localStorage.getItem('wanderlost_token') || null,
+    unlockedBadges: JSON.parse(localStorage.getItem('wanderlost_badges')) || [],
     BACKEND_URL: localStorage.getItem('WANDERLOST_BACKEND_OVERRIDE') || 'https://wanderlost-app.onrender.com'
+};
+
+const BADGE_TYPES = {
+    'cafe': { icon: 'fa-mug-hot', name: 'Coffee Addict' },
+    'museum': { icon: 'fa-building-columns', name: 'Historian' },
+    'park': { icon: 'fa-tree', name: 'Nature Walker' },
+    'restaurant': { icon: 'fa-utensils', name: 'Foodie' },
+    'bar': { icon: 'fa-martini-glass', name: 'Night Owl' },
+    'art_gallery': { icon: 'fa-palette', name: 'Art Critic' },
+    'church': { icon: 'fa-church', name: 'Spiritual' },
+    'library': { icon: 'fa-book-open', name: 'Bookworm' },
+    'tourist_attraction': { icon: 'fa-camera', name: 'Sightseer' },
+    'amusement_park': { icon: 'fa-roller-coaster', name: 'Thrillseeker' },
+    'aquarium': { icon: 'fa-fish-fins', name: 'Marine Biologist' },
+    'bakery': { icon: 'fa-croissant', name: 'Sweet Tooth' },
+    'campground': { icon: 'fa-campground', name: 'Camper' },
+    'clothing_store': { icon: 'fa-shirt', name: 'Fashionista' },
+    'convenience_store': { icon: 'fa-shop', name: 'Pit Stop' },
+    'department_store': { icon: 'fa-store', name: 'Window Shopper' },
+    'electronics_store': { icon: 'fa-laptop', name: 'Techie' },
+    'florist': { icon: 'fa-seedling', name: 'Botanist' },
+    'gym': { icon: 'fa-dumbbell', name: 'Iron Lifter' },
+    'hardware_store': { icon: 'fa-hammer', name: 'DIY Master' },
+    'jewelry_store': { icon: 'fa-gem', name: 'Gemologist' },
+    'liquor_store': { icon: 'fa-wine-bottle', name: 'Sommelier' },
+    'movie_theater': { icon: 'fa-film', name: 'Cinephile' },
+    'night_club': { icon: 'fa-music', name: 'Dancer' },
+    'pet_store': { icon: 'fa-dog', name: 'Animal Lover' },
+    'shoe_store': { icon: 'fa-shoe-prints', name: 'Sneakerhead' },
+    'shopping_mall': { icon: 'fa-bag-shopping', name: 'Mall Rat' },
+    'spa': { icon: 'fa-spa', name: 'Zen Master' },
+    'stadium': { icon: 'fa-futbol', name: 'Sports Fan' },
+    'zoo': { icon: 'fa-hippo', name: 'Zoologist' }
+};
+
+const AudioEngine = {
+    ctx: null,
+    init() {
+        if (!this.ctx && window.AudioContext) {
+            this.ctx = new AudioContext();
+        }
+    },
+    playChime() {
+        if (!this.ctx) this.init();
+        if (!this.ctx) return;
+        if (this.ctx.state === 'suspended') this.ctx.resume();
+        const now = this.ctx.currentTime;
+        const frequencies = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+        
+        frequencies.forEach((freq, i) => {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.value = freq;
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            gain.gain.setValueAtTime(0, now + (i * 0.1));
+            gain.gain.linearRampToValueAtTime(0.2, now + (i * 0.1) + 0.05);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + (i * 0.1) + 2.0);
+            osc.start(now + (i * 0.1));
+            osc.stop(now + (i * 0.1) + 2.0);
+        });
+    }
 };
 
 const refs = {};
@@ -23,6 +87,7 @@ window.addEventListener('DOMContentLoaded', () => {
     setupAlertBinds();
     setupAccountActions();
     setupAuth();
+    initializePassportGallery();
     
     // Dismiss Splash Screen after logo cinematic
     setTimeout(() => {
@@ -440,6 +505,39 @@ function setupAccountActions() {
     });
 }
 
+function initializePassportGallery() {
+    const gallery = document.getElementById('badge-gallery');
+    if (!gallery) return;
+    gallery.innerHTML = '';
+    
+    Object.keys(BADGE_TYPES).forEach(type => {
+        const bd = BADGE_TYPES[type];
+        const isUnlocked = state.unlockedBadges.includes(type);
+        const el = document.createElement('div');
+        el.className = `badge-item ${isUnlocked ? 'unlocked' : 'locked'}`;
+        el.id = `badge-${type}`;
+        el.innerHTML = `<i class="fa-solid ${bd.icon}"></i><span>${bd.name}</span>`;
+        gallery.appendChild(el);
+    });
+}
+
+function awardBadge(type) {
+    const mappedType = BADGE_TYPES[type] ? type : 'tourist_attraction';
+    
+    AudioEngine.playChime();
+    
+    if (state.unlockedBadges.includes(mappedType)) return;
+    
+    state.unlockedBadges.push(mappedType);
+    localStorage.setItem('wanderlost_badges', JSON.stringify(state.unlockedBadges));
+    
+    const badgeEl = document.getElementById(`badge-${mappedType}`);
+    if (badgeEl) {
+        badgeEl.classList.remove('locked');
+        badgeEl.classList.add('unlocked');
+    }
+}
+
 // --- INTELLIGENCE ENGINE (DISCOVERY) ---
 function startScan() {
     // 1. Safety Check (App Store Compliance)
@@ -504,6 +602,9 @@ function displayDiscovery(data, icon) {
     refs.locTitle.textContent = data.title;
     refs.locDesc.textContent = data.desc;
     refs.locationSheet.classList.remove('hidden');
+    
+    // Gamification: Award Badge & Trigger Audio Chime
+    awardBadge(data.category || 'tourist_attraction');
     
     // 3. Pan Map and Draw Trail
     if (window.map) {
