@@ -496,13 +496,27 @@ function initializePassportGallery() {
     if (!gallery) return;
     gallery.innerHTML = '';
     
-    Object.keys(BADGE_TYPES).forEach(type => {
+    // Scrape unlocked and locked categories
+    const unlockedTypes = state.unlockedBadges.filter(type => BADGE_TYPES[type]);
+    const lockedTypes = Object.keys(BADGE_TYPES).filter(type => !state.unlockedBadges.includes(type));
+    
+    // Render all verified Unlocked stamps
+    unlockedTypes.forEach(type => {
         const bd = BADGE_TYPES[type];
-        const isUnlocked = state.unlockedBadges.includes(type);
         const el = document.createElement('div');
-        el.className = `badge-item ${isUnlocked ? 'unlocked' : 'locked'}`;
+        el.className = 'badge-item unlocked';
         el.id = `badge-${type}`;
         el.innerHTML = `<i class="fa-solid ${bd.icon}"></i><span>${bd.name}</span>`;
+        gallery.appendChild(el);
+    });
+    
+    // Render exactly 3 Locked 'Mystery' stamps
+    const lockedToShow = lockedTypes.slice(0, 3);
+    lockedToShow.forEach(type => {
+        const el = document.createElement('div');
+        el.className = 'badge-item locked';
+        el.id = `badge-${type}`;
+        el.innerHTML = `<i class="fa-solid fa-question"></i><span>Mystery Stamp</span>`;
         gallery.appendChild(el);
     });
 }
