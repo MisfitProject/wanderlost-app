@@ -480,40 +480,24 @@
     pointer-events: none;
 }
 
-#splash-screen .splash-logo-container {
-    opacity: 1; 
-    transform: scale(1.1);
-    animation: container-settle 2.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-    text-align: center;
-}
-
-#splash-screen .splash-text {
-    font-family: var(--font-logo);
-    font-size: 5rem;
-    font-weight: 400;
-    font-style: normal;
-    margin: 0;
-    
-    background: linear-gradient(to right, var(--paper-light) 0%, var(--paper-light) 50%, transparent 50%, transparent 100%);
-    background-size: 200% 100%;
-    background-position: 100% 0;
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent; /* Fallback */
-    
-    animation: write-text 2s ease-in-out forwards;
+#splash-screen img {
+    width: 150px;
+    height: 150px;
+    opacity: 0;
+    transform: scale(0.9);
+    animation: splash-logo-in 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
     animation-delay: 0.2s;
 }
 
-@keyframes write-text {
-    0% { background-position: 100% 0; }
-    100% { background-position: 0 0; }
-}
-
-@keyframes container-settle {
-    0% { transform: scale(1.1); }
-    100% { transform: scale(1); }
+@keyframes splash-logo-in {
+    0% {
+        opacity: 0;
+        transform: scale(0.9) translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
 }
 
 /* --- Floating Action Scanner (FAB) --- */
