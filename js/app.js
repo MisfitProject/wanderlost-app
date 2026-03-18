@@ -341,17 +341,7 @@ function setupAccountActions() {
     document.getElementById('pay-google-btn').addEventListener('click', handlePayment);
     document.getElementById('pay-card-btn').addEventListener('click', handlePayment);
     
-    document.getElementById('cancel-membership-btn').addEventListener('click', async () => {
-        const confirmed = await showConfirm(
-            "Are you sure you want to end your Elite Journey? You will lose access to secret coordinates at the end of this billing cycle.",
-            "Confirm Cancellation",
-            "fa-ban"
-        );
-        if (confirmed) {
-            showModalAlert("Your membership has been cancelled. Access remains active until the end of the period.", "Cancellation Confirmed", "fa-check-circle");
-        }
-    });
-    
+
     document.getElementById('delete-data-btn').addEventListener('click', async () => {
         const confirmed = await showConfirm(
             "This will permanently delete your 'Travel Trails', earned badges, and discovery history. This cannot be undone.",
