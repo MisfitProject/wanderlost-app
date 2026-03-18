@@ -258,41 +258,43 @@ function setupNavigation() {
         startScan(); // Resume the scan automatically
     });
     
-    // Settings Module Wiring
-    document.getElementById('set-profile').addEventListener('click', () => {
-        refs.modalSettings.classList.add('hidden');
-        refs.modalProfile.classList.remove('hidden');
+    // Settings Module Wiring (Store-Required List)
+    document.getElementById('set-auth').addEventListener('click', () => {
+        showModalAlert("Email & Password management portal coming soon.", "Account Settings", "fa-shield-halved");
     });
-    document.getElementById('set-manage-sub').addEventListener('click', () => {
+    
+    document.getElementById('set-restore').addEventListener('click', () => {
         if (state.isSubscribed) {
-            showModalAlert("Manage your active Premium Subscription directly in your device's App Store or Google Play settings.", "Manage Subscription", "fa-crown");
-        } else {
-            refs.modalSettings.classList.add('hidden');
-            refs.modalCheckout.classList.remove('hidden');
+            showModalAlert("Your purchases are already restored and active.", "Already Active", "fa-check-circle");
+            return;
         }
+        setTimeout(() => {
+            state.isSubscribed = true;
+            document.querySelectorAll('.premium-lock').forEach(icon => icon.classList.add('hidden'));
+            showModalAlert("Purchases restored successfully. Premium features are now active.", "Restored", "fa-rotate");
+        }, 800);
     });
+    
     document.getElementById('set-permissions').addEventListener('click', () => {
-        showModalAlert("To adjust Location Services, please open your device's native Settings app.", "System Permissions", "fa-location-crosshairs");
+        showModalAlert("To adjust Location Services, please open your device's native Settings app.", "Location Permissions", "fa-location-crosshairs");
     });
-    document.getElementById('set-delete-account').addEventListener('click', () => {
-        document.getElementById('delete-data-btn').click(); // Reuse existing destroy logic
+    
+    document.getElementById('set-support').addEventListener('click', () => {
+        window.location.href = "mailto:support@wonderlost.com?subject=Wanderløst%20Support%20Request";
     });
-    document.getElementById('set-burn-evidence').addEventListener('click', async () => {
-        const confirmed = await showConfirm(
-            "This will completely erase your current Scavenger Hunt progress from your device and the cloud. Are you sure?",
-            "Burn Evidence?",
-            "fa-fire"
-        );
-        if (confirmed) {
-            state.discoveredNodes = [];
-            pushStateToCloud();
-            setTimeout(() => location.reload(), 500);
-        }
-    });
+
     document.getElementById('set-tos').addEventListener('click', () => { refs.modalLegal.classList.remove('hidden'); });
     document.getElementById('set-privacy').addEventListener('click', () => { refs.modalLegal.classList.remove('hidden'); });
+    
     document.getElementById('set-google-licenses').addEventListener('click', () => {
-        showModalAlert("Map data ©2026 Google. Powered by Google Maps Platform.", "Google Licenses", "fa-google");
+        showModalAlert("Map data ©2026 Google. Powered by Google Maps Platform.", "Third-Party Credits", "fa-google");
+    });
+    
+    // Toggles
+    const toggleSounds = document.getElementById('toggle-sounds');
+    toggleSounds.addEventListener('change', (e) => {
+        state.soundsEnabled = e.target.checked;
+        localStorage.setItem('wanderlost_sounds', state.soundsEnabled);
     });
     
     // Toggles
@@ -344,9 +346,10 @@ function setupNavigation() {
 }
 
 function setupAccountActions() {
-    document.getElementById('manage-payments-btn').addEventListener('click', () => {
+    // Data-Control List (My Account)
+    document.getElementById('manage-sub-profile-btn').addEventListener('click', () => {
         if (state.isSubscribed) {
-            showModalAlert("Your Premium subscription is active (CHF 9.99/mo).", "Premium Active", "fa-crown");
+            showModalAlert("Manage your active Premium Subscription directly in your device's App Store or Google Play settings.", "Manage Subscription", "fa-crown");
         } else {
             refs.modalCheckout.classList.remove('hidden');
         }
@@ -355,10 +358,7 @@ function setupAccountActions() {
     const handlePayment = () => {
         refs.modalCheckout.classList.add('hidden');
         state.isSubscribed = true;
-        
-        document.getElementById('profile-status-tag').textContent = "Wanderløst Premium";
-        document.getElementById('manage-payments-btn').innerHTML = `<i class="fa-solid fa-credit-card"></i> Manage Subscriptions`;
-        document.getElementById('cancel-membership-btn').classList.remove('hidden');
+        document.getElementById('manage-sub-profile-btn').innerHTML = `<i class="fa-solid fa-credit-card"></i> Manage Subscriptions`;
         
         // Remove lock icons
         document.querySelectorAll('.premium-lock').forEach(icon => icon.classList.add('hidden'));
@@ -369,27 +369,6 @@ function setupAccountActions() {
     document.getElementById('pay-apple-btn').addEventListener('click', handlePayment);
     document.getElementById('pay-google-btn').addEventListener('click', handlePayment);
     document.getElementById('pay-card-btn').addEventListener('click', handlePayment);
-
-    document.getElementById('restore-purchases-btn').addEventListener('click', () => {
-        if (state.isSubscribed) {
-            showModalAlert("Your purchases are already restored and active.", "Already Active", "fa-check-circle");
-            return;
-        }
-        
-        // Simulate checking with App Store / Play Store
-        setTimeout(() => {
-            state.isSubscribed = true;
-            document.getElementById('profile-status-tag').textContent = "Wanderløst Premium";
-            document.getElementById('manage-payments-btn').innerHTML = `<i class="fa-solid fa-credit-card"></i> Manage Subscriptions`;
-            document.getElementById('cancel-membership-btn').classList.remove('hidden');
-            document.querySelectorAll('.premium-lock').forEach(icon => icon.classList.add('hidden'));
-            showModalAlert("Purchases restored successfully. Premium features are now active.", "Restored", "fa-rotate");
-        }, 800);
-    });
-    
-    document.getElementById('terms-btn').addEventListener('click', () => {
-        refs.modalLegal.classList.remove('hidden');
-    });
     
     document.getElementById('cancel-membership-btn').addEventListener('click', async () => {
         const confirmed = await showConfirm(
@@ -704,6 +683,9 @@ function setupAuth() {
             // Login or Register Success
             state.token = data.token;
             localStorage.setItem('wanderlost_token', state.token);
+            localStorage.setItem('wanderlost_email', email); // Cache email for Identity display
+            
+            document.getElementById('profile-identity').textContent = email;
             refs.modalAuth.classList.add('hidden');
             document.getElementById('login-sync-btn').classList.add('hidden');
             document.getElementById('logout-btn').classList.remove('hidden');
