@@ -644,59 +644,88 @@
 /* --- Digital Passport Gallery --- */
 .passport-gallery {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(65px, 1fr));
-    gap: 12px;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 15px;
     padding: 10px 5px;
     max-height: 40vh;
     overflow-y: auto;
 }
 
 .badge-item {
+    position: relative;
+    background: #fff;
+    padding: 8px; /* The white border thickness */
+    height: 100px;
+    box-sizing: border-box;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    
+    /* Perfect physical stamp perforated edge mask */
+    mask-image: radial-gradient(circle at 4px 4px, transparent 4px, black 4.5px);
+    mask-size: 14px 14px;
+    mask-position: -4px -4px;
+    -webkit-mask-image: radial-gradient(circle at 4px 4px, transparent 4px, black 4.5px);
+    -webkit-mask-size: 14px 14px;
+    -webkit-mask-position: -4px -4px;
+}
+
+.stamp-inner {
+    width: 100%;
+    height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: #fdfbf7;
-    padding: 15px 5px;
+    background: var(--glass-border);
+    position: relative;
     text-align: center;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    /* Postal Stamp Perforated Edges via Masking */
-    mask-image: radial-gradient(circle at 5px 5px, transparent 5px, black 5.5px);
-    mask-size: 16px 16px;
-    mask-position: -5px -5px;
-    -webkit-mask-image: radial-gradient(circle at 5px 5px, transparent 5px, black 5.5px);
-    -webkit-mask-size: 16px 16px;
-    -webkit-mask-position: -5px -5px;
 }
 
-.badge-item i {
-    font-size: 1.6rem;
-    margin-bottom: 8px;
-    color: var(--ink-light);
-    transition: all 0.4s ease;
+.stamp-inner i {
+    font-size: 1.8rem;
+    margin-bottom: 5px;
+    color: var(--ink-dark);
 }
 
-.badge-item span {
-    font-size: 0.6rem;
+.stamp-inner span {
+    font-size: 0.55rem;
     font-weight: 600;
     color: var(--ink-dark);
     line-height: 1.1;
+    display: none; /* Hide text to prioritize art */
+}
+
+.stamp-inner .stamp-price {
+    position: absolute;
+    bottom: 3px;
+    right: 4px;
+    font-size: 0.5rem;
+    font-weight: 700;
+    color: var(--ink-dark);
+    opacity: 0.7;
 }
 
 /* Locked Mystery Stamp State */
 .badge-item.locked {
-    opacity: 0.4;
+    opacity: 0.5;
     filter: grayscale(100%);
-    background: rgba(220, 220, 220, 0.3);
+}
+.badge-item.locked .stamp-inner {
+    background: #e2dfd5;
 }
 
 /* Unlocked Stamp State */
 .badge-item.unlocked {
     opacity: 1;
-    background: linear-gradient(135deg, rgba(230, 204, 178, 0.6), rgba(245, 241, 230, 0.9));
     transform: scale(1.05);
 }
-.badge-item.unlocked i {
-    color: #e07a5f;
-    text-shadow: 0 2px 5px rgba(224, 122, 95, 0.5);
+.badge-item.unlocked .stamp-inner {
+    /* Beautiful pastel stamp background */
+    background: #e07a5f;
+}
+.badge-item.unlocked .stamp-inner i {
+    color: #fdfbf7;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+.badge-item.unlocked .stamp-price {
+    color: #fdfbf7;
 }

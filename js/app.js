@@ -500,23 +500,43 @@ function initializePassportGallery() {
     const unlockedTypes = state.unlockedBadges.filter(type => BADGE_TYPES[type]);
     const lockedTypes = Object.keys(BADGE_TYPES).filter(type => !state.unlockedBadges.includes(type));
     
+    // Deterministic Colors for Stamps
+    const stampColors = ['#e07a5f', '#81b29a', '#f2cc8f', '#e5989b', '#6d6875', '#d4a373', '#ffd166'];
+
     // Render all verified Unlocked stamps
-    unlockedTypes.forEach(type => {
+    unlockedTypes.forEach((type, index) => {
         const bd = BADGE_TYPES[type];
+        const color = stampColors[type.length % stampColors.length];
+        const price = (type.length * 2) + 11;
+        
         const el = document.createElement('div');
         el.className = 'badge-item unlocked';
         el.id = `badge-${type}`;
-        el.innerHTML = `<i class="fa-solid ${bd.icon}"></i><span>${bd.name}</span>`;
+        el.innerHTML = `
+            <div class="stamp-inner" style="background: ${color};">
+                <i class="fa-solid ${bd.icon}"></i>
+                <div class="stamp-price">${price}</div>
+            </div>
+            <span>${bd.name}</span>
+        `;
         gallery.appendChild(el);
     });
     
     // Render exactly 3 Locked 'Mystery' stamps
     const lockedToShow = lockedTypes.slice(0, 3);
-    lockedToShow.forEach(type => {
+    lockedToShow.forEach((type, index) => {
+        const price = (type.length * 2) + 11;
+        
         const el = document.createElement('div');
         el.className = 'badge-item locked';
         el.id = `badge-${type}`;
-        el.innerHTML = `<i class="fa-solid fa-question"></i><span>Mystery Stamp</span>`;
+        el.innerHTML = `
+            <div class="stamp-inner">
+                <i class="fa-solid fa-question"></i>
+                <div class="stamp-price">${price}</div>
+            </div>
+            <span>Mystery Stamp</span>
+        `;
         gallery.appendChild(el);
     });
 }
@@ -531,11 +551,8 @@ function awardBadge(type) {
     state.unlockedBadges.push(mappedType);
     localStorage.setItem('wanderlost_badges', JSON.stringify(state.unlockedBadges));
     
-    const badgeEl = document.getElementById(`badge-${mappedType}`);
-    if (badgeEl) {
-        badgeEl.classList.remove('locked');
-        badgeEl.classList.add('unlocked');
-    }
+    // Force gallery to repaint to convert mystery stamps to active artwork
+    initializePassportGallery();
 }
 
 // --- INTELLIGENCE ENGINE (DISCOVERY) ---

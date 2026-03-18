@@ -1,4 +1,4 @@
-const CACHE_NAME = 'wanderlost-v6-cache';
+const CACHE_NAME = 'wanderlost-v7-cache';
 const urlsToCache = [
   '/',
   '/index.html',
@@ -12,6 +12,7 @@ const urlsToCache = [
 
 // Install event: Cache core assets
 self.addEventListener('install', event => {
+  self.skipWaiting(); // Bruteforce installation bypass
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
@@ -41,6 +42,7 @@ self.addEventListener('fetch', event => {
 
 // Activate event: Clean up old caches
 self.addEventListener('activate', event => {
+  event.waitUntil(self.clients.claim()); // Force immediate page control
   const cacheWhitelist = [CACHE_NAME];
   event.waitUntil(
     caches.keys().then(cacheNames => {
