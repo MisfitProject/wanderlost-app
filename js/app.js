@@ -79,7 +79,7 @@ window.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
         const splash = document.getElementById('splash-screen');
         if (splash) splash.classList.add('fade-out');
-    }, 2500);
+    }, 3200);
 });
 
 // Google Maps Callback
