@@ -235,6 +235,10 @@ function setupNavigation() {
         refs.modalCheckout.classList.add('hidden');
     });
     
+    document.getElementById('close-auth-btn').addEventListener('click', () => {
+        refs.modalAuth.classList.add('hidden');
+    });
+    
     document.getElementById('accept-safety-btn').addEventListener('click', () => {
         localStorage.setItem('wanderlost_safety_accepted', 'true');
         refs.modalSafety.classList.add('hidden');
@@ -590,14 +594,20 @@ function setupAuth() {
         }
     });
     
+    document.getElementById('login-sync-btn').addEventListener('click', () => {
+        refs.modalAuth.classList.remove('hidden');
+        refs.modalProfile.classList.add('hidden');
+    });
+    
     document.getElementById('logout-btn').addEventListener('click', () => {
         localStorage.removeItem('wanderlost_token');
         location.reload(); // Hard reset local state
     });
     
-    // Show auth modal on boot if no token
-    if (!state.token) {
-        refs.modalAuth.classList.remove('hidden');
+    // Check boot state for toggling Dossier buttons
+    if (state.token) {
+        document.getElementById('login-sync-btn').classList.add('hidden');
+        document.getElementById('logout-btn').classList.remove('hidden');
     }
 }
 

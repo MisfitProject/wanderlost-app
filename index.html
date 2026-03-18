@@ -135,7 +135,8 @@
                         <button class="text-link-btn" id="terms-btn"><i class="fa-solid fa-file-contract"></i> Terms & Conditions</button>
                         <button class="text-link-btn danger-link hidden" id="cancel-membership-btn"><i class="fa-solid fa-ban"></i> Cancel Membership</button>
                         <button class="text-link-btn danger-link" id="delete-data-btn"><i class="fa-solid fa-trash-can"></i> Delete Account</button>
-                        <button class="text-link-btn" id="logout-btn"><i class="fa-solid fa-arrow-right-from-bracket"></i> Log Out</button>
+                        <button class="text-link-btn" id="login-sync-btn"><i class="fa-solid fa-cloud-arrow-up"></i> Log In to Sync Data</button>
+                        <button class="text-link-btn hidden" id="logout-btn"><i class="fa-solid fa-arrow-right-from-bracket"></i> Log Out</button>
                     </div>
                 </div>
             </div>
@@ -276,8 +277,9 @@
             </div>
 
             <!-- Auth Modal -->
-            <div id="auth-modal" class="modal-backdrop">
+            <div id="auth-modal" class="modal-backdrop hidden">
                 <div class="modal-card">
+                    <button class="close-btn" id="close-auth-btn" style="float:right; background:none; border:none; color:var(--ink-dark); margin-top:-10px; margin-right:-10px;"><i class="fa-solid fa-xmark"></i></button>
                     <h2 id="auth-title">Welcome to Wanderløst</h2>
                     <p style="color:var(--ink-dark); font-size:0.9rem; margin-bottom:20px;">Log in to sync your Scavenger Hunt across all your devices.</p>
                     
