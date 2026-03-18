@@ -121,6 +121,7 @@ function bindDOM() {
     refs.modalProfile = document.getElementById('profile-modal');
     refs.modalLegal = document.getElementById('legal-modal');
     refs.modalCheckout = document.getElementById('checkout-modal');
+    refs.modalSafety = document.getElementById('safety-modal');
     
     refs.hudBadges = document.querySelectorAll('.hud-badges i');
     refs.statPlaces = document.getElementById('stat-places');
@@ -217,6 +218,12 @@ function setupNavigation() {
         refs.modalCheckout.classList.add('hidden');
     });
     
+    document.getElementById('accept-safety-btn').addEventListener('click', () => {
+        localStorage.setItem('wanderlost_safety_accepted', 'true');
+        refs.modalSafety.classList.add('hidden');
+        startScan(); // Resume the scan automatically
+    });
+    
     // Category Selector
     refs.categoryPills.forEach(pill => {
         pill.addEventListener('click', () => {
@@ -310,6 +317,12 @@ function setupAccountActions() {
 
 // --- INTELLIGENCE ENGINE (DISCOVERY) ---
 function startScan() {
+    // 1. Safety Check (App Store Compliance)
+    if (!localStorage.getItem('wanderlost_safety_accepted')) {
+        refs.modalSafety.classList.remove('hidden');
+        return;
+    }
+
     if (!("geolocation" in navigator)) {
         showModalAlert("GPS disabled on device.", "Scanner Error", "fa-satellite");
         return;

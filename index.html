@@ -162,21 +162,64 @@
             <div id="legal-modal" class="modal-backdrop hidden">
                 <div class="modal-card" style="text-align:left; max-height:85vh; overflow-y:auto;">
                     <button class="close-btn" id="close-legal-btn" style="float:right; background:none; border:none; color:var(--ink-dark);"><i class="fa-solid fa-xmark"></i></button>
-                    <h3 style="margin-bottom:15px; border-bottom:1px solid var(--glass-border); padding-bottom:10px;">End User License Agreement</h3>
+                    <h3 style="margin-bottom:15px; border-bottom:1px solid var(--glass-border); padding-bottom:10px;">Terms and Conditions</h3>
                     
-                    <p style="margin-top:10px; font-size:0.85rem; color:var(--ink-dark);">
-                        <strong>1. Scavenger Hunt Liability:</strong><br>
-                        Wanderløst uses AI to recommend off-the-beaten-path locations. By utilizing the "Radar" or "Scan" functionality, the User assumes all physical risks. Wanderløst is strictly a digital interface and assumes no liability for injury, trespassing, or property damage resulting from navigating to a suggested coordinate.
-                        <br><br>
-                        <strong>2. Data Privacy & GDPR:</strong><br>
-                        Your coordinate data and movement trails are stored strictly in local memory (`localStorage`) and ephemeral backend state. We do not aggregate, sell, or transmit location profiles to third-party advertising exchanges. "Deleting Data" via the Dossier wipes the device memory instantly.
-                        <br><br>
-                        <strong>3. Google Maps™ & Places API Services:</strong><br>
-                        This application utilizes Google Maps Platform. By using Wanderløst, users are bound by the Google Maps/Google Earth Additional Terms of Service and Google Privacy Policy. The "Intelligence Rig" filter alters the curation of Google Places data but takes no ownership of third-party reviews.
-                        <br><br>
-                        <strong>4. Subscriptions & Billing:</strong><br>
-                        Premium memberships renew automatically. Cancellations take effect at the end of the current billing cycle. No partial refunds are provided for unused hunts.
+                    <p style="margin-top:10px; font-size:0.8rem; color:var(--ink-dark); line-height: 1.5;">
+                        <em>Last Updated: March 2026</em><br><br>
+                        
+                        <strong>1. Agreement to Terms</strong><br>
+                        By downloading, installing, or using Wanderløst (the "App"), provided by Wanderløst ("we," "us," or "our"), you agree to be bound by these Terms and Conditions. If you do not agree, do not use the App.<br><br>
+
+                        <strong>2. Eligibility & Age Requirements</strong><br>
+                        You must be at least 18 years old to use this App. By using the App, you represent that you meet this age requirement. In certain jurisdictions, parental consent may be required for users under the age of majority.<br><br>
+
+                        <strong>3. Service Description & Scavenger Hunt Mechanics</strong><br>
+                        Wanderløst provides a gamified travel experience ("Scavenger Hunt") where users discover locations sequentially.<br>
+                        • Third-Party Data: Recommendations are filtered based on third-party data (Google Maps). We apply filters for high ratings (over 4.7) and perceived local sentiment.<br>
+                        • No Guarantee of Accuracy: We do not guarantee the accuracy of ratings, the "local" status of reviewers, or the current availability/status of any location shown.<br>
+                        • Sequential Access: Locations appear on the map only after the previous objective is completed or discovered.<br><br>
+
+                        <strong>4. Google Maps Integration</strong><br>
+                        This App utilizes the Google Maps Platform. By using the App, you also agree to be bound by: Google Maps/Google Earth Additional Terms of Service, and Google Privacy Policy. You acknowledge that the App is a third-party application and is not endorsed or sponsored by Google.<br><br>
+
+                        <strong>5. Safety and Physical Risk (Critical)</strong><br>
+                        Participating in a Scavenger Hunt involves physical activity in public and private spaces. You agree that:<br>
+                        • Safety First: You will remain aware of your surroundings, obey all traffic laws, and avoid dangerous areas.<br>
+                        • No Trespassing: You will not enter private property or restricted areas without legal permission.<br>
+                        • Weather & Conditions: You assume all risks related to weather, terrain, and environmental conditions.<br>
+                        • Assumption of Risk: To the maximum extent permitted by law, you assume full responsibility for any physical injury, property damage, or loss incurred while using the App.<br><br>
+
+                        <strong>6. User Conduct & Content</strong><br>
+                        If the App allows you to upload photos or comments ("User Content"): You grant us a non-exclusive, royalty-free license to use that content. You may not upload illegal, offensive, or infringing material. Moderation: We reserve the right to remove any content and block any user that violates these terms (Required by Apple/Google).<br><br>
+
+                        <strong>7. Intellectual Property</strong><br>
+                        The App’s code, design, and game mechanics are the exclusive property of Wanderløst. You are granted a limited, non-transferable license for personal, non-commercial use only.<br><br>
+
+                        <strong>8. Limitation of Liability</strong><br>
+                        The App is provided "AS IS" and "AS AVAILABLE." Wanderløst is not liable for any indirect, incidental, or consequential damages arising from your use of the App, including but not limited to travel costs, accidents, or the quality of the recommended locations.<br><br>
+
+                        <strong>9. Privacy Policy</strong><br>
+                        Your use of the App is also governed by our Privacy Policy, which explains how we handle your location data. (Available upon request).<br><br>
+
+                        <strong>10. Termination</strong><br>
+                        We reserve the right to terminate or suspend your access to the App at any time, without notice, for conduct that we believe violates these Terms or is harmful to other users or our business interests.<br><br>
+
+                        <strong>11. Contact Information</strong><br>
+                        For questions or to report a problem, contact us at: support@wanderlost.com<br>
                     </p>
+                </div>
+            </div>
+
+            <!-- Pre-Scan Safety Warning Modal -->
+            <div id="safety-modal" class="modal-backdrop hidden">
+                <div class="modal-card">
+                    <div class="modal-icon"><i class="fa-solid fa-triangle-exclamation" style="color:#e07a5f;"></i></div>
+                    <h2 style="margin-bottom:10px;">Safety First</h2>
+                    <p style="color:var(--ink-dark); font-size:0.95rem; margin-bottom:20px;">
+                        Stay alert, watch for traffic, and remain aware of your surroundings.<br><br>
+                        <strong>Do not trespass</strong> or enter dangerous areas while hunting for locations.
+                    </p>
+                    <button class="primary-btn" id="accept-safety-btn">I Understand & Agree</button>
                 </div>
             </div>
 
