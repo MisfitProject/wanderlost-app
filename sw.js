@@ -1,4 +1,4 @@
-const CACHE_NAME = 'wanderlost-v3-cache';
+const CACHE_NAME = 'wanderlost-v4-cache';
 const urlsToCache = [
   '/',
   '/index.html',
@@ -6,7 +6,8 @@ const urlsToCache = [
   '/css/components.css',
   '/js/app.js',
   '/icon-192.png',
-  '/icon-512.png'
+  '/icon-512.png',
+  '/empty-splash.png'
 ];
 
 // Install event: Cache core assets
