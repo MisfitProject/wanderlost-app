@@ -23,6 +23,12 @@ window.addEventListener('DOMContentLoaded', () => {
     setupAlertBinds();
     setupAccountActions();
     setupAuth();
+    
+    // Dismiss Splash Screen after logo cinematic
+    setTimeout(() => {
+        const splash = document.getElementById('splash-screen');
+        if (splash) splash.classList.add('fade-out');
+    }, 2500);
 });
 
 // Google Maps Callback
