@@ -1,4 +1,4 @@
-const CACHE_NAME = 'wanderlost-v7-cache';
+const CACHE_NAME = 'wanderlost-v8-cache';
 const urlsToCache = [
   '/',
   '/index.html',

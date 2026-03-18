@@ -651,21 +651,32 @@
     overflow-y: auto;
 }
 
+.badge-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+}
+
 .badge-item {
     position: relative;
     background: #fff;
-    padding: 8px; /* The white border thickness */
-    height: 100px;
+    padding: 6px; /* White border */
+    width: 100%;
+    aspect-ratio: 1 / 1.1; /* Slightly taller than wide */
     box-sizing: border-box;
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     
-    /* Perfect physical stamp perforated edge mask */
-    mask-image: radial-gradient(circle at 4px 4px, transparent 4px, black 4.5px);
-    mask-size: 14px 14px;
-    mask-position: -4px -4px;
-    -webkit-mask-image: radial-gradient(circle at 4px 4px, transparent 4px, black 4.5px);
-    -webkit-mask-size: 14px 14px;
-    -webkit-mask-position: -4px -4px;
+    /* Dual-layer composite mask for perfect edges and solid center */
+    -webkit-mask: 
+      radial-gradient(circle at 4px 4px, transparent 4px, black 4.5px) -4px -4px / 12px 12px,
+      linear-gradient(black, black) center / calc(100% - 12px) calc(100% - 12px) no-repeat;
+    mask: 
+      radial-gradient(circle at 4px 4px, transparent 4px, black 4.5px) -4px -4px / 12px 12px,
+      linear-gradient(black, black) center / calc(100% - 12px) calc(100% - 12px) no-repeat;
+    -webkit-mask-composite: source-over;
+    mask-composite: add;
 }
 
 .stamp-inner {
@@ -675,33 +686,31 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: var(--glass-border);
     position: relative;
     text-align: center;
+    border-radius: 2px;
 }
 
 .stamp-inner i {
-    font-size: 1.8rem;
-    margin-bottom: 5px;
+    font-size: 2.2rem;
     color: var(--ink-dark);
 }
 
-.stamp-inner span {
-    font-size: 0.55rem;
-    font-weight: 600;
+.badge-wrapper > span {
+    font-size: 0.65rem;
+    font-weight: 700;
     color: var(--ink-dark);
     line-height: 1.1;
-    display: none; /* Hide text to prioritize art */
+    text-align: center;
 }
 
 .stamp-inner .stamp-price {
     position: absolute;
-    bottom: 3px;
-    right: 4px;
-    font-size: 0.5rem;
+    bottom: 0px;
+    right: 3px;
+    font-size: 0.55rem;
     font-weight: 700;
-    color: var(--ink-dark);
-    opacity: 0.7;
+    color: rgba(0,0,0,0.4);
 }
 
 /* Locked Mystery Stamp State */

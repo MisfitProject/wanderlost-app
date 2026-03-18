@@ -500,8 +500,8 @@ function initializePassportGallery() {
     const unlockedTypes = state.unlockedBadges.filter(type => BADGE_TYPES[type]);
     const lockedTypes = Object.keys(BADGE_TYPES).filter(type => !state.unlockedBadges.includes(type));
     
-    // Deterministic Colors for Stamps
-    const stampColors = ['#e07a5f', '#81b29a', '#f2cc8f', '#e5989b', '#6d6875', '#d4a373', '#ffd166'];
+    // Vibrant Colors mapping the user's reference image
+    const stampColors = ['#ff8fb3', '#6a9bd8', '#a8d87a', '#f9e67a', '#f78f8f', '#b39ddb'];
 
     // Render all verified Unlocked stamps
     unlockedTypes.forEach((type, index) => {
@@ -510,12 +510,14 @@ function initializePassportGallery() {
         const price = (type.length * 2) + 11;
         
         const el = document.createElement('div');
-        el.className = 'badge-item unlocked';
-        el.id = `badge-${type}`;
+        el.className = 'badge-wrapper';
+        el.id = `badge-${type}`; // keep ID on wrapper for scrolling later if needed
         el.innerHTML = `
-            <div class="stamp-inner" style="background: ${color};">
-                <i class="fa-solid ${bd.icon}"></i>
-                <div class="stamp-price">${price}</div>
+            <div class="badge-item unlocked">
+                <div class="stamp-inner" style="background: ${color};">
+                    <i class="fa-solid ${bd.icon}"></i>
+                    <div class="stamp-price">${price}</div>
+                </div>
             </div>
             <span>${bd.name}</span>
         `;
@@ -528,12 +530,13 @@ function initializePassportGallery() {
         const price = (type.length * 2) + 11;
         
         const el = document.createElement('div');
-        el.className = 'badge-item locked';
-        el.id = `badge-${type}`;
+        el.className = 'badge-wrapper';
         el.innerHTML = `
-            <div class="stamp-inner">
-                <i class="fa-solid fa-question"></i>
-                <div class="stamp-price">${price}</div>
+            <div class="badge-item locked">
+                <div class="stamp-inner">
+                    <i class="fa-solid fa-question"></i>
+                    <div class="stamp-price">${price}</div>
+                </div>
             </div>
             <span>Mystery Stamp</span>
         `;
