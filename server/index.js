@@ -51,12 +51,32 @@ app.post('/api/auth/login', (req, res) => {
 // 2b. Password Recovery
 app.post('/api/auth/recover', (req, res) => {
     const { email } = req.body;
-    // For security, always return success even if email doesn't exist, to prevent enumeration
     if (!email) return res.status(400).json({ error: "Email required" });
-    
-    // In a production app, we would send a SendGrid/AWS SES email here with a JWT reset link.
-    // For this prototype, we simulate a successful email dispatch.
     res.json({ success: true, message: "If an account exists, a recovery link has been sent." });
+});
+
+// 2c. Update Credentials
+app.put('/api/auth/update', (req, res) => {
+    const token = req.headers.authorization;
+    const { email, newEmail, newPassword } = req.body;
+    
+    if (!token) return res.status(401).json({ error: "Unauthorized" });
+    
+    const userKey = Object.keys(usersDB).find(key => usersDB[key].token === token);
+    if (!userKey || userKey !== email) {
+        return res.status(401).json({ error: "Invalid token or email mismatch" });
+    }
+    
+    const user = usersDB[userKey];
+    if (newPassword) user.password = newPassword;
+    
+    if (newEmail && newEmail !== email) {
+        if (usersDB[newEmail]) return res.status(400).json({ error: "Email already in use" });
+        usersDB[newEmail] = user;
+        delete usersDB[userKey];
+    }
+    
+    res.json({ success: true, message: "Account updated successfully" });
 });
 
 // 3. Sync State (Update history)

@@ -145,6 +145,12 @@ function bindDOM() {
     refs.authForgotLink = document.getElementById('auth-forgot-link');
     refs.forgotPwContainer = document.getElementById('forgot-pw-container');
     
+    refs.modalAccountEdit = document.getElementById('account-edit-modal');
+    refs.editEmail = document.getElementById('edit-email');
+    refs.editPassword = document.getElementById('edit-password');
+    refs.editPasswordConfirm = document.getElementById('edit-password-confirm');
+    refs.saveAccountBtn = document.getElementById('save-account-btn');
+    
     refs.hudBadges = document.querySelectorAll('.hud-badges i');
     refs.statPlaces = document.getElementById('stat-places');
     
@@ -254,6 +260,10 @@ function setupNavigation() {
         refs.modalAuth.classList.add('hidden');
     });
     
+    document.getElementById('close-account-edit-btn').addEventListener('click', () => {
+        refs.modalAccountEdit.classList.add('hidden');
+    });
+    
     document.getElementById('accept-safety-btn').addEventListener('click', () => {
         localStorage.setItem('wanderlost_safety_accepted', 'true');
         refs.modalSafety.classList.add('hidden');
@@ -262,7 +272,62 @@ function setupNavigation() {
     
     // Settings Module Wiring (Store-Required List)
     document.getElementById('set-auth').addEventListener('click', () => {
-        showModalAlert("Email & Password management portal coming soon.", "Account Settings", "fa-shield-halved");
+        if (!state.userEmail) {
+            return showModalAlert("You are browsing as a Guest. Log in via 'My Account' to manage your credentials.", "Guest Account", "fa-user-astronaut");
+        }
+        refs.modalAccountEdit.classList.remove('hidden');
+        refs.editEmail.value = state.userEmail || '';
+        refs.editPassword.value = '';
+        refs.editPasswordConfirm.value = '';
+    });
+
+    refs.saveAccountBtn.addEventListener('click', async () => {
+        const newEmail = refs.editEmail.value.trim();
+        const newPassword = refs.editPassword.value;
+        const confirmPassword = refs.editPasswordConfirm.value;
+        
+        if (!newEmail && !newPassword) {
+            return showModalAlert("Please enter an email or password to update.", "Input Required", "fa-triangle-exclamation");
+        }
+        
+        if (newPassword && newPassword !== confirmPassword) {
+            return showModalAlert("Passwords do not match.", "Error", "fa-circle-xmark");
+        }
+
+        const token = localStorage.getItem('wanderlost_token');
+        if (!token) {
+            return showModalAlert("You must be logged in to update credentials.", "Authentication Required", "fa-lock");
+        }
+
+        try {
+            const res = await fetch(`${API_BASE_URL}/auth/update`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': token
+                },
+                body: JSON.stringify({
+                    email: state.userEmail,
+                    newEmail: newEmail,
+                    newPassword: newPassword || undefined
+                })
+            });
+            const data = await res.json();
+            
+            if (data.success) {
+                if (newEmail) {
+                    state.userEmail = newEmail;
+                    localStorage.setItem('wanderlost_email', state.userEmail);
+                    document.getElementById('profile-identity').textContent = state.userEmail;
+                }
+                refs.modalAccountEdit.classList.add('hidden');
+                showModalAlert("Your account credentials have been successfully updated.", "Account Updated", "fa-check-circle");
+            } else {
+                showModalAlert(data.error || "Failed to update account.", "Error", "fa-circle-xmark");
+            }
+        } catch (err) {
+            showModalAlert("Server unreachable.", "Connection Error", "fa-wifi");
+        }
     });
     
     document.getElementById('set-restore').addEventListener('click', () => {
