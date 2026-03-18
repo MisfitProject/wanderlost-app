@@ -643,28 +643,42 @@
 
 /* --- Digital Passport Gallery --- */
 .passport-gallery {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-    gap: 15px;
-    padding: 10px 5px;
-    max-height: 40vh;
-    overflow-y: auto;
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 12px;
+    padding: 10px 5px 20px 5px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+}
+
+.passport-gallery::-webkit-scrollbar {
+    height: 4px;
+}
+.passport-gallery::-webkit-scrollbar-track {
+    background: transparent;
+}
+.passport-gallery::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,0.15);
+    border-radius: 4px;
 }
 
 .badge-wrapper {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 8px;
-    width: 100%;
+    gap: 6px;
+    flex-shrink: 0;
+    width: 65px; /* Shrunk significantly */
+    scroll-snap-align: start;
 }
 
 .badge-item {
     position: relative;
     background: #fff;
-    padding: 6px; /* White border */
+    padding: 5px; /* Smaller white frame */
     width: 100%;
-    aspect-ratio: 1 / 1.1; /* Slightly taller than wide */
+    aspect-ratio: 1 / 1.1;
     box-sizing: border-box;
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     
@@ -692,12 +706,12 @@
 }
 
 .stamp-inner i {
-    font-size: 2.2rem;
+    font-size: 1.8rem;
     color: var(--ink-dark);
 }
 
 .badge-wrapper > span {
-    font-size: 0.65rem;
+    font-size: 0.55rem;
     font-weight: 700;
     color: var(--ink-dark);
     line-height: 1.1;
