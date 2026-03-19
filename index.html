@@ -58,9 +58,14 @@
                 <h2 id="loc-title">The Hidden Bakery</h2>
                 <p id="loc-desc">A local favorite untouched by tourists. Find the hidden entrance behind the old brick wall.</p>
                 
-                <button id="btn-navigate" class="primary-btn">
-                    <i class="fa-solid fa-location-arrow"></i> Navigate Here
-                </button>
+                <div style="display:flex; gap:10px; margin-top:20px;">
+                    <button id="btn-save-itinerary" class="secondary-btn" style="flex:1;">
+                        <i class="fa-regular fa-bookmark"></i> Save
+                    </button>
+                    <button id="btn-navigate" class="primary-btn" style="flex:2;">
+                        <i class="fa-solid fa-location-arrow"></i> Navigate
+                    </button>
+                </div>
             </div>
         </section>
 
@@ -94,6 +99,10 @@
                 <i class="fa-regular fa-user"></i>
                 <span>My Account</span>
             </button>
+            <button class="nav-item" id="nav-itinerary">
+                <i class="fa-solid fa-suitcase"></i>
+                <span>Journey</span>
+            </button>
             <button class="nav-item scan-btn" id="nav-radar">
                 <i class="fa-solid fa-satellite-dish"></i>
             </button>
@@ -109,8 +118,24 @@
         <!-- 6. Modals Container -->
         <div id="modal-container">
             
-
-            
+            <!-- Itinerary Modal -->
+            <div id="itinerary-modal" class="modal-backdrop hidden">
+                <div class="modal-card profile-card" style="height: 85vh; display: flex; flex-direction: column;">
+                    <button class="close-btn" id="close-itinerary-btn"><i class="fa-solid fa-xmark"></i></button>
+                    <div class="profile-header" style="text-align: left; padding: 25px 20px 15px;">
+                        <h2 style="margin-bottom: 5px;">My Journey</h2>
+                        <span class="tag">Curated Secrets</span>
+                    </div>
+                    
+                    <div class="itinerary-list" id="itinerary-list">
+                        <!-- Items injected via JS -->
+                        <div style="color:var(--ink-light); text-align:center; padding: 60px 20px;">
+                            <i class="fa-solid fa-suitcase" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.3;"></i>
+                            <p>Your itinerary is empty.<br>Scan to discover hidden gems!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <!-- Alert Modal -->
             <div id="alert-modal" class="modal-backdrop hidden">
                 <div class="modal-card">

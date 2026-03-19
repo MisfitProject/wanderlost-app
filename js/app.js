@@ -12,6 +12,7 @@ const state = {
     trailPath: null,
     token: localStorage.getItem('wanderlost_token') || null,
     unlockedBadges: JSON.parse(localStorage.getItem('wanderlost_badges')) || [],
+    itinerary: JSON.parse(localStorage.getItem('wanderlost_itinerary')) || [],
     BACKEND_URL: localStorage.getItem('WANDERLOST_BACKEND_OVERRIDE') || 'https://wanderlost-app.onrender.com'
 };
 
@@ -245,17 +246,21 @@ function bindDOM() {
     refs.locTitle = document.getElementById('loc-title');
     refs.locDesc = document.getElementById('loc-desc');
     refs.btnNavigate = document.getElementById('btn-navigate');
+    refs.btnSaveItinerary = document.getElementById('btn-save-itinerary');
     
     refs.scanIndicator = document.getElementById('scan-indicator');
     refs.scanStatusText = document.getElementById('scan-status-text');
     
     refs.btnScan = document.getElementById('nav-radar');
     refs.btnProfile = document.getElementById('nav-profile');
+    refs.btnItinerary = document.getElementById('nav-itinerary');
     refs.btnSettings = document.getElementById('nav-settings-profile');
     refs.btnMap = document.getElementById('nav-map');
     
     refs.modalAlert = document.getElementById('alert-modal');
     refs.modalProfile = document.getElementById('profile-modal');
+    refs.modalItinerary = document.getElementById('itinerary-modal');
+    refs.itineraryList = document.getElementById('itinerary-list');
     refs.modalSettings = document.getElementById('settings-modal');
     refs.modalLegal = document.getElementById('legal-modal');
     refs.modalCheckout = document.getElementById('checkout-modal');
@@ -323,7 +328,7 @@ function setupAlertBinds() {
 // --- NAVIGATION & GESTURES ---
 function setupNavigation() {
     // Nav Active States
-    const navItems = [refs.btnProfile, refs.btnMap];
+    const navItems = [refs.btnProfile, refs.btnItinerary, refs.btnMap];
     navItems.forEach(btn => {
         btn.addEventListener('click', () => {
             navItems.forEach(b => b.classList.remove('active'));
@@ -331,6 +336,14 @@ function setupNavigation() {
             
             if(btn.id === 'nav-profile') {
                 refs.modalProfile.classList.remove('hidden');
+                refs.modalItinerary.classList.add('hidden');
+            } else if (btn.id === 'nav-itinerary') {
+                refs.modalItinerary.classList.remove('hidden');
+                refs.modalProfile.classList.add('hidden');
+                renderItinerary();
+            } else {
+                refs.modalProfile.classList.add('hidden');
+                refs.modalItinerary.classList.add('hidden');
             }
         });
     });
@@ -349,14 +362,14 @@ function setupNavigation() {
     refs.btnNavigate.addEventListener('click', () => {
         const lastNode = state.discoveredNodes[state.discoveredNodes.length - 1];
         if (!lastNode) return;
-        
-        const encoded = encodeURIComponent(lastNode.title);
-        const mapUrl = /iPhone|iPad|iPod/i.test(navigator.userAgent) 
-            ? `http://maps.apple.com/?q=${encoded}&ll=${lastNode.lat},${lastNode.lng}`
-            : `https://www.google.com/maps/search/?api=1&query=${encoded}&query_place_id=${lastNode.placeId}`;
-        
-        window.open(mapUrl, '_blank');
+        routeToLocation(lastNode.lat, lastNode.lng, lastNode.title, lastNode.placeId);
         refs.locationSheet.classList.add('hidden');
+    });
+
+    // Save to Itinerary
+    refs.btnSaveItinerary.addEventListener('click', () => {
+        const lastNode = state.discoveredNodes[state.discoveredNodes.length - 1];
+        if (lastNode) addToItinerary(lastNode);
     });
 
     // Tap outside Bottom Sheet to close
@@ -368,6 +381,12 @@ function setupNavigation() {
     document.getElementById('close-profile-btn').addEventListener('click', () => {
         refs.modalProfile.classList.add('hidden');
         refs.btnProfile.classList.remove('active');
+        refs.btnMap.classList.add('active');
+    });
+
+    document.getElementById('close-itinerary-btn').addEventListener('click', () => {
+        refs.modalItinerary.classList.add('hidden');
+        refs.btnItinerary.classList.remove('active');
         refs.btnMap.classList.add('active');
     });
     
@@ -743,6 +762,74 @@ function displayDiscovery(data, icon) {
     resetScanBtn(icon);
     pushStateToCloud(); // Sync after discovery
 }
+
+// --- EXPLORER ITINERARY MODULE ---
+function routeToLocation(lat, lng, title, placeId) {
+    const encoded = encodeURIComponent(title);
+    const mapUrl = /iPhone|iPad|iPod/i.test(navigator.userAgent) 
+        ? `http://maps.apple.com/?q=${encoded}&ll=${lat},${lng}`
+        : `https://www.google.com/maps/search/?api=1&query=${encoded}&query_place_id=${placeId}`;
+    window.open(mapUrl, '_blank');
+}
+
+function addToItinerary(data) {
+    // 1. Paywall Interceptor
+    if (!state.isSubscribed) {
+        refs.modalCheckout.classList.remove('hidden');
+        return;
+    }
+    
+    // 2. Duplication Lock
+    if (state.itinerary.find(i => i.placeId === data.placeId)) {
+        showModalAlert("This location is already curated in your Journey timeline.", "Already Saved", "fa-bookmark");
+        return;
+    }
+    
+    // 3. Immutable Execution
+    state.itinerary.push(data);
+    localStorage.setItem('wanderlost_itinerary', JSON.stringify(state.itinerary));
+    AudioEngine.playChime();
+    showModalAlert(`"${data.title}" successfully added to your Journey.`, "Saved", "fa-suitcase");
+}
+
+function removeFromItinerary(placeId) {
+    state.itinerary = state.itinerary.filter(i => i.placeId !== placeId);
+    localStorage.setItem('wanderlost_itinerary', JSON.stringify(state.itinerary));
+    renderItinerary();
+}
+
+function renderItinerary() {
+    if (state.itinerary.length === 0) {
+        refs.itineraryList.innerHTML = `
+            <div style="color:var(--ink-light); text-align:center; padding: 60px 20px;">
+                <i class="fa-solid fa-suitcase" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.3;"></i>
+                <p>Your itinerary is empty.<br>Scan to discover hidden gems!</p>
+            </div>
+        `;
+        return;
+    }
+
+    refs.itineraryList.innerHTML = '';
+    state.itinerary.forEach((item, index) => {
+        const el = document.createElement('div');
+        el.className = 'timeline-item';
+        el.innerHTML = `
+            <div class="timeline-dot"></div>
+            <h4 class="timeline-title">${index + 1}. ${item.title}</h4>
+            <p class="timeline-desc">${item.desc}</p>
+            <div class="timeline-actions">
+                <button class="btn-itinerary-nav" onclick="routeToLocation(${item.lat}, ${item.lng}, '${item.title.replace(/'/g, "\\'")}', '${item.placeId}')">
+                    <i class="fa-solid fa-location-arrow"></i> Navigate
+                </button>
+                <button class="btn-itinerary-del" onclick="removeFromItinerary('${item.placeId}')">
+                    <i class="fa-solid fa-trash-can"></i>
+                </button>
+            </div>
+        `;
+        refs.itineraryList.appendChild(el);
+    });
+}
+
 
 function drawTrail() {
     const pathCoordinates = state.discoveredNodes.map(node => ({ lat: node.lat, lng: node.lng }));
