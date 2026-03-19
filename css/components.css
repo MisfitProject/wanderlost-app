@@ -810,3 +810,12 @@
     z-index: 2001 !important;
     box-shadow: 0 0 0 10px rgba(255, 255, 255, 0.2), 0 0 30px rgba(210, 125, 45, 0.8) !important;
 }
+
+.nav-elevated {
+    z-index: 2001 !important;
+}
+
+.pointer-disabled {
+    pointer-events: none !important;
+    opacity: 0.3 !important;
+}

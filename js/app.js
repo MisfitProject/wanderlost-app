@@ -86,7 +86,10 @@ window.addEventListener('DOMContentLoaded', () => {
                 if (refs.onboardingScrim && refs.onboardingTooltip) {
                     refs.onboardingScrim.classList.remove('hidden');
                     refs.onboardingTooltip.classList.remove('hidden');
+                    refs.hudBottom.classList.add('nav-elevated');
                     refs.btnScan.classList.add('relative-z-elevate');
+                    refs.btnProfile.classList.add('pointer-disabled');
+                    refs.btnMap.classList.add('pointer-disabled');
                 }
             }, 600); // wait for splash CSS fade
         }
@@ -638,7 +641,10 @@ function startScan() {
     if (refs.onboardingScrim && !refs.onboardingScrim.classList.contains('hidden')) {
         refs.onboardingScrim.classList.add('hidden');
         refs.onboardingTooltip.classList.add('hidden');
+        refs.hudBottom.classList.remove('nav-elevated');
         refs.btnScan.classList.remove('relative-z-elevate');
+        refs.btnProfile.classList.remove('pointer-disabled');
+        refs.btnMap.classList.remove('pointer-disabled');
         localStorage.setItem('wanderlost_onboarded', 'true');
     }
     
