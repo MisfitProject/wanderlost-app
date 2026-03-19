@@ -753,63 +753,60 @@
     color: #fdfbf7;
 }
 
-/* --- Onboarding Manifesto --- */
-.manifesto-card {
-    text-align: left;
-    background: rgba(253, 251, 247, 0.95);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    border: 1px solid rgba(210, 125, 45, 0.5);
-    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-    padding: 25px;
+/* --- Interactive Contextual Onboarding --- */
+#onboarding-scrim {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    z-index: 2000;
+    transition: opacity 0.5s ease;
 }
 
-.manifesto-title {
-    font-family: var(--font-heading);
-    font-size: 1.8rem;
+#onboarding-tooltip {
+    position: fixed;
+    bottom: 110px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
     color: var(--ink-dark);
+    padding: 12px 20px;
+    border-radius: 20px;
+    font-size: 0.95rem;
+    font-weight: 600;
     text-align: center;
-    margin-bottom: 25px;
-    border-bottom: 1px solid var(--glass-border);
-    padding-bottom: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    z-index: 2002;
+    pointer-events: none;
+    animation: floatBounce 2s infinite ease-in-out;
 }
 
-.manifesto-rule {
-    display: flex;
-    align-items: flex-start;
-    gap: 15px;
-    margin-bottom: 20px;
-}
-
-.manifesto-icon {
-    font-size: 1.6rem;
-    color: var(--vintage-gold);
-    width: 30px;
-    flex-shrink: 0;
-    text-align: center;
-    padding-top: 3px;
-}
-
-.manifesto-text h4 {
-    font-size: 1.1rem;
-    color: var(--ink-dark);
-    margin: 0 0 5px 0;
-}
-
-.manifesto-text p {
-    font-size: 0.9rem;
-    color: var(--ink-light);
+#onboarding-tooltip p {
     margin: 0;
     line-height: 1.4;
 }
 
-.manifesto-btn {
-    margin-top: 15px;
-    width: 100%;
-    background: var(--ink-dark);
-    color: #fff;
-    padding: 14px;
-    font-size: 1.1rem;
-    letter-spacing: 1px;
-    border-radius: 4px;
+.tooltip-arrow {
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid white;
+}
+
+@keyframes floatBounce {
+    0%, 100% { transform: translate(-50%, 0); }
+    50% { transform: translate(-50%, 10px); }
+}
+
+/* Utility to yank the radar button straight through the scrim layer */
+.relative-z-elevate {
+    position: relative !important;
+    z-index: 2001 !important;
+    box-shadow: 0 0 0 10px rgba(255, 255, 255, 0.2), 0 0 30px rgba(210, 125, 45, 0.8) !important;
 }

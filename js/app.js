@@ -80,11 +80,15 @@ window.addEventListener('DOMContentLoaded', () => {
         const splash = document.getElementById('splash-screen');
         if (splash) splash.classList.add('fade-out');
         
-        // Check local memory to conditionally fire Onboarding Manifesto
+        // Contextual Onboarding Hook (Option 2: Forced Interaction)
         if (!localStorage.getItem('wanderlost_onboarded')) {
             setTimeout(() => {
-                refs.tutorialModal.classList.remove('hidden');
-            }, 600); // wait for splash fade
+                if (refs.onboardingScrim && refs.onboardingTooltip) {
+                    refs.onboardingScrim.classList.remove('hidden');
+                    refs.onboardingTooltip.classList.remove('hidden');
+                    refs.btnScan.classList.add('relative-z-elevate');
+                }
+            }, 600); // wait for splash CSS fade
         }
     }, 3200);
 });
@@ -254,8 +258,9 @@ function bindDOM() {
     refs.modalCheckout = document.getElementById('checkout-modal');
     refs.modalSafety = document.getElementById('safety-modal');
     refs.modalAuth = document.getElementById('auth-modal');
-    refs.tutorialModal = document.getElementById('tutorial-modal');
-    refs.btnAcceptJourney = document.getElementById('btn-accept-journey');
+    
+    refs.onboardingScrim = document.getElementById('onboarding-scrim');
+    refs.onboardingTooltip = document.getElementById('onboarding-tooltip');
     
     refs.authEmail = document.getElementById('auth-email');
     refs.authPassword = document.getElementById('auth-password');
@@ -314,15 +319,6 @@ function setupAlertBinds() {
 
 // --- NAVIGATION & GESTURES ---
 function setupNavigation() {
-    // Onboarding Button
-    if (refs.btnAcceptJourney) {
-        refs.btnAcceptJourney.addEventListener('click', () => {
-            localStorage.setItem('wanderlost_onboarded', 'true');
-            refs.tutorialModal.classList.add('hidden');
-            if (window.playUnlockChime) window.playUnlockChime();
-        });
-    }
-
     // Nav Active States
     const navItems = [refs.btnProfile, refs.btnMap];
     navItems.forEach(btn => {
@@ -638,6 +634,19 @@ function awardBadge(type) {
 
 // --- INTELLIGENCE ENGINE (DISCOVERY) ---
 function startScan() {
+    // 0. Contextual Onboarding Dismissal Hook
+    if (refs.onboardingScrim && !refs.onboardingScrim.classList.contains('hidden')) {
+        refs.onboardingScrim.classList.add('hidden');
+        refs.onboardingTooltip.classList.add('hidden');
+        refs.btnScan.classList.remove('relative-z-elevate');
+        localStorage.setItem('wanderlost_onboarded', 'true');
+    }
+    
+    // Physical hardware haptic response to Scan execution
+    if (navigator.vibrate) {
+        navigator.vibrate([100, 50, 100, 50, 200]);
+    }
+
     // 1. Safety Check (App Store Compliance)
     if (!localStorage.getItem('wanderlost_safety_accepted')) {
         refs.modalSafety.classList.remove('hidden');

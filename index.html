@@ -81,8 +81,14 @@
             <button class="cat-pill" data-type="tourist_attraction">Attractions <i class="fa-solid fa-lock premium-lock"></i></button>
         </div>
 
-        <!-- Fixed Bottom Navigation Bar -->
+        <!-- Interactive Contextual Onboarding -->
+        <div id="onboarding-scrim" class="hidden"></div>
+        <div id="onboarding-tooltip" class="hidden">
+            <p>Tap to scan your surroundings<br>and reveal your first gem.</p>
+            <div class="tooltip-arrow"></div>
+        </div>
 
+        <!-- Fixed Bottom Navigation Bar -->
         <nav id="bottom-nav">
             <button class="nav-item" id="nav-profile">
                 <i class="fa-regular fa-user"></i>
@@ -103,38 +109,7 @@
         <!-- 6. Modals Container -->
         <div id="modal-container">
             
-            <!-- Onboarding Manifesto Modal -->
-            <div id="tutorial-modal" class="modal-backdrop hidden" style="z-index: 3000;">
-                <div class="modal-card manifesto-card">
-                    <h2 class="manifesto-title">The Wanderløst Manifesto</h2>
-                    
-                    <div class="manifesto-rule">
-                        <div class="manifesto-icon"><i class="fa-solid fa-moon"></i></div>
-                        <div class="manifesto-text">
-                            <h4>The Hidden Map</h4>
-                            <p>The city is currently shrouded in darkness. Physically walk outside to reveal the map with your GPS spotlight.</p>
-                        </div>
-                    </div>
 
-                    <div class="manifesto-rule">
-                        <div class="manifesto-icon"><i class="fa-solid fa-satellite-dish"></i></div>
-                        <div class="manifesto-text">
-                            <h4>The Radar Scanner</h4>
-                            <p>Tap the central <b>Scan</b> button below to unveil highly-rated, secret local gems hidden within your radius.</p>
-                        </div>
-                    </div>
-
-                    <div class="manifesto-rule">
-                        <div class="manifesto-icon"><i class="fa-regular fa-user"></i></div>
-                        <div class="manifesto-text">
-                            <h4>The Digital Passport</h4>
-                            <p>Tap the <b>My Account</b> button on the bottom left to view the exclusive postal stamps you collect by visiting locations.</p>
-                        </div>
-                    </div>
-
-                    <button id="btn-accept-journey" class="primary-btn manifesto-btn">I Accept the Journey</button>
-                </div>
-            </div>
             
             <!-- Alert Modal -->
             <div id="alert-modal" class="modal-backdrop hidden">
