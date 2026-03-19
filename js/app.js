@@ -89,28 +89,88 @@ window.initMapData = function() {
     window.map = new google.maps.Map(document.getElementById('map-bg'), {
         center: center,
         zoom: 14,
-        disableDefaultUI: true,
-        styles: [
-            {elementType: 'geometry', stylers: [{color: '#f5f5f5'}]},
-            {elementType: 'labels.icon', stylers: [{visibility: 'off'}]},
-            {elementType: 'labels.text.fill', stylers: [{color: '#9e9e9e'}]},
-            {elementType: 'labels.text.stroke', stylers: [{color: '#f5f5f5'}]},
-            {featureType: 'administrative.land_parcel', elementType: 'labels.text.fill', stylers: [{color: '#bdbdbd'}]},
-            {featureType: 'poi', elementType: 'geometry', stylers: [{color: '#eeeeee'}]},
-            {featureType: 'poi', elementType: 'labels.text.fill', stylers: [{color: '#757575'}]},
-            {featureType: 'poi.park', elementType: 'geometry', stylers: [{color: '#e5e5e5'}]},
-            {featureType: 'poi.park', elementType: 'labels.text.fill', stylers: [{color: '#9e9e9e'}]},
-            {featureType: 'road', elementType: 'geometry', stylers: [{color: '#ffffff'}]},
-            {featureType: 'road.arterial', elementType: 'labels.text.fill', stylers: [{color: '#757575'}]},
-            {featureType: 'road.highway', elementType: 'geometry', stylers: [{color: '#dadada'}]},
-            {featureType: 'road.highway', elementType: 'labels.text.fill', stylers: [{color: '#616161'}]},
-            {featureType: 'road.local', elementType: 'labels.text.fill', stylers: [{color: '#9e9e9e'}]},
-            {featureType: 'transit.line', elementType: 'geometry', stylers: [{color: '#e5e5e5'}]},
-            {featureType: 'transit.station', elementType: 'geometry', stylers: [{color: '#eeeeee'}]},
-            {featureType: 'water', elementType: 'geometry', stylers: [{color: '#c9c9c9'}]},
-            {featureType: 'water', elementType: 'labels.text.fill', stylers: [{color: '#9e9e9e'}]}
-        ]
+        disableDefaultUI: true
     });
+    
+    class FogOfWarEngine {
+        constructor(map) {
+            this.map = map;
+            this.radius = 350; // 350 meters visibility
+            this.darkOverlay = null;
+            this.userMarker = null;
+            
+            // Massive globe-spanning bounds (Clockwise)
+            this.outerBounds = [
+                { lat: 85, lng: -180 },
+                { lat: -85, lng: -180 },
+                { lat: -85, lng: 180 },
+                { lat: 85, lng: 180 },
+                { lat: 85, lng: -180 }
+            ];
+        }
+
+        init() {
+            this.darkOverlay = new google.maps.Polygon({
+                paths: [this.outerBounds],
+                strokeWeight: 0,
+                fillColor: '#0a0a0a', /* Nearly pitch black */
+                fillOpacity: 0.9, /* 90% opacity */
+                map: this.map,
+                clickable: false,
+                zIndex: 1
+            });
+            
+            // Initiate live tracking
+            if ("geolocation" in navigator) {
+                navigator.geolocation.watchPosition(
+                    (pos) => this.updateMask({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+                    (err) => console.warn('FogOfWar GPS tracking error:', err),
+                    { enableHighAccuracy: true, maximumAge: 5000, timeout: 10000 }
+                );
+            }
+        }
+        
+        updateMask(userLatLng) {
+            if (!this.darkOverlay) return;
+            
+            // Generate a 350m inner ring (Counter-Clockwise geometry to carve hole)
+            const innerHole = [];
+            const vertexCount = 40;
+            for (let i = 0; i < vertexCount; i++) {
+                const heading = 360 - (i * (360 / vertexCount));
+                const point = google.maps.geometry.spherical.computeOffset(userLatLng, this.radius, heading);
+                innerHole.push(point);
+            }
+            
+            // Refresh polygon overlay paths
+            this.darkOverlay.setPaths([this.outerBounds, innerHole]);
+            
+            // Maintain physical user beacon 
+            if (!this.userMarker) {
+                this.userMarker = new google.maps.Marker({
+                    position: userLatLng,
+                    map: this.map,
+                    icon: {
+                        path: google.maps.SymbolPath.CIRCLE,
+                        scale: 7,
+                        fillColor: '#4285F4',
+                        fillOpacity: 1,
+                        strokeColor: '#ffffff',
+                        strokeWeight: 2.5
+                    },
+                    zIndex: 999
+                });
+            } else {
+                this.userMarker.setPosition(userLatLng);
+            }
+        }
+    }
+    
+    // Boot Engine if Geo-sphere limits are loaded 
+    if (google.maps.geometry && google.maps.geometry.spherical) {
+        window.fogEngine = new FogOfWarEngine(window.map);
+        window.fogEngine.init();
+    }
 
     window.CustomMarker = class extends google.maps.OverlayView {
         constructor(latlng, map, isPulse) {
