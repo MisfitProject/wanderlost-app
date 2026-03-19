@@ -683,7 +683,7 @@ function startScan() {
 }
 
 async function executeDiscovery(lat, lng, icon, category) {
-    refs.scanStatusText.textContent = "Connecting to Rig...";
+    refs.scanStatusText.textContent = "Uncovering local secrets...";
     
     try {
         const response = await fetch(`${state.BACKEND_URL}/api/discover`, {
@@ -695,14 +695,14 @@ async function executeDiscovery(lat, lng, icon, category) {
         const result = await response.json();
         
         if (result.success) {
-            refs.scanStatusText.textContent = "Manifesting...";
+            refs.scanStatusText.textContent = "Decoding hidden gems...";
             setTimeout(() => displayDiscovery(result.data, icon), 1000);
         } else {
             showModalAlert(result.message || "No secrets found here.", "Scanner Empty", "fa-ghost");
             resetScanBtn(icon);
         }
     } catch (err) {
-        showModalAlert("Connection to Intelligence Rig lost.", "Uplink Failed", "fa-tower-broadcast");
+        showModalAlert("Unable to reach the Discovery Engine. Check your connection.", "Connection Error", "fa-wifi");
         resetScanBtn(icon);
     }
 }

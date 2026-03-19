@@ -157,56 +157,23 @@ app.post('/api/discover', async (req, res) => {
         const strippedId = target.id.replace('places/', '');
         console.log(`[🎯 TARGET ACQUIRED] ${target.displayName.text}`);
 
-        // 3. AI VALIDATION PREP (Get Reviews)
-        const detailsResponse = await axios.get(
-            `https://maps.googleapis.com/maps/api/place/details/json?place_id=${strippedId}&fields=reviews&key=${GOOGLE_KEY}`
-        );
-
-        const reviews = detailsResponse.data.result.reviews || [];
-        const combinedReviews = reviews.map(r => r.text).join("\n\n---\n\n");
-
-        // 4. AI VALIDATION (Is it a tourist trap?)
-        let aiAnalysis = { isLocal: true, reason: "Verified via high community authenticity score." };
-
-        try {
-            const aiResponse = await axios.post(AI_RIG_URL, {
-                model: AI_MODEL,
-                prompt: `Quantify the "Local Gem" status of this location based on these reviews:\n${combinedReviews}\nMandatory JSON Output: {"isLocal": boolean, "reason": "1-sentence explaination"}.`,
-                stream: false,
-                format: 'json',
-                options: { temperature: 0.1 }
-            }, { timeout: 6000 });
-
-            if (aiResponse.data && aiResponse.data.response) {
-                const parsed = JSON.parse(aiResponse.data.response);
-                if (typeof parsed.isLocal !== 'undefined') aiAnalysis = parsed;
+        // 3. RAPID RESPONSE
+        console.log(`[✅ SUCCESS] Delivery: ${target.displayName.text}`);
+        res.json({
+            success: true,
+            data: {
+                id: strippedId,
+                title: target.displayName.text,
+                desc: target.editorialSummary?.text || "A highly-rated local gem discovered off the beaten path.",
+                lat: target.location.latitude,
+                lng: target.location.longitude,
+                placeId: strippedId
             }
-        } catch (aiError) {
-            console.warn(`[⚠️ AI WARN] Analysis Rig Timeout. Proceeding with raw data.`);
-        }
-
-        // 5. RESPONSE
-        if (aiAnalysis.isLocal) {
-            console.log(`[✅ SUCCESS] Delivery: ${target.displayName.text}`);
-            res.json({
-                success: true,
-                data: {
-                    id: strippedId,
-                    title: target.displayName.text,
-                    desc: target.editorialSummary?.text || aiAnalysis.reason,
-                    lat: target.location.latitude,
-                    lng: target.location.longitude,
-                    placeId: strippedId
-                }
-            });
-        } else {
-            console.log(`[❌ FILTERED] Failed AI Culture Check.`);
-            res.json({ success: false, message: "Area currently showing heavy tourist activity. Try another scan." });
-        }
+        });
 
     } catch (error) {
-        console.error(`[🔥 FATAL] Rig Error:`, error.message);
-        res.status(500).json({ success: false, message: "Intelligence Rig internal error." });
+        console.error(`[🔥 FATAL] Search Engine Failure:`, error.message);
+        res.status(500).json({ success: false, message: "Discovery Engine internal error." });
     }
 });
 
