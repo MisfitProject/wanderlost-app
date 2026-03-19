@@ -824,18 +824,107 @@ function renderItinerary() {
             <div class="timeline-dot"></div>
             <h4 class="timeline-title">${index + 1}. ${item.title}</h4>
             <p class="timeline-desc">${item.desc}</p>
+            
+            <!-- Photo Journal Memory Anchor -->
+            <div id="photo-container-${item.placeId}" style="margin-bottom: 15px;">
+                <img id="img-${item.placeId}" class="shared-photo hidden" style="width:100%; border-radius:8px; margin-bottom:10px; border:1px solid var(--glass-border); box-shadow:0 4px 10px rgba(0,0,0,0.1);">
+                <label for="upload-${item.placeId}" class="secondary-btn" style="display:inline-block; font-size:0.8rem; padding:6px 12px; cursor:pointer;">
+                    <i class="fa-solid fa-camera"></i> Capture Memory
+                </label>
+                <input type="file" id="upload-${item.placeId}" accept="image/*" capture="environment" style="display:none;" onchange="handlePhotoUpload(event, '${item.placeId}')">
+                <button id="del-photo-${item.placeId}" class="hidden" style="background:none; border:none; color:var(--accent-red); margin-left:10px; cursor:pointer;" onclick="removePhoto('${item.placeId}')"><i class="fa-solid fa-trash-can"></i></button>
+            </div>
+
             <div class="timeline-actions">
                 <button class="btn-itinerary-nav" onclick="routeToLocation(${item.lat}, ${item.lng}, '${item.title.replace(/'/g, "\\'")}', '${item.placeId}')">
                     <i class="fa-solid fa-location-arrow"></i> Navigate
                 </button>
                 <button class="btn-itinerary-del" onclick="removeFromItinerary('${item.placeId}')">
-                    <i class="fa-solid fa-trash-can"></i>
+                    <i class="fa-solid fa-trash-can"></i> Remove
                 </button>
             </div>
         `;
         refs.itineraryList.appendChild(el);
+
+        // Asynchronous IDB Image Hook
+        getPhoto(item.placeId, (base64) => {
+            if (base64) {
+                document.getElementById(`img-${item.placeId}`).src = base64;
+                document.getElementById(`img-${item.placeId}`).classList.remove('hidden');
+                document.querySelector(`label[for="upload-${item.placeId}"]`).classList.add('hidden');
+                document.getElementById(`del-photo-${item.placeId}`).classList.remove('hidden');
+            }
+        });
     });
 }
+
+// --- PHOTO JOURNALING DB PROTOCOLS (IndexedDB) ---
+const DB_NAME = 'WanderlostJournalDB';
+const DB_VERSION = 1;
+let journalDB;
+
+function initJournalDB() {
+    const request = indexedDB.open(DB_NAME, DB_VERSION);
+    request.onupgradeneeded = (e) => {
+        journalDB = e.target.result;
+        if (!journalDB.objectStoreNames.contains('photos')) {
+            journalDB.createObjectStore('photos', { keyPath: 'placeId' });
+        }
+    };
+    request.onsuccess = (e) => { journalDB = e.target.result; };
+    request.onerror = (e) => console.error("Wanderløst IDB Error:", e);
+}
+
+// Fire init
+initJournalDB();
+
+function savePhoto(placeId, base64Data) {
+    if (!journalDB) return;
+    const tx = journalDB.transaction('photos', 'readwrite');
+    tx.objectStore('photos').put({ placeId, data: base64Data });
+    tx.oncomplete = () => {
+        showModalAlert("Memory successfully encoded into your private local Journal.", "Photo Saved", "fa-camera");
+        renderItinerary();
+    };
+}
+
+function deletePhoto(placeId, callback) {
+    if (!journalDB) return;
+    const tx = journalDB.transaction('photos', 'readwrite');
+    tx.objectStore('photos').delete(placeId);
+    tx.oncomplete = () => { if(callback) callback(); };
+}
+
+function getPhoto(placeId, callback) {
+    if (!journalDB) { callback(null); return; }
+    const tx = journalDB.transaction('photos', 'readonly');
+    const req = tx.objectStore('photos').get(placeId);
+    req.onsuccess = () => { callback(req.result ? req.result.data : null); };
+    req.onerror = () => { callback(null); };
+}
+
+// Global Handlers for inline HTML execution
+window.handlePhotoUpload = (event, placeId) => {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    // Resize payload verification
+    if (file.size > 5 * 1024 * 1024) {
+        showModalAlert("Please choose an image under 5MB to preserve local database stability.", "Image Too Large", "fa-triangle-exclamation");
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        const base64Data = e.target.result;
+        savePhoto(placeId, base64Data);
+    };
+    reader.readAsDataURL(file);
+};
+
+window.removePhoto = (placeId) => {
+    deletePhoto(placeId, () => { renderItinerary(); });
+};
 
 
 function drawTrail() {
