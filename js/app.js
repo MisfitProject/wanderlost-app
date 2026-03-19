@@ -501,7 +501,7 @@ function setupNavigation() {
     });
     
     document.getElementById('set-support').addEventListener('click', () => {
-        window.location.href = "mailto:support@wonderlost.com?subject=Wanderløst%20Support%20Request";
+        window.location.href = "mailto:info@belleluxe24.store?subject=Wanderløst%20Support%20Request";
     });
 
     document.getElementById('set-tos').addEventListener('click', () => { refs.modalTOS.classList.remove('hidden'); });
