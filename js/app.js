@@ -683,7 +683,7 @@ function startScan() {
 }
 
 async function executeDiscovery(lat, lng, icon, category) {
-    refs.scanStatusText.textContent = "Uncovering local secrets...";
+    refs.scanStatusText.textContent = "Searching for top niche places...";
     
     try {
         const response = await fetch(`${state.BACKEND_URL}/api/discover`, {
