@@ -328,7 +328,7 @@ function setupAlertBinds() {
 // --- NAVIGATION & GESTURES ---
 function setupNavigation() {
     // Nav Active States
-    const navItems = [refs.btnProfile, refs.btnItinerary, refs.btnMap];
+    const navItems = [refs.btnProfile, refs.btnMap];
     navItems.forEach(btn => {
         btn.addEventListener('click', () => {
             navItems.forEach(b => b.classList.remove('active'));
@@ -337,15 +337,18 @@ function setupNavigation() {
             if(btn.id === 'nav-profile') {
                 refs.modalProfile.classList.remove('hidden');
                 refs.modalItinerary.classList.add('hidden');
-            } else if (btn.id === 'nav-itinerary') {
-                refs.modalItinerary.classList.remove('hidden');
-                refs.modalProfile.classList.add('hidden');
-                renderItinerary();
             } else {
                 refs.modalProfile.classList.add('hidden');
                 refs.modalItinerary.classList.add('hidden');
             }
         });
+    });
+
+    // Profile Modal -> Itinerary Modal Router
+    refs.btnItinerary.addEventListener('click', () => {
+        refs.modalProfile.classList.add('hidden');
+        refs.modalItinerary.classList.remove('hidden');
+        renderItinerary();
     });
 
     // Relocated Settings Gear (Inside Profile Modal)
@@ -386,8 +389,7 @@ function setupNavigation() {
 
     document.getElementById('close-itinerary-btn').addEventListener('click', () => {
         refs.modalItinerary.classList.add('hidden');
-        refs.btnItinerary.classList.remove('active');
-        refs.btnMap.classList.add('active');
+        refs.modalProfile.classList.remove('hidden'); // Return directly to Profile module
     });
     
     document.getElementById('close-settings-btn').addEventListener('click', () => {
