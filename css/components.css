@@ -752,3 +752,64 @@
 .badge-item.unlocked .stamp-price {
     color: #fdfbf7;
 }
+
+/* --- Onboarding Manifesto --- */
+.manifesto-card {
+    text-align: left;
+    background: rgba(253, 251, 247, 0.95);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(210, 125, 45, 0.5);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    padding: 25px;
+}
+
+.manifesto-title {
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    color: var(--ink-dark);
+    text-align: center;
+    margin-bottom: 25px;
+    border-bottom: 1px solid var(--glass-border);
+    padding-bottom: 15px;
+}
+
+.manifesto-rule {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.manifesto-icon {
+    font-size: 1.6rem;
+    color: var(--vintage-gold);
+    width: 30px;
+    flex-shrink: 0;
+    text-align: center;
+    padding-top: 3px;
+}
+
+.manifesto-text h4 {
+    font-size: 1.1rem;
+    color: var(--ink-dark);
+    margin: 0 0 5px 0;
+}
+
+.manifesto-text p {
+    font-size: 0.9rem;
+    color: var(--ink-light);
+    margin: 0;
+    line-height: 1.4;
+}
+
+.manifesto-btn {
+    margin-top: 15px;
+    width: 100%;
+    background: var(--ink-dark);
+    color: #fff;
+    padding: 14px;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+    border-radius: 4px;
+}
