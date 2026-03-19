@@ -262,7 +262,8 @@ function bindDOM() {
     refs.modalItinerary = document.getElementById('itinerary-modal');
     refs.itineraryList = document.getElementById('itinerary-list');
     refs.modalSettings = document.getElementById('settings-modal');
-    refs.modalLegal = document.getElementById('legal-modal');
+    refs.modalTOS = document.getElementById('tos-modal');
+    refs.modalPrivacy = document.getElementById('privacy-modal');
     refs.modalCheckout = document.getElementById('checkout-modal');
     refs.modalSafety = document.getElementById('safety-modal');
     refs.modalAuth = document.getElementById('auth-modal');
@@ -397,8 +398,12 @@ function setupNavigation() {
         // Do not alter nav bar active states, since Settings is now a sub-modal of Profile
     });
     
-    document.getElementById('close-legal-btn').addEventListener('click', () => {
-        refs.modalLegal.classList.add('hidden');
+    document.getElementById('close-tos-btn').addEventListener('click', () => {
+        refs.modalTOS.classList.add('hidden');
+    });
+
+    document.getElementById('close-privacy-btn').addEventListener('click', () => {
+        refs.modalPrivacy.classList.add('hidden');
     });
     
     document.getElementById('close-checkout-btn').addEventListener('click', () => {
@@ -499,8 +504,8 @@ function setupNavigation() {
         window.location.href = "mailto:support@wonderlost.com?subject=Wanderløst%20Support%20Request";
     });
 
-    document.getElementById('set-tos').addEventListener('click', () => { refs.modalLegal.classList.remove('hidden'); });
-    document.getElementById('set-privacy').addEventListener('click', () => { refs.modalLegal.classList.remove('hidden'); });
+    document.getElementById('set-tos').addEventListener('click', () => { refs.modalTOS.classList.remove('hidden'); });
+    document.getElementById('set-privacy').addEventListener('click', () => { refs.modalPrivacy.classList.remove('hidden'); });
     
     document.getElementById('set-google-licenses').addEventListener('click', () => {
         showModalAlert("Map data ©2026 Google. Powered by Google Maps Platform.", "Third-Party Credits", "fa-google");
