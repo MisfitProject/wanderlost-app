@@ -54,6 +54,30 @@ const state = {
     BACKEND_URL: 'https://wanderlost-app.onrender.com' 
 };
 
+// Global Modal Helpers for Tailwind sliding modals
+window.openModal = function(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.classList.remove('hidden');
+    // Small delay so the browser registers the element before animating
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+            el.classList.remove('translate-y-full');
+            el.classList.add('translate-y-0');
+        });
+    });
+};
+
+window.closeModal = function(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.classList.add('translate-y-full');
+    el.classList.remove('translate-y-0');
+    setTimeout(() => {
+        el.classList.add('hidden');
+    }, 500); // match the duration-500 transition
+};
+
 // Custom Modal System (To hide domain and match aesthetic)
 function showAlert(message, title = "Notice", icon = "fa-circle-info") {
     const modal = document.getElementById('custom-modal');
@@ -192,12 +216,7 @@ function init() {
     const openProfile = (e) => {
         if (e) { e.preventDefault(); e.stopPropagation(); }
         console.log("Opening Profile (Priority Handler)...");
-        if (modalProfile) {
-            modalProfile.classList.remove('hidden');
-            modalProfile.style.display = 'flex';
-            modalProfile.style.opacity = '1';
-            modalProfile.style.pointerEvents = 'auto';
-        }
+        openModal('profile-modal');
     };
 
     if (profileBtn) {
@@ -215,12 +234,12 @@ function init() {
     });
 
     // Close Buttons
-    if (btnCloseProfile) btnCloseProfile.onclick = () => modalProfile.classList.add('hidden');
-    if (btnCloseSub) btnCloseSub.onclick = () => modalSub.classList.add('hidden');
-    if (btnCloseLegal) btnCloseLegal.onclick = () => modalLegal.classList.add('hidden');
+    if (btnCloseProfile) btnCloseProfile.onclick = () => closeModal('profile-modal');
+    if (btnCloseSub) btnCloseSub.onclick = () => closeModal('subscription-modal');
+    if (btnCloseLegal) btnCloseLegal.onclick = () => closeModal('legal-modal');
     if (btnCloseCheckout) btnCloseCheckout.onclick = () => {
-        modalCheckout.classList.add('hidden');
-        if (previousModalForCheckout) previousModalForCheckout.classList.remove('hidden');
+        closeModal('checkout-modal');
+        if (previousModalForCheckout) openModal(previousModalForCheckout.id);
     };
 
     // The core scan function — called only after user approves location
@@ -348,14 +367,14 @@ ${state.BACKEND_URL}`, "Connection Error", "fa-tower-broadcast");
         if(state.isSubscribed) {
             await showAlert("Active Status: Wanderløst Elite", "Already Member", "fa-user-check");
         } else {
-            if (modalSub) modalSub.classList.remove('hidden');
+            if (modalSub) openModal('subscription-modal');
         }
     });
 
     safeBind('subscribe-now-btn', 'click', () => {
         previousModalForCheckout = modalSub;
-        if (modalSub) modalSub.classList.add('hidden');
-        if (modalCheckout) modalCheckout.classList.remove('hidden');
+        if (modalSub) closeModal('subscription-modal');
+        if (modalCheckout) openModal('checkout-modal');
     });
 
     // Payment Logic
@@ -374,7 +393,7 @@ ${state.BACKEND_URL}`, "Connection Error", "fa-tower-broadcast");
             if (spinner) spinner.classList.add('hidden');
             state.isSubscribed = true;
             setTimeout(async () => {
-                if (modalCheckout) modalCheckout.classList.add('hidden');
+                if (modalCheckout) closeModal('checkout-modal');
                 await showAlert("Welcome to Elite.", "Membership Active", "fa-crown");
                 if (btnConfirmPayment) {
                     btnConfirmPayment.disabled = false;
@@ -387,15 +406,15 @@ ${state.BACKEND_URL}`, "Connection Error", "fa-tower-broadcast");
     // Footer Links (Safe Bindings)
     safeBind('manage-payments-btn', 'click', async () => {
         if(state.isSubscribed) await showAlert("Plan: Elite\nRenewal: Monthly", "Subscription", "fa-credit-card");
-        else { 
-            if (modalProfile) modalProfile.classList.add('hidden'); 
-            if (modalSub) modalSub.classList.remove('hidden'); 
+         else { 
+            closeModal('profile-modal'); 
+            openModal('subscription-modal'); 
         }
     });
     
     safeBind('terms-btn', 'click', () => {
-        if (modalProfile) modalProfile.classList.add('hidden');
-        if (modalLegal) modalLegal.classList.remove('hidden');
+        closeModal('profile-modal');
+        openModal('legal-modal');
     });
 
     safeBind('cancel-membership-btn', 'click', async () => {
@@ -540,7 +559,7 @@ window.gm_authFailure = hideGoogleWatermarks;
 function revealNextNode() {
     if (state.currentNodeIndex >= state.nodes.length - 1) {
         // Out of places, prompt subscription or end
-        modalSub.classList.remove('hidden');
+        openModal('subscription-modal');
         idlePrompt.innerHTML = '<h3>Out of free hints</h3><p>Subscribe to discover more!</p><button id="settings-btn" class="primary-btn gold-btn glow-btn-gold">Upgrade Now</button>';
         return;
     }
@@ -564,19 +583,22 @@ function showLocationDetails(node) {
     
     // If it's visited, hide the primary "Ready to go" button to indicate history
     if(node.status === 'visited') {
-        btnReady.style.display = 'none';
-        document.querySelector('.card-header .tag').textContent = 'Visited';
-        document.querySelector('.card-header .tag').style.color = 'var(--text-secondary)';
-        document.querySelector('.card-header .tag').style.borderColor = 'var(--text-secondary)';
+        btnReady.classList.add('hidden');
+        document.querySelector('#location-card .tag').textContent = 'Visited';
     } else {
-        btnReady.style.display = 'flex';
-        document.querySelector('.card-header .tag').textContent = 'New Discovery';
-        document.querySelector('.card-header .tag').style.color = 'var(--accent-vintage)';
-        document.querySelector('.card-header .tag').style.borderColor = 'var(--accent-vintage)';
+        btnReady.classList.remove('hidden');
+        document.querySelector('#location-card .tag').textContent = 'Discovery';
     }
     
+    // Use Tailwind translation for the bottom sheet
+    locationCard.classList.remove('hidden'); // Ensure it's in the DOM
+    // Small delay to allow CSS transition to catch
+    setTimeout(() => {
+        locationCard.classList.remove('translate-y-full');
+        locationCard.classList.add('translate-y-0');
+    }, 10);
+    
     idlePrompt.classList.add('hidden');
-    locationCard.classList.remove('hidden');
 }
 
 function completeCurrentLocation() {
@@ -586,10 +608,16 @@ function completeCurrentLocation() {
     state.placesVisited++;
     updateProgress();
     
-    renderNodes();
+    renderNodes(); // visual update
 
-    locationCard.classList.add('hidden');
-    idlePrompt.classList.remove('hidden');
+    // Dismiss Tailwind sheet
+    locationCard.classList.add('translate-y-full');
+    locationCard.classList.remove('translate-y-0');
+    
+    setTimeout(() => {
+        locationCard.classList.add('hidden');
+        idlePrompt.classList.remove('hidden');
+    }, 500);
 }
 
 function updateProgress() {

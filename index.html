@@ -159,11 +159,11 @@
                 <span class="material-symbols-outlined mb-1">menu_book</span>
                 <span class="font-sans text-[10px] tracking-widest uppercase">Journal</span>
             </button>
-            <button class="flex flex-col items-center justify-center text-[#5F5E5E] hover:text-[#735C00] transition-colors opacity-70" onclick="document.getElementById('legal-modal').classList.remove('hidden')">
+            <button class="flex flex-col items-center justify-center text-[#5F5E5E] hover:text-[#735C00] transition-colors opacity-70" onclick="openModal('legal-modal')">
                 <span class="material-symbols-outlined mb-1">gpp_good</span>
                 <span class="font-sans text-[10px] tracking-widest uppercase">Safety</span>
             </button>
-            <button class="flex flex-col items-center justify-center text-[#5F5E5E] hover:text-[#735C00] transition-colors opacity-70" onclick="document.getElementById('profile-modal').classList.remove('hidden')">
+            <button class="flex flex-col items-center justify-center text-[#5F5E5E] hover:text-[#735C00] transition-colors opacity-70" onclick="openModal('profile-modal')">
                 <span class="material-symbols-outlined mb-1">person</span>
                 <span class="font-sans text-[10px] tracking-widest uppercase">Profile</span>
             </button>
@@ -195,14 +195,63 @@
         </div>
 
         <!-- Subscription Modal -->
-        <div id="subscription-modal" class="modal-backdrop hidden fixed inset-0 z-[110] bg-black/60 backdrop-blur-sm flex items-center justify-center">
-            <div class="modal-content bg-surface p-8 max-w-sm w-[90%] relative shadow-2xl border border-outline-variant/30">
-                <button class="close-btn absolute top-4 right-4 text-xl" onclick="this.closest('.modal-backdrop').classList.add('hidden')"><i class="fa-solid fa-xmark"></i></button>
-                <div class="text-center">
-                    <i class="fa-solid fa-gem text-3xl text-primary-container mb-4"></i>
-                    <h2 class="font-serif text-2xl mb-2"><span class="elegant-w tracking-[-1px]">W</span>anderløst Elite</h2>
-                    <p class="text-sm text-secondary mb-6">Unlock unlimited AI discoveries.</p>
-                    <button id="subscribe-now-btn" class="w-full bg-primary-container text-on-primary-container py-3 font-bold uppercase tracking-widest text-xs">Subscribe Now</button>
+        <!-- Subscription Modal (Stitch Layout) -->
+        <div id="subscription-modal" class="fixed inset-0 z-[120] flex items-center justify-center p-4 sm:p-6 bg-on-surface/10 backdrop-blur-sm transform translate-y-full transition-transform duration-500 pointer-events-auto hidden">
+            <!-- Modal Container -->
+            <div class="relative w-full max-w-4xl bg-surface-container-lowest shadow-2xl flex flex-col md:flex-row overflow-hidden border border-outline-variant/20 max-h-[90vh] overflow-y-auto">
+                <!-- Close Button -->
+                <button class="absolute top-6 right-6 z-20 text-secondary hover:text-on-surface transition-colors" onclick="closeModal('subscription-modal')">
+                    <span class="material-symbols-outlined text-2xl">close</span>
+                </button>
+                
+                <!-- Visual Side (Left) -->
+                <div class="hidden md:block md:w-5/12 relative bg-surface-container">
+                    <img class="absolute inset-0 w-full h-full object-cover" data-alt="dramatic aerial view" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDR2pcdkAvsm7erOFslp8-irFmg-D0oUliN9yiXJv4BUfGvhzVZVt0TwUXDZfGop7kx5MXlj0EIIRhucVVLUt7fXrG2QQzFxZF8Qf8wQh6q-K5x57Vw_bSeygB_OgPoRCZBWXEuv0pmKNzFEnqRCTzXXIeCtCDeAIgHn2TUzPGGbbhONQsCRVhh0SPqVYH_DhE_wXamazI2gv_opMpIU-p_3DFLBDxvWNnLFdr3lLIMvUii5tjqbvmC2v73bP93OweBi8xkgO8PS2g"/>
+                    <div class="absolute inset-0 bg-primary/10 mix-blend-multiply"></div>
+                    <div class="absolute bottom-10 left-10 right-10">
+                        <p class="font-serif italic text-xl text-white leading-relaxed">
+                            "The journey of a thousand miles begins with a single step into the unknown."
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- Content Side (Right) -->
+                <div class="w-full md:w-7/12 p-8 md:p-16 flex flex-col justify-center">
+                    <!-- Brand Anchor -->
+                    <div class="mb-12">
+                        <span class="font-label text-[10px] tracking-[0.2em] uppercase text-primary font-semibold mb-4 block">Membership</span>
+                        <h2 class="font-serif text-4xl md:text-5xl text-on-surface leading-tight mb-6">
+                            Wanderløst Elite
+                        </h2>
+                        <p class="text-secondary text-lg font-light leading-relaxed max-w-md">
+                            Join a curated world of modern explorers and archive your journeys with precision.
+                        </p>
+                    </div>
+                    
+                    <!-- Feature List -->
+                    <ul class="space-y-6 mb-12">
+                        <li class="flex items-start gap-4">
+                            <span class="material-symbols-outlined text-primary mt-0.5" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                            <div>
+                                <span class="font-medium text-on-surface block">Unlimited Discoveries</span>
+                                <span class="text-secondary text-sm">No more badges. The network is yours.</span>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-4">
+                            <span class="material-symbols-outlined text-primary mt-0.5" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                            <div>
+                                <span class="font-medium text-on-surface block">Save Places</span>
+                                <span class="text-secondary text-sm">Build custom itineraries for future trips.</span>
+                            </div>
+                        </li>
+                    </ul>
+                    
+                    <!-- Actions -->
+                    <div class="space-y-6">
+                        <button id="subscribe-now-btn" class="w-full bg-primary-container text-on-primary-container px-8 py-5 text-sm font-semibold tracking-widest uppercase hover:opacity-90 transition-all active:scale-[0.98]">
+                            Start Your Journey — 20 CHF/mo
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -217,45 +266,120 @@
             </div>
         </div>
 
-        <!-- Profile Modal -->
-         <div id="profile-modal" class="modal-backdrop hidden fixed inset-0 z-[110] bg-black/60 backdrop-blur-sm flex items-center justify-center">
-            <div class="modal-content bg-surface p-8 max-w-md w-[90%] relative shadow-2xl border border-outline-variant/30 h-[80vh] overflow-y-auto">
-                <button class="close-btn absolute top-4 right-4 text-xl" onclick="this.closest('.modal-backdrop').classList.add('hidden')"><i class="fa-solid fa-xmark"></i></button>
-                
-                <div class="text-center mb-8 pt-4">
-                    <div class="w-16 h-16 mx-auto bg-surface-container-high rounded-full flex items-center justify-center text-2xl text-secondary mb-4">
-                        <i class="fa-solid fa-user-astronaut"></i>
+        <!-- Profile Modal (Stitch Layout) -->
+        <div id="profile-modal" class="fixed inset-0 z-[110] bg-[#FBFBFB] transform translate-y-full transition-transform duration-500 overflow-y-auto w-full h-full pointer-events-auto">
+            <!-- TopAppBar Shell -->
+            <header class="sticky top-0 w-full flex justify-between items-center px-6 h-16 z-50 bg-[#F9F9F9]/80 backdrop-blur-md border-b-[0.5px] border-[#D0C5AF]/20">
+                <div class="flex items-center gap-4">
+                    <span class="material-symbols-outlined text-[#735C00] cursor-pointer" data-icon="close" onclick="closeModal('profile-modal')">close</span>
+                    <h1 class="font-serif italic text-2xl text-[#1A1C1C]">Wanderlost</h1>
+                </div>
+                <div class="flex items-center gap-4">
+                    <span class="material-symbols-outlined text-[#735C00] cursor-pointer" data-icon="notifications">notifications</span>
+                </div>
+            </header>
+            
+            <main class="pt-8 px-6 pb-32 max-w-screen-md mx-auto">
+                <!-- Profile Section -->
+                <section class="flex flex-col items-center mb-12">
+                    <div class="relative group cursor-pointer">
+                        <div class="w-32 h-32 rounded-full overflow-hidden border-[0.5px] border-outline-variant/30 bg-surface-container flex items-center justify-center">
+                            <span class="material-symbols-outlined text-4xl text-secondary">person</span>
+                        </div>
                     </div>
-                    <h2 class="font-serif text-3xl text-on-surface">My Dossier</h2>
-                    <p class="text-xs uppercase tracking-widest text-secondary mt-2">Level 1 Explorer</p>
-                </div>
+                    <h2 class="mt-6 font-serif text-3xl tracking-tight text-on-surface">Explorer</h2>
+                    <p class="text-secondary font-label text-[10px] tracking-[0.2em] uppercase mt-1">Level 1</p>
+                </section>
+                
+                <!-- Membership Status Card -->
+                <section class="mb-12">
+                    <div class="bg-surface-container-lowest border-[0.5px] border-outline-variant/20 p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+                        <div>
+                            <p class="text-secondary font-label text-[10px] tracking-widest uppercase mb-1">Account Tier</p>
+                            <h3 class="font-headline text-xl flex items-center gap-2">Membership: Free</h3>
+                        </div>
+                        <button class="bg-primary-container text-on-primary-container px-8 py-3 font-label text-xs font-semibold tracking-widest uppercase hover:opacity-90 transition-opacity active:scale-[0.98]" onclick="openModal('subscription-modal')">Join Premium</button>
+                    </div>
+                </section>
 
-                <div class="mb-8">
-                    <h3 class="text-xs font-bold uppercase tracking-widest text-on-surface border-b pb-2 mb-4">History & Discoveries</h3>
-                    <p class="text-sm text-secondary">No secrets uncovered yet.</p>
-                </div>
-
-                <div class="flex flex-col gap-4 mt-8">
-                    <button class="text-left text-xs uppercase tracking-widest text-secondary hover:text-primary transition-colors flex items-center gap-2"><i class="fa-solid fa-credit-card"></i> Manage Payments</button>
-                    <button class="text-left text-xs uppercase tracking-widest text-secondary hover:text-primary transition-colors flex items-center gap-2" onclick="document.getElementById('legal-modal').classList.remove('hidden')"><i class="fa-solid fa-file-contract"></i> Legal & Protocol</button>
-                </div>
-            </div>
+                <!-- Settings CTA -->
+                <section class="mb-24 flex flex-col items-center text-center gap-4">
+                    <button class="text-secondary border-b border-outline-variant/30 font-label text-[10px] tracking-[0.2em] uppercase py-1 hover:text-primary transition-colors" onclick="openModal('legal-modal')">
+                        Legal & Protocol
+                    </button>
+                </section>
+            </main>
         </div>
 
         <!-- Legal Modal -->
-        <div id="legal-modal" class="modal-backdrop hidden fixed inset-0 z-[120] bg-black/60 backdrop-blur-sm flex items-center justify-center">
-            <div class="modal-content bg-surface p-8 max-w-xl w-[90%] relative shadow-2xl border border-outline-variant/30 h-[85vh] overflow-y-auto">
-                <button class="close-btn absolute top-4 right-4 text-xl" onclick="this.closest('.modal-backdrop').classList.add('hidden')"><i class="fa-solid fa-xmark"></i></button>
-                
-                <h2 class="font-serif text-3xl mb-2 text-on-surface">Legal & Privacy</h2>
-                <p class="text-xs uppercase tracking-widest text-secondary mb-8">Protocol Validated</p>
-
-                <div class="text-sm text-secondary space-y-4">
-                    <p><strong>Self-Preservation:</strong> Wanderløst is a discovery interface, not a travel guide. You are responsible for your own journey.</p>
-                    <p><strong>Data Processing:</strong> Foreground location is actively used only to verify discovery proximity. Vector traces are stored securely.</p>
-                    <p><strong>App Usage:</strong> The generative AI models provide creative routing. Always defer to local laws and signage.</p>
+        <!-- Legal Modal (Stitch Layout) -->
+        <div id="legal-modal" class="fixed inset-0 z-[120] bg-background transform translate-y-full transition-transform duration-500 overflow-y-auto w-full h-full pointer-events-auto selection:bg-primary-fixed selection:text-on-primary-fixed">
+            <!-- Top Navigation Anchor -->
+            <header class="sticky top-0 w-full z-50 bg-[#F9F9F9]/80 backdrop-blur-md border-b border-[#D0C5AF]/20">
+                <div class="flex items-center px-6 h-16 w-full max-w-7xl mx-auto justify-between">
+                    <div class="flex items-center gap-4">
+                        <button class="active:scale-95 transition-transform text-[#735C00]" onclick="closeModal('legal-modal')">
+                            <span class="material-symbols-outlined">arrow_back</span>
+                        </button>
+                        <h1 class="font-['Noto_Serif'] font-normal tracking-tight text-[#1A1C1C] text-lg">Safety & Responsibility</h1>
+                    </div>
+                    <div class="text-xl font-serif text-[#1A1C1C] italic">W.</div>
                 </div>
-            </div>
+            </header>
+            
+            <main class="pt-8 px-6 pb-32 max-w-screen-md mx-auto">
+                <!-- Hero Section -->
+                <section class="editorial-tension mb-16">
+                    <div class="mb-8">
+                        <span class="font-label text-[10px] uppercase tracking-[0.2em] text-primary mb-2 block">Protocol 01</span>
+                        <h2 class="font-display text-4xl md:text-5xl font-bold leading-tight text-on-surface">The Digital Curator’s Liability</h2>
+                    </div>
+                    <div class="relative">
+                        <div class="h-[1px] w-12 bg-primary mb-8"></div>
+                        <p class="font-body text-secondary leading-relaxed text-sm md:text-base">
+                            Wanderlost is a discovery interface, not a travel guide. We provide data-driven recommendations based on public information; we do not verify the current physical condition, safety, or legality of any location. <span class="text-on-surface font-medium italic">You are responsible for your own journey.</span>
+                        </p>
+                    </div>
+                </section>
+
+                <!-- Section 1: Physical Safety -->
+                <section class="editorial-tension mb-20">
+                    <div class="flex items-baseline gap-4 mb-10">
+                        <span class="font-label text-xs text-outline-variant font-light">01.</span>
+                        <h3 class="font-display text-2xl font-bold text-on-surface">Self-Preservation</h3>
+                    </div>
+                    <div class="space-y-12">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 border-l border-outline-variant/20 pl-6">
+                            <div>
+                                <h4 class="font-label text-[11px] uppercase tracking-widest text-primary mb-3">Environmental Intelligence</h4>
+                                <p class="text-sm text-secondary leading-relaxed">
+                                    <strong class="text-on-surface font-medium">The 80/20 Rule:</strong> Assess the environment upon arrival. If it feels wrong, leave.
+                                </p>
+                            </div>
+                            <div>
+                                <h4 class="font-label text-[11px] uppercase tracking-widest text-primary mb-3">Tactical Awareness</h4>
+                                <p class="text-sm text-secondary leading-relaxed">
+                                    <strong class="text-on-surface font-medium">Emergency Readiness:</strong> Always identify your closest exit or transit point.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Footer Disclaimer -->
+                <footer class="editorial-tension py-12 bg-surface-container-low/50">
+                    <div class="max-w-md">
+                        <h5 class="font-label text-[10px] uppercase tracking-[0.15em] text-on-surface font-bold mb-4">Disclaimer of Liability</h5>
+                        <p class="font-body text-[11px] leading-relaxed text-secondary/80">
+                            By using Wanderlost, you acknowledge that all travel is undertaken at your own risk. You agree to hold Wanderlost harmless from any claims resulting from your personal travel decisions.
+                        </p>
+                        <div class="mt-8 flex gap-4">
+                            <div class="h-8 w-[1px] bg-outline-variant/40"></div>
+                            <div class="italic font-display text-lg text-outline-variant">Safety is a personal coordinate.</div>
+                        </div>
+                    </div>
+                </footer>
+            </main>
         </div>
 
         <div id="location-permission-modal" class="modal-backdrop hidden">
