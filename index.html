@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html class="light" lang="en">
 <head>
 <meta charset="utf-8"/>
@@ -203,6 +203,23 @@ div[style*="z-index: 1000001"], div[style*="z-index: 1000000"] { display: none !
       </div>
     </div>
 
+    <!-- Premium Overlay (Blurred Locked Content) -->
+    <div class="absolute top-36 left-1/2 -translate-x-1/2 w-[90%] z-30 opacity-40 blur-sm pointer-events-none">
+      <div class="bg-surface-container border border-outline-variant/20 p-4 h-24 flex items-center gap-4">
+        <div class="w-16 h-16 bg-outline-variant/30"></div>
+        <div class="flex-1 space-y-2">
+          <div class="h-4 bg-outline-variant/30 w-3/4"></div>
+          <div class="h-3 bg-outline-variant/20 w-1/2"></div>
+        </div>
+      </div>
+    </div>
+    <div class="absolute top-44 left-1/2 -translate-x-1/2 z-40">
+      <button onclick="openModal('modal-premium')" class="bg-inverse-surface/90 text-inverse-on-surface px-6 py-2.5 text-[10px] font-label font-bold uppercase tracking-[0.15em] backdrop-blur-md border border-white/10 shadow-xl flex items-center gap-2">
+        <span class="material-symbols-outlined text-sm">lock</span>
+        Unlock 12 more... with Premium
+      </button>
+    </div>
+
     <!-- Discover Button -->
     <div class="fixed bottom-24 left-1/2 -translate-x-1/2 w-full max-w-xs px-6 z-40">
       <button id="btn-discover" class="w-full bg-primary-container text-on-primary-container font-label text-[11px] font-bold uppercase tracking-[0.2em] py-5 px-10 shadow-[0_20px_40px_-10px_rgba(212,175,55,0.4)] hover:shadow-[0_25px_50px_-10px_rgba(212,175,55,0.6)] transition-all active:translate-y-1 rounded-full flex items-center justify-center gap-3 border border-white/20">
@@ -304,6 +321,39 @@ div[style*="z-index: 1000001"], div[style*="z-index: 1000000"] { display: none !
           <span class="material-symbols-outlined text-[200px]">auto_stories</span>
         </div>
       </div>
+      <!-- Blurred Past Discoveries -->
+      <div class="relative">
+        <div class="flex items-center justify-between mb-8">
+          <h3 class="font-headline text-lg italic text-secondary/60">Past Discoveries</h3>
+          <span class="text-[10px] uppercase tracking-[0.2em] text-outline/40 font-label">Volume 00</span>
+        </div>
+        <div class="space-y-12 filter blur-md pointer-events-none opacity-40 select-none">
+          <div class="group flex flex-col md:flex-row gap-6 items-start">
+            <div class="w-full md:w-32 h-32 bg-surface-container-high"></div>
+            <div class="flex-1 border-b border-outline-variant/20 pb-6 w-full">
+              <h4 class="font-serif-title text-2xl mb-2">The Emerald Courtyard</h4>
+              <p class="text-secondary text-sm mb-4 font-body leading-relaxed">A botanical garden hidden in the industrial district.</p>
+            </div>
+          </div>
+          <div class="group flex flex-col md:flex-row gap-6 items-start">
+            <div class="w-full md:w-32 h-32 bg-surface-container-high"></div>
+            <div class="flex-1 border-b border-outline-variant/20 pb-6 w-full">
+              <h4 class="font-serif-title text-2xl mb-2">Midnight Records</h4>
+              <p class="text-secondary text-sm mb-4 font-body leading-relaxed">Vinyl shop specializing in obscure jazz pressings.</p>
+            </div>
+          </div>
+        </div>
+        <!-- Locked Overlay -->
+        <div class="absolute inset-0 flex items-center justify-center">
+          <div class="text-center group cursor-pointer">
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-full border border-primary text-primary mb-4 transition-transform group-hover:scale-110">
+              <span class="material-symbols-outlined text-3xl">lock</span>
+            </div>
+            <p class="font-serif-title text-xl text-on-surface">12 More Nodes Hidden</p>
+            <p class="text-[10px] uppercase tracking-widest text-secondary mt-2">Become a member to Reveal</p>
+          </div>
+        </div>
+      </div>
     </section>
   </main>
 </section>
@@ -323,8 +373,15 @@ div[style*="z-index: 1000001"], div[style*="z-index: 1000000"] { display: none !
   </header>
   <main class="pt-8 px-6 max-w-screen-md mx-auto pb-32 overflow-y-auto" style="height:calc(100vh - 80px)">
     <section class="flex flex-col items-center mb-12">
-      <div class="w-32 h-32 rounded-full overflow-hidden border-[0.5px] border-outline-variant/30 bg-surface-container-high flex items-center justify-center">
-        <span class="material-symbols-outlined text-5xl text-secondary">person</span>
+      <div class="relative group cursor-pointer">
+        <div class="w-32 h-32 rounded-full overflow-hidden border-[0.5px] border-outline-variant/30">
+          <img alt="User Profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbCapbZpiJc0BoOIFDF4-jr2t60HAk4MD7Y1P4UjJmtjBurdVbLboys9VXiT_G3m6O_naZH3o49c3Oohe1ZE7W_BWVW1jfgKNFy7857lW6LMPBogSgm373r9DfFNKffCSkge5ujAUrmfRa-12AG8mkeY7unycNVvWC6S9yPxB8ej_0_wFuKeGlMpw0rjto_7oA2iwPHPdaMaRE3adFCVllYMTmQywG7-78J-dg2sInYud1kqjGZx3hzWq5c7IqWh1lFJIBST_JtjY"/>
+        </div>
+        <div class="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity rounded-full">
+          <div class="bg-primary-container p-2 rounded-full shadow-lg">
+            <span class="material-symbols-outlined text-on-primary-container text-xl">upload</span>
+          </div>
+        </div>
       </div>
       <h2 class="mt-6 font-serif text-3xl tracking-tight text-on-surface">Explorer</h2>
       <p class="text-secondary font-label text-[10px] tracking-[0.2em] uppercase mt-1">Nomad Explorer</p>
@@ -333,22 +390,78 @@ div[style*="z-index: 1000001"], div[style*="z-index: 1000000"] { display: none !
       <div class="bg-surface-container-lowest border-[0.5px] border-outline-variant/20 p-8 flex flex-col md:flex-row justify-between items-center gap-6">
         <div>
           <p class="text-secondary font-label text-[10px] tracking-widest uppercase mb-1">Account Tier</p>
-          <h3 class="font-headline text-xl flex items-center gap-2">Membership: Free</h3>
+          <h3 class="font-headline text-xl flex items-center gap-2">Membership: Free <span class="material-symbols-outlined text-primary text-sm">info</span></h3>
         </div>
         <button onclick="openModal('modal-premium')" class="bg-primary-container text-on-primary-container px-8 py-3 font-label text-xs font-semibold tracking-widest uppercase hover:opacity-90 transition-opacity active:scale-[0.98]">
           Join Premium
         </button>
       </div>
     </section>
-    <section class="mb-12">
+    <section class="mb-16">
       <div class="space-y-0">
         <div class="flex justify-between items-center py-5 border-b-[0.5px] border-outline-variant/20">
           <div><span class="block text-secondary font-label text-[10px] tracking-widest uppercase">Full Name</span><span class="text-on-surface font-body text-sm">Explorer</span></div>
           <span class="material-symbols-outlined text-outline-variant text-sm cursor-pointer">edit</span>
         </div>
         <div class="flex justify-between items-center py-5 border-b-[0.5px] border-outline-variant/20">
-          <div><span class="block text-secondary font-label text-[10px] tracking-widest uppercase">Email Address</span><span class="text-on-surface font-body text-sm">â€”</span></div>
+          <div><span class="block text-secondary font-label text-[10px] tracking-widest uppercase">Email Address</span><span class="text-on-surface font-body text-sm">—</span></div>
           <span class="material-symbols-outlined text-outline-variant text-sm cursor-pointer">mail</span>
+        </div>
+        <div class="flex justify-between items-center py-5 border-b-[0.5px] border-outline-variant/20">
+          <div><span class="block text-secondary font-label text-[10px] tracking-widest uppercase">Date of Birth</span><span class="text-on-surface font-body text-sm">—</span></div>
+          <span class="material-symbols-outlined text-outline-variant text-sm cursor-pointer">calendar_today</span>
+        </div>
+        <div class="flex justify-between items-center py-5 border-b-[0.5px] border-outline-variant/20">
+          <div><span class="block text-secondary font-label text-[10px] tracking-widest uppercase">Security</span><span class="text-on-surface font-body text-sm tracking-tighter">••••••••••••</span></div>
+          <span class="material-symbols-outlined text-outline-variant text-sm cursor-pointer">lock</span>
+        </div>
+      </div>
+    </section>
+    <!-- Previously Revealed Nodes -->
+    <section class="mb-12">
+      <div class="flex items-baseline justify-between mb-6">
+        <h3 class="font-serif text-2xl text-on-surface">Previously Revealed Nodes</h3>
+        <span class="text-secondary font-label text-[10px] tracking-widest uppercase">View All</span>
+      </div>
+      <div class="flex overflow-x-auto gap-6 pb-8 hide-scrollbar snap-x">
+        <div class="min-w-[260px] snap-start group">
+          <div class="aspect-[4/5] bg-surface-container-low mb-4 overflow-hidden">
+            <img alt="Kyoto" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmHGZeXsqiNDNSPnXv5v6eb8f7UkfQeDYxLZXvHPjHS1e_w9sOdUGvhCJLGNBT1eNA6Umsr6QU0vTPGrL2RN6Ztuk2C0IPJMmUispnlU7Wy7uCbj1oHtiBt2kzgs1OyU_hUIxFnxU3ekXm48390ROEe0iR_PF9VrwS2LcWoNYGCialDLgvg-Xdh492FB194wREX9M3J4w5ywULqdpmQBCFx3lDS7R1eDhGGhjS31acOHbZ-j8qM1Wsa5PLJvCHqPI7edT-oU8pMBk"/>
+          </div>
+          <div class="px-1"><span class="text-secondary font-label text-[9px] tracking-widest uppercase">35.0116° N, 135.7681° E</span><h4 class="font-headline text-lg mt-1">Gion District</h4></div>
+        </div>
+        <div class="min-w-[260px] snap-start group">
+          <div class="aspect-[4/5] bg-surface-container-low mb-4 overflow-hidden">
+            <img alt="Taj Mahal" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjV-sEslIcXBFhgDlXK8o73LnhAW8_pu4Ne00IrYeZaanv1nbGfWOKYYP8EhqwX6Uzjvwahkj9CS8dgumnfAKti0pdb0N8XNEu6neh5EBtT6XdlrDBnYF9L1qCT_ptAiiD-SXKRSdY_BjbRQyQRTXTpA7QJCte90bHYmk_QMHCMED0xgnStzEZ92aOeLE7rwq6ODxk7KfSJL4b6elmaZMj4gq0StaY_NV5HN39k8wDvyFYj60iis2EzfIDF2cskYeUdnajbpWDkk0"/>
+          </div>
+          <div class="px-1"><span class="text-secondary font-label text-[9px] tracking-widest uppercase">27.1751° N, 78.0421° E</span><h4 class="font-headline text-lg mt-1">The Ivory Tomb</h4></div>
+        </div>
+        <div class="min-w-[260px] snap-start group">
+          <div class="aspect-[4/5] bg-surface-container-low mb-4 overflow-hidden">
+            <img alt="Ha Long Bay" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBvCvcdr0azfGMId86beFA5T1_eSbLO-wjm5pL7wGurOuulJlC-kVSzXD3Y1Azp6rsC-bcgCT9AXNoAF_IlRZVtNuzGQxhINSPYUzXysVVRuZtXp5T7ApJ0R-K2bzOmh4jbd4Rudoi4C0j2l1hYMpm2EGlzTdsReyva3A-K24sbOKFX2luuoxxGV1wNOc4iU1L_-_0pY-KtLb63bhO2XmHdLVtY672BZzrq9gjEa3x4SUjsDebw_7WRTqO_da-AYENVt8pOTLnEFVs"/>
+          </div>
+          <div class="px-1"><span class="text-secondary font-label text-[9px] tracking-widest uppercase">20.9101° N, 107.1839° E</span><h4 class="font-headline text-lg mt-1">The Emerald Bay</h4></div>
+        </div>
+        <!-- Locked Card -->
+        <div class="min-w-[260px] snap-start relative">
+          <div class="aspect-[4/5] bg-surface-container-low mb-4 overflow-hidden relative">
+            <img alt="Locked" class="w-full h-full object-cover blur-md grayscale" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD754b9Nk005jPlwDA2uYadGvPqMT3oaThf18wlutUbI4Iedk_hq0MyBCp9Gsg1do6x2-8cYi1HrIvHmM-tKwrX235OPH7uwd5AZUP3eVMPwqDbbPNFMAcZr8MkBLvogjhGl1_uHXiIX0tJ0CHTogUDN2D9_exxkAS7mxmyCqhCsEb7Xf-ctSqEZkCNgHIlED-INk1ayyAvAC6DPDQSJPwivSjB18GIG2dNHUC4f4-MLRzJp7ITaUzVXcwbrCjVtMmYiSzMO4Rhkoo"/>
+            <div class="absolute inset-0 flex flex-col items-center justify-center bg-on-surface/5">
+              <span class="material-symbols-outlined text-primary text-3xl mb-2" style="font-variation-settings:'FILL' 1;">lock</span>
+              <span class="text-on-surface font-label text-[10px] tracking-widest uppercase">Premium Only</span>
+            </div>
+          </div>
+          <div class="px-1 opacity-40"><span class="text-secondary font-label text-[9px] tracking-widest uppercase">??.????° N, ??.????° E</span><h4 class="font-headline text-lg mt-1">Hidden Sanctuary</h4></div>
+        </div>
+        <div class="min-w-[260px] snap-start relative">
+          <div class="aspect-[4/5] bg-surface-container-low mb-4 overflow-hidden relative">
+            <img alt="Locked" class="w-full h-full object-cover blur-md grayscale" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBojD9T5tB3_IJn0IaTcbR_HGbKEJXXFQ0g01JsXPgSSmyxR8JEArtNLSLhn3pGvp8qBxdUm3QS0GrAj7J65wdWC6ute8cdcJcoNopdy8Kz6IUo3YdZhZub7cHfgICi0oWewusGoFD5H8XirMbLEfWBDojgI_G2YIZiEFZy8tBqzHAmbndEzFyg1veg9x6Ib-QQEKmY_XMWNMfo81zq23DVNIYYw10wHa4XgBrU-JQcvsF-ja8zIkcDOizyafLCr589y-r3lh7i4no"/>
+            <div class="absolute inset-0 flex flex-col items-center justify-center bg-on-surface/5">
+              <span class="material-symbols-outlined text-primary text-3xl mb-2" style="font-variation-settings:'FILL' 1;">lock</span>
+              <span class="text-on-surface font-label text-[10px] tracking-widest uppercase">Premium Only</span>
+            </div>
+          </div>
+          <div class="px-1 opacity-40"><span class="text-secondary font-label text-[9px] tracking-widest uppercase">??.????° N, ??.????° E</span><h4 class="font-headline text-lg mt-1">Arctic Watch</h4></div>
         </div>
       </div>
     </section>
@@ -406,22 +519,52 @@ div[style*="z-index: 1000001"], div[style*="z-index: 1000000"] { display: none !
           <span class="text-xs tracking-widest uppercase text-secondary">Status</span>
           <span class="text-primary font-semibold italic font-serif text-lg">Free</span>
         </div>
+        <div class="flex justify-between items-baseline">
+          <span class="text-xs tracking-widest uppercase text-secondary">Next Bill Info</span>
+          <span class="text-sm font-body">N/A — Not subscribed</span>
+        </div>
         <div class="pt-4 flex gap-4">
           <button onclick="openModal('modal-premium')" class="px-6 py-3 bg-primary-container text-on-primary-container text-xs font-bold tracking-widest uppercase hover:opacity-90 transition-all">Manage Subscription</button>
+          <button class="px-6 py-3 border text-xs font-bold tracking-widest uppercase transition-all border-on-surface text-on-surface hover:bg-on-surface/5">Cancel Membership</button>
+        </div>
+      </div>
+    </section>
+    <!-- App Preferences -->
+    <section class="mb-10">
+      <h3 class="text-2xl font-serif-editorial border-b-[0.5px] border-outline-variant/20 pb-2 mb-6">App Preferences</h3>
+      <div class="flex justify-between items-center py-4">
+        <div>
+          <span class="block text-sm font-medium">Distance Units</span>
+          <span class="text-[10px] text-secondary uppercase tracking-tighter">Affects map and navigation</span>
+        </div>
+        <div class="flex border border-outline-variant/30">
+          <button class="px-4 py-2 text-[10px] font-bold tracking-widest uppercase bg-surface-container-highest text-on-surface">Meters</button>
+          <button class="px-4 py-2 text-[10px] font-bold tracking-widest uppercase text-secondary hover:bg-surface-container-low transition-colors">Feet</button>
         </div>
       </div>
     </section>
     <section class="mb-10">
       <h3 class="text-2xl font-serif-editorial border-b-[0.5px] border-outline-variant/20 pb-2 mb-4">Legal & Support</h3>
       <ul class="divide-y divide-outline-variant/20">
-        <li><a class="flex justify-between items-center py-4 group cursor-pointer" onclick="openModal('modal-safety')"><span class="text-sm group-hover:pl-2 transition-all duration-300">Safety & Responsibility</span><span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">arrow_outward</span></a></li>
+        <li><a class="flex justify-between items-center py-4 group cursor-pointer"><span class="text-sm group-hover:pl-2 transition-all duration-300">Help Center</span><span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">arrow_outward</span></a></li>
+        <li><a class="flex justify-between items-center py-4 group cursor-pointer"><span class="text-sm group-hover:pl-2 transition-all duration-300">Terms & Conditions</span><span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">arrow_outward</span></a></li>
         <li><a class="flex justify-between items-center py-4 group cursor-pointer" onclick="openModal('modal-privacy')"><span class="text-sm group-hover:pl-2 transition-all duration-300">Privacy Policy</span><span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">arrow_outward</span></a></li>
+        <li><a class="flex justify-between items-center py-4 group cursor-pointer" onclick="openModal('modal-safety')"><span class="text-sm group-hover:pl-2 transition-all duration-300">Safety & Responsibility</span><span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">arrow_outward</span></a></li>
       </ul>
+    </section>
+    <!-- Account Actions -->
+    <section class="mb-16">
+      <div class="py-4">
+        <button class="text-sm text-secondary font-medium underline underline-offset-4 decoration-outline-variant hover:text-on-surface transition-colors">Log out</button>
+      </div>
     </section>
     <section class="bg-surface-container-low p-8 border-l-4 border-error/30">
       <h3 class="text-xl font-serif-editorial text-error mb-4">Danger Zone</h3>
-      <p class="text-xs text-secondary mb-6 leading-relaxed">Actions performed here are irreversible.</p>
-      <button class="text-xs font-bold tracking-widest uppercase text-error hover:underline transition-all">Delete my data</button>
+      <p class="text-xs text-secondary mb-6 leading-relaxed">Actions performed in this area are irreversible. Your data and account history will be purged from our servers immediately.</p>
+      <div class="flex flex-col gap-4 items-start">
+        <button class="text-xs font-bold tracking-widest uppercase text-error hover:underline transition-all">Delete my account</button>
+        <button class="text-xs font-bold tracking-widest uppercase text-error hover:underline transition-all">Delete my data</button>
+      </div>
     </section>
   </main>
 </div>
@@ -593,10 +736,12 @@ div[style*="z-index: 1000001"], div[style*="z-index: 1000000"] { display: none !
           <li class="flex items-start gap-4"><span class="material-symbols-outlined text-primary mt-0.5" style="font-variation-settings:'FILL' 1;">check_circle</span><div><span class="font-medium text-on-surface block">Unlimited Discoveries</span><span class="text-secondary text-sm">No more limits. The network is yours.</span></div></li>
           <li class="flex items-start gap-4"><span class="material-symbols-outlined text-primary mt-0.5" style="font-variation-settings:'FILL' 1;">check_circle</span><div><span class="font-medium text-on-surface block">Filter by Category</span><span class="text-secondary text-sm">Target specifically what you're looking for.</span></div></li>
           <li class="flex items-start gap-4"><span class="material-symbols-outlined text-primary mt-0.5" style="font-variation-settings:'FILL' 1;">check_circle</span><div><span class="font-medium text-on-surface block">Save Places</span><span class="text-secondary text-sm">Build custom itineraries for future trips.</span></div></li>
+          <li class="flex items-start gap-4"><span class="material-symbols-outlined text-primary mt-0.5" style="font-variation-settings:'FILL' 1;">check_circle</span><div><span class="font-medium text-on-surface block">Show Your History</span><span class="text-secondary text-sm">Full permanent log of every place you've been.</span></div></li>
         </ul>
         <button onclick="openModal('modal-checkout');closeModal('modal-premium');" class="w-full bg-primary-container text-on-primary-container px-8 py-5 text-sm font-semibold tracking-widest uppercase hover:opacity-90 transition-all active:scale-[0.98]">
-          Start Your Journey â€” 20 CHF/mo
+          Start Your Journey — 20 CHF/mo
         </button>
+        <p class="text-center mt-6"><button class="text-secondary text-xs underline underline-offset-4 decoration-outline-variant hover:text-on-surface transition-colors">Restore Purchase</button></p>
       </div>
     </div>
   </div>
