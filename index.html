@@ -1,420 +1,692 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html class="light" lang="en">
 <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <!-- PWA Setup -->
-    <link rel="manifest" href="./manifest.json">
-    <meta name="theme-color" content="#1A1C1C">
-    <link rel="apple-touch-icon" href="./icon-192.png">
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>Wanderlost</title>
+<meta name="description" content="Discover hidden gems with AI-powered local exploration"/>
+<meta name="theme-color" content="#F9F9F9"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+<link rel="manifest" href="./manifest.json"/>
+<link rel="icon" type="image/png" href="./icon-192.png"/>
+<link rel="apple-touch-icon" href="./icon-192.png"/>
 
-    <!-- Tailwind Config -->
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&family=Noto+Serif:wght@400;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Legacy Modals Styling -->
-    <link rel="stylesheet" href="./style.css?v=33">
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700&family=Noto+Serif:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 
-    <style>
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
-        }
-        .hide-scrollbar::-webkit-scrollbar { display: none; }
-        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        
-        /* Map Adjustments */
-        #map-bg { width: 100vw; height: 100vh; }
-        .gm-style-cc, .gmnoprint { display: none !important; }
-        
-        /* Premium Sonar */
-        .sonar-circle { animation: sonar-pulse 3s cubic-bezier(0, 0, 0.2, 1) infinite; }
-        @keyframes sonar-pulse {
-            0% { transform: scale(1); opacity: 0.5; }
-            100% { transform: scale(4); opacity: 0; }
-        }
-    </style>
-    <script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        "primary-fixed": "#ffe088", "surface-container-low": "#f3f3f3",
-                        "primary": "#735c00", "on-surface": "#1a1c1c", "inverse-on-surface": "#f0f1f1",
-                        "secondary": "#5f5e5e", "surface-container-highest": "#e2e2e2",
-                        "outline-variant": "#d0c5af", "surface": "#f9f9f9", "primary-container": "#d4af37",
-                        "on-primary-container": "#554300", "background": "#fbfbfb", "surface-container-lowest": "#ffffff"
-                    },
-                    fontFamily: {
-                        "headline": ["Noto Serif"], "body": ["Inter"],
-                        "label": ["Inter"], "serif": ["Cormorant Garamond", "serif"]
-                    }
-                }
-            }
-        }
-    </script>
+<!-- Tailwind -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        "primary-fixed": "#ffe088",
+        "tertiary-fixed": "#dbe1ff",
+        "surface-bright": "#f9f9f9",
+        "surface-container-low": "#f3f3f3",
+        "on-tertiary-fixed-variant": "#27438a",
+        "on-tertiary-container": "#254188",
+        "on-secondary-fixed-variant": "#474747",
+        "on-tertiary": "#ffffff",
+        "primary": "#735c00",
+        "on-primary-fixed": "#241a00",
+        "on-secondary-fixed": "#1b1c1c",
+        "on-primary": "#ffffff",
+        "on-primary-fixed-variant": "#574500",
+        "inverse-on-surface": "#f0f1f1",
+        "secondary": "#5f5e5e",
+        "on-error": "#ffffff",
+        "inverse-primary": "#e9c349",
+        "on-background": "#1a1c1c",
+        "surface-container-highest": "#e2e2e2",
+        "tertiary": "#415ba4",
+        "secondary-fixed": "#e4e2e1",
+        "error": "#ba1a1a",
+        "on-secondary-container": "#656464",
+        "on-primary-container": "#554300",
+        "surface-tint": "#735c00",
+        "outline-variant": "#d0c5af",
+        "surface-container-high": "#e8e8e8",
+        "inverse-surface": "#2f3131",
+        "error-container": "#ffdad6",
+        "surface": "#f9f9f9",
+        "surface-variant": "#e2e2e2",
+        "primary-container": "#d4af37",
+        "on-secondary": "#ffffff",
+        "primary-fixed-dim": "#e9c349",
+        "outline": "#7f7663",
+        "tertiary-container": "#97b0ff",
+        "surface-dim": "#dadada",
+        "secondary-fixed-dim": "#c8c6c6",
+        "on-surface": "#1a1c1c",
+        "on-surface-variant": "#4d4635",
+        "tertiary-fixed-dim": "#b4c5ff",
+        "surface-container": "#eeeeee",
+        "on-error-container": "#93000a",
+        "on-tertiary-fixed": "#00174b",
+        "background": "#f9f9f9",
+        "secondary-container": "#e4e2e1",
+        "surface-container-lowest": "#ffffff"
+      },
+      fontFamily: {
+        "headline": ["Noto Serif"],
+        "body": ["Inter"],
+        "label": ["Inter"],
+        "serif": ["Cormorant Garamond", "serif"],
+        "serif-title": ["Cormorant Garamond", "serif"]
+      },
+      borderRadius: {"DEFAULT": "0px", "lg": "0px", "xl": "0px", "full": "9999px"},
+    },
+  },
+}
+</script>
+
+<style>
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+}
+.neural-grid {
+  background-size: 40px 40px;
+  background-image:
+    linear-gradient(to right, rgba(208, 197, 175, 0.1) 0.5px, transparent 0.5px),
+    linear-gradient(to bottom, rgba(208, 197, 175, 0.1) 0.5px, transparent 0.5px);
+}
+.hide-scrollbar::-webkit-scrollbar { display: none; }
+.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+.sonar-circle {
+  animation: sonar-pulse 3s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+@keyframes sonar-pulse {
+  0% { transform: scale(1); opacity: 0.5; }
+  100% { transform: scale(4); opacity: 0; }
+}
+.glass-nav { backdrop-filter: blur(20px); }
+.serif-headline { font-family: 'Cormorant Garamond', serif; }
+.font-serif-editorial { font-family: 'Cormorant Garamond', serif; }
+.editorial-tension { padding-left: 10%; padding-right: 15%; }
+
+/* Tab visibility */
+.tab-section { display: none; }
+.tab-section.active { display: block; }
+
+/* Modal sliding */
+.modal-slide {
+  position: fixed; inset: 0; z-index: 200;
+  background: #FBFBFB;
+  transform: translateY(100%);
+  transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+  overflow-y: auto;
+  pointer-events: none;
+}
+.modal-slide.open {
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* Discovery bottom sheet */
+#discovery-sheet {
+  position: fixed; bottom: 0; left: 0; width: 100%; z-index: 100;
+  transform: translateY(100%);
+  transition: transform 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+}
+#discovery-sheet.open { transform: translateY(0); }
+
+/* Google Maps fixes */
+.gm-err-container, .gm-style-cc, .gmnoprint,
+button[title="Toggle fullscreen view"], .gm-style-pbc { display: none !important; }
+div[style*="z-index: 1000001"], div[style*="z-index: 1000000"] { display: none !important; }
+</style>
 </head>
-<body class="bg-surface font-body text-on-surface overflow-hidden">
 
-    <!-- The Map Background -->
-    <div id="map-layer" class="fixed inset-0 z-0">
-        <div id="map-bg"></div>
-        <svg id="trail-svg" class="absolute inset-0 w-full h-full pointer-events-none z-10"></svg>
-        <div id="nodes-container" class="absolute inset-0 w-full h-full pointer-events-none z-20"></div>
+<body class="bg-surface font-body text-on-surface antialiased overflow-hidden">
+
+<!-- ============================================================ -->
+<!-- WELCOME SPLASH -->
+<!-- ============================================================ -->
+<div id="welcome-splash" class="fixed inset-0 z-[300] bg-[#1A1C1C] flex items-center justify-center transition-opacity duration-1000">
+  <div class="text-center px-8">
+    <div class="mb-4 text-xs tracking-[0.3em] text-[#D0C5AF] uppercase">The Secret City</div>
+    <h1 class="font-serif italic text-5xl text-[#F9F9F9] mb-2">
+      <span class="text-[#D4AF37]">W</span>anderlost
+    </h1>
+    <p class="text-secondary text-sm mt-4 mb-8">AI-powered local discovery</p>
+    <button id="btn-begin" class="bg-primary-container text-on-primary-container px-10 py-3 text-xs font-bold uppercase tracking-widest active:scale-95 transition-transform">
+      Begin Journey
+    </button>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- TAB: EXPLORE (home_refined_discovery_popup) -->
+<!-- ============================================================ -->
+<section id="tab-explore" class="tab-section active">
+  <!-- Top Navigation -->
+  <header class="fixed top-0 w-full flex justify-between items-center px-6 h-16 z-50 bg-[#F9F9F9]/80 backdrop-blur-md border-b-[0.5px] border-[#D0C5AF]/20">
+    <div class="font-serif italic text-2xl text-[#1A1C1C]">Wanderlost</div>
+    <div class="flex items-center gap-4">
+      <div class="px-4 py-1.5 rounded-full border border-outline-variant/30 bg-surface/40 backdrop-blur-md flex items-center gap-2">
+        <span class="w-1.5 h-1.5 rounded-full bg-primary-container shadow-[0_0_8px_rgba(212,175,55,0.6)]"></span>
+        <span id="discovery-counter" class="text-[10px] font-label uppercase tracking-widest text-secondary font-medium">3 Free Discoveries</span>
+      </div>
+      <button class="text-[#735C00] hover:opacity-70 transition-opacity active:scale-95 duration-200" onclick="openModal('modal-settings')">
+        <span class="material-symbols-outlined">settings</span>
+      </button>
     </div>
-    
-    <!-- Fog Overlay -->
-    <div id="fog-overlay" class="fixed inset-0 bg-black/40 z-10 pointer-events-none transition-opacity duration-1000"></div>
+  </header>
 
-    <!-- UI Layer -->
-    <div id="ui-layer" class="fixed inset-0 z-20 pointer-events-none">
-        
-        <!-- Top Nav -->
-        <header class="fixed top-0 w-full flex justify-between items-center px-6 h-16 bg-[#F9F9F9]/80 backdrop-blur-md border-b-[0.5px] border-[#D0C5AF]/20 pointer-events-auto shadow-sm">
-            <div class="font-serif italic text-2xl text-[#1A1C1C]"><span class="elegant-w font-['Bodoni_Moda'] tracking-[-1px]">W</span>anderløst</div>
-            <div class="flex items-center gap-4">
-                <div class="px-4 py-1.5 rounded-full border border-outline-variant/30 bg-surface/40 backdrop-blur-md flex items-center gap-2">
-                    <span class="w-1.5 h-1.5 rounded-full bg-primary-container shadow-[0_0_8px_rgba(212,175,55,0.6)]"></span>
-                    <span class="text-[10px] font-label uppercase tracking-widest text-secondary font-medium">3 Free</span>
-                </div>
-                <button id="open-profile-btn" class="text-[#735C00] hover:opacity-70 transition-opacity active:scale-95 duration-200">
-                    <span class="material-symbols-outlined" data-icon="person">person</span>
-                </button>
-            </div>
-        </header>
+  <!-- Map Canvas -->
+  <main class="relative w-full h-screen bg-[#FBFBFB] neural-grid overflow-hidden">
+    <div id="map-bg" class="absolute inset-0 z-0"></div>
 
-        <!-- Premium Gate: Category List -->
-        <div class="absolute top-20 left-0 w-full z-40 pointer-events-auto">
-            <div class="flex gap-2 px-6 overflow-x-auto hide-scrollbar py-2">
-                <button class="flex-shrink-0 px-4 py-2 bg-surface/80 backdrop-blur-md border border-outline-variant/30 text-[10px] font-label font-bold uppercase tracking-wider text-on-surface hover:bg-primary-container hover:text-on-primary-container transition-all shadow-sm">Restaurants</button>
-                <button class="flex-shrink-0 px-4 py-2 bg-primary-container text-on-primary-container border border-primary/20 text-[10px] font-label font-bold uppercase tracking-wider transition-all shadow-sm">Cafes</button>
-                <button class="flex-shrink-0 px-4 py-2 bg-surface/80 backdrop-blur-md border border-outline-variant/30 text-[10px] font-label font-bold uppercase tracking-wider text-on-surface hover:bg-primary-container transition-all shadow-sm">Bakeries</button>
-                <button class="flex-shrink-0 px-4 py-2 bg-surface/80 backdrop-blur-md border border-outline-variant/30 text-[10px] font-label font-bold uppercase tracking-wider text-on-surface hover:bg-primary-container transition-all shadow-sm">Hidden Spots</button>
-            </div>
-        </div>
-
-        <!-- Premium Overlay Suggestion -->
-        <div class="absolute top-44 left-1/2 -translate-x-1/2 z-40 pointer-events-auto">
-            <button class="bg-gray-900/90 text-white px-6 py-2.5 text-[10px] font-label font-bold uppercase tracking-[0.15em] backdrop-blur-md border border-white/20 shadow-xl flex items-center gap-2 rounded-sm" onclick="document.getElementById('subscription-modal').classList.remove('hidden')">
-                <span class="material-symbols-outlined text-sm" data-icon="lock">lock</span> Unlock 12 more...
-            </button>
-        </div>
-
-        <!-- Sonar Effect Marker -->
-        <div class="absolute top-[48%] left-[50%] -translate-x-1/2 -translate-y-1/2 pointer-events-none origin-center">
-            <div class="relative flex items-center justify-center">
-                <div class="absolute w-24 h-24 border border-primary-container/40 rounded-full sonar-circle" style="animation-delay: -1.5s;"></div>
-                <div class="absolute w-12 h-12 border border-primary-container/60 rounded-full sonar-circle"></div>
-                <!-- <div class="w-4 h-4 bg-primary rounded-full border-2 border-surface shadow-[0_0_15px_rgba(115,92,0,0.4)] z-10"></div> -->
-            </div>
-        </div>
-
-        <!-- Discover Button -->
-        <div class="fixed bottom-24 left-1/2 -translate-x-1/2 w-full max-w-xs px-6 z-40 pointer-events-auto">
-            <button id="radar-btn" class="w-full bg-primary-container text-on-primary-container font-label text-[11px] font-bold uppercase tracking-[0.2em] py-5 px-10 shadow-[0_20px_40px_-10px_rgba(212,175,55,0.4)] hover:shadow-[0_25px_50px_-10px_rgba(212,175,55,0.6)] transition-all active:translate-y-1 rounded-full flex items-center justify-center gap-3 border border-white/20">
-                <span class="material-symbols-outlined text-sm" data-icon="explore">explore</span> Discover Places
-            </button>
-        </div>
-
-        <!-- Smart Popup (Bottom Sheet mapped to location-card) -->
-        <div id="location-card" class="fixed bottom-0 left-0 w-full z-50 transform transition-transform duration-500 translate-y-full h-1/2 pointer-events-auto hidden">
-            <div class="bg-surface-container-lowest border-t border-outline-variant/30 shadow-[0_-20px_50px_-15px_rgba(0,0,0,0.12)] pb-24 pt-8 px-8 max-w-3xl mx-auto border-x lg:border-x-outline-variant/10 rounded-t-3xl md:rounded-t-none h-full overflow-y-auto">
-                <div class="flex justify-between items-start mb-6">
-                    <div>
-                        <span class="tag inline-block px-2 py-0.5 border border-outline-variant/40 text-[9px] font-label uppercase tracking-[0.15em] text-secondary mb-3">Discovery</span>
-                        <h1 id="loc-title" class="font-serif text-3xl md:text-4xl text-on-surface tracking-tight leading-tight italic">...</h1>
-                    </div>
-                    <div class="flex gap-2">
-                        <button id="collapse-btn" class="w-10 h-10 flex items-center justify-center hover:bg-surface-container transition-colors rounded-full text-secondary">
-                            <i class="fa-solid fa-chevron-down"></i>
-                        </button>
-                    </div>
-                </div>
-                
-                <div class="flex flex-col md:flex-row gap-8 mb-8">
-                    <!-- Image placeholder if needed -->
-                    <div class="w-full md:w-56 aspect-[4/3] md:aspect-square flex-shrink-0 bg-gray-100 hidden"></div>
-                    <div class="flex-grow flex flex-col justify-between">
-                        <div class="space-y-3">
-                            <p id="loc-desc" class="text-[13px] font-body tracking-wide leading-relaxed text-secondary border-l-2 border-primary-container pl-4">...</p>
-                        </div>
-                        <div class="grid grid-cols-1 gap-4 mt-8">
-                            <button id="ready-btn" class="flex items-center justify-center gap-2 text-white py-4 px-6 text-[10px] font-label font-bold uppercase tracking-widest transition-all hover:bg-primary/90 shadow-md bg-[#D4AF37]">
-                                <span class="material-symbols-outlined text-sm" data-icon="map">map</span> Go to Google Maps
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Bottom Navigation Shell -->
-        <nav class="fixed bottom-0 left-0 w-full z-[60] flex justify-around items-center h-20 px-4 md:px-12 pb-safe bg-[#F9F9F9]/90 backdrop-blur-md border-t-[0.5px] border-[#D0C5AF]/30 pointer-events-auto shadow-lg">
-            <button class="flex flex-col items-center justify-center text-[#735C00] scale-110 active:translate-y-[-2px] duration-300 transition-transform">
-                <span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">explore</span>
-                <span class="font-sans text-[10px] tracking-widest uppercase font-bold">Explore</span>
-            </button>
-            <button class="flex flex-col items-center justify-center text-[#5F5E5E] hover:text-[#735C00] transition-colors opacity-70">
-                <span class="material-symbols-outlined mb-1">menu_book</span>
-                <span class="font-sans text-[10px] tracking-widest uppercase">Journal</span>
-            </button>
-            <button class="flex flex-col items-center justify-center text-[#5F5E5E] hover:text-[#735C00] transition-colors opacity-70" onclick="openModal('legal-modal')">
-                <span class="material-symbols-outlined mb-1">gpp_good</span>
-                <span class="font-sans text-[10px] tracking-widest uppercase">Safety</span>
-            </button>
-            <button class="flex flex-col items-center justify-center text-[#5F5E5E] hover:text-[#735C00] transition-colors opacity-70" onclick="openModal('profile-modal')">
-                <span class="material-symbols-outlined mb-1">person</span>
-                <span class="font-sans text-[10px] tracking-widest uppercase">Profile</span>
-            </button>
-        </nav>
-
-        <!-- Hidden ID Anchors for app.js stability -->
-        <div class="hidden">
-            <button id="scan-btn"></button>
-            <div id="idle-prompt"></div>
-            <button id="settings-btn"></button>
-        </div>
-
+    <!-- Category Filters -->
+    <div class="absolute top-20 left-0 w-full z-40">
+      <div class="flex gap-2 px-6 overflow-x-auto hide-scrollbar py-2">
+        <button class="flex-shrink-0 px-4 py-2 bg-surface/80 backdrop-blur-md border border-outline-variant/30 text-[10px] font-label font-bold uppercase tracking-wider text-on-surface-variant transition-all">Restaurants</button>
+        <button class="flex-shrink-0 px-4 py-2 bg-primary-container text-on-primary-container border border-primary/20 text-[10px] font-label font-bold uppercase tracking-wider transition-all">Cafes</button>
+        <button class="flex-shrink-0 px-4 py-2 bg-surface/80 backdrop-blur-md border border-outline-variant/30 text-[10px] font-label font-bold uppercase tracking-wider text-on-surface-variant transition-all">Bakeries</button>
+        <button class="flex-shrink-0 px-4 py-2 bg-surface/80 backdrop-blur-md border border-outline-variant/30 text-[10px] font-label font-bold uppercase tracking-wider text-on-surface-variant transition-all">Bars</button>
+        <button class="flex-shrink-0 px-4 py-2 bg-surface/80 backdrop-blur-md border border-outline-variant/30 text-[10px] font-label font-bold uppercase tracking-wider text-on-surface-variant transition-all">Parks</button>
+        <button class="flex-shrink-0 px-4 py-2 bg-surface/80 backdrop-blur-md border border-outline-variant/30 text-[10px] font-label font-bold uppercase tracking-wider text-on-surface-variant transition-all">Museums</button>
+      </div>
     </div>
 
-    <!-- Legacy Modals (Rendered above UI layer) -->
-    <div id="legacy-modals" class="z-[100] relative pointer-events-auto">
-        
-        <!-- Welcome Splash -->
-        <div id="welcome-modal" class="modal-backdrop initial-overlay fixed inset-0 z-[120] bg-[#1A1C1C] flex items-center justify-center transition-opacity duration-1000">
-            <div class="modal-content glass-panel cinematic-reveal bg-surface/5 backdrop-blur-md border border-outline-variant/20 p-8 max-w-md w-[90%] text-center">
-                <div class="poster-logo-container mb-8">
-                    <div class="poster-top-line text-xs tracking-[0.3em] text-[#D0C5AF] mb-4">THE SECRET CITY</div>
-                    <div class="brand-logo-main poster-lockup text-5xl font-serif text-[#F9F9F9] flex items-center justify-center gap-1">
-                        <span class="elegant-w font-['Bodoni_Moda'] text-6xl text-[#D4AF37] italic mr-1">W</span>anderløst
-                    </div>
-                </div>
-                <button id="start-journey-btn" class="bg-primary-container text-on-primary-container px-8 py-3 text-xs font-bold uppercase tracking-widest">Begin Journey</button>
-            </div>
-        </div>
-
-        <!-- Subscription Modal -->
-        <!-- Subscription Modal (Stitch Layout) -->
-        <div id="subscription-modal" class="fixed inset-0 z-[120] flex items-center justify-center p-4 sm:p-6 bg-on-surface/10 backdrop-blur-sm transform translate-y-full transition-transform duration-500 pointer-events-auto hidden">
-            <!-- Modal Container -->
-            <div class="relative w-full max-w-4xl bg-surface-container-lowest shadow-2xl flex flex-col md:flex-row overflow-hidden border border-outline-variant/20 max-h-[90vh] overflow-y-auto">
-                <!-- Close Button -->
-                <button class="absolute top-6 right-6 z-20 text-secondary hover:text-on-surface transition-colors" onclick="closeModal('subscription-modal')">
-                    <span class="material-symbols-outlined text-2xl">close</span>
-                </button>
-                
-                <!-- Visual Side (Left) -->
-                <div class="hidden md:block md:w-5/12 relative bg-surface-container">
-                    <img class="absolute inset-0 w-full h-full object-cover" data-alt="dramatic aerial view" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDR2pcdkAvsm7erOFslp8-irFmg-D0oUliN9yiXJv4BUfGvhzVZVt0TwUXDZfGop7kx5MXlj0EIIRhucVVLUt7fXrG2QQzFxZF8Qf8wQh6q-K5x57Vw_bSeygB_OgPoRCZBWXEuv0pmKNzFEnqRCTzXXIeCtCDeAIgHn2TUzPGGbbhONQsCRVhh0SPqVYH_DhE_wXamazI2gv_opMpIU-p_3DFLBDxvWNnLFdr3lLIMvUii5tjqbvmC2v73bP93OweBi8xkgO8PS2g"/>
-                    <div class="absolute inset-0 bg-primary/10 mix-blend-multiply"></div>
-                    <div class="absolute bottom-10 left-10 right-10">
-                        <p class="font-serif italic text-xl text-white leading-relaxed">
-                            "The journey of a thousand miles begins with a single step into the unknown."
-                        </p>
-                    </div>
-                </div>
-                
-                <!-- Content Side (Right) -->
-                <div class="w-full md:w-7/12 p-8 md:p-16 flex flex-col justify-center">
-                    <!-- Brand Anchor -->
-                    <div class="mb-12">
-                        <span class="font-label text-[10px] tracking-[0.2em] uppercase text-primary font-semibold mb-4 block">Membership</span>
-                        <h2 class="font-serif text-4xl md:text-5xl text-on-surface leading-tight mb-6">
-                            Wanderløst Elite
-                        </h2>
-                        <p class="text-secondary text-lg font-light leading-relaxed max-w-md">
-                            Join a curated world of modern explorers and archive your journeys with precision.
-                        </p>
-                    </div>
-                    
-                    <!-- Feature List -->
-                    <ul class="space-y-6 mb-12">
-                        <li class="flex items-start gap-4">
-                            <span class="material-symbols-outlined text-primary mt-0.5" style="font-variation-settings: 'FILL' 1;">check_circle</span>
-                            <div>
-                                <span class="font-medium text-on-surface block">Unlimited Discoveries</span>
-                                <span class="text-secondary text-sm">No more badges. The network is yours.</span>
-                            </div>
-                        </li>
-                        <li class="flex items-start gap-4">
-                            <span class="material-symbols-outlined text-primary mt-0.5" style="font-variation-settings: 'FILL' 1;">check_circle</span>
-                            <div>
-                                <span class="font-medium text-on-surface block">Save Places</span>
-                                <span class="text-secondary text-sm">Build custom itineraries for future trips.</span>
-                            </div>
-                        </li>
-                    </ul>
-                    
-                    <!-- Actions -->
-                    <div class="space-y-6">
-                        <button id="subscribe-now-btn" class="w-full bg-primary-container text-on-primary-container px-8 py-5 text-sm font-semibold tracking-widest uppercase hover:opacity-90 transition-all active:scale-[0.98]">
-                            Start Your Journey — 20 CHF/mo
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Checkout / Payment Modal -->
-        <div id="checkout-modal" class="modal-backdrop hidden fixed inset-0 z-[110] bg-black/60 backdrop-blur-sm flex items-center justify-center">
-            <div class="modal-content bg-surface p-8 max-w-sm w-[90%] relative shadow-2xl border border-outline-variant/30 text-center">
-                <button class="close-btn absolute top-4 right-4 text-xl"><i class="fa-solid fa-xmark"></i></button>
-                <h2 class="font-serif text-2xl mb-4">Secure Checkout</h2>
-                <p class="text-sm text-secondary mb-6">20.00 CHF / Month</p>
-                <button type="button" id="confirm-payment-btn" class="w-full bg-primary-container text-on-primary-container py-3 font-bold uppercase tracking-widest text-xs">Pay 20.00 CHF</button>
-            </div>
-        </div>
-
-        <!-- Profile Modal (Stitch Layout) -->
-        <div id="profile-modal" class="fixed inset-0 z-[110] bg-[#FBFBFB] transform translate-y-full transition-transform duration-500 overflow-y-auto w-full h-full pointer-events-auto">
-            <!-- TopAppBar Shell -->
-            <header class="sticky top-0 w-full flex justify-between items-center px-6 h-16 z-50 bg-[#F9F9F9]/80 backdrop-blur-md border-b-[0.5px] border-[#D0C5AF]/20">
-                <div class="flex items-center gap-4">
-                    <span class="material-symbols-outlined text-[#735C00] cursor-pointer" data-icon="close" onclick="closeModal('profile-modal')">close</span>
-                    <h1 class="font-serif italic text-2xl text-[#1A1C1C]">Wanderlost</h1>
-                </div>
-                <div class="flex items-center gap-4">
-                    <span class="material-symbols-outlined text-[#735C00] cursor-pointer" data-icon="notifications">notifications</span>
-                </div>
-            </header>
-            
-            <main class="pt-8 px-6 pb-32 max-w-screen-md mx-auto">
-                <!-- Profile Section -->
-                <section class="flex flex-col items-center mb-12">
-                    <div class="relative group cursor-pointer">
-                        <div class="w-32 h-32 rounded-full overflow-hidden border-[0.5px] border-outline-variant/30 bg-surface-container flex items-center justify-center">
-                            <span class="material-symbols-outlined text-4xl text-secondary">person</span>
-                        </div>
-                    </div>
-                    <h2 class="mt-6 font-serif text-3xl tracking-tight text-on-surface">Explorer</h2>
-                    <p class="text-secondary font-label text-[10px] tracking-[0.2em] uppercase mt-1">Level 1</p>
-                </section>
-                
-                <!-- Membership Status Card -->
-                <section class="mb-12">
-                    <div class="bg-surface-container-lowest border-[0.5px] border-outline-variant/20 p-8 flex flex-col md:flex-row justify-between items-center gap-6">
-                        <div>
-                            <p class="text-secondary font-label text-[10px] tracking-widest uppercase mb-1">Account Tier</p>
-                            <h3 class="font-headline text-xl flex items-center gap-2">Membership: Free</h3>
-                        </div>
-                        <button class="bg-primary-container text-on-primary-container px-8 py-3 font-label text-xs font-semibold tracking-widest uppercase hover:opacity-90 transition-opacity active:scale-[0.98]" onclick="openModal('subscription-modal')">Join Premium</button>
-                    </div>
-                </section>
-
-                <!-- Settings CTA -->
-                <section class="mb-24 flex flex-col items-center text-center gap-4">
-                    <button class="text-secondary border-b border-outline-variant/30 font-label text-[10px] tracking-[0.2em] uppercase py-1 hover:text-primary transition-colors" onclick="openModal('legal-modal')">
-                        Legal & Protocol
-                    </button>
-                </section>
-            </main>
-        </div>
-
-        <!-- Legal Modal -->
-        <!-- Legal Modal (Stitch Layout) -->
-        <div id="legal-modal" class="fixed inset-0 z-[120] bg-background transform translate-y-full transition-transform duration-500 overflow-y-auto w-full h-full pointer-events-auto selection:bg-primary-fixed selection:text-on-primary-fixed">
-            <!-- Top Navigation Anchor -->
-            <header class="sticky top-0 w-full z-50 bg-[#F9F9F9]/80 backdrop-blur-md border-b border-[#D0C5AF]/20">
-                <div class="flex items-center px-6 h-16 w-full max-w-7xl mx-auto justify-between">
-                    <div class="flex items-center gap-4">
-                        <button class="active:scale-95 transition-transform text-[#735C00]" onclick="closeModal('legal-modal')">
-                            <span class="material-symbols-outlined">arrow_back</span>
-                        </button>
-                        <h1 class="font-['Noto_Serif'] font-normal tracking-tight text-[#1A1C1C] text-lg">Safety & Responsibility</h1>
-                    </div>
-                    <div class="text-xl font-serif text-[#1A1C1C] italic">W.</div>
-                </div>
-            </header>
-            
-            <main class="pt-8 px-6 pb-32 max-w-screen-md mx-auto">
-                <!-- Hero Section -->
-                <section class="editorial-tension mb-16">
-                    <div class="mb-8">
-                        <span class="font-label text-[10px] uppercase tracking-[0.2em] text-primary mb-2 block">Protocol 01</span>
-                        <h2 class="font-display text-4xl md:text-5xl font-bold leading-tight text-on-surface">The Digital Curator’s Liability</h2>
-                    </div>
-                    <div class="relative">
-                        <div class="h-[1px] w-12 bg-primary mb-8"></div>
-                        <p class="font-body text-secondary leading-relaxed text-sm md:text-base">
-                            Wanderlost is a discovery interface, not a travel guide. We provide data-driven recommendations based on public information; we do not verify the current physical condition, safety, or legality of any location. <span class="text-on-surface font-medium italic">You are responsible for your own journey.</span>
-                        </p>
-                    </div>
-                </section>
-
-                <!-- Section 1: Physical Safety -->
-                <section class="editorial-tension mb-20">
-                    <div class="flex items-baseline gap-4 mb-10">
-                        <span class="font-label text-xs text-outline-variant font-light">01.</span>
-                        <h3 class="font-display text-2xl font-bold text-on-surface">Self-Preservation</h3>
-                    </div>
-                    <div class="space-y-12">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 border-l border-outline-variant/20 pl-6">
-                            <div>
-                                <h4 class="font-label text-[11px] uppercase tracking-widest text-primary mb-3">Environmental Intelligence</h4>
-                                <p class="text-sm text-secondary leading-relaxed">
-                                    <strong class="text-on-surface font-medium">The 80/20 Rule:</strong> Assess the environment upon arrival. If it feels wrong, leave.
-                                </p>
-                            </div>
-                            <div>
-                                <h4 class="font-label text-[11px] uppercase tracking-widest text-primary mb-3">Tactical Awareness</h4>
-                                <p class="text-sm text-secondary leading-relaxed">
-                                    <strong class="text-on-surface font-medium">Emergency Readiness:</strong> Always identify your closest exit or transit point.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Footer Disclaimer -->
-                <footer class="editorial-tension py-12 bg-surface-container-low/50">
-                    <div class="max-w-md">
-                        <h5 class="font-label text-[10px] uppercase tracking-[0.15em] text-on-surface font-bold mb-4">Disclaimer of Liability</h5>
-                        <p class="font-body text-[11px] leading-relaxed text-secondary/80">
-                            By using Wanderlost, you acknowledge that all travel is undertaken at your own risk. You agree to hold Wanderlost harmless from any claims resulting from your personal travel decisions.
-                        </p>
-                        <div class="mt-8 flex gap-4">
-                            <div class="h-8 w-[1px] bg-outline-variant/40"></div>
-                            <div class="italic font-display text-lg text-outline-variant">Safety is a personal coordinate.</div>
-                        </div>
-                    </div>
-                </footer>
-            </main>
-        </div>
-
-        <div id="location-permission-modal" class="modal-backdrop hidden">
-             <!-- Left inside the legacy DOM just to satisfy JS listeners, styled generically -->
-             <div class="modal-content bg-surface p-8 max-w-sm w-[90%] mx-auto mt-20 text-center relative border border-outline-variant/30">
-                <h2 class="font-serif text-2xl mb-4">Location Required</h2>
-                <p class="text-sm mb-6 text-secondary">To discover hidden gems, we need to locate you on the map.</p>
-                <div class="flex gap-4">
-                    <button id="location-deny-btn" class="flex-1 py-3 text-xs uppercase bg-surface-container text-on-surface">Not Now</button>
-                    <button id="location-allow-btn" class="flex-1 py-3 text-xs uppercase bg-primary-container text-on-primary-container font-bold">Allow</button>
-                </div>
-            </div>
-        </div>
-
-        <div id="custom-modal" class="modal-backdrop hidden">
-             <div class="modal-content bg-surface p-8 mx-auto mt-20 max-w-sm w-[90%] text-center border border-outline-variant/30">
-                 <h2 id="modal-title" class="font-serif text-2xl mb-2">Notice</h2>
-                 <p id="modal-message" class="text-sm text-secondary mb-6"></p>
-                 <button id="modal-ok-btn" class="bg-primary-container text-on-primary-container w-full py-3 text-xs font-bold uppercase tracking-widest">Understood</button>
-                 <button id="modal-cancel-btn" class="hidden"></button>
-             </div>
-        </div>
-
+    <!-- Sonar Effect -->
+    <div id="sonar-marker" class="absolute top-[48%] left-[42%] -translate-x-1/2 -translate-y-1/2 hidden">
+      <div class="relative flex items-center justify-center">
+        <div class="absolute w-24 h-24 border border-primary-container/30 rounded-full sonar-circle" style="animation-delay:-1.5s;"></div>
+        <div class="absolute w-12 h-12 border border-primary-container/50 rounded-full sonar-circle"></div>
+        <div class="w-4 h-4 bg-primary rounded-full border-2 border-surface shadow-[0_0_15px_rgba(115,92,0,0.4)] z-10"></div>
+      </div>
     </div>
 
-    <!-- Scripts -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB1RVtX565j0NYmTtFebx1nmDCrh6X0rYM&callback=initMap" async defer></script>
-    <script src="./app.js"></script>
-    
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW failed', err));
+    <!-- Discover Button -->
+    <div class="fixed bottom-24 left-1/2 -translate-x-1/2 w-full max-w-xs px-6 z-40">
+      <button id="btn-discover" class="w-full bg-primary-container text-on-primary-container font-label text-[11px] font-bold uppercase tracking-[0.2em] py-5 px-10 shadow-[0_20px_40px_-10px_rgba(212,175,55,0.4)] hover:shadow-[0_25px_50px_-10px_rgba(212,175,55,0.6)] transition-all active:translate-y-1 rounded-full flex items-center justify-center gap-3 border border-white/20">
+        <span class="material-symbols-outlined text-sm">explore</span>
+        Discover Places
+      </button>
+    </div>
+  </main>
+
+  <!-- Discovery Bottom Sheet -->
+  <div id="discovery-sheet">
+    <div class="bg-surface-container-lowest border-t border-outline-variant/30 shadow-[0_-20px_50px_-15px_rgba(0,0,0,0.12)] pb-24 pt-8 px-8 max-w-3xl mx-auto rounded-t-3xl h-[50vh] overflow-y-auto">
+      <div class="flex justify-between items-start mb-6">
+        <div>
+          <span id="sheet-tag" class="inline-block px-2 py-0.5 border border-outline-variant/40 text-[9px] font-label uppercase tracking-[0.15em] text-secondary mb-3">Discovery</span>
+          <h1 id="sheet-title" class="font-serif text-4xl text-on-surface tracking-tight leading-tight italic">Loading...</h1>
+        </div>
+        <div class="flex gap-2">
+          <button onclick="closeDiscoverySheet()" class="w-10 h-10 flex items-center justify-center hover:bg-surface-container transition-colors rounded-full">
+            <span class="material-symbols-outlined text-secondary">close</span>
+          </button>
+        </div>
+      </div>
+      <div class="flex flex-col gap-4 mb-8">
+        <div class="flex items-start gap-3 text-secondary">
+          <span class="material-symbols-outlined text-base mt-0.5">location_on</span>
+          <p id="sheet-address" class="text-[13px] font-body tracking-wide leading-relaxed">...</p>
+        </div>
+        <div class="flex items-center gap-3 text-secondary">
+          <span class="material-symbols-outlined text-base">straighten</span>
+          <p id="sheet-distance" class="text-[13px] font-body tracking-wide">...</p>
+        </div>
+        <p id="sheet-desc" class="text-sm text-secondary leading-relaxed mt-2">...</p>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <button id="btn-go-maps" class="flex items-center justify-center gap-2 text-white py-4 px-6 text-[10px] font-label font-bold uppercase tracking-widest transition-all hover:bg-primary/90 shadow-md bg-[#D4AF37]">
+          <span class="material-symbols-outlined text-sm">map</span> Go to Google Maps
+        </button>
+        <button class="flex items-center justify-center gap-2 border border-outline py-4 px-6 text-[10px] font-label font-bold uppercase tracking-widest text-on-surface hover:bg-surface-container transition-colors">
+          <span class="material-symbols-outlined text-sm">bookmark</span> Save
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- TAB: HISTORY (history_refined_layout) -->
+<!-- ============================================================ -->
+<section id="tab-history" class="tab-section">
+  <header class="bg-[#F9F9F9]/80 backdrop-blur-xl sticky top-0 z-50 border-b border-[#D0C5AF]/20">
+    <div class="flex justify-between items-center w-full px-6 py-4">
+      <button class="text-[#5F5E5E] hover:opacity-70 transition-opacity active:scale-95 duration-200" onclick="openModal('modal-settings')">
+        <span class="material-symbols-outlined">menu</span>
+      </button>
+      <h1 class="text-2xl font-serif tracking-tighter text-[#735C00]">Wanderlost</h1>
+      <button class="text-[#5F5E5E] hover:opacity-70 transition-opacity active:scale-95 duration-200">
+        <span class="material-symbols-outlined">search</span>
+      </button>
+    </div>
+  </header>
+  <main class="max-w-3xl mx-auto px-6 pt-12 pb-32 overflow-y-auto" style="height:calc(100vh - 80px)">
+    <section class="mb-16">
+      <h2 class="font-serif-title text-5xl text-on-surface tracking-tight mb-2">History</h2>
+      <div class="h-px w-16 bg-primary mb-8"></div>
+      <p class="text-secondary font-body text-sm tracking-wide uppercase">Chronicle of your curated journeys</p>
+    </section>
+    <section class="mb-20">
+      <div class="flex items-center justify-between mb-8">
+        <h3 class="font-headline text-lg italic text-on-surface">Recent Discoveries</h3>
+        <span class="text-[10px] uppercase tracking-[0.2em] text-outline font-label">Volume 01</span>
+      </div>
+      <div id="history-list" class="space-y-12">
+        <p class="text-secondary text-sm italic">No discoveries yet. Tap "Discover Places" on the Explore tab to begin your journey.</p>
+      </div>
+    </section>
+    <!-- Premium Gate -->
+    <section class="mb-20 relative">
+      <div class="bg-primary-container p-8 md:p-12 mb-12 text-on-primary-container relative overflow-hidden">
+        <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
+          <div class="text-center md:text-left">
+            <h3 class="font-serif-title text-3xl md:text-4xl mb-4 leading-tight">Join Premium to<br/>Unlock History</h3>
+            <div class="flex flex-wrap gap-6 justify-center md:justify-start">
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-lg">all_inclusive</span>
+                <span class="text-xs uppercase tracking-widest font-label font-semibold">Unlimited History</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-lg">book_5</span>
+                <span class="text-xs uppercase tracking-widest font-label font-semibold">Permanent Log</span>
+              </div>
+            </div>
+          </div>
+          <button onclick="openModal('modal-premium')" class="bg-on-primary-container text-surface px-10 py-4 font-label text-[11px] uppercase tracking-[0.2em] font-bold hover:opacity-90 transition-opacity whitespace-nowrap">
+            Upgrade Now
+          </button>
+        </div>
+        <div class="absolute top-0 right-0 opacity-10 translate-x-1/4 -translate-y-1/4">
+          <span class="material-symbols-outlined text-[200px]">auto_stories</span>
+        </div>
+      </div>
+    </section>
+  </main>
+</section>
+
+<!-- ============================================================ -->
+<!-- TAB: PROFILE (my_account) -->
+<!-- ============================================================ -->
+<section id="tab-profile" class="tab-section">
+  <header class="sticky top-0 w-full flex justify-between items-center px-6 h-16 z-50 bg-[#F9F9F9]/80 backdrop-blur-md border-b-[0.5px] border-[#D0C5AF]/20">
+    <div class="flex items-center gap-4">
+      <span class="material-symbols-outlined text-[#735C00] cursor-pointer" onclick="openModal('modal-settings')">menu</span>
+      <h1 class="font-serif italic text-2xl text-[#1A1C1C]">Wanderlost</h1>
+    </div>
+    <div class="flex items-center gap-4">
+      <span class="material-symbols-outlined text-[#735C00] cursor-pointer">notifications</span>
+    </div>
+  </header>
+  <main class="pt-8 px-6 max-w-screen-md mx-auto pb-32 overflow-y-auto" style="height:calc(100vh - 80px)">
+    <section class="flex flex-col items-center mb-12">
+      <div class="w-32 h-32 rounded-full overflow-hidden border-[0.5px] border-outline-variant/30 bg-surface-container-high flex items-center justify-center">
+        <span class="material-symbols-outlined text-5xl text-secondary">person</span>
+      </div>
+      <h2 class="mt-6 font-serif text-3xl tracking-tight text-on-surface">Explorer</h2>
+      <p class="text-secondary font-label text-[10px] tracking-[0.2em] uppercase mt-1">Nomad Explorer</p>
+    </section>
+    <section class="mb-12">
+      <div class="bg-surface-container-lowest border-[0.5px] border-outline-variant/20 p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+        <div>
+          <p class="text-secondary font-label text-[10px] tracking-widest uppercase mb-1">Account Tier</p>
+          <h3 class="font-headline text-xl flex items-center gap-2">Membership: Free</h3>
+        </div>
+        <button onclick="openModal('modal-premium')" class="bg-primary-container text-on-primary-container px-8 py-3 font-label text-xs font-semibold tracking-widest uppercase hover:opacity-90 transition-opacity active:scale-[0.98]">
+          Join Premium
+        </button>
+      </div>
+    </section>
+    <section class="mb-12">
+      <div class="space-y-0">
+        <div class="flex justify-between items-center py-5 border-b-[0.5px] border-outline-variant/20">
+          <div><span class="block text-secondary font-label text-[10px] tracking-widest uppercase">Full Name</span><span class="text-on-surface font-body text-sm">Explorer</span></div>
+          <span class="material-symbols-outlined text-outline-variant text-sm cursor-pointer">edit</span>
+        </div>
+        <div class="flex justify-between items-center py-5 border-b-[0.5px] border-outline-variant/20">
+          <div><span class="block text-secondary font-label text-[10px] tracking-widest uppercase">Email Address</span><span class="text-on-surface font-body text-sm">â€”</span></div>
+          <span class="material-symbols-outlined text-outline-variant text-sm cursor-pointer">mail</span>
+        </div>
+      </div>
+    </section>
+    <section class="mb-24 flex flex-col items-center text-center gap-4">
+      <p class="text-secondary font-body text-sm max-w-[300px]">Customize your data preferences or deactivate your account at any time.</p>
+      <button onclick="openModal('modal-settings')" class="text-secondary border-b border-outline-variant/30 font-label text-[10px] tracking-[0.2em] uppercase py-1 hover:text-primary transition-colors">
+        Privacy Settings
+      </button>
+    </section>
+  </main>
+</section>
+
+<!-- ============================================================ -->
+<!-- SHARED BOTTOM NAV -->
+<!-- ============================================================ -->
+<nav id="bottom-nav" class="fixed bottom-0 left-0 w-full z-[150] flex justify-around items-center h-20 px-4 pb-safe bg-[#F9F9F9]/90 backdrop-blur-md border-t-[0.5px] border-[#D0C5AF]/20 shadow-lg">
+  <button onclick="switchTab('tab-explore')" data-tab="tab-explore" class="nav-btn flex flex-col items-center justify-center text-[#735C00] active:translate-y-[-2px] duration-300 transition-all">
+    <span class="material-symbols-outlined mb-1" style="font-variation-settings:'FILL' 1;">explore</span>
+    <span class="font-sans text-[10px] tracking-widest uppercase font-bold">Explore</span>
+  </button>
+  <button onclick="switchTab('tab-history')" data-tab="tab-history" class="nav-btn flex flex-col items-center justify-center text-[#5F5E5E] hover:text-[#735C00] transition-colors opacity-70">
+    <span class="material-symbols-outlined mb-1">history</span>
+    <span class="font-sans text-[10px] tracking-widest uppercase">History</span>
+  </button>
+  <button onclick="switchTab('tab-profile')" data-tab="tab-profile" class="nav-btn flex flex-col items-center justify-center text-[#5F5E5E] hover:text-[#735C00] transition-colors opacity-70">
+    <span class="material-symbols-outlined mb-1">person</span>
+    <span class="font-sans text-[10px] tracking-widest uppercase">Profile</span>
+  </button>
+</nav>
+
+<!-- ============================================================ -->
+<!-- MODAL: SETTINGS (settings_updated_colors) -->
+<!-- ============================================================ -->
+<div id="modal-settings" class="modal-slide">
+  <header class="fixed top-0 w-full flex justify-between items-center px-6 h-16 z-50 bg-[#F9F9F9]/80 backdrop-blur-md border-b-[0.5px] border-[#D0C5AF]/20">
+    <div class="flex items-center gap-4">
+      <button class="text-[#5F5E5E] active:scale-95 duration-200" onclick="closeModal('modal-settings')">
+        <span class="material-symbols-outlined">arrow_back</span>
+      </button>
+      <h1 class="font-serif italic text-2xl text-[#1A1C1C]">Settings</h1>
+    </div>
+    <span class="material-symbols-outlined text-[#735C00] cursor-pointer">notifications</span>
+  </header>
+  <main class="pt-24 pb-32 px-6 max-w-2xl mx-auto">
+    <section class="mb-12 flex items-end justify-between">
+      <div>
+        <p class="text-[10px] tracking-[0.2em] uppercase text-secondary font-medium mb-2">User Profile</p>
+        <h2 class="text-4xl font-serif-editorial leading-none">Explorer</h2>
+      </div>
+    </section>
+    <section class="mb-10">
+      <h3 class="text-2xl font-serif-editorial border-b-[0.5px] border-outline-variant/20 pb-2 mb-6">Membership</h3>
+      <div class="space-y-6">
+        <div class="flex justify-between items-baseline">
+          <span class="text-xs tracking-widest uppercase text-secondary">Status</span>
+          <span class="text-primary font-semibold italic font-serif text-lg">Free</span>
+        </div>
+        <div class="pt-4 flex gap-4">
+          <button onclick="openModal('modal-premium')" class="px-6 py-3 bg-primary-container text-on-primary-container text-xs font-bold tracking-widest uppercase hover:opacity-90 transition-all">Manage Subscription</button>
+        </div>
+      </div>
+    </section>
+    <section class="mb-10">
+      <h3 class="text-2xl font-serif-editorial border-b-[0.5px] border-outline-variant/20 pb-2 mb-4">Legal & Support</h3>
+      <ul class="divide-y divide-outline-variant/20">
+        <li><a class="flex justify-between items-center py-4 group cursor-pointer" onclick="openModal('modal-safety')"><span class="text-sm group-hover:pl-2 transition-all duration-300">Safety & Responsibility</span><span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">arrow_outward</span></a></li>
+        <li><a class="flex justify-between items-center py-4 group cursor-pointer" onclick="openModal('modal-privacy')"><span class="text-sm group-hover:pl-2 transition-all duration-300">Privacy Policy</span><span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">arrow_outward</span></a></li>
+      </ul>
+    </section>
+    <section class="bg-surface-container-low p-8 border-l-4 border-error/30">
+      <h3 class="text-xl font-serif-editorial text-error mb-4">Danger Zone</h3>
+      <p class="text-xs text-secondary mb-6 leading-relaxed">Actions performed here are irreversible.</p>
+      <button class="text-xs font-bold tracking-widest uppercase text-error hover:underline transition-all">Delete my data</button>
+    </section>
+  </main>
+</div>
+
+<!-- ============================================================ -->
+<!-- MODAL: SAFETY (safety_responsibility) -->
+<!-- ============================================================ -->
+<div id="modal-safety" class="modal-slide">
+  <header class="sticky top-0 w-full z-50 bg-[#F9F9F9]/80 backdrop-blur-md border-b border-[#D0C5AF]/20">
+    <div class="flex items-center px-6 h-16 w-full max-w-7xl mx-auto justify-between">
+      <div class="flex items-center gap-4">
+        <button class="active:scale-95 transition-transform text-[#735C00]" onclick="closeModal('modal-safety')">
+          <span class="material-symbols-outlined">arrow_back</span>
+        </button>
+        <h1 class="font-['Noto_Serif'] font-normal tracking-tight text-[#1A1C1C] text-lg">Safety & Responsibility</h1>
+      </div>
+      <div class="text-xl font-serif text-[#1A1C1C] italic">W.</div>
+    </div>
+  </header>
+  <main class="pt-8 pb-32">
+    <section class="editorial-tension mb-16">
+      <div class="mb-8">
+        <span class="font-label text-[10px] uppercase tracking-[0.2em] text-primary mb-2 block">Protocol 01</span>
+        <h2 class="font-display text-4xl md:text-5xl font-bold leading-tight text-on-surface">The Digital Curator's Liability</h2>
+      </div>
+      <div class="relative">
+        <div class="h-[1px] w-12 bg-primary mb-8"></div>
+        <p class="font-body text-secondary leading-relaxed text-sm md:text-base">
+          Wanderlost is a discovery interface, not a travel guide. We provide data-driven recommendations based on public information. <span class="text-on-surface font-medium italic">You are responsible for your own journey.</span>
+        </p>
+      </div>
+    </section>
+    <section class="editorial-tension mb-20">
+      <div class="flex items-baseline gap-4 mb-10">
+        <span class="font-label text-xs text-outline-variant font-light">01.</span>
+        <h3 class="font-display text-2xl font-bold text-on-surface">Self-Preservation (Physical Safety)</h3>
+      </div>
+      <div class="space-y-12">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 border-l border-outline-variant/20 pl-6">
+          <div>
+            <h4 class="font-label text-[11px] uppercase tracking-widest text-primary mb-3">Environmental Intelligence</h4>
+            <p class="text-sm text-secondary leading-relaxed"><strong class="text-on-surface font-medium">The 80/20 Rule:</strong> Assess the environment upon arrival. If it feels wrong, leave.</p>
+          </div>
+          <div>
+            <h4 class="font-label text-[11px] uppercase tracking-widest text-primary mb-3">Tactical Awareness</h4>
+            <p class="text-sm text-secondary leading-relaxed"><strong class="text-on-surface font-medium">Emergency Readiness:</strong> Always identify your closest exit or transit point.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="editorial-tension mb-24">
+      <div class="flex items-baseline gap-4 mb-10">
+        <span class="font-label text-xs text-outline-variant font-light">02.</span>
+        <h3 class="font-display text-2xl font-bold text-on-surface">Self-Responsibility (Legal)</h3>
+      </div>
+      <div class="flex flex-col gap-6">
+        <div class="flex gap-6 items-center py-6 border-b border-outline-variant/20">
+          <span class="font-label text-xs text-primary font-bold">NO_AGENCY</span>
+          <p class="text-sm text-secondary flex-1">Wanderlost does not act as an agent, guide, or insurer.</p>
+        </div>
+        <div class="flex gap-6 items-center py-6 border-b border-outline-variant/20">
+          <span class="font-label text-xs text-primary font-bold">PRIVATE_PRP</span>
+          <p class="text-sm text-secondary flex-1">Never trespass. If a location is restricted, do not enter.</p>
+        </div>
+      </div>
+    </section>
+    <footer class="editorial-tension py-12 bg-surface-container-low/50">
+      <div class="max-w-md">
+        <h5 class="font-label text-[10px] uppercase tracking-[0.15em] text-on-surface font-bold mb-4">Disclaimer of Liability</h5>
+        <p class="font-body text-[11px] leading-relaxed text-secondary/80">By using Wanderlost, you acknowledge that all travel is undertaken at your own risk.</p>
+        <div class="mt-8 flex gap-4">
+          <div class="h-8 w-[1px] bg-outline-variant/40"></div>
+          <div class="italic font-display text-lg text-outline-variant">Safety is a personal coordinate.</div>
+        </div>
+      </div>
+    </footer>
+  </main>
+</div>
+
+<!-- ============================================================ -->
+<!-- MODAL: PRIVACY POLICY (from screenshot) -->
+<!-- ============================================================ -->
+<div id="modal-privacy" class="modal-slide">
+  <header class="sticky top-0 w-full z-50 bg-[#F9F9F9]/80 backdrop-blur-md border-b border-[#D0C5AF]/20">
+    <div class="flex items-center px-6 h-16 w-full max-w-7xl mx-auto justify-between">
+      <div class="flex items-center gap-4">
+        <button class="active:scale-95 transition-transform text-[#735C00]" onclick="closeModal('modal-privacy')">
+          <span class="material-symbols-outlined">arrow_back</span>
+        </button>
+        <h1 class="font-['Noto_Serif'] font-normal tracking-tight text-[#1A1C1C] text-lg">Privacy Policy</h1>
+      </div>
+      <div class="text-xl font-serif text-[#1A1C1C] italic">W.</div>
+    </div>
+  </header>
+  <main class="pt-8 pb-32 px-[10%]">
+    <section class="mb-4">
+      <span class="font-label text-[10px] uppercase tracking-[0.2em] text-primary mb-2 block">Legal & Privacy</span>
+      <h2 class="font-serif-title text-5xl leading-tight text-on-surface mb-4">Respecting the Digital Horizon.</h2>
+      <p class="text-[10px] uppercase tracking-widest text-outline mb-8">Last Updated: March 27, 2026</p>
+      <p class="font-serif italic text-secondary leading-relaxed text-lg">At Wanderlost, your privacy is the bedrock of our exploration. We curate experiences, not personal data for profit. This document outlines our commitment to your digital sovereignty.</p>
+    </section>
+
+    <section class="mb-12 mt-12">
+      <h3 class="font-serif-title text-3xl text-on-surface mb-1">Data We Collect</h3>
+      <span class="font-label text-[10px] uppercase tracking-[0.2em] text-primary mb-6 block">Section 01</span>
+      <div class="space-y-6">
+        <div><h4 class="font-headline text-sm font-bold mb-1">Precise Location Data</h4><p class="text-sm text-secondary leading-relaxed">Required for real-time navigation and the Neural Map functionality. We only track location when the app is active or in background-tracking mode.</p></div>
+        <div><h4 class="font-headline text-sm font-bold mb-1">Account Information</h4><p class="text-sm text-secondary leading-relaxed">Name, email address, and verified credentials used to synchronize your Journal across devices.</p></div>
+        <div><h4 class="font-headline text-sm font-bold mb-1">Usage Data & Identifiers</h4><p class="text-sm text-secondary leading-relaxed">Anonymous device identifiers and interaction logs to improve the fluidity of the Wanderlost interface.</p></div>
+      </div>
+    </section>
+
+    <section class="mb-12">
+      <h3 class="font-serif-title text-3xl text-on-surface mb-1">Data Utilization</h3>
+      <span class="font-label text-[10px] uppercase tracking-[0.2em] text-primary mb-6 block">Section 02</span>
+      <div class="bg-surface-container-low p-6 border-l-2 border-primary mb-6">
+        <h4 class="font-headline text-base font-bold mb-2">The Neural Map</h4>
+        <p class="text-sm text-secondary leading-relaxed">Your data fuels the "Neural Map"â€”our proprietary algorithmic curation that suggests hidden gems based on movement patterns rather than commercial influence.</p>
+      </div>
+    </section>
+
+    <section class="mb-12">
+      <h3 class="font-serif-title text-3xl text-on-surface mb-1">Third Party Ecosystem</h3>
+      <span class="font-label text-[10px] uppercase tracking-[0.2em] text-primary mb-6 block">Section 03</span>
+      <div class="space-y-4">
+        <div class="flex justify-between py-3 border-b border-outline-variant/20"><span class="text-sm">Map Services</span><span class="text-sm text-secondary">Google Maps SDK</span></div>
+        <div class="flex justify-between py-3 border-b border-outline-variant/20"><span class="text-sm">Payment Processors</span><span class="text-sm text-secondary">Stripe / Apple Pay</span></div>
+        <div class="flex justify-between py-3 border-b border-outline-variant/20"><span class="text-sm">Analytics</span><span class="text-sm text-secondary">In-house (Encrypted)</span></div>
+      </div>
+    </section>
+
+    <section class="mb-12">
+      <h3 class="font-serif-title text-3xl text-on-surface mb-1">Safety Disclaimer</h3>
+      <span class="font-label text-[10px] uppercase tracking-[0.2em] text-primary mb-6 block">Section 04</span>
+      <p class="text-sm text-secondary leading-relaxed">While our Neural Map provides curated navigation, data sources may occasionally vary due to atmospheric or signal interference. Wanderlost is a tool for exploration, not a substitute for personal judgment.</p>
+      <p class="text-xs uppercase tracking-widest text-on-surface font-bold mt-4">User responsibility is mandatory.</p>
+    </section>
+
+    <div class="text-center mt-16 mb-8">
+      <p class="text-sm text-secondary mb-2">Have questions about your digital footprint?</p>
+      <button class="text-primary font-serif italic text-lg border-b border-primary/30 hover:border-primary transition-colors">Contact the Curator</button>
+    </div>
+  </main>
+</div>
+
+<!-- ============================================================ -->
+<!-- MODAL: PREMIUM (premium_upsell) -->
+<!-- ============================================================ -->
+<div id="modal-premium" class="modal-slide" style="background:rgba(26,28,28,0.1);backdrop-filter:blur(4px);">
+  <div class="flex items-center justify-center min-h-screen p-4 sm:p-6">
+    <div class="relative w-full max-w-4xl bg-surface-container-lowest shadow-2xl flex flex-col md:flex-row overflow-hidden border border-outline-variant/20 max-h-[90vh] overflow-y-auto">
+      <button class="absolute top-6 right-6 z-20 text-secondary hover:text-on-surface transition-colors" onclick="closeModal('modal-premium')">
+        <span class="material-symbols-outlined text-2xl">close</span>
+      </button>
+      <div class="hidden md:block md:w-5/12 relative bg-surface-container">
+        <img class="absolute inset-0 w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDR2pcdkAvsm7erOFslp8-irFmg-D0oUliN9yiXJv4BUfGvhzVZVt0TwUXDZfGop7kx5MXlj0EIIRhucVVLUt7fXrG2QQzFxZF8Qf8wQh6q-K5x57Vw_bSeygB_OgPoRCZBWXEuv0pmKNzFEnqRCTzXXIeCtCDeAIgHn2TUzPGGbbhONQsCRVhh0SPqVYH_DhE_wXamazI2gv_opMpIU-p_3DFLBDxvWNnLFdr3lLIMvUii5tjqbvmC2v73bP93OweBi8xkgO8PS2g"/>
+        <div class="absolute inset-0 bg-primary/10 mix-blend-multiply"></div>
+        <div class="absolute bottom-10 left-10 right-10">
+          <p class="font-serif italic text-xl text-white leading-relaxed">"The journey of a thousand miles begins with a single step into the unknown."</p>
+        </div>
+      </div>
+      <div class="w-full md:w-7/12 p-8 md:p-16 flex flex-col justify-center">
+        <div class="mb-12">
+          <span class="font-label text-[10px] tracking-[0.2em] uppercase text-primary font-semibold mb-4 block">Membership</span>
+          <h2 class="font-serif text-4xl md:text-5xl text-on-surface leading-tight mb-6">Unlock the possibilities.</h2>
+          <p class="text-secondary text-lg font-light leading-relaxed max-w-md">Join a curated world of modern explorers.</p>
+        </div>
+        <ul class="space-y-6 mb-12">
+          <li class="flex items-start gap-4"><span class="material-symbols-outlined text-primary mt-0.5" style="font-variation-settings:'FILL' 1;">check_circle</span><div><span class="font-medium text-on-surface block">Unlimited Discoveries</span><span class="text-secondary text-sm">No more limits. The network is yours.</span></div></li>
+          <li class="flex items-start gap-4"><span class="material-symbols-outlined text-primary mt-0.5" style="font-variation-settings:'FILL' 1;">check_circle</span><div><span class="font-medium text-on-surface block">Filter by Category</span><span class="text-secondary text-sm">Target specifically what you're looking for.</span></div></li>
+          <li class="flex items-start gap-4"><span class="material-symbols-outlined text-primary mt-0.5" style="font-variation-settings:'FILL' 1;">check_circle</span><div><span class="font-medium text-on-surface block">Save Places</span><span class="text-secondary text-sm">Build custom itineraries for future trips.</span></div></li>
+        </ul>
+        <button onclick="openModal('modal-checkout');closeModal('modal-premium');" class="w-full bg-primary-container text-on-primary-container px-8 py-5 text-sm font-semibold tracking-widest uppercase hover:opacity-90 transition-all active:scale-[0.98]">
+          Start Your Journey â€” 20 CHF/mo
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- MODAL: CHECKOUT (checkout) -->
+<!-- ============================================================ -->
+<div id="modal-checkout" class="modal-slide">
+  <header class="fixed top-0 w-full flex justify-between items-center px-6 h-16 z-50 bg-[#F9F9F9]/80 backdrop-blur-md border-b-[0.5px] border-[#D0C5AF]/20">
+    <div class="flex items-center gap-4">
+      <button class="text-[#5F5E5E] active:scale-95 duration-200" onclick="closeModal('modal-checkout')">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+      <h1 class="serif-headline text-2xl tracking-tight text-on-surface">Checkout</h1>
+    </div>
+    <span class="text-[#735C00] font-serif italic text-2xl">Wanderlost</span>
+  </header>
+  <main class="pt-24 pb-32 max-w-2xl mx-auto px-6">
+    <section class="mb-12">
+      <h2 class="uppercase tracking-[0.1em] text-secondary text-[0.6875rem] font-semibold mb-6">Select Your Journey</h2>
+      <div class="flex p-1 bg-surface-container-low border border-outline-variant/20 items-center">
+        <button class="flex-1 py-4 text-center text-sm font-medium bg-surface-container-lowest text-on-surface">20 CHF Monthly</button>
+        <button class="flex-1 py-4 text-center text-sm font-medium text-secondary hover:text-on-surface transition-colors">200 CHF Annual</button>
+      </div>
+    </section>
+    <section class="mb-12">
+      <h2 class="uppercase tracking-[0.1em] text-secondary text-[0.6875rem] font-semibold mb-6">Express Checkout</h2>
+      <div class="grid grid-cols-2 gap-4">
+        <button class="flex items-center justify-center gap-2 bg-on-surface text-surface py-4 active:scale-[0.98] transition-transform"><span class="font-semibold tracking-tight text-lg">Apple Pay</span></button>
+        <button class="flex items-center justify-center gap-2 bg-surface-container-lowest border border-outline-variant/30 text-on-surface py-4 active:scale-[0.98] transition-transform"><span class="font-semibold tracking-tight text-lg italic">G Pay</span></button>
+      </div>
+    </section>
+    <div class="flex items-center gap-4 mb-12">
+      <div class="h-[0.5px] flex-1 bg-outline-variant/30"></div>
+      <span class="uppercase tracking-widest text-secondary text-[10px]">Or pay manually</span>
+      <div class="h-[0.5px] flex-1 bg-outline-variant/30"></div>
+    </div>
+    <section class="mb-12">
+      <form id="checkout-form" class="space-y-8">
+        <div><label class="block uppercase tracking-widest text-secondary text-[0.6875rem] mb-2">Cardholder Name</label><input class="w-full bg-transparent border-0 border-b border-outline-variant/40 focus:border-primary focus:ring-0 px-0 py-2 text-on-surface placeholder:text-outline-variant/60 font-medium transition-colors" placeholder="FULL NAME" type="text" required/></div>
+        <div><label class="block uppercase tracking-widest text-secondary text-[0.6875rem] mb-2">Card Number</label><input class="w-full bg-transparent border-0 border-b border-outline-variant/40 focus:border-primary focus:ring-0 px-0 py-2 text-on-surface placeholder:text-outline-variant/60 font-medium transition-colors" placeholder="0000 0000 0000 0000" type="text" required/></div>
+        <div class="grid grid-cols-2 gap-8">
+          <div><label class="block uppercase tracking-widest text-secondary text-[0.6875rem] mb-2">Expiry</label><input class="w-full bg-transparent border-0 border-b border-outline-variant/40 focus:border-primary focus:ring-0 px-0 py-2 text-on-surface placeholder:text-outline-variant/60 font-medium transition-colors" placeholder="MM/YY" type="text" required/></div>
+          <div><label class="block uppercase tracking-widest text-secondary text-[0.6875rem] mb-2">CVC</label><input class="w-full bg-transparent border-0 border-b border-outline-variant/40 focus:border-primary focus:ring-0 px-0 py-2 text-on-surface placeholder:text-outline-variant/60 font-medium transition-colors" placeholder="123" type="text" required/></div>
+        </div>
+      </form>
+    </section>
+    <section class="p-8 bg-surface-container-low border border-outline-variant/10 mb-12">
+      <div class="flex justify-between items-end">
+        <div><span class="uppercase tracking-widest text-secondary text-[10px] block mb-1">Total Due Today</span><h3 class="serif-headline text-4xl text-on-surface">20.00 CHF</h3></div>
+        <div class="text-right"><span class="uppercase tracking-widest text-secondary text-[10px] block mb-1">Premium Access</span><span class="text-on-surface text-sm font-medium">Billed Monthly</span></div>
+      </div>
+      <div class="mt-8 pt-8 border-t border-outline-variant/20">
+        <p class="text-[11px] text-secondary leading-relaxed tracking-wide">By confirming, you agree to Wanderlost's Terms of Service and Privacy Policy.</p>
+      </div>
+    </section>
+    <button id="btn-confirm-payment" class="w-full bg-primary-container text-on-primary-container py-5 text-sm font-bold tracking-[0.2em] uppercase active:scale-[0.99] transition-all hover:bg-primary-container/90">
+      Confirm Payment
+    </button>
+  </main>
+  <footer class="pb-12 text-center">
+    <div class="flex justify-center items-center gap-2 mb-2">
+      <span class="material-symbols-outlined text-primary text-sm">verified_user</span>
+      <span class="uppercase tracking-widest text-secondary text-[9px]">Encrypted & Secure Transaction</span>
+    </div>
+  </footer>
+</div>
+
+<!-- ============================================================ -->
+<!-- SCRIPTS -->
+<!-- ============================================================ -->
+<script src="./app.js"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB1RVtX565j0NYmTtFebx1nmDCrh6X0rYM&callback=initMap"></script>
+
+<!-- Service Worker Registration -->
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').then(reg => {
+      reg.addEventListener('updatefound', () => {
+        const newWorker = reg.installing;
+        newWorker.addEventListener('statechange', () => {
+          if (newWorker.state === 'activated') location.reload();
         });
-      }
-    </script>
+      });
+    });
+  });
+}
+</script>
+
 </body>
 </html>
