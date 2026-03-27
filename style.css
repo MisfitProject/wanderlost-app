@@ -1121,11 +1121,17 @@ button {
 }
 
 .elegant-w {
+    font-family: 'Bodoni Moda', 'Playfair Display', var(--font-heading), serif !important;
+    color: var(--accent-vintage);
+    font-weight: 400 !important;
     font-size: 1.4em;
-    font-weight: 400;
-    font-style: italic; /* Swashy elegant feel */
+    font-style: italic !important;
+    letter-spacing: -1px;
     margin-right: -2px;
     line-height: 0.8;
+    vertical-align: baseline;
+    display: inline-block;
+    transition: all 0.3s ease;
 }
 
 .elegant-w-elite {
@@ -1413,18 +1419,7 @@ button {
     }
 }
 
-/* Unified Premium Branding */
-.brand-w, .elegant-w {
-    font-family: var(--font-heading) !important;
-    color: var(--accent-vintage);
-    font-weight: 900 !important;
-    font-size: 1.4em;
-    vertical-align: baseline;
-    font-style: italic !important;
-    letter-spacing: -2px;
-    display: inline-block;
-    transition: all 0.3s ease;
-}
+/* Unified Premium Branding applied above (line 1123) */
 
 .brand-logo-main {
     font-size: 3.5rem;
