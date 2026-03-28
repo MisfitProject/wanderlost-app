@@ -547,7 +547,7 @@ div[style*="z-index: 1000001"], div[style*="z-index: 1000000"] { display: none !
       <h3 class="text-2xl font-serif-editorial border-b-[0.5px] border-outline-variant/20 pb-2 mb-4">Legal & Support</h3>
       <ul class="divide-y divide-outline-variant/20">
         <li><a class="flex justify-between items-center py-4 group cursor-pointer"><span class="text-sm group-hover:pl-2 transition-all duration-300">Help Center</span><span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">arrow_outward</span></a></li>
-        <li><a class="flex justify-between items-center py-4 group cursor-pointer"><span class="text-sm group-hover:pl-2 transition-all duration-300">Terms & Conditions</span><span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">arrow_outward</span></a></li>
+        <li><a class="flex justify-between items-center py-4 group cursor-pointer" onclick="openModal('modal-terms')"><span class="text-sm group-hover:pl-2 transition-all duration-300">Terms & Conditions</span><span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">arrow_outward</span></a></li>
         <li><a class="flex justify-between items-center py-4 group cursor-pointer" onclick="openModal('modal-privacy')"><span class="text-sm group-hover:pl-2 transition-all duration-300">Privacy Policy</span><span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">arrow_outward</span></a></li>
         <li><a class="flex justify-between items-center py-4 group cursor-pointer" onclick="openModal('modal-safety')"><span class="text-sm group-hover:pl-2 transition-all duration-300">Safety & Responsibility</span><span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">arrow_outward</span></a></li>
       </ul>
@@ -705,6 +705,96 @@ div[style*="z-index: 1000001"], div[style*="z-index: 1000000"] { display: none !
 
     <div class="text-center mt-16 mb-8">
       <p class="text-sm text-secondary mb-2">Have questions about your digital footprint?</p>
+      <button class="text-primary font-serif italic text-lg border-b border-primary/30 hover:border-primary transition-colors">Contact the Curator</button>
+    </div>
+  </main>
+</div>
+
+<!-- ============================================================ -->
+<!-- MODAL: TERMS & CONDITIONS -->
+<!-- ============================================================ -->
+<div id="modal-terms" class="modal-slide">
+  <header class="sticky top-0 w-full z-50 bg-[#F9F9F9]/80 backdrop-blur-md border-b border-[#D0C5AF]/20">
+    <div class="flex items-center px-6 h-16 w-full max-w-7xl mx-auto justify-between">
+      <div class="flex items-center gap-4">
+        <button class="active:scale-95 transition-transform text-[#735C00]" onclick="closeModal('modal-terms')">
+          <span class="material-symbols-outlined">arrow_back</span>
+        </button>
+        <h1 class="font-['Noto_Serif'] font-normal tracking-tight text-[#1A1C1C] text-lg">Terms &amp; Conditions</h1>
+      </div>
+      <div class="text-xl font-serif text-[#1A1C1C] italic">W.</div>
+    </div>
+  </header>
+  <main class="pt-8 pb-32 px-[10%]">
+    <section class="mb-4">
+      <span class="font-label text-[10px] uppercase tracking-[0.2em] text-primary mb-2 block">Legal Framework</span>
+      <h2 class="font-serif-title text-5xl leading-tight text-on-surface mb-4">Terms of Engagement.</h2>
+      <p class="text-[10px] uppercase tracking-widest text-outline mb-8">Last Updated: March 27, 2026</p>
+      <p class="font-serif italic text-secondary leading-relaxed text-lg">By accessing Wanderlost, you agree to be bound by these Terms of Service. Please read them carefully before using our discovery platform.</p>
+    </section>
+
+    <section class="mb-12 mt-12">
+      <h3 class="font-serif-title text-3xl text-on-surface mb-1">Acceptance of Terms</h3>
+      <span class="font-label text-[10px] uppercase tracking-[0.2em] text-primary mb-6 block">Section 01</span>
+      <div class="space-y-4">
+        <p class="text-sm text-secondary leading-relaxed">By downloading, installing, or using Wanderlost (the "Application"), you acknowledge that you have read, understood, and agree to be bound by these Terms and Conditions. If you do not agree, you must not use the Application.</p>
+        <p class="text-sm text-secondary leading-relaxed">These terms constitute a legally binding agreement between you ("User") and Wanderlost ("Company", "we", "us").</p>
+      </div>
+    </section>
+
+    <section class="mb-12">
+      <h3 class="font-serif-title text-3xl text-on-surface mb-1">Use of Service</h3>
+      <span class="font-label text-[10px] uppercase tracking-[0.2em] text-primary mb-6 block">Section 02</span>
+      <div class="space-y-6">
+        <div class="bg-surface-container-low p-6 border-l-2 border-primary">
+          <h4 class="font-headline text-base font-bold mb-2">Eligibility</h4>
+          <p class="text-sm text-secondary leading-relaxed">You must be at least 18 years old to use Wanderlost. By using the Application, you represent and warrant that you meet this requirement.</p>
+        </div>
+        <div>
+          <h4 class="font-headline text-sm font-bold mb-1">Account Responsibility</h4>
+          <p class="text-sm text-secondary leading-relaxed">You are responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account.</p>
+        </div>
+        <div>
+          <h4 class="font-headline text-sm font-bold mb-1">Prohibited Conduct</h4>
+          <p class="text-sm text-secondary leading-relaxed">You agree not to misuse the service, including but not limited to: reverse engineering the discovery algorithm, scraping location data, or using the application for any unlawful purpose.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="mb-12">
+      <h3 class="font-serif-title text-3xl text-on-surface mb-1">Subscription &amp; Billing</h3>
+      <span class="font-label text-[10px] uppercase tracking-[0.2em] text-primary mb-6 block">Section 03</span>
+      <div class="space-y-4">
+        <div class="flex justify-between py-3 border-b border-outline-variant/20"><span class="text-sm">Free Tier</span><span class="text-sm text-secondary">3 discoveries per session</span></div>
+        <div class="flex justify-between py-3 border-b border-outline-variant/20"><span class="text-sm">Premium Monthly</span><span class="text-sm text-secondary">20 CHF / month</span></div>
+        <div class="flex justify-between py-3 border-b border-outline-variant/20"><span class="text-sm">Premium Annual</span><span class="text-sm text-secondary">200 CHF / year</span></div>
+        <div class="flex justify-between py-3 border-b border-outline-variant/20"><span class="text-sm">Cancellation</span><span class="text-sm text-secondary">Anytime, effective end of billing cycle</span></div>
+      </div>
+      <p class="text-sm text-secondary leading-relaxed mt-6">Subscriptions automatically renew unless cancelled at least 24 hours before the end of the current billing period. No refunds will be issued for partial billing periods.</p>
+    </section>
+
+    <section class="mb-12">
+      <h3 class="font-serif-title text-3xl text-on-surface mb-1">Limitation of Liability</h3>
+      <span class="font-label text-[10px] uppercase tracking-[0.2em] text-primary mb-6 block">Section 04</span>
+      <div class="bg-surface-container-low p-6 border-l-2 border-error/50">
+        <p class="text-sm text-secondary leading-relaxed">Wanderlost provides location-based recommendations "as is" without warranties of any kind. We are not liable for any damages, injuries, or losses arising from the use of our recommendations. <strong class="text-on-surface font-medium">All travel is undertaken at your own risk.</strong></p>
+      </div>
+    </section>
+
+    <section class="mb-12">
+      <h3 class="font-serif-title text-3xl text-on-surface mb-1">Intellectual Property</h3>
+      <span class="font-label text-[10px] uppercase tracking-[0.2em] text-primary mb-6 block">Section 05</span>
+      <p class="text-sm text-secondary leading-relaxed">All content, design, algorithms, and branding within Wanderlost are the exclusive property of the Company. You may not copy, modify, distribute, or create derivative works without prior written consent.</p>
+    </section>
+
+    <section class="mb-12">
+      <h3 class="font-serif-title text-3xl text-on-surface mb-1">Governing Law</h3>
+      <span class="font-label text-[10px] uppercase tracking-[0.2em] text-primary mb-6 block">Section 06</span>
+      <p class="text-sm text-secondary leading-relaxed">These Terms shall be governed by and construed in accordance with the laws of Switzerland. Any disputes arising from these Terms shall be subject to the exclusive jurisdiction of the courts of Zurich.</p>
+    </section>
+
+    <div class="text-center mt-16 mb-8">
+      <p class="text-sm text-secondary mb-2">Questions about our terms?</p>
       <button class="text-primary font-serif italic text-lg border-b border-primary/30 hover:border-primary transition-colors">Contact the Curator</button>
     </div>
   </main>
