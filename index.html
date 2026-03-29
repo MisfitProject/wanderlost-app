@@ -534,7 +534,7 @@ div[style*="z-index: 1000001"], div[style*="z-index: 1000000"] { display: none !
     <section class="mb-10">
       <h3 class="text-2xl font-serif-editorial border-b-[0.5px] border-outline-variant/20 pb-2 mb-4">Legal & Support</h3>
       <ul class="divide-y divide-outline-variant/20">
-        <li><a class="flex justify-between items-center py-4 group cursor-pointer"><span class="text-sm group-hover:pl-2 transition-all duration-300">Help Center</span><span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">arrow_outward</span></a></li>
+        <li><a class="flex justify-between items-center py-4 group cursor-pointer" onclick="openModal('modal-help')"><span class="text-sm group-hover:pl-2 transition-all duration-300">Help Center</span><span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">arrow_outward</span></a></li>
         <li><a class="flex justify-between items-center py-4 group cursor-pointer" onclick="openModal('modal-terms')"><span class="text-sm group-hover:pl-2 transition-all duration-300">Terms & Conditions</span><span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">arrow_outward</span></a></li>
         <li><a class="flex justify-between items-center py-4 group cursor-pointer" onclick="openModal('modal-privacy')"><span class="text-sm group-hover:pl-2 transition-all duration-300">Privacy Policy</span><span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">arrow_outward</span></a></li>
         <li><a class="flex justify-between items-center py-4 group cursor-pointer" onclick="openModal('modal-safety')"><span class="text-sm group-hover:pl-2 transition-all duration-300">Safety & Responsibility</span><span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">arrow_outward</span></a></li>
@@ -783,6 +783,210 @@ div[style*="z-index: 1000001"], div[style*="z-index: 1000000"] { display: none !
 
     <div class="text-center mt-16 mb-8">
       <p class="text-sm text-secondary mb-2">Questions about our terms?</p>
+      <button class="text-primary font-serif italic text-lg border-b border-primary/30 hover:border-primary transition-colors">Contact the Curator</button>
+    </div>
+  </main>
+</div>
+
+<!-- ============================================================ -->
+<!-- MODAL: HELP CENTER -->
+<!-- ============================================================ -->
+<div id="modal-help" class="modal-slide">
+  <header class="sticky top-0 w-full z-50 bg-[#F9F9F9]/80 backdrop-blur-md border-b border-[#D0C5AF]/20">
+    <div class="flex items-center px-6 h-16 w-full max-w-7xl mx-auto justify-between">
+      <div class="flex items-center gap-4">
+        <button class="active:scale-95 transition-transform text-[#735C00]" onclick="closeModal('modal-help')">
+          <span class="material-symbols-outlined">arrow_back</span>
+        </button>
+        <h1 class="font-['Noto_Serif'] font-normal tracking-tight text-[#1A1C1C] text-lg">Help Center</h1>
+      </div>
+      <div class="text-xl font-serif text-[#1A1C1C] italic">W.</div>
+    </div>
+  </header>
+  <main class="pt-8 pb-32 px-[8%] max-w-3xl mx-auto">
+    <!-- Header -->
+    <section class="mb-8">
+      <span class="font-label text-[10px] uppercase tracking-[0.2em] text-primary mb-2 block">Support</span>
+      <h2 class="font-serif-title text-4xl leading-tight text-on-surface mb-6">How can we help?</h2>
+    </section>
+
+    <!-- Search Bar -->
+    <section class="mb-12">
+      <div class="relative">
+        <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant text-xl">search</span>
+        <input id="help-search" type="text" placeholder="Search for answers..." oninput="filterHelpItems(this.value)" class="w-full pl-12 pr-6 py-4 border border-outline-variant/30 rounded-full bg-surface text-sm text-on-surface placeholder:text-outline-variant/60 font-body tracking-wide focus:outline-none focus:border-primary/50 transition-colors"/>
+      </div>
+    </section>
+
+    <!-- Getting Started -->
+    <section class="help-category mb-10">
+      <h3 class="text-xl font-serif-editorial border-b-[0.5px] border-outline-variant/20 pb-2 mb-0">Getting Started</h3>
+      <div class="divide-y divide-outline-variant/10">
+        <div class="help-item">
+          <button onclick="toggleHelpItem(this)" class="help-q w-full flex justify-between items-center py-5 text-left group">
+            <span class="text-sm font-medium text-on-surface group-hover:text-primary transition-colors pr-4">How do &ldquo;Discoveries&rdquo; work?</span>
+            <span class="material-symbols-outlined text-outline-variant text-lg flex-shrink-0 transition-transform duration-300">chevron_right</span>
+          </button>
+          <div class="help-a hidden pb-6 pl-0 pr-8">
+            <p class="text-sm text-secondary leading-relaxed">The &ldquo;Discover Places&rdquo; button reveals one high-quality hidden gem near your current location. These are places with a 4.8+ rating and a high density of local reviews. Once you tap the button, a new pulsating dot appears on your map.</p>
+          </div>
+        </div>
+        <div class="help-item">
+          <button onclick="toggleHelpItem(this)" class="help-q w-full flex justify-between items-center py-5 text-left group">
+            <span class="text-sm font-medium text-on-surface group-hover:text-primary transition-colors pr-4">What are the pulsating dots on the map?</span>
+            <span class="material-symbols-outlined text-outline-variant text-lg flex-shrink-0 transition-transform duration-300">chevron_right</span>
+          </button>
+          <div class="help-a hidden pb-6 pl-0 pr-8">
+            <p class="text-sm text-secondary leading-relaxed">Each dot represents a &ldquo;Discovery.&rdquo; The color indicates the type of place (e.g., Food, Nature, or Culture). A pulsating dot means the place has been revealed but not yet visited or saved to your history.</p>
+          </div>
+        </div>
+        <div class="help-item">
+          <button onclick="toggleHelpItem(this)" class="help-q w-full flex justify-between items-center py-5 text-left group">
+            <span class="text-sm font-medium text-on-surface group-hover:text-primary transition-colors pr-4">Why can I only see 3 places for free?</span>
+            <span class="material-symbols-outlined text-outline-variant text-lg flex-shrink-0 transition-transform duration-300">chevron_right</span>
+          </button>
+          <div class="help-a hidden pb-6 pl-0 pr-8">
+            <p class="text-sm text-secondary leading-relaxed">Wanderlost is a niche tool designed for high-quality exploration. We offer the first 3 discoveries for free so you can experience the network. To unlock unlimited discoveries and advanced features, you can join our Premium membership.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Account & Profile -->
+    <section class="help-category mb-10">
+      <h3 class="text-xl font-serif-editorial border-b-[0.5px] border-outline-variant/20 pb-2 mb-0">Account &amp; Profile</h3>
+      <div class="divide-y divide-outline-variant/10">
+        <div class="help-item">
+          <button onclick="toggleHelpItem(this)" class="help-q w-full flex justify-between items-center py-5 text-left group">
+            <span class="text-sm font-medium text-on-surface group-hover:text-primary transition-colors pr-4">How do I change my profile picture?</span>
+            <span class="material-symbols-outlined text-outline-variant text-lg flex-shrink-0 transition-transform duration-300">chevron_right</span>
+          </button>
+          <div class="help-a hidden pb-6 pl-0 pr-8">
+            <p class="text-sm text-secondary leading-relaxed">Go to My Account, tap on your current profile picture (or the placeholder circle), and select &ldquo;Upload Picture.&rdquo; You can choose a photo from your library or take a new one.</p>
+          </div>
+        </div>
+        <div class="help-item">
+          <button onclick="toggleHelpItem(this)" class="help-q w-full flex justify-between items-center py-5 text-left group">
+            <span class="text-sm font-medium text-on-surface group-hover:text-primary transition-colors pr-4">How do I reset my password?</span>
+            <span class="material-symbols-outlined text-outline-variant text-lg flex-shrink-0 transition-transform duration-300">chevron_right</span>
+          </button>
+          <div class="help-a hidden pb-6 pl-0 pr-8">
+            <p class="text-sm text-secondary leading-relaxed">In the My Account section, tap on the &ldquo;Password&rdquo; field. You will be prompted to enter your current password and then set a new one. If you&rsquo;ve forgotten your password, use the &ldquo;Forgot Password&rdquo; link on the login screen to receive a reset email.</p>
+          </div>
+        </div>
+        <div class="help-item">
+          <button onclick="toggleHelpItem(this)" class="help-q w-full flex justify-between items-center py-5 text-left group">
+            <span class="text-sm font-medium text-on-surface group-hover:text-primary transition-colors pr-4">How can I delete my account and data?</span>
+            <span class="material-symbols-outlined text-outline-variant text-lg flex-shrink-0 transition-transform duration-300">chevron_right</span>
+          </button>
+          <div class="help-a hidden pb-6 pl-0 pr-8">
+            <p class="text-sm text-secondary leading-relaxed">We respect your privacy. Go to Settings, scroll to the bottom, and select <strong class="text-on-surface">Delete my account</strong>. This will permanently remove your profile, history, and saved places. To remove only your activity data while keeping your account, select <strong class="text-on-surface">Delete my data</strong>.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Premium & Billing -->
+    <section class="help-category mb-10">
+      <h3 class="text-xl font-serif-editorial border-b-[0.5px] border-outline-variant/20 pb-2 mb-0">Premium &amp; Billing</h3>
+      <div class="divide-y divide-outline-variant/10">
+        <div class="help-item">
+          <button onclick="toggleHelpItem(this)" class="help-q w-full flex justify-between items-center py-5 text-left group">
+            <span class="text-sm font-medium text-on-surface group-hover:text-primary transition-colors pr-4">What is included in the Premium plan?</span>
+            <span class="material-symbols-outlined text-outline-variant text-lg flex-shrink-0 transition-transform duration-300">chevron_right</span>
+          </button>
+          <div class="help-a hidden pb-6 pl-0 pr-8">
+            <p class="text-sm text-secondary leading-relaxed">Premium members get unlimited discoveries, the ability to filter the map by category (e.g., only show Bakeries), a full history log of every place visited, and the ability to save places to a custom itinerary.</p>
+          </div>
+        </div>
+        <div class="help-item">
+          <button onclick="toggleHelpItem(this)" class="help-q w-full flex justify-between items-center py-5 text-left group">
+            <span class="text-sm font-medium text-on-surface group-hover:text-primary transition-colors pr-4">How do I cancel my subscription?</span>
+            <span class="material-symbols-outlined text-outline-variant text-lg flex-shrink-0 transition-transform duration-300">chevron_right</span>
+          </button>
+          <div class="help-a hidden pb-6 pl-0 pr-8">
+            <p class="text-sm text-secondary leading-relaxed mb-3">Subscriptions are managed directly through your device&rsquo;s store:</p>
+            <div class="space-y-2 ml-1">
+              <div class="flex gap-3 items-start"><span class="font-label text-[10px] text-primary font-bold mt-0.5">iOS</span><span class="text-sm text-secondary">Settings &gt; Apple ID &gt; Subscriptions &gt; Wanderlost &gt; Cancel</span></div>
+              <div class="flex gap-3 items-start"><span class="font-label text-[10px] text-primary font-bold mt-0.5">Android</span><span class="text-sm text-secondary">Google Play Store &gt; Menu &gt; Subscriptions &gt; Wanderlost &gt; Cancel</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="help-item">
+          <button onclick="toggleHelpItem(this)" class="help-q w-full flex justify-between items-center py-5 text-left group">
+            <span class="text-sm font-medium text-on-surface group-hover:text-primary transition-colors pr-4">I paid for Premium but it&rsquo;s not showing up</span>
+            <span class="material-symbols-outlined text-outline-variant text-lg flex-shrink-0 transition-transform duration-300">chevron_right</span>
+          </button>
+          <div class="help-a hidden pb-6 pl-0 pr-8">
+            <p class="text-sm text-secondary leading-relaxed">Go to Settings and tap <strong class="text-on-surface">Manage Membership</strong>. Look for a button that says &ldquo;Restore Purchases.&rdquo; If the issue persists, ensure you are logged into the same Apple or Google account used for the purchase.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Technical Issues -->
+    <section class="help-category mb-10">
+      <h3 class="text-xl font-serif-editorial border-b-[0.5px] border-outline-variant/20 pb-2 mb-0">Technical Issues</h3>
+      <div class="divide-y divide-outline-variant/10">
+        <div class="help-item">
+          <button onclick="toggleHelpItem(this)" class="help-q w-full flex justify-between items-center py-5 text-left group">
+            <span class="text-sm font-medium text-on-surface group-hover:text-primary transition-colors pr-4">The map isn&rsquo;t loading my location</span>
+            <span class="material-symbols-outlined text-outline-variant text-lg flex-shrink-0 transition-transform duration-300">chevron_right</span>
+          </button>
+          <div class="help-a hidden pb-6 pl-0 pr-8">
+            <p class="text-sm text-secondary leading-relaxed">Ensure that Location Services are enabled for Wanderlost in your phone&rsquo;s privacy settings. For the best experience, set location access to &ldquo;While Using the App.&rdquo;</p>
+          </div>
+        </div>
+        <div class="help-item">
+          <button onclick="toggleHelpItem(this)" class="help-q w-full flex justify-between items-center py-5 text-left group">
+            <span class="text-sm font-medium text-on-surface group-hover:text-primary transition-colors pr-4">Why can&rsquo;t I see any dots in my area?</span>
+            <span class="material-symbols-outlined text-outline-variant text-lg flex-shrink-0 transition-transform duration-300">chevron_right</span>
+          </button>
+          <div class="help-a hidden pb-6 pl-0 pr-8">
+            <p class="text-sm text-secondary leading-relaxed">Wanderlost has a very high bar for recommendations (&gt;4.8 stars and 80% local reviews). If you are in a very remote area or a place without highly-vetted local favorites, the map may appear empty. Try panning the map to a nearby neighborhood or city center.</p>
+          </div>
+        </div>
+        <div class="help-item">
+          <button onclick="toggleHelpItem(this)" class="help-q w-full flex justify-between items-center py-5 text-left group">
+            <span class="text-sm font-medium text-on-surface group-hover:text-primary transition-colors pr-4">The &ldquo;Go to Google Maps&rdquo; button isn&rsquo;t working</span>
+            <span class="material-symbols-outlined text-outline-variant text-lg flex-shrink-0 transition-transform duration-300">chevron_right</span>
+          </button>
+          <div class="help-a hidden pb-6 pl-0 pr-8">
+            <p class="text-sm text-secondary leading-relaxed">This button requires the Google Maps app to be installed on your device. If it is installed and still not working, check your internet connection or try restarting the app.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Safety & Responsibility -->
+    <section class="help-category mb-10">
+      <h3 class="text-xl font-serif-editorial border-b-[0.5px] border-outline-variant/20 pb-2 mb-0">Safety &amp; Responsibility</h3>
+      <div class="divide-y divide-outline-variant/10">
+        <div class="help-item">
+          <button onclick="toggleHelpItem(this)" class="help-q w-full flex justify-between items-center py-5 text-left group">
+            <span class="text-sm font-medium text-on-surface group-hover:text-primary transition-colors pr-4">Is the information in the app verified?</span>
+            <span class="material-symbols-outlined text-outline-variant text-lg flex-shrink-0 transition-transform duration-300">chevron_right</span>
+          </button>
+          <div class="help-a hidden pb-6 pl-0 pr-8">
+            <p class="text-sm text-secondary leading-relaxed">Wanderlost uses a data-driven algorithm to find highly-rated spots. We do not manually curate or visit these locations. Conditions on the ground can change, so always use your own judgment when visiting a new area.</p>
+          </div>
+        </div>
+        <div class="help-item">
+          <button onclick="toggleHelpItem(this)" class="help-q w-full flex justify-between items-center py-5 text-left group">
+            <span class="text-sm font-medium text-on-surface group-hover:text-primary transition-colors pr-4">What should I do if a location feels unsafe?</span>
+            <span class="material-symbols-outlined text-outline-variant text-lg flex-shrink-0 transition-transform duration-300">chevron_right</span>
+          </button>
+          <div class="help-a hidden pb-6 pl-0 pr-8">
+            <p class="text-sm text-secondary leading-relaxed">Your safety is your responsibility. If you arrive at a discovery and the environment feels uncomfortable or different than expected, leave immediately. Wanderlost is a recommendation tool, not a safety guide.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Footer -->
+    <div class="text-center mt-12 mb-8 py-8 border-t border-outline-variant/20">
+      <span class="material-symbols-outlined text-primary text-3xl mb-3 block">support_agent</span>
+      <p class="text-sm text-secondary mb-3">Still need help?</p>
       <button class="text-primary font-serif italic text-lg border-b border-primary/30 hover:border-primary transition-colors">Contact the Curator</button>
     </div>
   </main>

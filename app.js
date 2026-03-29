@@ -90,6 +90,50 @@ function selectCategory(btn) {
 }
 
 // ============================================================
+// HELP CENTER
+// ============================================================
+function toggleHelpItem(btn) {
+  const item = btn.closest('.help-item');
+  const answer = item.querySelector('.help-a');
+  const chevron = btn.querySelector('.material-symbols-outlined');
+  
+  // Close other open items in same category
+  const category = item.closest('.help-category');
+  category.querySelectorAll('.help-item').forEach(other => {
+    if (other !== item) {
+      other.querySelector('.help-a').classList.add('hidden');
+      const otherChevron = other.querySelector('.help-q .material-symbols-outlined');
+      if (otherChevron) { otherChevron.style.transform = ''; otherChevron.textContent = 'chevron_right'; }
+    }
+  });
+  
+  // Toggle this item
+  const isOpen = !answer.classList.contains('hidden');
+  answer.classList.toggle('hidden');
+  if (isOpen) {
+    chevron.style.transform = '';
+    chevron.textContent = 'chevron_right';
+  } else {
+    chevron.style.transform = 'rotate(90deg)';
+    chevron.textContent = 'expand_more';
+  }
+}
+
+function filterHelpItems(query) {
+  const q = query.toLowerCase().trim();
+  document.querySelectorAll('.help-item').forEach(item => {
+    const text = item.textContent.toLowerCase();
+    item.style.display = !q || text.includes(q) ? '' : 'none';
+  });
+  // Show/hide category headers based on visible items
+  document.querySelectorAll('.help-category').forEach(cat => {
+    const visibleItems = cat.querySelectorAll('.help-item[style=""], .help-item:not([style])');
+    const hasVisible = Array.from(cat.querySelectorAll('.help-item')).some(i => i.style.display !== 'none');
+    cat.style.display = hasVisible ? '' : 'none';
+  });
+}
+
+// ============================================================
 // GOOGLE MAPS
 // ============================================================
 let map;
