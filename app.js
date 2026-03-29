@@ -207,8 +207,10 @@ function hideGoogleWatermarks() {
 window.gm_authFailure = hideGoogleWatermarks;
 
 // ============================================================
-// AI DISCOVERY
+// AI DISCOVERY (Client-side using Maps JS Places Library)
 // ============================================================
+let placesService = null;
+
 async function runDiscovery() {
   const btn = document.getElementById('btn-discover');
   const sonar = document.getElementById('sonar-marker');
@@ -237,87 +239,106 @@ async function runDiscovery() {
       map.setZoom(15);
     }
 
-    // Show sonar at user position
+    // Show sonar
     sonar.classList.remove('hidden');
 
     btn.innerHTML = '<span class="material-symbols-outlined text-sm animate-spin">progress_activity</span> Discovering...';
 
-    // Call backend
-    const response = await fetch(`${BACKEND_URL}/api/discover`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ lat: latitude, lng: longitude, category: state.selectedCategory })
+    // Initialize PlacesService if not already
+    if (!placesService && map) {
+      placesService = new google.maps.places.PlacesService(map);
+    }
+
+    if (!placesService) {
+      throw new Error('Places service not available');
+    }
+
+    // Build search request
+    const typeMap = {
+      'restaurant': 'restaurant',
+      'cafe': 'cafe',
+      'bakery': 'bakery',
+      'bar': 'bar',
+      'park': 'park',
+      'museum': 'museum'
+    };
+
+    const request = {
+      location: new google.maps.LatLng(latitude, longitude),
+      radius: 2000
+    };
+
+    if (state.selectedCategory && typeMap[state.selectedCategory]) {
+      request.type = typeMap[state.selectedCategory];
+    } else {
+      request.keyword = 'hidden gem local favorite';
+    }
+
+    // Client-side Places nearbySearch
+    const results = await new Promise((resolve, reject) => {
+      placesService.nearbySearch(request, (results, status) => {
+        if (status === google.maps.places.PlacesServiceStatus.OK) {
+          resolve(results);
+        } else if (status === google.maps.places.PlacesServiceStatus.ZERO_RESULTS) {
+          resolve([]);
+        } else {
+          reject(new Error('Places search: ' + status));
+        }
+      });
     });
 
-    const result = await response.json();
-
-    if (result.success && result.data) {
-      // Calculate distance from user to place
-      const placeLat = result.data.lat || latitude;
-      const placeLng = result.data.lng || longitude;
-      const dist = getDistanceKm(latitude, longitude, placeLat, placeLng);
-
-      state.currentPlace = {
-        name: result.data.title || 'Hidden Gem',
-        type: result.data.type || state.selectedCategory || 'Discovery',
-        address: result.data.desc || 'A local favorite',
-        distance: dist < 1 ? `${Math.round(dist * 1000)}m away` : `${dist.toFixed(1)}km away`,
-        description: result.data.reason || 'A secret spot favored by locals.',
-        lat: placeLat,
-        lng: placeLng,
-        discoveredAt: new Date()
-      };
-
-      // Update sheet
-      document.getElementById('sheet-title').textContent = state.currentPlace.name;
-      document.getElementById('sheet-tag').textContent = state.currentPlace.type;
-      document.getElementById('sheet-address').textContent = state.currentPlace.address;
-      document.getElementById('sheet-distance').textContent = state.currentPlace.distance;
-      document.getElementById('sheet-desc').textContent = state.currentPlace.description;
-
-      // Add marker on map
-      addMapMarker(state.currentPlace);
-
-      // Pan map to discovered place
-      if (map) map.panTo({ lat: placeLat, lng: placeLng });
-
-      openDiscoverySheet();
-      addToHistory(state.currentPlace);
-
-      if (!state.isSubscribed) {
-        state.discoveriesRemaining--;
-        document.getElementById('discovery-counter').textContent = 
-          state.discoveriesRemaining + ' Free Discover' + (state.discoveriesRemaining === 1 ? 'y' : 'ies');
-      }
-    } else {
-      // Show toast instead of ugly alert
-      showToast(result.message || 'No hidden gems found nearby. Try a different category!');
+    if (results.length === 0) {
+      showToast('No places found nearby. Try a different category!');
+      btn.innerHTML = '<span class="material-symbols-outlined text-sm">explore</span> Discover Places';
+      btn.disabled = false;
+      return;
     }
-  } catch (err) {
-    console.error('Discovery error:', err);
-    // Fallback with demo data
+
+    // Filter for > 4.0 stars
+    let candidates = results.filter(p => (p.rating || 0) >= 4.0);
+    if (candidates.length === 0) candidates = results;
+
+    // Pick a random one
+    const target = candidates[Math.floor(Math.random() * candidates.length)];
+    const placeLat = target.geometry.location.lat();
+    const placeLng = target.geometry.location.lng();
+    const dist = getDistanceKm(latitude, longitude, placeLat, placeLng);
+
     state.currentPlace = {
-      name: 'The Artisanal Hearth',
-      type: 'Bakery',
-      address: 'Near your current location',
-      distance: 'Within walking distance',
-      description: 'A local favorite with handmade pastries and artisan bread.',
-      lat: 47.3769,
-      lng: 8.5417,
+      name: target.name || 'Hidden Gem',
+      type: (target.types && target.types[0]) || state.selectedCategory || 'Discovery',
+      address: target.vicinity || 'A local favorite',
+      distance: dist < 1 ? Math.round(dist * 1000) + 'm away' : dist.toFixed(1) + 'km away',
+      description: target.rating ? 'Rating: ' + target.rating + ' — Highly rated by locals' : 'A secret spot favored by locals.',
+      lat: placeLat,
+      lng: placeLng,
       discoveredAt: new Date()
     };
+
+    // Update sheet
     document.getElementById('sheet-title').textContent = state.currentPlace.name;
     document.getElementById('sheet-tag').textContent = state.currentPlace.type;
     document.getElementById('sheet-address').textContent = state.currentPlace.address;
     document.getElementById('sheet-distance').textContent = state.currentPlace.distance;
     document.getElementById('sheet-desc').textContent = state.currentPlace.description;
+
+    // Add marker on map
+    addMapMarker(state.currentPlace);
+
+    // Pan map to discovered place
+    if (map) map.panTo({ lat: placeLat, lng: placeLng });
+
     openDiscoverySheet();
     addToHistory(state.currentPlace);
+
     if (!state.isSubscribed) {
       state.discoveriesRemaining--;
       document.getElementById('discovery-counter').textContent = 
         state.discoveriesRemaining + ' Free Discover' + (state.discoveriesRemaining === 1 ? 'y' : 'ies');
     }
+  } catch (err) {
+    console.error('Discovery error:', err);
+    showToast('Could not discover places. Check your location permissions.');
   }
 
   // Reset button
