@@ -259,7 +259,7 @@ async function runDiscovery() {
 
       state.currentPlace = {
         name: result.data.title || 'Hidden Gem',
-        type: state.selectedCategory || 'Discovery',
+        type: result.data.type || state.selectedCategory || 'Discovery',
         address: result.data.desc || 'A local favorite',
         distance: dist < 1 ? `${Math.round(dist * 1000)}m away` : `${dist.toFixed(1)}km away`,
         description: result.data.reason || 'A secret spot favored by locals.',
@@ -290,8 +290,8 @@ async function runDiscovery() {
           state.discoveriesRemaining + ' Free Discover' + (state.discoveriesRemaining === 1 ? 'y' : 'ies');
       }
     } else {
-      // No results from backend
-      alert(result.message || 'No hidden gems found nearby. Try a different category!');
+      // Show toast instead of ugly alert
+      showToast(result.message || 'No hidden gems found nearby. Try a different category!');
     }
   } catch (err) {
     console.error('Discovery error:', err);
@@ -499,4 +499,29 @@ function saveCurrentPlace() {
   setTimeout(() => {
     btn.innerHTML = '<span class="material-symbols-outlined text-sm">bookmark</span> Save';
   }, 2000);
+}
+
+// Toast notification
+function showToast(message) {
+  const existing = document.getElementById('app-toast');
+  if (existing) existing.remove();
+  
+  const toast = document.createElement('div');
+  toast.id = 'app-toast';
+  toast.className = 'fixed top-20 left-1/2 -translate-x-1/2 z-[999] bg-on-surface text-surface px-6 py-3 text-sm font-body tracking-wide shadow-xl max-w-sm text-center transition-all duration-500';
+  toast.style.opacity = '0';
+  toast.style.transform = 'translateX(-50%) translateY(-10px)';
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  
+  requestAnimationFrame(() => {
+    toast.style.opacity = '1';
+    toast.style.transform = 'translateX(-50%) translateY(0)';
+  });
+  
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateX(-50%) translateY(-10px)';
+    setTimeout(() => toast.remove(), 500);
+  }, 4000);
 }
