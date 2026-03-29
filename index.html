@@ -139,6 +139,19 @@ tailwind.config = {
 .gm-err-container, .gm-style-cc, .gmnoprint,
 button[title="Toggle fullscreen view"], .gm-style-pbc { display: none !important; }
 div[style*="z-index: 1000001"], div[style*="z-index: 1000000"] { display: none !important; }
+
+/* Prevent startup glitch (FOUC) while Tailwind CDN loads */
+body { background-color: #F9F9F9; margin: 0; }
+#welcome-splash {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 9999;
+  background-color: #1A1C1C;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
 </style>
 </head>
 
