@@ -11,7 +11,10 @@ const state = {
   currentPlace: null,
   history: [],
   activeTab: 'tab-explore',
-  selectedCategory: ''
+  selectedCategory: '',
+  savedPlaces: [],
+  markers: [],
+  selectedPlan: 'monthly'
 };
 
 // ============================================================
@@ -115,6 +118,37 @@ window.initMap = function() {
   });
 };
 
+// Add a marker to the map
+function addMapMarker(place) {
+  if (!map || !place.lat || !place.lng) return;
+  const marker = new google.maps.Marker({
+    position: { lat: place.lat, lng: place.lng },
+    map: map,
+    title: place.name,
+    icon: {
+      path: google.maps.SymbolPath.CIRCLE,
+      scale: 10,
+      fillColor: '#D4AF37',
+      fillOpacity: 1,
+      strokeColor: '#FFFFFF',
+      strokeWeight: 3
+    },
+    animation: google.maps.Animation.DROP
+  });
+  // Click marker to show sheet
+  marker.addListener('click', () => {
+    state.currentPlace = place;
+    document.getElementById('sheet-title').textContent = place.name;
+    document.getElementById('sheet-tag').textContent = place.type || 'Discovery';
+    document.getElementById('sheet-address').textContent = place.address || 'Nearby';
+    document.getElementById('sheet-distance').textContent = place.distance || 'Close by';
+    document.getElementById('sheet-desc').textContent = place.description || '';
+    openDiscoverySheet();
+  });
+  state.markers.push(marker);
+  return marker;
+}
+
 // Hide Google Maps watermarks
 function hideGoogleWatermarks() {
   const style = document.createElement('style');
@@ -153,13 +187,13 @@ async function runDiscovery() {
 
     const { latitude, longitude } = position.coords;
 
-    // Center map
+    // Center map on user
     if (map) {
       map.panTo({ lat: latitude, lng: longitude });
       map.setZoom(15);
     }
 
-    // Show sonar
+    // Show sonar at user position
     sonar.classList.remove('hidden');
 
     btn.innerHTML = '<span class="material-symbols-outlined text-sm animate-spin">progress_activity</span> Discovering...';
@@ -173,32 +207,47 @@ async function runDiscovery() {
 
     const result = await response.json();
 
-    if (result.place) {
+    if (result.success && result.data) {
+      // Calculate distance from user to place
+      const placeLat = result.data.lat || latitude;
+      const placeLng = result.data.lng || longitude;
+      const dist = getDistanceKm(latitude, longitude, placeLat, placeLng);
+
       state.currentPlace = {
-        ...result.place,
-        lat: latitude,
-        lng: longitude,
+        name: result.data.title || 'Hidden Gem',
+        type: state.selectedCategory || 'Discovery',
+        address: result.data.desc || 'A local favorite',
+        distance: dist < 1 ? `${Math.round(dist * 1000)}m away` : `${dist.toFixed(1)}km away`,
+        description: result.data.reason || 'A secret spot favored by locals.',
+        lat: placeLat,
+        lng: placeLng,
         discoveredAt: new Date()
       };
 
       // Update sheet
-      document.getElementById('sheet-title').textContent = result.place.name || 'Hidden Gem';
-      document.getElementById('sheet-tag').textContent = result.place.type || 'Discovery';
-      document.getElementById('sheet-address').textContent = result.place.address || 'Nearby';
-      document.getElementById('sheet-distance').textContent = result.place.distance || 'Close by';
-      document.getElementById('sheet-desc').textContent = result.place.description || 'A local favorite worth exploring.';
+      document.getElementById('sheet-title').textContent = state.currentPlace.name;
+      document.getElementById('sheet-tag').textContent = state.currentPlace.type;
+      document.getElementById('sheet-address').textContent = state.currentPlace.address;
+      document.getElementById('sheet-distance').textContent = state.currentPlace.distance;
+      document.getElementById('sheet-desc').textContent = state.currentPlace.description;
+
+      // Add marker on map
+      addMapMarker(state.currentPlace);
+
+      // Pan map to discovered place
+      if (map) map.panTo({ lat: placeLat, lng: placeLng });
 
       openDiscoverySheet();
-
-      // Add to history
       addToHistory(state.currentPlace);
 
-      // Decrement counter
       if (!state.isSubscribed) {
         state.discoveriesRemaining--;
         document.getElementById('discovery-counter').textContent = 
           state.discoveriesRemaining + ' Free Discover' + (state.discoveriesRemaining === 1 ? 'y' : 'ies');
       }
+    } else {
+      // No results from backend
+      alert(result.message || 'No hidden gems found nearby. Try a different category!');
     }
   } catch (err) {
     console.error('Discovery error:', err);
@@ -230,6 +279,17 @@ async function runDiscovery() {
   // Reset button
   btn.innerHTML = '<span class="material-symbols-outlined text-sm">explore</span> Discover Places';
   btn.disabled = false;
+}
+
+// Haversine distance in km
+function getDistanceKm(lat1, lon1, lat2, lon2) {
+  const R = 6371;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+    Math.sin(dLon/2) * Math.sin(dLon/2);
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
 // ============================================================
@@ -337,8 +397,62 @@ window.addEventListener('DOMContentLoaded', () => {
   const btnPayment = document.getElementById('btn-confirm-payment');
   if (btnPayment) btnPayment.addEventListener('click', confirmPayment);
 
+  // Save button on discovery sheet
+  const btnSave = document.getElementById('btn-save-place');
+  if (btnSave) btnSave.addEventListener('click', saveCurrentPlace);
+
+  // Checkout plan toggle
+  document.querySelectorAll('.plan-toggle-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.plan-toggle-btn').forEach(b => {
+        b.classList.remove('bg-surface-container-lowest', 'text-on-surface');
+        b.classList.add('text-secondary');
+      });
+      btn.classList.add('bg-surface-container-lowest', 'text-on-surface');
+      btn.classList.remove('text-secondary');
+      state.selectedPlan = btn.dataset.plan;
+      // Update total
+      const totalEl = document.getElementById('checkout-total');
+      const billingEl = document.getElementById('checkout-billing');
+      if (state.selectedPlan === 'annual') {
+        if (totalEl) totalEl.textContent = '200.00 CHF';
+        if (billingEl) billingEl.textContent = 'Billed Annually';
+      } else {
+        if (totalEl) totalEl.textContent = '20.00 CHF';
+        if (billingEl) billingEl.textContent = 'Billed Monthly';
+      }
+    });
+  });
+
+  // Distance unit toggle
+  document.querySelectorAll('.unit-toggle-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.unit-toggle-btn').forEach(b => {
+        b.classList.remove('bg-surface-container-highest', 'text-on-surface');
+        b.classList.add('text-secondary');
+      });
+      btn.classList.add('bg-surface-container-highest', 'text-on-surface');
+      btn.classList.remove('text-secondary');
+    });
+  });
+
   // Hide Google watermarks
   hideGoogleWatermarks();
 
   console.log('Wanderlost Stitch Edition — Initialized');
 });
+
+// Save place
+function saveCurrentPlace() {
+  if (!state.currentPlace) return;
+  const btn = document.getElementById('btn-save-place');
+  if (state.savedPlaces.find(p => p.name === state.currentPlace.name)) {
+    btn.innerHTML = '<span class="material-symbols-outlined text-sm">check</span> Already Saved';
+    return;
+  }
+  state.savedPlaces.push({ ...state.currentPlace });
+  btn.innerHTML = '<span class="material-symbols-outlined text-sm">bookmark_added</span> Saved!';
+  setTimeout(() => {
+    btn.innerHTML = '<span class="material-symbols-outlined text-sm">bookmark</span> Save';
+  }, 2000);
+}
