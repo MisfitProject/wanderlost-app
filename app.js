@@ -10,7 +10,8 @@ const state = {
   isSubscribed: false,
   currentPlace: null,
   history: [],
-  activeTab: 'tab-explore'
+  activeTab: 'tab-explore',
+  selectedCategory: ''
 };
 
 // ============================================================
@@ -70,6 +71,22 @@ function closeDiscoverySheet() {
 }
 
 // ============================================================
+// CATEGORY SELECTION
+// ============================================================
+function selectCategory(btn) {
+  // Update active styling
+  document.querySelectorAll('.cat-btn').forEach(b => {
+    b.classList.remove('bg-primary-container', 'text-on-primary-container', 'border-primary/20');
+    b.classList.add('bg-surface/80', 'backdrop-blur-md', 'border-outline-variant/30', 'text-on-surface-variant');
+  });
+  btn.classList.remove('bg-surface/80', 'backdrop-blur-md', 'border-outline-variant/30', 'text-on-surface-variant');
+  btn.classList.add('bg-primary-container', 'text-on-primary-container', 'border-primary/20');
+  
+  // Store selected category
+  state.selectedCategory = btn.dataset.category || '';
+}
+
+// ============================================================
 // GOOGLE MAPS
 // ============================================================
 let map;
@@ -79,19 +96,21 @@ window.initMap = function() {
     zoom: 14,
     disableDefaultUI: true,
     styles: [
-      {elementType:'geometry',stylers:[{color:'#ebe3cd'}]},
-      {elementType:'labels.text.fill',stylers:[{color:'#523735'}]},
-      {elementType:'labels.text.stroke',stylers:[{color:'#f5f1e6'}]},
-      {featureType:'administrative',elementType:'geometry.stroke',stylers:[{color:'#c9b2a6'}]},
-      {featureType:'landscape.natural',elementType:'geometry',stylers:[{color:'#dfd2ae'}]},
-      {featureType:'poi',elementType:'geometry',stylers:[{color:'#dfd2ae'},{visibility:'off'}]},
-      {featureType:'poi.park',elementType:'geometry.fill',stylers:[{color:'#a5b076'}]},
-      {featureType:'road',elementType:'geometry',stylers:[{color:'#f5f1e6'}]},
-      {featureType:'road.arterial',elementType:'geometry',stylers:[{color:'#fdfcf8'}]},
-      {featureType:'road.highway',elementType:'geometry',stylers:[{color:'#f8c967'}]},
-      {featureType:'road.highway',elementType:'geometry.stroke',stylers:[{color:'#e9bc62'}]},
-      {featureType:'water',elementType:'geometry.fill',stylers:[{color:'#b9d3c2'}]},
-      {featureType:'water',elementType:'labels.text.fill',stylers:[{color:'#92998d'}]}
+      {elementType:'geometry',stylers:[{color:'#f5f5f5'}]},
+      {elementType:'labels.icon',stylers:[{visibility:'off'}]},
+      {elementType:'labels.text.fill',stylers:[{color:'#616161'}]},
+      {elementType:'labels.text.stroke',stylers:[{color:'#f5f5f5'}]},
+      {featureType:'administrative.land_parcel',elementType:'labels.text.fill',stylers:[{color:'#bdbdbd'}]},
+      {featureType:'poi',elementType:'geometry',stylers:[{color:'#eeeeee'}]},
+      {featureType:'poi',elementType:'labels.text.fill',stylers:[{color:'#757575'}]},
+      {featureType:'poi.park',elementType:'geometry',stylers:[{color:'#e5e5e5'}]},
+      {featureType:'road',elementType:'geometry',stylers:[{color:'#ffffff'}]},
+      {featureType:'road.arterial',elementType:'labels.text.fill',stylers:[{color:'#757575'}]},
+      {featureType:'road.highway',elementType:'geometry',stylers:[{color:'#dadada'}]},
+      {featureType:'road.local',elementType:'labels.text.fill',stylers:[{color:'#9e9e9e'}]},
+      {featureType:'transit.line',elementType:'geometry',stylers:[{color:'#e5e5e5'}]},
+      {featureType:'water',elementType:'geometry',stylers:[{color:'#c9c9c9'}]},
+      {featureType:'water',elementType:'labels.text.fill',stylers:[{color:'#9e9e9e'}]}
     ]
   });
 };
@@ -149,7 +168,7 @@ async function runDiscovery() {
     const response = await fetch(`${BACKEND_URL}/api/discover`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ lat: latitude, lng: longitude })
+      body: JSON.stringify({ lat: latitude, lng: longitude, category: state.selectedCategory })
     });
 
     const result = await response.json();

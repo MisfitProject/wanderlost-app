@@ -166,31 +166,34 @@ div[style*="z-index: 1000001"], div[style*="z-index: 1000000"] { display: none !
 <section id="tab-explore" class="tab-section active">
   <!-- Top Navigation -->
   <header class="fixed top-0 w-full flex justify-between items-center px-6 h-16 z-50 bg-[#F9F9F9]/80 backdrop-blur-md border-b-[0.5px] border-[#D0C5AF]/20">
-    <div class="font-serif italic text-2xl text-[#1A1C1C]">Wanderlost</div>
+    <div class="flex items-center gap-4">
+      <button class="text-[#5F5E5E] hover:opacity-70 transition-opacity active:scale-95 duration-200" onclick="openModal('modal-settings')">
+        <span class="material-symbols-outlined">menu</span>
+      </button>
+      <div class="font-serif italic text-2xl text-[#1A1C1C]">Wanderlost</div>
+    </div>
     <div class="flex items-center gap-4">
       <div class="px-4 py-1.5 rounded-full border border-outline-variant/30 bg-surface/40 backdrop-blur-md flex items-center gap-2">
         <span class="w-1.5 h-1.5 rounded-full bg-primary-container shadow-[0_0_8px_rgba(212,175,55,0.6)]"></span>
         <span id="discovery-counter" class="text-[10px] font-label uppercase tracking-widest text-secondary font-medium">3 Free Discoveries</span>
       </div>
-      <button class="text-[#735C00] hover:opacity-70 transition-opacity active:scale-95 duration-200" onclick="openModal('modal-settings')">
-        <span class="material-symbols-outlined">settings</span>
-      </button>
     </div>
   </header>
 
   <!-- Map Canvas -->
   <main class="relative w-full h-screen bg-[#FBFBFB] neural-grid overflow-hidden">
-    <div id="map-bg" class="absolute inset-0 z-0"></div>
+    <div id="map-bg" class="absolute inset-0 z-0" style="filter: grayscale(100%) contrast(1.05);"></div>
 
     <!-- Category Filters -->
     <div class="absolute top-20 left-0 w-full z-40">
-      <div class="flex gap-2 px-6 overflow-x-auto hide-scrollbar py-2">
-        <button class="flex-shrink-0 px-4 py-2 bg-surface/80 backdrop-blur-md border border-outline-variant/30 text-[10px] font-label font-bold uppercase tracking-wider text-on-surface-variant transition-all">Restaurants</button>
-        <button class="flex-shrink-0 px-4 py-2 bg-primary-container text-on-primary-container border border-primary/20 text-[10px] font-label font-bold uppercase tracking-wider transition-all">Cafes</button>
-        <button class="flex-shrink-0 px-4 py-2 bg-surface/80 backdrop-blur-md border border-outline-variant/30 text-[10px] font-label font-bold uppercase tracking-wider text-on-surface-variant transition-all">Bakeries</button>
-        <button class="flex-shrink-0 px-4 py-2 bg-surface/80 backdrop-blur-md border border-outline-variant/30 text-[10px] font-label font-bold uppercase tracking-wider text-on-surface-variant transition-all">Bars</button>
-        <button class="flex-shrink-0 px-4 py-2 bg-surface/80 backdrop-blur-md border border-outline-variant/30 text-[10px] font-label font-bold uppercase tracking-wider text-on-surface-variant transition-all">Parks</button>
-        <button class="flex-shrink-0 px-4 py-2 bg-surface/80 backdrop-blur-md border border-outline-variant/30 text-[10px] font-label font-bold uppercase tracking-wider text-on-surface-variant transition-all">Museums</button>
+      <div id="category-filters" class="flex gap-2 px-6 overflow-x-auto hide-scrollbar py-2">
+        <button onclick="selectCategory(this)" data-category="" class="cat-btn flex-shrink-0 px-4 py-2 bg-primary-container text-on-primary-container border border-primary/20 text-[10px] font-label font-bold uppercase tracking-wider transition-all">All</button>
+        <button onclick="selectCategory(this)" data-category="restaurant" class="cat-btn flex-shrink-0 px-4 py-2 bg-surface/80 backdrop-blur-md border border-outline-variant/30 text-[10px] font-label font-bold uppercase tracking-wider text-on-surface-variant transition-all">Restaurants</button>
+        <button onclick="selectCategory(this)" data-category="cafe" class="cat-btn flex-shrink-0 px-4 py-2 bg-surface/80 backdrop-blur-md border border-outline-variant/30 text-[10px] font-label font-bold uppercase tracking-wider text-on-surface-variant transition-all">Cafes</button>
+        <button onclick="selectCategory(this)" data-category="bakery" class="cat-btn flex-shrink-0 px-4 py-2 bg-surface/80 backdrop-blur-md border border-outline-variant/30 text-[10px] font-label font-bold uppercase tracking-wider text-on-surface-variant transition-all">Bakeries</button>
+        <button onclick="selectCategory(this)" data-category="bar" class="cat-btn flex-shrink-0 px-4 py-2 bg-surface/80 backdrop-blur-md border border-outline-variant/30 text-[10px] font-label font-bold uppercase tracking-wider text-on-surface-variant transition-all">Bars</button>
+        <button onclick="selectCategory(this)" data-category="park" class="cat-btn flex-shrink-0 px-4 py-2 bg-surface/80 backdrop-blur-md border border-outline-variant/30 text-[10px] font-label font-bold uppercase tracking-wider text-on-surface-variant transition-all">Parks</button>
+        <button onclick="selectCategory(this)" data-category="museum" class="cat-btn flex-shrink-0 px-4 py-2 bg-surface/80 backdrop-blur-md border border-outline-variant/30 text-[10px] font-label font-bold uppercase tracking-wider text-on-surface-variant transition-all">Museums</button>
       </div>
     </div>
 
@@ -203,22 +206,7 @@ div[style*="z-index: 1000001"], div[style*="z-index: 1000000"] { display: none !
       </div>
     </div>
 
-    <!-- Premium Overlay (Blurred Locked Content) -->
-    <div class="absolute top-36 left-1/2 -translate-x-1/2 w-[90%] z-30 opacity-40 blur-sm pointer-events-none">
-      <div class="bg-surface-container border border-outline-variant/20 p-4 h-24 flex items-center gap-4">
-        <div class="w-16 h-16 bg-outline-variant/30"></div>
-        <div class="flex-1 space-y-2">
-          <div class="h-4 bg-outline-variant/30 w-3/4"></div>
-          <div class="h-3 bg-outline-variant/20 w-1/2"></div>
-        </div>
-      </div>
-    </div>
-    <div class="absolute top-44 left-1/2 -translate-x-1/2 z-40">
-      <button onclick="openModal('modal-premium')" class="bg-inverse-surface/90 text-inverse-on-surface px-6 py-2.5 text-[10px] font-label font-bold uppercase tracking-[0.15em] backdrop-blur-md border border-white/10 shadow-xl flex items-center gap-2">
-        <span class="material-symbols-outlined text-sm">lock</span>
-        Unlock 12 more... with Premium
-      </button>
-    </div>
+
 
     <!-- Discover Button -->
     <div class="fixed bottom-24 left-1/2 -translate-x-1/2 w-full max-w-xs px-6 z-40">

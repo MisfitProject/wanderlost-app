@@ -12,7 +12,19 @@ const AI_RIG_URL = process.env.AI_RIG_URL;
 
 // Main discovery endpoint
 app.post('/api/discover', async (req, res) => {
-    const { lat, lng } = req.body;
+    const { lat, lng, category } = req.body;
+
+    // Map category to Google Places types
+    const defaultTypes = ['restaurant', 'cafe', 'tourist_attraction', 'park', 'museum', 'bakery', 'bar'];
+    const categoryMap = {
+        'restaurant': ['restaurant'],
+        'cafe': ['cafe'],
+        'bakery': ['bakery'],
+        'bar': ['bar'],
+        'park': ['park'],
+        'museum': ['museum']
+    };
+    const includedTypes = category && categoryMap[category] ? categoryMap[category] : defaultTypes;
 
     try {
         // 1. Search Google for nearby high-rated places
@@ -26,7 +38,7 @@ app.post('/api/discover', async (req, res) => {
                         radius: 2000.0 // 2km
                     }
                 },
-                includedTypes: ['restaurant', 'cafe', 'tourist_attraction', 'park', 'museum'],
+                includedTypes: includedTypes,
                 maxResultCount: 10
             },
             {
