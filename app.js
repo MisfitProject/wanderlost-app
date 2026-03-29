@@ -439,9 +439,12 @@ function confirmPayment() {
 // ============================================================
 function dismissWelcome() {
   const splash = document.getElementById('welcome-splash');
-  splash.style.opacity = '0';
+  if (!splash) return;
+  // Slide the splash screen completely out of the viewport cleanly
+  splash.style.transform = 'translateY(-100vh)';
   splash.style.pointerEvents = 'none';
-  setTimeout(() => splash.remove(), 1000);
+  // Remove after slide animation finishes (0.6s)
+  setTimeout(() => splash.remove(), 700);
 }
 
 // ============================================================

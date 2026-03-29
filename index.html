@@ -151,6 +151,7 @@ body { background-color: #F9F9F9; margin: 0; }
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  transition: transform 0.6s cubic-bezier(0.8, 0, 0.2, 1);
 }
 </style>
 </head>
@@ -160,7 +161,7 @@ body { background-color: #F9F9F9; margin: 0; }
 <!-- ============================================================ -->
 <!-- WELCOME SPLASH -->
 <!-- ============================================================ -->
-<div id="welcome-splash" class="fixed inset-0 z-[300] bg-[#1A1C1C] flex items-center justify-center transition-opacity duration-1000">
+<div id="welcome-splash" class="fixed inset-0 z-[300] bg-[#1A1C1C] flex items-center justify-center">
   <div class="text-center px-8">
     <div class="mb-4 text-xs tracking-[0.3em] text-[#D0C5AF] uppercase">The Secret City</div>
     <h1 class="font-serif italic text-5xl text-[#F9F9F9] mb-2">
