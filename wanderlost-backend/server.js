@@ -14,117 +14,94 @@ const AI_RIG_URL = process.env.AI_RIG_URL;
 app.post('/api/discover', async (req, res) => {
     const { lat, lng, category } = req.body;
 
-    // Map category to Google Places types
-    const defaultTypes = ['restaurant', 'cafe', 'tourist_attraction', 'park', 'museum', 'bakery', 'bar'];
-    const categoryMap = {
-        'restaurant': ['restaurant'],
-        'cafe': ['cafe'],
-        'bakery': ['bakery'],
-        'bar': ['bar'],
-        'park': ['park'],
-        'museum': ['museum']
+    // Map category to Google Places types (legacy API uses single type string)
+    const typeMap = {
+        'restaurant': 'restaurant',
+        'cafe': 'cafe',
+        'bakery': 'bakery',
+        'bar': 'bar',
+        'park': 'park',
+        'museum': 'museum'
     };
-    const includedTypes = category && categoryMap[category] ? categoryMap[category] : defaultTypes;
 
     try {
-        // 1. Search Google for nearby places
-        const searchResponse = await axios.post(
-            'https://places.googleapis.com/v1/places:searchNearby',
-            {
-                locationRestriction: {
-                    circle: {
-                        center: { latitude: lat, longitude: lng },
-                        radius: 2000.0
-                    }
-                },
-                includedTypes: includedTypes,
-                maxResultCount: 10
-            },
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Goog-Api-Key': GOOGLE_KEY,
-                    'X-Goog-FieldMask': 'places.displayName,places.id,places.rating,places.location,places.editorialSummary,places.formattedAddress,places.primaryType'
-                }
-            }
-        );
+        // Build legacy Nearby Search URL
+        let url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=2000&key=${GOOGLE_KEY}`;
+        
+        if (category && typeMap[category]) {
+            url += `&type=${typeMap[category]}`;
+        } else {
+            // Default: search for a variety of interesting places
+            url += `&type=restaurant|cafe|bakery|bar|park|museum`;
+        }
 
-        const places = searchResponse.data.places || [];
+        // 1. Search for nearby places
+        const searchResponse = await axios.get(url, { timeout: 8000 });
+
+        if (searchResponse.data.status !== 'OK' && searchResponse.data.status !== 'ZERO_RESULTS') {
+            console.error("Google Places API error:", searchResponse.data.status, searchResponse.data.error_message);
+            return res.status(500).json({ 
+                success: false, 
+                message: `Google API error: ${searchResponse.data.status}. ${searchResponse.data.error_message || ''}` 
+            });
+        }
+
+        const places = searchResponse.data.results || [];
         
         if (places.length === 0) {
-            return res.json({ success: false, message: "No places found nearby. Try panning to a different area." });
+            return res.json({ success: false, message: "No places found nearby. Try a different area or category." });
         }
 
-        // Filter for > 4.0 stars (relaxed from 4.7 to get more results)
-        let candidates = places.filter(p => p.rating >= 4.0);
-        
-        // If no highly rated ones, use all results
-        if (candidates.length === 0) {
-            candidates = places;
-        }
+        // Filter for > 4.0 stars
+        let candidates = places.filter(p => (p.rating || 0) >= 4.0);
+        if (candidates.length === 0) candidates = places;
 
-        // Pick a random candidate (not always the first)
+        // Pick a random candidate
         const target = candidates[Math.floor(Math.random() * candidates.length)];
         
-        // Build the response — skip reviews/AI to avoid extra failure points
+        // Build response
         let reason = "High community rating and authentic local presence.";
 
-        // Try to get reviews for AI analysis (optional — don't fail if this breaks)
+        // Optional: get reviews via Place Details
         try {
-            // The new Places API returns IDs like "places/ChIJ..." — strip prefix for legacy API
-            const placeId = target.id.startsWith('places/') ? target.id.substring(7) : target.id;
-            
             const detailsResponse = await axios.get(
-                `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&fields=reviews&key=${GOOGLE_KEY}`,
+                `https://maps.googleapis.com/maps/api/place/details/json?place_id=${target.place_id}&fields=reviews,editorial_summary&key=${GOOGLE_KEY}`,
                 { timeout: 5000 }
             );
-
-            const reviews = detailsResponse.data?.result?.reviews || [];
             
-            if (reviews.length > 0) {
-                const reviewText = reviews.slice(0, 3).map(r => r.text).join("\n\n");
-                
-                // Try AI analysis (optional)
-                try {
-                    const aiResponse = await axios.post(AI_RIG_URL, {
-                        model: process.env.AI_MODEL_NAME,
-                        prompt: `Review Content: ${reviewText}\n\nTask: Determine if this place is a "local gem". Respond with JSON: {"isLocal": true/false, "reason": "short explanation"}.`,
-                        stream: false,
-                        format: 'json'
-                    }, { timeout: 6000 });
-
-                    if (aiResponse.data && aiResponse.data.response) {
-                        const aiResult = JSON.parse(aiResponse.data.response);
-                        reason = aiResult.reason || reason;
-                    }
-                } catch (aiError) {
-                    console.log("AI Rig unavailable, using default reason:", aiError.message);
-                }
+            const details = detailsResponse.data?.result;
+            if (details?.reviews?.length > 0) {
+                // Use first review as a flavor text
+                reason = details.reviews[0].text?.substring(0, 200) || reason;
             }
-        } catch (detailsError) {
-            console.log("Place details unavailable, skipping reviews:", detailsError.message);
+            if (details?.editorial_summary?.overview) {
+                reason = details.editorial_summary.overview;
+            }
+        } catch (detailsErr) {
+            console.log("Details fetch skipped:", detailsErr.message);
         }
 
         // Return the discovery
         res.json({
             success: true,
             data: {
-                title: target.displayName?.text || "Hidden Gem",
-                desc: target.editorialSummary?.text || target.formattedAddress || "A secret spot favored by locals.",
-                lat: target.location?.latitude,
-                lng: target.location?.longitude,
+                title: target.name || "Hidden Gem",
+                desc: target.vicinity || "A secret spot favored by locals.",
+                lat: target.geometry?.location?.lat,
+                lng: target.geometry?.location?.lng,
                 reason: reason,
-                type: target.primaryType || category || "discovery"
+                type: (target.types && target.types[0]) || category || "discovery",
+                rating: target.rating || null
             }
         });
 
     } catch (error) {
         console.error("Discovery Error:", error.message);
         if (error.response) {
-            console.error("API Response Status:", error.response.status);
-            console.error("API Response Data:", JSON.stringify(error.response.data));
+            console.error("Status:", error.response.status);
+            console.error("Data:", JSON.stringify(error.response.data));
         }
-        res.status(500).json({ success: false, message: "Backend error during discovery. Check server logs." });
+        res.status(500).json({ success: false, message: "Backend error during discovery." });
     }
 });
 
