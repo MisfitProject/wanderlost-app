@@ -395,13 +395,15 @@ function renderHistory() {
 // ============================================================
 function goToGoogleMaps() {
   if (!state.currentPlace) return;
-  const { lat, lng, name } = state.currentPlace;
+  const { lat, lng, name, address } = state.currentPlace;
   const encodedName = encodeURIComponent(name || 'Discovery');
+  const searchQuery = encodeURIComponent((name || '') + ' ' + (address || ''));
   let mapUrl;
   if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
     mapUrl = `http://maps.apple.com/?q=${encodedName}&ll=${lat},${lng}`;
   } else {
-    mapUrl = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+    // Use place name + address as query so Maps shows the actual place listing
+    mapUrl = `https://www.google.com/maps/search/?api=1&query=${searchQuery}`;
   }
   window.open(mapUrl, '_blank');
   closeDiscoverySheet();
