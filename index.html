@@ -278,7 +278,7 @@ body { background-color: #F9F9F9; margin: 0; }
         <span class="material-symbols-outlined">menu</span>
       </button>
       <h1 class="text-2xl font-serif tracking-tighter text-[#735C00]">Wanderlost</h1>
-      <button class="text-[#5F5E5E] hover:opacity-70 transition-opacity active:scale-95 duration-200">
+      <button onclick="showToast('History search coming in next update.')" class="text-[#5F5E5E] hover:opacity-70 transition-opacity active:scale-95 duration-200">
         <span class="material-symbols-outlined">search</span>
       </button>
     </div>
@@ -527,7 +527,7 @@ body { background-color: #F9F9F9; margin: 0; }
         </div>
         <div class="pt-4 flex gap-4">
           <button onclick="openModal('modal-premium')" class="px-6 py-3 bg-primary-container text-on-primary-container text-xs font-bold tracking-widest uppercase hover:opacity-90 transition-all">Manage Subscription</button>
-          <button class="px-6 py-3 border text-xs font-bold tracking-widest uppercase transition-all border-on-surface text-on-surface hover:bg-on-surface/5">Cancel Membership</button>
+          <button onclick="showToast('You are on the Free Membership. No cancellation required.')" class="px-6 py-3 border text-xs font-bold tracking-widest uppercase transition-all border-on-surface text-on-surface hover:bg-on-surface/5">Cancel Membership</button>
         </div>
       </div>
     </section>
@@ -557,15 +557,15 @@ body { background-color: #F9F9F9; margin: 0; }
     <!-- Account Actions -->
     <section class="mb-16">
       <div class="py-4">
-        <button class="text-sm text-secondary font-medium underline underline-offset-4 decoration-outline-variant hover:text-on-surface transition-colors">Log out</button>
+        <button onclick="window.location.reload()" class="text-sm text-secondary font-medium underline underline-offset-4 decoration-outline-variant hover:text-on-surface transition-colors">Log out</button>
       </div>
     </section>
     <section class="bg-surface-container-low p-8 border-l-4 border-error/30">
       <h3 class="text-xl font-serif-editorial text-error mb-4">Danger Zone</h3>
       <p class="text-xs text-secondary mb-6 leading-relaxed">Actions performed in this area are irreversible. Your data and account history will be purged from our servers immediately.</p>
       <div class="flex flex-col gap-4 items-start">
-        <button class="text-xs font-bold tracking-widest uppercase text-error hover:underline transition-all">Delete my account</button>
-        <button class="text-xs font-bold tracking-widest uppercase text-error hover:underline transition-all">Delete my data</button>
+        <button onclick="if(confirm('Are you absolutely sure you want to delete your account? This cannot be undone.')) { showToast('Account deletion initiated. You will be logged out.'); setTimeout(() => location.reload(), 2500); }" class="text-xs font-bold tracking-widest uppercase text-error hover:underline transition-all">Delete my account</button>
+        <button onclick="if(confirm('Warning: This will clear all your history and saved places locally.')) { showToast('Local data purged successfully.'); state.history = []; state.savedPlaces = []; renderHistory(); }" class="text-xs font-bold tracking-widest uppercase text-error hover:underline transition-all">Delete my data</button>
       </div>
     </section>
   </main>
@@ -707,7 +707,7 @@ body { background-color: #F9F9F9; margin: 0; }
 
     <div class="text-center mt-16 mb-8">
       <p class="text-sm text-secondary mb-2">Have questions about your digital footprint?</p>
-      <button class="text-primary font-serif italic text-lg border-b border-primary/30 hover:border-primary transition-colors">Contact the Curator</button>
+      <button onclick="window.location.href='mailto:support@wanderlost.com'" class="text-primary font-serif italic text-lg border-b border-primary/30 hover:border-primary transition-colors">Contact the Curator</button>
     </div>
   </main>
 </div>
@@ -797,7 +797,7 @@ body { background-color: #F9F9F9; margin: 0; }
 
     <div class="text-center mt-16 mb-8">
       <p class="text-sm text-secondary mb-2">Questions about our terms?</p>
-      <button class="text-primary font-serif italic text-lg border-b border-primary/30 hover:border-primary transition-colors">Contact the Curator</button>
+      <button onclick="window.location.href='mailto:support@wanderlost.com'" class="text-primary font-serif italic text-lg border-b border-primary/30 hover:border-primary transition-colors">Contact the Curator</button>
     </div>
   </main>
 </div>
@@ -1001,7 +1001,7 @@ body { background-color: #F9F9F9; margin: 0; }
     <div class="text-center mt-12 mb-8 py-8 border-t border-outline-variant/20">
       <span class="material-symbols-outlined text-primary text-3xl mb-3 block">support_agent</span>
       <p class="text-sm text-secondary mb-3">Still need help?</p>
-      <button class="text-primary font-serif italic text-lg border-b border-primary/30 hover:border-primary transition-colors">Contact the Curator</button>
+      <button onclick="window.location.href='mailto:support@wanderlost.com'" class="text-primary font-serif italic text-lg border-b border-primary/30 hover:border-primary transition-colors">Contact the Curator</button>
     </div>
   </main>
 </div>
@@ -1037,7 +1037,7 @@ body { background-color: #F9F9F9; margin: 0; }
         <button onclick="openModal('modal-checkout');closeModal('modal-premium');" class="w-full bg-primary-container text-on-primary-container px-8 py-5 text-sm font-semibold tracking-widest uppercase hover:opacity-90 transition-all active:scale-[0.98]">
           Start Your Journey — 20 CHF/mo
         </button>
-        <p class="text-center mt-6"><button class="text-secondary text-xs underline underline-offset-4 decoration-outline-variant hover:text-on-surface transition-colors">Restore Purchase</button></p>
+        <p class="text-center mt-6"><button onclick="showToast('No previous purchases found for this account.')" class="text-secondary text-xs underline underline-offset-4 decoration-outline-variant hover:text-on-surface transition-colors">Restore Purchase</button></p>
       </div>
     </div>
   </div>
