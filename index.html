@@ -375,69 +375,54 @@ body { background-color: #F9F9F9; margin: 0; }
     </section>
     <section class="mb-16">
       <div class="space-y-0">
-        <div class="flex justify-between items-center py-5 border-b-[0.5px] border-outline-variant/20">
-          <div><span class="block text-secondary font-label text-[10px] tracking-widest uppercase">Full Name</span><span class="text-on-surface font-body text-sm">Explorer</span></div>
-          <span class="material-symbols-outlined text-outline-variant text-sm cursor-pointer">edit</span>
+        <div class="flex justify-between items-center py-4 border-b-[0.5px] border-outline-variant/20 group">
+          <div class="flex-1"><span class="block text-secondary font-label text-[10px] tracking-widest uppercase mb-1">Full Name</span><input type="text" value="Explorer" class="w-full bg-transparent border-x-0 border-t-0 border-b border-transparent p-0 text-on-surface font-body text-sm focus:ring-0 focus:border-primary focus:outline-none transition-colors" /></div>
+          <span class="material-symbols-outlined text-outline-variant text-sm cursor-pointer group-hover:text-primary transition-colors">edit</span>
         </div>
-        <div class="flex justify-between items-center py-5 border-b-[0.5px] border-outline-variant/20">
-          <div><span class="block text-secondary font-label text-[10px] tracking-widest uppercase">Email Address</span><span class="text-on-surface font-body text-sm">—</span></div>
-          <span class="material-symbols-outlined text-outline-variant text-sm cursor-pointer">mail</span>
+        <div class="flex justify-between items-center py-4 border-b-[0.5px] border-outline-variant/20 group">
+          <div class="flex-1"><span class="block text-secondary font-label text-[10px] tracking-widest uppercase mb-1">Email Address</span><input type="email" placeholder="Add email" class="w-full bg-transparent border-x-0 border-t-0 border-b border-transparent p-0 text-on-surface font-body text-sm focus:ring-0 focus:border-primary focus:outline-none transition-colors" /></div>
+          <span class="material-symbols-outlined text-outline-variant text-sm cursor-pointer group-hover:text-primary transition-colors">mail</span>
         </div>
-        <div class="flex justify-between items-center py-5 border-b-[0.5px] border-outline-variant/20">
-          <div><span class="block text-secondary font-label text-[10px] tracking-widest uppercase">Date of Birth</span><span class="text-on-surface font-body text-sm">—</span></div>
-          <span class="material-symbols-outlined text-outline-variant text-sm cursor-pointer">calendar_today</span>
+        <div class="flex justify-between items-center py-4 border-b-[0.5px] border-outline-variant/20 group">
+          <div class="flex-1"><span class="block text-secondary font-label text-[10px] tracking-widest uppercase mb-1">Date of Birth</span><input type="date" class="w-full bg-transparent border-x-0 border-t-0 border-b border-transparent p-0 text-secondary font-body text-sm focus:ring-0 focus:border-primary focus:outline-none transition-colors" /></div>
+          <span class="material-symbols-outlined text-outline-variant text-sm cursor-pointer group-hover:text-primary transition-colors">calendar_today</span>
         </div>
-        <div class="flex justify-between items-center py-5 border-b-[0.5px] border-outline-variant/20">
-          <div><span class="block text-secondary font-label text-[10px] tracking-widest uppercase">Security</span><span class="text-on-surface font-body text-sm tracking-tighter">••••••••••••</span></div>
-          <span class="material-symbols-outlined text-outline-variant text-sm cursor-pointer">lock</span>
+        <div class="flex justify-between items-center py-4 border-b-[0.5px] border-outline-variant/20 group">
+          <div class="flex-1"><span class="block text-secondary font-label text-[10px] tracking-widest uppercase mb-1">Security</span><input type="password" value="password123" class="w-full bg-transparent border-x-0 border-t-0 border-b border-transparent p-0 text-on-surface font-body text-sm focus:ring-0 focus:border-primary focus:outline-none transition-colors tracking-widest" /></div>
+          <span class="material-symbols-outlined text-outline-variant text-sm cursor-pointer group-hover:text-primary transition-colors">lock</span>
         </div>
       </div>
     </section>
-    <!-- Previously Revealed Nodes -->
-    <section class="mb-12">
+    <!-- Saved Places Gate -->
+    <section class="mb-12 relative">
       <div class="flex items-baseline justify-between mb-6">
-        <h3 class="font-serif text-2xl text-on-surface">Previously Revealed Nodes</h3>
+        <h3 class="font-serif text-2xl text-on-surface">Saved Places</h3>
         <span class="text-secondary font-label text-[10px] tracking-widest uppercase">View All</span>
       </div>
-      <div class="flex overflow-x-auto gap-6 pb-8 hide-scrollbar snap-x">
-        <div class="min-w-[260px] snap-start group">
-          <div class="aspect-[4/5] bg-surface-container-low mb-4 overflow-hidden">
-            <img alt="Kyoto" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmHGZeXsqiNDNSPnXv5v6eb8f7UkfQeDYxLZXvHPjHS1e_w9sOdUGvhCJLGNBT1eNA6Umsr6QU0vTPGrL2RN6Ztuk2C0IPJMmUispnlU7Wy7uCbj1oHtiBt2kzgs1OyU_hUIxFnxU3ekXm48390ROEe0iR_PF9VrwS2LcWoNYGCialDLgvg-Xdh492FB194wREX9M3J4w5ywULqdpmQBCFx3lDS7R1eDhGGhjS31acOHbZ-j8qM1Wsa5PLJvCHqPI7edT-oU8pMBk"/>
-          </div>
-          <div class="px-1"><span class="text-secondary font-label text-[9px] tracking-widest uppercase">35.0116° N, 135.7681° E</span><h4 class="font-headline text-lg mt-1">Gion District</h4></div>
-        </div>
-        <div class="min-w-[260px] snap-start group">
-          <div class="aspect-[4/5] bg-surface-container-low mb-4 overflow-hidden">
-            <img alt="Taj Mahal" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjV-sEslIcXBFhgDlXK8o73LnhAW8_pu4Ne00IrYeZaanv1nbGfWOKYYP8EhqwX6Uzjvwahkj9CS8dgumnfAKti0pdb0N8XNEu6neh5EBtT6XdlrDBnYF9L1qCT_ptAiiD-SXKRSdY_BjbRQyQRTXTpA7QJCte90bHYmk_QMHCMED0xgnStzEZ92aOeLE7rwq6ODxk7KfSJL4b6elmaZMj4gq0StaY_NV5HN39k8wDvyFYj60iis2EzfIDF2cskYeUdnajbpWDkk0"/>
-          </div>
-          <div class="px-1"><span class="text-secondary font-label text-[9px] tracking-widest uppercase">27.1751° N, 78.0421° E</span><h4 class="font-headline text-lg mt-1">The Ivory Tomb</h4></div>
-        </div>
-        <div class="min-w-[260px] snap-start group">
-          <div class="aspect-[4/5] bg-surface-container-low mb-4 overflow-hidden">
-            <img alt="Ha Long Bay" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBvCvcdr0azfGMId86beFA5T1_eSbLO-wjm5pL7wGurOuulJlC-kVSzXD3Y1Azp6rsC-bcgCT9AXNoAF_IlRZVtNuzGQxhINSPYUzXysVVRuZtXp5T7ApJ0R-K2bzOmh4jbd4Rudoi4C0j2l1hYMpm2EGlzTdsReyva3A-K24sbOKFX2luuoxxGV1wNOc4iU1L_-_0pY-KtLb63bhO2XmHdLVtY672BZzrq9gjEa3x4SUjsDebw_7WRTqO_da-AYENVt8pOTLnEFVs"/>
-          </div>
-          <div class="px-1"><span class="text-secondary font-label text-[9px] tracking-widest uppercase">20.9101° N, 107.1839° E</span><h4 class="font-headline text-lg mt-1">The Emerald Bay</h4></div>
-        </div>
-        <!-- Locked Card -->
-        <div class="min-w-[260px] snap-start relative">
-          <div class="aspect-[4/5] bg-surface-container-low mb-4 overflow-hidden relative">
-            <img alt="Locked" class="w-full h-full object-cover blur-md grayscale" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD754b9Nk005jPlwDA2uYadGvPqMT3oaThf18wlutUbI4Iedk_hq0MyBCp9Gsg1do6x2-8cYi1HrIvHmM-tKwrX235OPH7uwd5AZUP3eVMPwqDbbPNFMAcZr8MkBLvogjhGl1_uHXiIX0tJ0CHTogUDN2D9_exxkAS7mxmyCqhCsEb7Xf-ctSqEZkCNgHIlED-INk1ayyAvAC6DPDQSJPwivSjB18GIG2dNHUC4f4-MLRzJp7ITaUzVXcwbrCjVtMmYiSzMO4Rhkoo"/>
-            <div class="absolute inset-0 flex flex-col items-center justify-center bg-on-surface/5">
-              <span class="material-symbols-outlined text-primary text-3xl mb-2" style="font-variation-settings:'FILL' 1;">lock</span>
-              <span class="text-on-surface font-label text-[10px] tracking-widest uppercase">Premium Only</span>
+      <div class="relative">
+        <div class="flex overflow-x-auto gap-6 pb-8 hide-scrollbar snap-x filter blur-md pointer-events-none opacity-40 select-none">
+          <div class="min-w-[260px] snap-start group">
+            <div class="aspect-[4/5] bg-surface-container-low mb-4 overflow-hidden">
+              <img alt="Kyoto" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmHGZeXsqiNDNSPnXv5v6eb8f7UkfQeDYxLZXvHPjHS1e_w9sOdUGvhCJLGNBT1eNA6Umsr6QU0vTPGrL2RN6Ztuk2C0IPJMmUispnlU7Wy7uCbj1oHtiBt2kzgs1OyU_hUIxFnxU3ekXm48390ROEe0iR_PF9VrwS2LcWoNYGCialDLgvg-Xdh492FB194wREX9M3J4w5ywULqdpmQBCFx3lDS7R1eDhGGhjS31acOHbZ-j8qM1Wsa5PLJvCHqPI7edT-oU8pMBk"/>
             </div>
+            <div class="px-1"><span class="text-secondary font-label text-[9px] tracking-widest uppercase">35.0116° N, 135.7681° E</span><h4 class="font-headline text-lg mt-1">Gion District</h4></div>
           </div>
-          <div class="px-1 opacity-40"><span class="text-secondary font-label text-[9px] tracking-widest uppercase">??.????° N, ??.????° E</span><h4 class="font-headline text-lg mt-1">Hidden Sanctuary</h4></div>
-        </div>
-        <div class="min-w-[260px] snap-start relative">
-          <div class="aspect-[4/5] bg-surface-container-low mb-4 overflow-hidden relative">
-            <img alt="Locked" class="w-full h-full object-cover blur-md grayscale" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBojD9T5tB3_IJn0IaTcbR_HGbKEJXXFQ0g01JsXPgSSmyxR8JEArtNLSLhn3pGvp8qBxdUm3QS0GrAj7J65wdWC6ute8cdcJcoNopdy8Kz6IUo3YdZhZub7cHfgICi0oWewusGoFD5H8XirMbLEfWBDojgI_G2YIZiEFZy8tBqzHAmbndEzFyg1veg9x6Ib-QQEKmY_XMWNMfo81zq23DVNIYYw10wHa4XgBrU-JQcvsF-ja8zIkcDOizyafLCr589y-r3lh7i4no"/>
-            <div class="absolute inset-0 flex flex-col items-center justify-center bg-on-surface/5">
-              <span class="material-symbols-outlined text-primary text-3xl mb-2" style="font-variation-settings:'FILL' 1;">lock</span>
-              <span class="text-on-surface font-label text-[10px] tracking-widest uppercase">Premium Only</span>
+          <div class="min-w-[260px] snap-start group">
+            <div class="aspect-[4/5] bg-surface-container-low mb-4 overflow-hidden">
+              <img alt="Taj Mahal" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjV-sEslIcXBFhgDlXK8o73LnhAW8_pu4Ne00IrYeZaanv1nbGfWOKYYP8EhqwX6Uzjvwahkj9CS8dgumnfAKti0pdb0N8XNEu6neh5EBtT6XdlrDBnYF9L1qCT_ptAiiD-SXKRSdY_BjbRQyQRTXTpA7QJCte90bHYmk_QMHCMED0xgnStzEZ92aOeLE7rwq6ODxk7KfSJL4b6elmaZMj4gq0StaY_NV5HN39k8wDvyFYj60iis2EzfIDF2cskYeUdnajbpWDkk0"/>
             </div>
+            <div class="px-1"><span class="text-secondary font-label text-[9px] tracking-widest uppercase">27.1751° N, 78.0421° E</span><h4 class="font-headline text-lg mt-1">The Ivory Tomb</h4></div>
           </div>
-          <div class="px-1 opacity-40"><span class="text-secondary font-label text-[9px] tracking-widest uppercase">??.????° N, ??.????° E</span><h4 class="font-headline text-lg mt-1">Arctic Watch</h4></div>
+        </div>
+        <!-- Locked Overlay -->
+        <div class="absolute inset-0 flex items-center justify-center -translate-y-4">
+          <div class="text-center group cursor-pointer" onclick="openModal('modal-premium')">
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-full border border-primary text-primary mb-4 transition-transform group-hover:scale-110 bg-surface/50 backdrop-blur-sm">
+              <span class="material-symbols-outlined text-3xl">lock</span>
+            </div>
+            <p class="font-serif-title text-xl text-on-surface">Premium Feature</p>
+            <p class="text-[10px] uppercase tracking-widest text-secondary mt-2 border-b border-secondary/30 inline-block pb-0.5 group-hover:text-primary transition-colors">Upgrade to unlock Saves</p>
+          </div>
         </div>
       </div>
     </section>
