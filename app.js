@@ -14,7 +14,8 @@ const state = {
   selectedCategory: '',
   savedPlaces: [],
   markers: [],
-  selectedPlan: 'monthly'
+  selectedPlan: 'monthly',
+  distanceUnit: 'meters'  // 'meters' or 'feet'
 };
 
 // ============================================================
@@ -60,6 +61,26 @@ function closeModal(id) {
   // Restore scroll if no other modals are open
   const anyOpen = document.querySelector('.modal-slide.open');
   if (!anyOpen) document.body.style.overflow = '';
+}
+
+// ============================================================
+// DISTANCE FORMATTING
+// ============================================================
+function formatDistance(distKm) {
+  if (state.distanceUnit === 'feet') {
+    const feet = distKm * 3280.84;
+    if (feet < 5280) {
+      return Math.round(feet) + ' ft away';
+    } else {
+      return (feet / 5280).toFixed(1) + ' mi away';
+    }
+  } else {
+    if (distKm < 1) {
+      return Math.round(distKm * 1000) + ' m away';
+    } else {
+      return distKm.toFixed(1) + ' km away';
+    }
+  }
 }
 
 // ============================================================
@@ -308,7 +329,8 @@ async function runDiscovery() {
       name: target.name || 'Hidden Gem',
       type: (target.types && target.types[0]) || state.selectedCategory || 'Discovery',
       address: target.vicinity || 'A local favorite',
-      distance: dist < 1 ? Math.round(dist * 1000) + 'm away' : dist.toFixed(1) + 'km away',
+      distance: formatDistance(dist),
+      distKm: dist,
       description: target.rating ? 'Rating: ' + target.rating + ' — Highly rated by locals' : 'A secret spot favored by locals.',
       lat: placeLat,
       lng: placeLng,
@@ -490,6 +512,12 @@ window.addEventListener('DOMContentLoaded', () => {
       });
       btn.classList.add('bg-surface-container-highest', 'text-on-surface');
       btn.classList.remove('text-secondary');
+      state.distanceUnit = btn.dataset.unit || 'meters';
+      // Live-update the currently shown discovery distance
+      if (state.currentPlace && state.currentPlace.distKm !== undefined) {
+        const distEl = document.getElementById('sheet-distance');
+        if (distEl) distEl.textContent = formatDistance(state.currentPlace.distKm);
+      }
     });
   });
 
