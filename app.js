@@ -434,26 +434,13 @@ function confirmPayment() {
   }, 2000);
 }
 
-// ============================================================
-// WELCOME FLOW
-// ============================================================
-function dismissWelcome() {
-  const splash = document.getElementById('welcome-splash');
-  if (!splash) return;
-  // Slide the splash screen completely out of the viewport cleanly
-  splash.style.transform = 'translateY(-100vh)';
-  splash.style.pointerEvents = 'none';
-  // Remove after slide animation finishes (0.6s)
-  setTimeout(() => splash.remove(), 700);
-}
+
 
 // ============================================================
 // INIT
 // ============================================================
 window.addEventListener('DOMContentLoaded', () => {
-  // Welcome button
-  const btnBegin = document.getElementById('btn-begin');
-  if (btnBegin) btnBegin.addEventListener('click', dismissWelcome);
+
 
   // Discover button
   const btnDiscover = document.getElementById('btn-discover');
