@@ -496,6 +496,101 @@ window.addEventListener('DOMContentLoaded', () => {
   // Hide Google watermarks
   hideGoogleWatermarks();
 
+  // ============================================================
+  // AUTH GATE
+  // ============================================================
+  const authGate = document.getElementById('auth-gate');
+  const loginOverlay = document.getElementById('login-overlay');
+  const forgotOverlay = document.getElementById('forgot-overlay');
+
+  // "Try for Free" — dismiss the gate
+  const btnTryFree = document.getElementById('btn-try-free');
+  if (btnTryFree) btnTryFree.addEventListener('click', () => {
+    authGate.classList.add('hidden');
+  });
+
+  // "Log In" — show login overlay
+  const btnOpenLogin = document.getElementById('btn-open-login');
+  if (btnOpenLogin) btnOpenLogin.addEventListener('click', () => {
+    loginOverlay.classList.add('open');
+  });
+
+  // Back from login
+  const btnCloseLogin = document.getElementById('btn-close-login');
+  if (btnCloseLogin) btnCloseLogin.addEventListener('click', () => {
+    loginOverlay.classList.remove('open');
+  });
+
+  // Login submit
+  const btnLoginSubmit = document.getElementById('btn-login-submit');
+  if (btnLoginSubmit) btnLoginSubmit.addEventListener('click', () => {
+    const email = document.getElementById('login-email').value.trim();
+    const password = document.getElementById('login-password').value;
+    if (!email || !password) {
+      showToast('Please fill in all fields');
+      return;
+    }
+    btnLoginSubmit.textContent = 'Signing in...';
+    btnLoginSubmit.disabled = true;
+    setTimeout(() => {
+      loginOverlay.classList.remove('open');
+      authGate.classList.add('hidden');
+      btnLoginSubmit.textContent = 'SIGN IN';
+      btnLoginSubmit.disabled = false;
+      showToast('Welcome back, Explorer!');
+    }, 1500);
+  });
+
+  // "Forgot my password"
+  const btnOpenForgot = document.getElementById('btn-open-forgot');
+  if (btnOpenForgot) btnOpenForgot.addEventListener('click', () => {
+    forgotOverlay.classList.add('open');
+  });
+
+  // Back from forgot
+  const btnCloseForgot = document.getElementById('btn-close-forgot');
+  if (btnCloseForgot) btnCloseForgot.addEventListener('click', () => {
+    forgotOverlay.classList.remove('open');
+    document.getElementById('forgot-confirm-msg').classList.add('hidden');
+  });
+
+  // Forgot submit
+  const btnForgotSubmit = document.getElementById('btn-forgot-submit');
+  if (btnForgotSubmit) btnForgotSubmit.addEventListener('click', () => {
+    const email = document.getElementById('forgot-email').value.trim();
+    if (!email) {
+      showToast('Please enter your email address');
+      return;
+    }
+    btnForgotSubmit.textContent = 'Sending...';
+    btnForgotSubmit.disabled = true;
+    setTimeout(() => {
+      btnForgotSubmit.textContent = 'SEND RECOVERY LINK';
+      btnForgotSubmit.disabled = false;
+      document.getElementById('forgot-confirm-msg').classList.remove('hidden');
+    }, 1500);
+  });
+
+  // ============================================================
+  // PROFILE SAVE
+  // ============================================================
+  const btnSaveProfile = document.getElementById('btn-save-profile');
+  if (btnSaveProfile) btnSaveProfile.addEventListener('click', () => {
+    const pw = document.getElementById('profile-password').value;
+    const pwConfirm = document.getElementById('profile-password-confirm').value;
+    if (pw && pw !== pwConfirm) {
+      showToast('Passwords do not match');
+      return;
+    }
+    btnSaveProfile.textContent = 'Saving...';
+    btnSaveProfile.disabled = true;
+    setTimeout(() => {
+      btnSaveProfile.textContent = 'SAVE CHANGES';
+      btnSaveProfile.disabled = false;
+      showToast('Profile updated successfully');
+    }, 1200);
+  });
+
   console.log('Wanderlost Stitch Edition — Initialized');
 });
 

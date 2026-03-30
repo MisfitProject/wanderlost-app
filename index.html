@@ -143,10 +143,129 @@ div[style*="z-index: 1000001"], div[style*="z-index: 1000000"] { display: none !
 /* Prevent startup glitch (FOUC) while Tailwind CDN loads */
 body { background-color: #F9F9F9; margin: 0; }
 
+/* Auth gate overlay */
+#auth-gate {
+  position: fixed; inset: 0; z-index: 9999;
+  background: #F9F9F9;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+#auth-gate.hidden {
+  opacity: 0; pointer-events: none; transform: translateY(-100%);
+}
+
+/* Login modal overlay */
+#login-overlay {
+  position: fixed; inset: 0; z-index: 10000;
+  background: #F9F9F9;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  transform: translateY(100%);
+  transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+  pointer-events: none;
+  overflow-y: auto;
+}
+#login-overlay.open {
+  transform: translateY(0); pointer-events: auto;
+}
+
+/* Forgot password slide */
+#forgot-overlay {
+  position: fixed; inset: 0; z-index: 10001;
+  background: #F9F9F9;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  transform: translateY(100%);
+  transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+  pointer-events: none;
+  overflow-y: auto;
+}
+#forgot-overlay.open {
+  transform: translateY(0); pointer-events: auto;
+}
+
 </style>
 </head>
 
 <body class="bg-surface font-body text-on-surface antialiased">
+
+<!-- ============================================================ -->
+<!-- AUTH GATE: Log In / Try for Free -->
+<!-- ============================================================ -->
+<div id="auth-gate">
+  <div class="text-center px-8 max-w-sm w-full">
+    <div class="mb-2 text-[10px] tracking-[0.3em] text-secondary uppercase">The Secret City</div>
+    <h1 class="font-serif italic text-5xl text-on-surface mb-2">
+      <span class="text-primary-container">W</span>anderlost
+    </h1>
+    <p class="text-secondary text-sm mt-4 mb-12 font-serif italic">AI-powered local discovery</p>
+
+    <button id="btn-open-login" class="w-full bg-primary-container text-on-primary-container px-8 py-4 font-label text-xs font-semibold tracking-widest uppercase active:scale-[0.97] transition-transform mb-4">
+      Log In
+    </button>
+    <button id="btn-try-free" class="w-full border border-outline-variant/40 text-on-surface px-8 py-4 font-label text-xs tracking-widest uppercase active:scale-[0.97] transition-transform hover:border-primary/50 hover:text-primary">
+      Try for Free
+    </button>
+    <p class="text-[10px] text-secondary mt-8 tracking-wide">By continuing you agree to our <button onclick="document.getElementById('auth-gate').classList.add('hidden');openModal('modal-terms');" class="underline text-on-surface">Terms</button> & <button onclick="document.getElementById('auth-gate').classList.add('hidden');openModal('modal-privacy');" class="underline text-on-surface">Privacy Policy</button></p>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- LOGIN OVERLAY -->
+<!-- ============================================================ -->
+<div id="login-overlay">
+  <div class="w-full max-w-sm px-8">
+    <button id="btn-close-login" class="mb-8 text-secondary active:scale-95 transition-transform">
+      <span class="material-symbols-outlined">arrow_back</span>
+    </button>
+    <h2 class="font-serif-title text-4xl text-on-surface mb-2">Welcome back.</h2>
+    <p class="text-secondary text-sm mb-10 font-serif italic">Sign in to continue your journey</p>
+
+    <div class="space-y-6 mb-8">
+      <div>
+        <label class="block text-secondary font-label text-[10px] tracking-widest uppercase mb-2">Email Address</label>
+        <input id="login-email" type="email" placeholder="you@email.com" class="w-full bg-transparent border-x-0 border-t-0 border-b border-outline-variant/40 p-0 pb-3 text-on-surface font-body text-sm focus:ring-0 focus:border-primary focus:outline-none transition-colors" />
+      </div>
+      <div>
+        <label class="block text-secondary font-label text-[10px] tracking-widest uppercase mb-2">Password</label>
+        <input id="login-password" type="password" placeholder="••••••••" class="w-full bg-transparent border-x-0 border-t-0 border-b border-outline-variant/40 p-0 pb-3 text-on-surface font-body text-sm focus:ring-0 focus:border-primary focus:outline-none transition-colors tracking-widest" />
+      </div>
+    </div>
+
+    <button id="btn-login-submit" class="w-full bg-primary-container text-on-primary-container px-8 py-4 font-label text-xs font-semibold tracking-widest uppercase active:scale-[0.97] transition-transform mb-6">
+      Sign In
+    </button>
+
+    <div class="text-center">
+      <button id="btn-open-forgot" class="text-secondary text-xs tracking-wide border-b border-outline-variant/30 pb-0.5 hover:text-primary transition-colors">Forgot my password?</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- FORGOT PASSWORD OVERLAY -->
+<!-- ============================================================ -->
+<div id="forgot-overlay">
+  <div class="w-full max-w-sm px-8">
+    <button id="btn-close-forgot" class="mb-8 text-secondary active:scale-95 transition-transform">
+      <span class="material-symbols-outlined">arrow_back</span>
+    </button>
+    <h2 class="font-serif-title text-4xl text-on-surface mb-2">Reset Password.</h2>
+    <p class="text-secondary text-sm mb-10 font-serif italic">Enter your email and we'll send you a recovery link</p>
+
+    <div class="mb-8">
+      <label class="block text-secondary font-label text-[10px] tracking-widest uppercase mb-2">Email Address</label>
+      <input id="forgot-email" type="email" placeholder="you@email.com" class="w-full bg-transparent border-x-0 border-t-0 border-b border-outline-variant/40 p-0 pb-3 text-on-surface font-body text-sm focus:ring-0 focus:border-primary focus:outline-none transition-colors" />
+    </div>
+
+    <button id="btn-forgot-submit" class="w-full bg-primary-container text-on-primary-container px-8 py-4 font-label text-xs font-semibold tracking-widest uppercase active:scale-[0.97] transition-transform">
+      Send Recovery Link
+    </button>
+
+    <p id="forgot-confirm-msg" class="text-center text-sm text-primary mt-6 hidden font-serif italic">Recovery link sent! Check your inbox.</p>
+  </div>
+</div>
 
 <!-- ============================================================ -->
 <!-- TAB: EXPLORE (home_refined_discovery_popup) -->
@@ -388,10 +507,17 @@ body { background-color: #F9F9F9; margin: 0; }
           <span class="material-symbols-outlined text-outline-variant text-sm cursor-pointer group-hover:text-primary transition-colors">calendar_today</span>
         </div>
         <div class="flex justify-between items-center py-4 border-b-[0.5px] border-outline-variant/20 group">
-          <div class="flex-1"><span class="block text-secondary font-label text-[10px] tracking-widest uppercase mb-1">Security</span><input type="password" value="password123" class="w-full bg-transparent border-x-0 border-t-0 border-b border-transparent p-0 text-on-surface font-body text-sm focus:ring-0 focus:border-primary focus:outline-none transition-colors tracking-widest" /></div>
+          <div class="flex-1"><span class="block text-secondary font-label text-[10px] tracking-widest uppercase mb-1">Password</span><input id="profile-password" type="password" placeholder="New password" class="w-full bg-transparent border-x-0 border-t-0 border-b border-transparent p-0 text-on-surface font-body text-sm focus:ring-0 focus:border-primary focus:outline-none transition-colors tracking-widest" /></div>
+          <span class="material-symbols-outlined text-outline-variant text-sm cursor-pointer group-hover:text-primary transition-colors">lock</span>
+        </div>
+        <div class="flex justify-between items-center py-4 border-b-[0.5px] border-outline-variant/20 group">
+          <div class="flex-1"><span class="block text-secondary font-label text-[10px] tracking-widest uppercase mb-1">Confirm Password</span><input id="profile-password-confirm" type="password" placeholder="Repeat password" class="w-full bg-transparent border-x-0 border-t-0 border-b border-transparent p-0 text-on-surface font-body text-sm focus:ring-0 focus:border-primary focus:outline-none transition-colors tracking-widest" /></div>
           <span class="material-symbols-outlined text-outline-variant text-sm cursor-pointer group-hover:text-primary transition-colors">lock</span>
         </div>
       </div>
+      <button id="btn-save-profile" class="w-full mt-6 bg-primary-container text-on-primary-container px-8 py-3.5 font-label text-xs font-semibold tracking-widest uppercase active:scale-[0.97] transition-transform hover:opacity-90">
+        Save Changes
+      </button>
     </section>
     <!-- Saved Places Gate -->
     <section class="mb-12 relative">
