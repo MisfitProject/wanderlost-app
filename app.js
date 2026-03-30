@@ -585,6 +585,12 @@ window.addEventListener('DOMContentLoaded', () => {
     btnSaveProfile.textContent = 'Saving...';
     btnSaveProfile.disabled = true;
     setTimeout(() => {
+      // Update the profile display name
+      const nameInput = document.getElementById('profile-fullname');
+      const displayName = document.getElementById('profile-display-name');
+      if (nameInput && displayName && nameInput.value.trim()) {
+        displayName.textContent = nameInput.value.trim();
+      }
       btnSaveProfile.textContent = 'SAVE CHANGES';
       btnSaveProfile.disabled = false;
       showToast('Profile updated successfully');
