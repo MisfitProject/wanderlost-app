@@ -416,7 +416,7 @@ body { background-color: #F9F9F9; margin: 0; }
     </section>
     <!-- Premium Gate -->
     <section class="mb-20 relative">
-      <div class="bg-primary-container p-8 md:p-12 mb-12 text-on-primary-container relative overflow-hidden">
+      <div class="glass glass-border p-8 md:p-12 mb-12 relative overflow-hidden rounded-[24px]">
         <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
           <div class="text-center md:text-left">
             <h3 class="font-serif-title text-3xl md:text-4xl mb-4 leading-tight">Join Premium to<br/>Unlock History</h3>
@@ -431,7 +431,7 @@ body { background-color: #F9F9F9; margin: 0; }
               </div>
             </div>
           </div>
-          <button onclick="openModal('modal-premium')" class="bg-on-primary-container text-surface px-10 py-4 font-label text-[11px] uppercase tracking-[0.2em] font-bold hover:opacity-90 transition-opacity whitespace-nowrap">
+          <button onclick="openModal('modal-premium')" class="bg-accent text-white px-10 py-4 font-label text-[11px] uppercase tracking-[0.2em] font-bold hover:opacity-90 transition-opacity whitespace-nowrap rounded-full glow-accent">
             Upgrade Now
           </button>
         </div>
@@ -463,8 +463,8 @@ body { background-color: #F9F9F9; margin: 0; }
         </div>
         <!-- Locked Overlay -->
         <div class="absolute inset-0 flex items-center justify-center">
-          <div class="text-center group cursor-pointer">
-            <div class="inline-flex items-center justify-center w-16 h-16 rounded-full border border-primary text-primary mb-4 transition-transform group-hover:scale-110">
+          <div class="text-center group cursor-pointer" onclick="openModal('modal-premium')">
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-full border border-accent text-accent mb-4 transition-transform group-hover:scale-110">
               <span class="material-symbols-outlined text-3xl">lock</span>
             </div>
             <p class="font-serif-title text-xl text-on-surface">12 More Nodes Hidden</p>
@@ -566,11 +566,11 @@ body { background-color: #F9F9F9; margin: 0; }
         <!-- Locked Overlay -->
         <div class="absolute inset-0 flex items-center justify-center -translate-y-4">
           <div class="text-center group cursor-pointer" onclick="openModal('modal-premium')">
-            <div class="inline-flex items-center justify-center w-16 h-16 rounded-full border border-primary text-primary mb-4 transition-transform group-hover:scale-110 bg-surface/50 backdrop-blur-sm">
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-full border border-accent text-accent mb-4 transition-transform group-hover:scale-110 bg-surface/50 backdrop-blur-sm">
               <span class="material-symbols-outlined text-3xl">lock</span>
             </div>
             <p class="font-serif-title text-xl text-on-surface">Premium Feature</p>
-            <p class="text-[10px] uppercase tracking-widest text-secondary mt-2 border-b border-secondary/30 inline-block pb-0.5 group-hover:text-primary transition-colors">Upgrade to unlock Saves</p>
+            <p class="text-[10px] uppercase tracking-widest text-secondary mt-2 border-b border-secondary/30 inline-block pb-0.5 group-hover:text-accent transition-colors">Upgrade to unlock Saves</p>
           </div>
         </div>
       </div>
@@ -649,7 +649,6 @@ body { background-color: #F9F9F9; margin: 0; }
           <button data-unit="meters" class="unit-toggle-btn px-4 py-2 text-[10px] font-bold tracking-widest uppercase bg-accent text-white">Meters</button>
           <button data-unit="feet" class="unit-toggle-btn px-4 py-2 text-[10px] font-bold tracking-widest uppercase text-secondary hover:bg-white/40 transition-colors">Feet</button>
         </div>
-        </div>
       </div>
     </section>
     <section class="mb-10">
@@ -682,7 +681,7 @@ body { background-color: #F9F9F9; margin: 0; }
 <!-- MODAL: SAFETY (safety_responsibility) -->
 <!-- ============================================================ -->
 <div id="modal-safety" class="modal-slide">
-  <header class="sticky top-0 w-full z-50 bg-[#F9F9F9]/80 backdrop-blur-md border-b border-[#D0C5AF]/20">
+  <header class="sticky top-0 w-full z-50 glass-strong glass-border" style="border-radius:0 0 20px 20px;">
     <div class="flex items-center px-6 h-16 w-full max-w-7xl mx-auto justify-between">
       <div class="flex items-center gap-4">
         <button class="active:scale-95 transition-transform text-accent" onclick="closeModal('modal-safety')">
@@ -753,7 +752,7 @@ body { background-color: #F9F9F9; margin: 0; }
 <!-- MODAL: PRIVACY POLICY (from screenshot) -->
 <!-- ============================================================ -->
 <div id="modal-privacy" class="modal-slide">
-  <header class="sticky top-0 w-full z-50 bg-[#F9F9F9]/80 backdrop-blur-md border-b border-[#D0C5AF]/20">
+  <header class="sticky top-0 w-full z-50 glass-strong glass-border" style="border-radius:0 0 20px 20px;">
     <div class="flex items-center px-6 h-16 w-full max-w-7xl mx-auto justify-between">
       <div class="flex items-center gap-4">
         <button class="active:scale-95 transition-transform text-accent" onclick="closeModal('modal-privacy')">
@@ -822,7 +821,7 @@ body { background-color: #F9F9F9; margin: 0; }
 <!-- MODAL: TERMS & CONDITIONS -->
 <!-- ============================================================ -->
 <div id="modal-terms" class="modal-slide">
-  <header class="sticky top-0 w-full z-50 bg-[#F9F9F9]/80 backdrop-blur-md border-b border-[#D0C5AF]/20">
+  <header class="sticky top-0 w-full z-50 glass-strong glass-border" style="border-radius:0 0 20px 20px;">
     <div class="flex items-center px-6 h-16 w-full max-w-7xl mx-auto justify-between">
       <div class="flex items-center gap-4">
         <button class="active:scale-95 transition-transform text-accent" onclick="closeModal('modal-terms')">
@@ -915,7 +914,7 @@ body { background-color: #F9F9F9; margin: 0; }
 <!-- MODAL: HELP CENTER -->
 <!-- ============================================================ -->
 <div id="modal-help" class="modal-slide">
-  <header class="sticky top-0 w-full z-50 bg-[#F9F9F9]/80 backdrop-blur-md border-b border-[#D0C5AF]/20">
+  <header class="sticky top-0 w-full z-50 glass-strong glass-border" style="border-radius:0 0 20px 20px;">
     <div class="flex items-center px-6 h-16 w-full max-w-7xl mx-auto justify-between">
       <div class="flex items-center gap-4">
         <button class="active:scale-95 transition-transform text-accent" onclick="closeModal('modal-help')">
@@ -1156,7 +1155,7 @@ body { background-color: #F9F9F9; margin: 0; }
 <!-- MODAL: CHECKOUT (checkout) -->
 <!-- ============================================================ -->
 <div id="modal-checkout" class="modal-slide">
-  <header class="fixed top-0 w-full flex justify-between items-center px-6 h-16 z-50 bg-[#F9F9F9]/80 backdrop-blur-md border-b-[0.5px] border-[#D0C5AF]/20">
+  <header class="fixed top-0 w-full flex justify-between items-center px-6 h-16 z-50 glass-strong glass-border" style="border-radius:0 0 20px 20px;">
     <div class="flex items-center gap-4">
       <button class="text-[#5F5E5E] active:scale-95 duration-200" onclick="closeModal('modal-checkout')">
         <span class="material-symbols-outlined">close</span>

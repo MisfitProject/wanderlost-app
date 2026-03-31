@@ -487,10 +487,10 @@ window.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.plan-toggle-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.plan-toggle-btn').forEach(b => {
-        b.classList.remove('bg-surface-container-lowest', 'text-on-surface');
+        b.classList.remove('bg-accent', 'text-white');
         b.classList.add('text-secondary');
       });
-      btn.classList.add('bg-surface-container-lowest', 'text-on-surface');
+      btn.classList.add('bg-accent', 'text-white');
       btn.classList.remove('text-secondary');
       state.selectedPlan = btn.dataset.plan;
       // Update total
