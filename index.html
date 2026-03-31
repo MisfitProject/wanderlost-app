@@ -24,6 +24,8 @@ tailwind.config = {
   theme: {
     extend: {
       colors: {
+        "accent": "#38B6FF",
+        "accent-dark": "#2196DB",
         "primary-fixed": "#ffe088",
         "tertiary-fixed": "#dbe1ff",
         "surface-bright": "#f9f9f9",
@@ -32,7 +34,7 @@ tailwind.config = {
         "on-tertiary-container": "#254188",
         "on-secondary-fixed-variant": "#474747",
         "on-tertiary": "#ffffff",
-        "primary": "#735c00",
+        "primary": "#38B6FF",
         "on-primary-fixed": "#241a00",
         "on-secondary-fixed": "#1b1c1c",
         "on-primary": "#ffffff",
@@ -40,22 +42,22 @@ tailwind.config = {
         "inverse-on-surface": "#f0f1f1",
         "secondary": "#5f5e5e",
         "on-error": "#ffffff",
-        "inverse-primary": "#e9c349",
+        "inverse-primary": "#38B6FF",
         "on-background": "#1a1c1c",
         "surface-container-highest": "#e2e2e2",
         "tertiary": "#415ba4",
         "secondary-fixed": "#e4e2e1",
         "error": "#ba1a1a",
         "on-secondary-container": "#656464",
-        "on-primary-container": "#554300",
-        "surface-tint": "#735c00",
+        "on-primary-container": "#ffffff",
+        "surface-tint": "#38B6FF",
         "outline-variant": "#d0c5af",
         "surface-container-high": "#e8e8e8",
         "inverse-surface": "#2f3131",
         "error-container": "#ffdad6",
         "surface": "#f9f9f9",
         "surface-variant": "#e2e2e2",
-        "primary-container": "#d4af37",
+        "primary-container": "#38B6FF",
         "on-secondary": "#ffffff",
         "primary-fixed-dim": "#e9c349",
         "outline": "#7f7663",
@@ -79,7 +81,7 @@ tailwind.config = {
         "serif": ["Cormorant Garamond", "serif"],
         "serif-title": ["Cormorant Garamond", "serif"]
       },
-      borderRadius: {"DEFAULT": "0px", "lg": "0px", "xl": "0px", "full": "9999px"},
+      borderRadius: {"DEFAULT": "24px", "lg": "28px", "xl": "32px", "full": "9999px"},
     },
   },
 }
@@ -92,8 +94,8 @@ tailwind.config = {
 .neural-grid {
   background-size: 40px 40px;
   background-image:
-    linear-gradient(to right, rgba(208, 197, 175, 0.1) 0.5px, transparent 0.5px),
-    linear-gradient(to bottom, rgba(208, 197, 175, 0.1) 0.5px, transparent 0.5px);
+    linear-gradient(to right, rgba(208, 197, 175, 0.08) 0.5px, transparent 0.5px),
+    linear-gradient(to bottom, rgba(208, 197, 175, 0.08) 0.5px, transparent 0.5px);
 }
 .hide-scrollbar::-webkit-scrollbar { display: none; }
 .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -104,7 +106,13 @@ tailwind.config = {
   0% { transform: scale(1); opacity: 0.5; }
   100% { transform: scale(4); opacity: 0; }
 }
-.glass-nav { backdrop-filter: blur(20px); }
+
+/* Glass utilities */
+.glass { backdrop-filter: blur(25px) saturate(120%); -webkit-backdrop-filter: blur(25px) saturate(120%); background: rgba(255,255,255,0.4); }
+.glass-strong { backdrop-filter: blur(30px) saturate(130%); -webkit-backdrop-filter: blur(30px) saturate(130%); background: rgba(255,255,255,0.7); }
+.glass-border { border: 0.5px solid rgba(255,255,255,0.5); }
+.glow-accent { box-shadow: 0 0 24px rgba(56,182,255,0.35), 0 0 60px rgba(56,182,255,0.12); }
+
 .serif-headline { font-family: 'Cormorant Garamond', serif; }
 .font-serif-editorial { font-family: 'Cormorant Garamond', serif; }
 .editorial-tension { padding-left: 10%; padding-right: 15%; }
@@ -146,7 +154,8 @@ body { background-color: #F9F9F9; margin: 0; }
 /* Auth gate overlay */
 #auth-gate {
   position: fixed; inset: 0; z-index: 9999;
-  background: #F9F9F9;
+  background: rgba(249,249,249,0.92);
+  backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px);
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
   transition: opacity 0.5s ease, transform 0.5s ease;
@@ -158,7 +167,8 @@ body { background-color: #F9F9F9; margin: 0; }
 /* Login modal overlay */
 #login-overlay {
   position: fixed; inset: 0; z-index: 10000;
-  background: #F9F9F9;
+  background: rgba(249,249,249,0.95);
+  backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px);
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
   transform: translateY(100%);
@@ -173,7 +183,8 @@ body { background-color: #F9F9F9; margin: 0; }
 /* Forgot password slide */
 #forgot-overlay {
   position: fixed; inset: 0; z-index: 10001;
-  background: #F9F9F9;
+  background: rgba(249,249,249,0.95);
+  backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px);
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
   transform: translateY(100%);
@@ -184,6 +195,18 @@ body { background-color: #F9F9F9; margin: 0; }
 #forgot-overlay.open {
   transform: translateY(0); pointer-events: auto;
 }
+
+/* Neural network canvas */
+#neural-canvas {
+  position: absolute; inset: 0; z-index: 1; pointer-events: none;
+}
+
+/* Node pulse animation */
+@keyframes node-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+.node-pulse { animation: node-breathe 2s ease-in-out infinite; }
 
 </style>
 </head>
@@ -197,14 +220,14 @@ body { background-color: #F9F9F9; margin: 0; }
   <div class="text-center px-8 max-w-sm w-full">
     <div class="mb-2 text-[10px] tracking-[0.3em] text-secondary uppercase">The Secret City</div>
     <h1 class="font-serif italic text-5xl text-on-surface mb-2">
-      <span class="text-primary-container">W</span>anderlost
+      <span class="text-accent">W</span>anderlost
     </h1>
     <p class="text-secondary text-sm mt-4 mb-12 font-serif italic">AI-powered local discovery</p>
 
-    <button id="btn-open-login" class="w-full bg-primary-container text-on-primary-container px-8 py-4 font-label text-xs font-semibold tracking-widest uppercase active:scale-[0.97] transition-transform mb-4">
+    <button id="btn-open-login" class="w-full bg-accent text-white px-8 py-4 font-label text-xs font-semibold tracking-widest uppercase active:scale-[0.97] transition-transform mb-4 rounded-full glow-accent">
       Log In
     </button>
-    <button id="btn-try-free" class="w-full border border-outline-variant/40 text-on-surface px-8 py-4 font-label text-xs tracking-widest uppercase active:scale-[0.97] transition-transform hover:border-primary/50 hover:text-primary">
+    <button id="btn-try-free" class="w-full glass glass-border text-on-surface px-8 py-4 font-label text-xs tracking-widest uppercase active:scale-[0.97] transition-transform hover:bg-white/60 rounded-full">
       Try for Free
     </button>
     <p class="text-[10px] text-secondary mt-8 tracking-wide">By continuing you agree to our <button onclick="document.getElementById('auth-gate').classList.add('hidden');openModal('modal-terms');" class="underline text-on-surface">Terms</button> & <button onclick="document.getElementById('auth-gate').classList.add('hidden');openModal('modal-privacy');" class="underline text-on-surface">Privacy Policy</button></p>
@@ -225,20 +248,20 @@ body { background-color: #F9F9F9; margin: 0; }
     <div class="space-y-6 mb-8">
       <div>
         <label class="block text-secondary font-label text-[10px] tracking-widest uppercase mb-2">Email Address</label>
-        <input id="login-email" type="email" placeholder="you@email.com" class="w-full bg-transparent border-x-0 border-t-0 border-b border-outline-variant/40 p-0 pb-3 text-on-surface font-body text-sm focus:ring-0 focus:border-primary focus:outline-none transition-colors" />
+        <input id="login-email" type="email" placeholder="you@email.com" class="w-full bg-transparent border-x-0 border-t-0 border-b border-outline-variant/40 p-0 pb-3 text-on-surface font-body text-sm focus:ring-0 focus:border-accent focus:outline-none transition-colors" />
       </div>
       <div>
         <label class="block text-secondary font-label text-[10px] tracking-widest uppercase mb-2">Password</label>
-        <input id="login-password" type="password" placeholder="••••••••" class="w-full bg-transparent border-x-0 border-t-0 border-b border-outline-variant/40 p-0 pb-3 text-on-surface font-body text-sm focus:ring-0 focus:border-primary focus:outline-none transition-colors tracking-widest" />
+        <input id="login-password" type="password" placeholder="••••••••" class="w-full bg-transparent border-x-0 border-t-0 border-b border-outline-variant/40 p-0 pb-3 text-on-surface font-body text-sm focus:ring-0 focus:border-accent focus:outline-none transition-colors tracking-widest" />
       </div>
     </div>
 
-    <button id="btn-login-submit" class="w-full bg-primary-container text-on-primary-container px-8 py-4 font-label text-xs font-semibold tracking-widest uppercase active:scale-[0.97] transition-transform mb-6">
+    <button id="btn-login-submit" class="w-full bg-accent text-white px-8 py-4 font-label text-xs font-semibold tracking-widest uppercase active:scale-[0.97] transition-transform mb-6 rounded-full glow-accent">
       Sign In
     </button>
 
     <div class="text-center">
-      <button id="btn-open-forgot" class="text-secondary text-xs tracking-wide border-b border-outline-variant/30 pb-0.5 hover:text-primary transition-colors">Forgot my password?</button>
+      <button id="btn-open-forgot" class="text-secondary text-xs tracking-wide border-b border-outline-variant/30 pb-0.5 hover:text-accent transition-colors">Forgot my password?</button>
     </div>
   </div>
 </div>
@@ -256,14 +279,14 @@ body { background-color: #F9F9F9; margin: 0; }
 
     <div class="mb-8">
       <label class="block text-secondary font-label text-[10px] tracking-widest uppercase mb-2">Email Address</label>
-      <input id="forgot-email" type="email" placeholder="you@email.com" class="w-full bg-transparent border-x-0 border-t-0 border-b border-outline-variant/40 p-0 pb-3 text-on-surface font-body text-sm focus:ring-0 focus:border-primary focus:outline-none transition-colors" />
+      <input id="forgot-email" type="email" placeholder="you@email.com" class="w-full bg-transparent border-x-0 border-t-0 border-b border-outline-variant/40 p-0 pb-3 text-on-surface font-body text-sm focus:ring-0 focus:border-accent focus:outline-none transition-colors" />
     </div>
 
-    <button id="btn-forgot-submit" class="w-full bg-primary-container text-on-primary-container px-8 py-4 font-label text-xs font-semibold tracking-widest uppercase active:scale-[0.97] transition-transform">
+    <button id="btn-forgot-submit" class="w-full bg-accent text-white px-8 py-4 font-label text-xs font-semibold tracking-widest uppercase active:scale-[0.97] transition-transform rounded-full glow-accent">
       Send Recovery Link
     </button>
 
-    <p id="forgot-confirm-msg" class="text-center text-sm text-primary mt-6 hidden font-serif italic">Recovery link sent! Check your inbox.</p>
+    <p id="forgot-confirm-msg" class="text-center text-sm text-accent mt-6 hidden font-serif italic">Recovery link sent! Check your inbox.</p>
   </div>
 </div>
 
@@ -272,16 +295,16 @@ body { background-color: #F9F9F9; margin: 0; }
 <!-- ============================================================ -->
 <section id="tab-explore" class="tab-section active">
   <!-- Top Navigation -->
-  <header class="fixed top-0 w-full flex justify-between items-center px-6 h-16 z-50 bg-[#F9F9F9]/80 backdrop-blur-md border-b-[0.5px] border-[#D0C5AF]/20">
+  <header class="fixed top-0 w-full flex justify-between items-center px-6 h-16 z-50 glass-strong glass-border" style="border-radius:0 0 20px 20px;">
     <div class="flex items-center gap-4">
       <button class="text-[#5F5E5E] hover:opacity-70 transition-opacity active:scale-95 duration-200" onclick="openModal('modal-settings')">
         <span class="material-symbols-outlined">menu</span>
       </button>
-      <div class="font-serif italic text-2xl text-[#1A1C1C]">Wanderlost</div>
+      <div class="font-serif italic text-2xl text-[#1A1C1C]"><span class="text-accent">W</span>anderlost</div>
     </div>
     <div class="flex items-center gap-4">
-      <div class="px-4 py-1.5 rounded-full border border-outline-variant/30 bg-surface/40 backdrop-blur-md flex items-center gap-2">
-        <span class="w-1.5 h-1.5 rounded-full bg-primary-container shadow-[0_0_8px_rgba(212,175,55,0.6)]"></span>
+      <div class="px-4 py-1.5 rounded-full glass glass-border flex items-center gap-2">
+        <span class="w-1.5 h-1.5 rounded-full bg-accent shadow-[0_0_8px_rgba(56,182,255,0.6)]"></span>
         <span id="discovery-counter" class="text-[10px] font-label uppercase tracking-widest text-secondary font-medium">3 Free Discoveries</span>
       </div>
     </div>
@@ -290,34 +313,33 @@ body { background-color: #F9F9F9; margin: 0; }
   <!-- Map Canvas -->
   <main class="relative w-full h-screen bg-[#FBFBFB] neural-grid overflow-hidden">
     <div id="map-bg" class="absolute inset-0 z-0" style="filter: grayscale(100%) contrast(1.05);"></div>
+    <canvas id="neural-canvas"></canvas>
 
     <!-- Category Filters -->
     <div class="absolute top-20 left-0 w-full z-40">
       <div id="category-filters" class="flex gap-2 px-6 overflow-x-auto hide-scrollbar py-2">
-        <button onclick="selectCategory(this)" data-category="" class="cat-btn flex-shrink-0 px-4 py-2 bg-primary-container text-on-primary-container border border-primary/20 text-[10px] font-label font-bold uppercase tracking-wider transition-all">All</button>
-        <button onclick="selectCategory(this)" data-category="restaurant" class="cat-btn flex-shrink-0 px-4 py-2 bg-surface/80 backdrop-blur-md border border-outline-variant/30 text-[10px] font-label font-bold uppercase tracking-wider text-on-surface-variant transition-all">Restaurants</button>
-        <button onclick="selectCategory(this)" data-category="cafe" class="cat-btn flex-shrink-0 px-4 py-2 bg-surface/80 backdrop-blur-md border border-outline-variant/30 text-[10px] font-label font-bold uppercase tracking-wider text-on-surface-variant transition-all">Cafes</button>
-        <button onclick="selectCategory(this)" data-category="bakery" class="cat-btn flex-shrink-0 px-4 py-2 bg-surface/80 backdrop-blur-md border border-outline-variant/30 text-[10px] font-label font-bold uppercase tracking-wider text-on-surface-variant transition-all">Bakeries</button>
-        <button onclick="selectCategory(this)" data-category="bar" class="cat-btn flex-shrink-0 px-4 py-2 bg-surface/80 backdrop-blur-md border border-outline-variant/30 text-[10px] font-label font-bold uppercase tracking-wider text-on-surface-variant transition-all">Bars</button>
-        <button onclick="selectCategory(this)" data-category="park" class="cat-btn flex-shrink-0 px-4 py-2 bg-surface/80 backdrop-blur-md border border-outline-variant/30 text-[10px] font-label font-bold uppercase tracking-wider text-on-surface-variant transition-all">Parks</button>
-        <button onclick="selectCategory(this)" data-category="museum" class="cat-btn flex-shrink-0 px-4 py-2 bg-surface/80 backdrop-blur-md border border-outline-variant/30 text-[10px] font-label font-bold uppercase tracking-wider text-on-surface-variant transition-all">Museums</button>
+        <button onclick="selectCategory(this)" data-category="" class="cat-btn flex-shrink-0 px-4 py-2 bg-accent text-white border border-accent/20 text-[10px] font-label font-bold uppercase tracking-wider transition-all rounded-full">All</button>
+        <button onclick="selectCategory(this)" data-category="restaurant" class="cat-btn flex-shrink-0 px-4 py-2 glass glass-border text-[10px] font-label font-bold uppercase tracking-wider text-on-surface-variant transition-all rounded-full">Restaurants</button>
+        <button onclick="selectCategory(this)" data-category="cafe" class="cat-btn flex-shrink-0 px-4 py-2 glass glass-border text-[10px] font-label font-bold uppercase tracking-wider text-on-surface-variant transition-all rounded-full">Cafes</button>
+        <button onclick="selectCategory(this)" data-category="bakery" class="cat-btn flex-shrink-0 px-4 py-2 glass glass-border text-[10px] font-label font-bold uppercase tracking-wider text-on-surface-variant transition-all rounded-full">Bakeries</button>
+        <button onclick="selectCategory(this)" data-category="bar" class="cat-btn flex-shrink-0 px-4 py-2 glass glass-border text-[10px] font-label font-bold uppercase tracking-wider text-on-surface-variant transition-all rounded-full">Bars</button>
+        <button onclick="selectCategory(this)" data-category="park" class="cat-btn flex-shrink-0 px-4 py-2 glass glass-border text-[10px] font-label font-bold uppercase tracking-wider text-on-surface-variant transition-all rounded-full">Parks</button>
+        <button onclick="selectCategory(this)" data-category="museum" class="cat-btn flex-shrink-0 px-4 py-2 glass glass-border text-[10px] font-label font-bold uppercase tracking-wider text-on-surface-variant transition-all rounded-full">Museums</button>
       </div>
     </div>
 
     <!-- Sonar Effect -->
     <div id="sonar-marker" class="absolute top-[48%] left-[42%] -translate-x-1/2 -translate-y-1/2 hidden">
       <div class="relative flex items-center justify-center">
-        <div class="absolute w-24 h-24 border border-primary-container/30 rounded-full sonar-circle" style="animation-delay:-1.5s;"></div>
-        <div class="absolute w-12 h-12 border border-primary-container/50 rounded-full sonar-circle"></div>
-        <div class="w-4 h-4 bg-primary rounded-full border-2 border-surface shadow-[0_0_15px_rgba(115,92,0,0.4)] z-10"></div>
+        <div class="absolute w-24 h-24 border border-accent/30 rounded-full sonar-circle" style="animation-delay:-1.5s;"></div>
+        <div class="absolute w-12 h-12 border border-accent/50 rounded-full sonar-circle"></div>
+        <div class="w-4 h-4 bg-accent rounded-full border-2 border-white shadow-[0_0_15px_rgba(56,182,255,0.5)] z-10"></div>
       </div>
     </div>
 
-
-
     <!-- Discover Button -->
-    <div class="fixed bottom-24 left-1/2 -translate-x-1/2 w-full max-w-xs px-6 z-40">
-      <button id="btn-discover" class="w-full bg-primary-container text-on-primary-container font-label text-[11px] font-bold uppercase tracking-[0.2em] py-5 px-10 shadow-[0_20px_40px_-10px_rgba(212,175,55,0.4)] hover:shadow-[0_25px_50px_-10px_rgba(212,175,55,0.6)] transition-all active:translate-y-1 rounded-full flex items-center justify-center gap-3 border border-white/20">
+    <div class="fixed bottom-28 left-1/2 -translate-x-1/2 w-full max-w-xs px-6 z-40">
+      <button id="btn-discover" class="w-full bg-accent text-white font-label text-[11px] font-bold uppercase tracking-[0.2em] py-5 px-10 shadow-[0_20px_40px_-10px_rgba(56,182,255,0.4)] hover:shadow-[0_25px_50px_-10px_rgba(56,182,255,0.6)] transition-all active:translate-y-1 rounded-full flex items-center justify-center gap-3 border border-white/20 glow-accent">
         <span class="material-symbols-outlined text-sm">explore</span>
         Discover Places
       </button>
@@ -326,14 +348,14 @@ body { background-color: #F9F9F9; margin: 0; }
 
   <!-- Discovery Bottom Sheet -->
   <div id="discovery-sheet">
-    <div class="bg-surface-container-lowest border-t border-outline-variant/30 shadow-[0_-20px_50px_-15px_rgba(0,0,0,0.12)] pb-24 pt-8 px-8 max-w-3xl mx-auto rounded-t-3xl h-[50vh] overflow-y-auto">
+    <div class="glass glass-border shadow-[0_-20px_60px_-15px_rgba(56,182,255,0.15)] pb-24 pt-8 px-8 max-w-3xl mx-auto rounded-t-[32px] h-[50vh] overflow-y-auto">
       <div class="flex justify-between items-start mb-6">
         <div>
-          <span id="sheet-tag" class="inline-block px-2 py-0.5 border border-outline-variant/40 text-[9px] font-label uppercase tracking-[0.15em] text-secondary mb-3">Discovery</span>
+          <span id="sheet-tag" class="inline-block px-3 py-1 glass glass-border rounded-full text-[9px] font-label uppercase tracking-[0.15em] text-secondary mb-3">Discovery</span>
           <h1 id="sheet-title" class="font-serif text-4xl text-on-surface tracking-tight leading-tight italic">Loading...</h1>
         </div>
         <div class="flex gap-2">
-          <button onclick="closeDiscoverySheet()" class="w-10 h-10 flex items-center justify-center hover:bg-surface-container transition-colors rounded-full">
+          <button onclick="closeDiscoverySheet()" class="w-10 h-10 flex items-center justify-center hover:bg-white/50 transition-colors rounded-full glass glass-border">
             <span class="material-symbols-outlined text-secondary">close</span>
           </button>
         </div>
@@ -350,10 +372,10 @@ body { background-color: #F9F9F9; margin: 0; }
         <p id="sheet-desc" class="text-sm text-secondary leading-relaxed mt-2">...</p>
       </div>
       <div class="grid grid-cols-2 gap-4">
-        <button id="btn-go-maps" class="flex items-center justify-center gap-2 text-white py-4 px-6 text-[10px] font-label font-bold uppercase tracking-widest transition-all hover:bg-primary/90 shadow-md bg-[#D4AF37]">
+        <button id="btn-go-maps" class="flex items-center justify-center gap-2 text-white py-4 px-6 text-[10px] font-label font-bold uppercase tracking-widest transition-all hover:opacity-90 shadow-md bg-accent rounded-[16px]">
           <span class="material-symbols-outlined text-sm">map</span> Go to Google Maps
         </button>
-        <button id="btn-save-place" class="flex items-center justify-center gap-2 border border-outline py-4 px-6 text-[10px] font-label font-bold uppercase tracking-widest text-on-surface hover:bg-surface-container transition-colors">
+        <button id="btn-save-place" class="flex items-center justify-center gap-2 glass glass-border py-4 px-6 text-[10px] font-label font-bold uppercase tracking-widest text-on-surface hover:bg-white/60 transition-colors rounded-[16px]">
           <span class="material-symbols-outlined text-sm">bookmark</span> Save
         </button>
       </div>
@@ -361,16 +383,17 @@ body { background-color: #F9F9F9; margin: 0; }
   </div>
 </section>
 
+
 <!-- ============================================================ -->
 <!-- TAB: HISTORY (history_refined_layout) -->
 <!-- ============================================================ -->
 <section id="tab-history" class="tab-section">
-  <header class="bg-[#F9F9F9]/80 backdrop-blur-xl sticky top-0 z-50 border-b border-[#D0C5AF]/20">
+  <header class="glass-strong glass-border sticky top-0 z-50" style="border-radius:0 0 20px 20px;">
     <div class="flex justify-between items-center w-full px-6 py-4">
       <button class="text-[#5F5E5E] hover:opacity-70 transition-opacity active:scale-95 duration-200" onclick="openModal('modal-settings')">
         <span class="material-symbols-outlined">menu</span>
       </button>
-      <h1 class="text-2xl font-serif tracking-tighter text-[#735C00]">Wanderlost</h1>
+      <h1 class="text-2xl font-serif tracking-tighter text-accent"><span class="text-accent">W</span>anderlost</h1>
       <button onclick="showToast('History search coming in next update.')" class="text-[#5F5E5E] hover:opacity-70 transition-opacity active:scale-95 duration-200">
         <span class="material-symbols-outlined">search</span>
       </button>
@@ -457,19 +480,19 @@ body { background-color: #F9F9F9; margin: 0; }
 <!-- TAB: PROFILE (my_account) -->
 <!-- ============================================================ -->
 <section id="tab-profile" class="tab-section">
-  <header class="sticky top-0 w-full flex justify-between items-center px-6 h-16 z-50 bg-[#F9F9F9]/80 backdrop-blur-md border-b-[0.5px] border-[#D0C5AF]/20">
+  <header class="sticky top-0 w-full flex justify-between items-center px-6 h-16 z-50 glass-strong glass-border" style="border-radius:0 0 20px 20px;">
     <div class="flex items-center gap-4">
-      <span class="material-symbols-outlined text-[#735C00] cursor-pointer" onclick="openModal('modal-settings')">menu</span>
-      <h1 class="font-serif italic text-2xl text-[#1A1C1C]">Wanderlost</h1>
+      <span class="material-symbols-outlined text-accent cursor-pointer" onclick="openModal('modal-settings')">menu</span>
+      <h1 class="font-serif italic text-2xl text-[#1A1C1C]"><span class="text-accent">W</span>anderlost</h1>
     </div>
     <div class="flex items-center gap-4">
-      <span class="material-symbols-outlined text-[#735C00] cursor-pointer">notifications</span>
+      <span class="material-symbols-outlined text-accent cursor-pointer">notifications</span>
     </div>
   </header>
   <main class="pt-8 px-6 max-w-screen-md mx-auto pb-32 overflow-y-auto" style="height:calc(100vh - 80px)">
     <section class="flex flex-col items-center mb-12">
       <div class="relative group cursor-pointer">
-        <div class="w-32 h-32 rounded-full overflow-hidden border-[0.5px] border-outline-variant/30">
+        <div class="w-32 h-32 rounded-full overflow-hidden ring-2 ring-accent/30 border-[0.5px] border-white/50">
           <img alt="User Profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbCapbZpiJc0BoOIFDF4-jr2t60HAk4MD7Y1P4UjJmtjBurdVbLboys9VXiT_G3m6O_naZH3o49c3Oohe1ZE7W_BWVW1jfgKNFy7857lW6LMPBogSgm373r9DfFNKffCSkge5ujAUrmfRa-12AG8mkeY7unycNVvWC6S9yPxB8ej_0_wFuKeGlMpw0rjto_7oA2iwPHPdaMaRE3adFCVllYMTmQywG7-78J-dg2sInYud1kqjGZx3hzWq5c7IqWh1lFJIBST_JtjY"/>
         </div>
         <div class="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity rounded-full">
@@ -482,12 +505,12 @@ body { background-color: #F9F9F9; margin: 0; }
       <p class="text-secondary font-label text-[10px] tracking-[0.2em] uppercase mt-1">Nomad Explorer</p>
     </section>
     <section class="mb-12">
-      <div class="bg-surface-container-lowest border-[0.5px] border-outline-variant/20 p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+      <div class="glass glass-border rounded-[24px] p-8 flex flex-col md:flex-row justify-between items-center gap-6">
         <div>
           <p class="text-secondary font-label text-[10px] tracking-widest uppercase mb-1">Account Tier</p>
-          <h3 class="font-headline text-xl flex items-center gap-2">Membership: Free <span class="material-symbols-outlined text-primary text-sm">info</span></h3>
+          <h3 class="font-headline text-xl flex items-center gap-2">Membership: Free <span class="material-symbols-outlined text-accent text-sm">info</span></h3>
         </div>
-        <button onclick="openModal('modal-premium')" class="bg-primary-container text-on-primary-container px-8 py-3 font-label text-xs font-semibold tracking-widest uppercase hover:opacity-90 transition-opacity active:scale-[0.98]">
+        <button onclick="openModal('modal-premium')" class="bg-accent text-white px-8 py-3 font-label text-xs font-semibold tracking-widest uppercase hover:opacity-90 transition-opacity active:scale-[0.98] rounded-full glow-accent">
           Join Premium
         </button>
       </div>
@@ -515,7 +538,7 @@ body { background-color: #F9F9F9; margin: 0; }
           <span class="material-symbols-outlined text-outline-variant text-sm cursor-pointer group-hover:text-primary transition-colors">lock</span>
         </div>
       </div>
-      <button id="btn-save-profile" class="w-full mt-6 bg-primary-container text-on-primary-container px-8 py-3.5 font-label text-xs font-semibold tracking-widest uppercase active:scale-[0.97] transition-transform hover:opacity-90">
+      <button id="btn-save-profile" class="w-full mt-6 bg-accent text-white px-8 py-3.5 font-label text-xs font-semibold tracking-widest uppercase active:scale-[0.97] transition-transform hover:opacity-90 rounded-full glow-accent">
         Save Changes
       </button>
     </section>
@@ -562,20 +585,18 @@ body { background-color: #F9F9F9; margin: 0; }
 </section>
 
 <!-- ============================================================ -->
-<!-- SHARED BOTTOM NAV -->
+<!-- SHARED BOTTOM NAV — Floating Glass Dock -->
 <!-- ============================================================ -->
-<nav id="bottom-nav" class="fixed bottom-0 left-0 w-full z-[150] flex justify-around items-center h-20 px-4 pb-safe bg-[#F9F9F9]/90 backdrop-blur-md border-t-[0.5px] border-[#D0C5AF]/20 shadow-lg">
-  <button onclick="switchTab('tab-explore')" data-tab="tab-explore" class="nav-btn flex flex-col items-center justify-center text-[#735C00] active:translate-y-[-2px] duration-300 transition-all">
-    <span class="material-symbols-outlined mb-1" style="font-variation-settings:'FILL' 1;">explore</span>
-    <span class="font-sans text-[10px] tracking-widest uppercase font-bold">Explore</span>
+<nav id="bottom-nav" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[150] flex justify-around items-center h-16 px-6 glass-strong glass-border rounded-full shadow-[0_8px_32px_rgba(0,0,0,0.08)] w-[280px]">
+  <button onclick="switchTab('tab-explore')" data-tab="tab-explore" class="nav-btn relative flex flex-col items-center justify-center text-accent active:translate-y-[-2px] duration-300 transition-all">
+    <span class="absolute inset-0 bg-accent/15 rounded-full"></span>
+    <span class="material-symbols-outlined relative z-10" style="font-variation-settings:'FILL' 1;">explore</span>
   </button>
-  <button onclick="switchTab('tab-history')" data-tab="tab-history" class="nav-btn flex flex-col items-center justify-center text-[#5F5E5E] hover:text-[#735C00] transition-colors opacity-70">
-    <span class="material-symbols-outlined mb-1">history</span>
-    <span class="font-sans text-[10px] tracking-widest uppercase">History</span>
+  <button onclick="switchTab('tab-history')" data-tab="tab-history" class="nav-btn relative flex flex-col items-center justify-center text-[#5F5E5E] hover:text-accent transition-colors opacity-70">
+    <span class="material-symbols-outlined relative z-10">history</span>
   </button>
-  <button onclick="switchTab('tab-profile')" data-tab="tab-profile" class="nav-btn flex flex-col items-center justify-center text-[#5F5E5E] hover:text-[#735C00] transition-colors opacity-70">
-    <span class="material-symbols-outlined mb-1">person</span>
-    <span class="font-sans text-[10px] tracking-widest uppercase">Profile</span>
+  <button onclick="switchTab('tab-profile')" data-tab="tab-profile" class="nav-btn relative flex flex-col items-center justify-center text-[#5F5E5E] hover:text-accent transition-colors opacity-70">
+    <span class="material-symbols-outlined relative z-10">person</span>
   </button>
 </nav>
 
@@ -583,14 +604,14 @@ body { background-color: #F9F9F9; margin: 0; }
 <!-- MODAL: SETTINGS (settings_updated_colors) -->
 <!-- ============================================================ -->
 <div id="modal-settings" class="modal-slide">
-  <header class="fixed top-0 w-full flex justify-between items-center px-6 h-16 z-50 bg-[#F9F9F9]/80 backdrop-blur-md border-b-[0.5px] border-[#D0C5AF]/20">
+  <header class="fixed top-0 w-full flex justify-between items-center px-6 h-16 z-50 glass-strong glass-border" style="border-radius:0 0 20px 20px;">
     <div class="flex items-center gap-4">
       <button class="text-[#5F5E5E] active:scale-95 duration-200" onclick="closeModal('modal-settings')">
         <span class="material-symbols-outlined">arrow_back</span>
       </button>
       <h1 class="font-serif italic text-2xl text-[#1A1C1C]">Settings</h1>
     </div>
-    <span class="material-symbols-outlined text-[#735C00] cursor-pointer">notifications</span>
+    <span class="material-symbols-outlined text-accent cursor-pointer">notifications</span>
   </header>
   <main class="pt-24 pb-32 px-6 max-w-2xl mx-auto">
     <section class="mb-12 flex items-end justify-between">
@@ -611,7 +632,7 @@ body { background-color: #F9F9F9; margin: 0; }
           <span class="text-sm font-body">N/A — Not subscribed</span>
         </div>
         <div class="pt-4 flex gap-4">
-          <button onclick="openModal('modal-premium')" class="px-6 py-3 bg-primary-container text-on-primary-container text-xs font-bold tracking-widest uppercase hover:opacity-90 transition-all">Manage Subscription</button>
+          <button onclick="openModal('modal-premium')" class="px-6 py-3 bg-accent text-white text-xs font-bold tracking-widest uppercase hover:opacity-90 transition-all rounded-full glow-accent">Manage Subscription</button>
           <button onclick="showToast('You are on the Free Membership. No cancellation required.')" class="px-6 py-3 border text-xs font-bold tracking-widest uppercase transition-all border-on-surface text-on-surface hover:bg-on-surface/5">Cancel Membership</button>
         </div>
       </div>
@@ -624,9 +645,10 @@ body { background-color: #F9F9F9; margin: 0; }
           <span class="block text-sm font-medium">Distance Units</span>
           <span class="text-[10px] text-secondary uppercase tracking-tighter">Affects map and navigation</span>
         </div>
-        <div class="flex border border-outline-variant/30">
-          <button data-unit="meters" class="unit-toggle-btn px-4 py-2 text-[10px] font-bold tracking-widest uppercase bg-surface-container-highest text-on-surface">Meters</button>
-          <button data-unit="feet" class="unit-toggle-btn px-4 py-2 text-[10px] font-bold tracking-widest uppercase text-secondary hover:bg-surface-container-low transition-colors">Feet</button>
+        <div class="flex glass glass-border rounded-full overflow-hidden">
+          <button data-unit="meters" class="unit-toggle-btn px-4 py-2 text-[10px] font-bold tracking-widest uppercase bg-accent text-white">Meters</button>
+          <button data-unit="feet" class="unit-toggle-btn px-4 py-2 text-[10px] font-bold tracking-widest uppercase text-secondary hover:bg-white/40 transition-colors">Feet</button>
+        </div>
         </div>
       </div>
     </section>
@@ -663,7 +685,7 @@ body { background-color: #F9F9F9; margin: 0; }
   <header class="sticky top-0 w-full z-50 bg-[#F9F9F9]/80 backdrop-blur-md border-b border-[#D0C5AF]/20">
     <div class="flex items-center px-6 h-16 w-full max-w-7xl mx-auto justify-between">
       <div class="flex items-center gap-4">
-        <button class="active:scale-95 transition-transform text-[#735C00]" onclick="closeModal('modal-safety')">
+        <button class="active:scale-95 transition-transform text-accent" onclick="closeModal('modal-safety')">
           <span class="material-symbols-outlined">arrow_back</span>
         </button>
         <h1 class="font-['Noto_Serif'] font-normal tracking-tight text-[#1A1C1C] text-lg">Safety & Responsibility</h1>
@@ -734,7 +756,7 @@ body { background-color: #F9F9F9; margin: 0; }
   <header class="sticky top-0 w-full z-50 bg-[#F9F9F9]/80 backdrop-blur-md border-b border-[#D0C5AF]/20">
     <div class="flex items-center px-6 h-16 w-full max-w-7xl mx-auto justify-between">
       <div class="flex items-center gap-4">
-        <button class="active:scale-95 transition-transform text-[#735C00]" onclick="closeModal('modal-privacy')">
+        <button class="active:scale-95 transition-transform text-accent" onclick="closeModal('modal-privacy')">
           <span class="material-symbols-outlined">arrow_back</span>
         </button>
         <h1 class="font-['Noto_Serif'] font-normal tracking-tight text-[#1A1C1C] text-lg">Privacy Policy</h1>
@@ -803,7 +825,7 @@ body { background-color: #F9F9F9; margin: 0; }
   <header class="sticky top-0 w-full z-50 bg-[#F9F9F9]/80 backdrop-blur-md border-b border-[#D0C5AF]/20">
     <div class="flex items-center px-6 h-16 w-full max-w-7xl mx-auto justify-between">
       <div class="flex items-center gap-4">
-        <button class="active:scale-95 transition-transform text-[#735C00]" onclick="closeModal('modal-terms')">
+        <button class="active:scale-95 transition-transform text-accent" onclick="closeModal('modal-terms')">
           <span class="material-symbols-outlined">arrow_back</span>
         </button>
         <h1 class="font-['Noto_Serif'] font-normal tracking-tight text-[#1A1C1C] text-lg">Terms &amp; Conditions</h1>
@@ -896,7 +918,7 @@ body { background-color: #F9F9F9; margin: 0; }
   <header class="sticky top-0 w-full z-50 bg-[#F9F9F9]/80 backdrop-blur-md border-b border-[#D0C5AF]/20">
     <div class="flex items-center px-6 h-16 w-full max-w-7xl mx-auto justify-between">
       <div class="flex items-center gap-4">
-        <button class="active:scale-95 transition-transform text-[#735C00]" onclick="closeModal('modal-help')">
+        <button class="active:scale-95 transition-transform text-accent" onclick="closeModal('modal-help')">
           <span class="material-symbols-outlined">arrow_back</span>
         </button>
         <h1 class="font-['Noto_Serif'] font-normal tracking-tight text-[#1A1C1C] text-lg">Help Center</h1>
@@ -1096,9 +1118,9 @@ body { background-color: #F9F9F9; margin: 0; }
 <!-- ============================================================ -->
 <!-- MODAL: PREMIUM (premium_upsell) -->
 <!-- ============================================================ -->
-<div id="modal-premium" class="modal-slide" style="background:rgba(26,28,28,0.1);backdrop-filter:blur(4px);">
+<div id="modal-premium" class="modal-slide" style="background:rgba(26,28,28,0.15);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);">
   <div class="flex items-center justify-center min-h-screen p-4 sm:p-6">
-    <div class="relative w-full max-w-4xl bg-surface-container-lowest shadow-2xl flex flex-col md:flex-row overflow-hidden border border-outline-variant/20 max-h-[90vh] overflow-y-auto">
+    <div class="relative w-full max-w-4xl glass glass-border shadow-2xl flex flex-col md:flex-row overflow-hidden rounded-[32px] max-h-[90vh] overflow-y-auto">
       <button class="absolute top-6 right-6 z-20 text-secondary hover:text-on-surface transition-colors" onclick="closeModal('modal-premium')">
         <span class="material-symbols-outlined text-2xl">close</span>
       </button>
@@ -1121,7 +1143,7 @@ body { background-color: #F9F9F9; margin: 0; }
           <li class="flex items-start gap-4"><span class="material-symbols-outlined text-primary mt-0.5" style="font-variation-settings:'FILL' 1;">check_circle</span><div><span class="font-medium text-on-surface block">Save Places</span><span class="text-secondary text-sm">Build custom itineraries for future trips.</span></div></li>
           <li class="flex items-start gap-4"><span class="material-symbols-outlined text-primary mt-0.5" style="font-variation-settings:'FILL' 1;">check_circle</span><div><span class="font-medium text-on-surface block">Show Your History</span><span class="text-secondary text-sm">Full permanent log of every place you've been.</span></div></li>
         </ul>
-        <button onclick="openModal('modal-checkout');closeModal('modal-premium');" class="w-full bg-primary-container text-on-primary-container px-8 py-5 text-sm font-semibold tracking-widest uppercase hover:opacity-90 transition-all active:scale-[0.98]">
+        <button onclick="openModal('modal-checkout');closeModal('modal-premium');" class="w-full bg-accent text-white px-8 py-5 text-sm font-semibold tracking-widest uppercase hover:opacity-90 transition-all active:scale-[0.98] rounded-full glow-accent">
           Start Your Journey — 20 CHF/mo
         </button>
         <p class="text-center mt-6"><button onclick="showToast('No previous purchases found for this account.')" class="text-secondary text-xs underline underline-offset-4 decoration-outline-variant hover:text-on-surface transition-colors">Restore Purchase</button></p>
@@ -1141,13 +1163,13 @@ body { background-color: #F9F9F9; margin: 0; }
       </button>
       <h1 class="serif-headline text-2xl tracking-tight text-on-surface">Checkout</h1>
     </div>
-    <span class="text-[#735C00] font-serif italic text-2xl">Wanderlost</span>
+    <span class="text-accent font-serif italic text-2xl">Wanderlost</span>
   </header>
   <main class="pt-24 pb-32 max-w-2xl mx-auto px-6">
     <section class="mb-12">
       <h2 class="uppercase tracking-[0.1em] text-secondary text-[0.6875rem] font-semibold mb-6">Select Your Journey</h2>
-      <div class="flex p-1 bg-surface-container-low border border-outline-variant/20 items-center">
-        <button data-plan="monthly" class="plan-toggle-btn flex-1 py-4 text-center text-sm font-medium bg-surface-container-lowest text-on-surface">20 CHF Monthly</button>
+      <div class="flex p-1 glass glass-border rounded-full items-center">
+        <button data-plan="monthly" class="plan-toggle-btn flex-1 py-4 text-center text-sm font-medium bg-accent text-white rounded-full">20 CHF Monthly</button>
         <button data-plan="annual" class="plan-toggle-btn flex-1 py-4 text-center text-sm font-medium text-secondary hover:text-on-surface transition-colors">200 CHF Annual</button>
       </div>
     </section>
@@ -1173,7 +1195,7 @@ body { background-color: #F9F9F9; margin: 0; }
         </div>
       </form>
     </section>
-    <section class="p-8 bg-surface-container-low border border-outline-variant/10 mb-12">
+    <section class="p-8 glass glass-border rounded-[24px] mb-12">
       <div class="flex justify-between items-end">
         <div><span class="uppercase tracking-widest text-secondary text-[10px] block mb-1">Total Due Today</span><h3 id="checkout-total" class="serif-headline text-4xl text-on-surface">20.00 CHF</h3></div>
         <div class="text-right"><span class="uppercase tracking-widest text-secondary text-[10px] block mb-1">Premium Access</span><span id="checkout-billing" class="text-on-surface text-sm font-medium">Billed Monthly</span></div>
@@ -1182,7 +1204,7 @@ body { background-color: #F9F9F9; margin: 0; }
         <p class="text-[11px] text-secondary leading-relaxed tracking-wide">By confirming, you agree to Wanderlost's Terms of Service and Privacy Policy.</p>
       </div>
     </section>
-    <button id="btn-confirm-payment" class="w-full bg-primary-container text-on-primary-container py-5 text-sm font-bold tracking-[0.2em] uppercase active:scale-[0.99] transition-all hover:bg-primary-container/90">
+    <button id="btn-confirm-payment" class="w-full bg-accent text-white py-5 text-sm font-bold tracking-[0.2em] uppercase active:scale-[0.99] transition-all hover:opacity-90 rounded-full glow-accent">
       Confirm Payment
     </button>
   </main>

@@ -27,18 +27,19 @@ function switchTab(tabId) {
   // Show target
   const target = document.getElementById(tabId);
   if (target) target.classList.add('active');
-  // Update nav buttons
+  // Update nav buttons — floating glass dock with glow indicator
   document.querySelectorAll('.nav-btn').forEach(btn => {
+    const glowEl = btn.querySelector('.bg-accent\\/15');
     if (btn.dataset.tab === tabId) {
       btn.classList.remove('text-[#5F5E5E]', 'opacity-70');
-      btn.classList.add('text-[#735C00]');
+      btn.classList.add('text-accent');
       btn.querySelector('.material-symbols-outlined').style.fontVariationSettings = "'FILL' 1";
-      btn.querySelector('span:last-child').classList.add('font-bold');
+      if (glowEl) glowEl.style.display = 'block';
     } else {
       btn.classList.add('text-[#5F5E5E]', 'opacity-70');
-      btn.classList.remove('text-[#735C00]');
+      btn.classList.remove('text-accent');
       btn.querySelector('.material-symbols-outlined').style.fontVariationSettings = "'FILL' 0";
-      btn.querySelector('span:last-child').classList.remove('font-bold');
+      if (glowEl) glowEl.style.display = 'none';
     }
   });
   state.activeTab = tabId;
@@ -98,13 +99,15 @@ function closeDiscoverySheet() {
 // CATEGORY SELECTION
 // ============================================================
 function selectCategory(btn) {
-  // Update active styling
+  // Update active styling — glass pills with blue active
   document.querySelectorAll('.cat-btn').forEach(b => {
-    b.classList.remove('bg-primary-container', 'text-on-primary-container', 'border-primary/20');
-    b.classList.add('bg-surface/80', 'backdrop-blur-md', 'border-outline-variant/30', 'text-on-surface-variant');
+    b.classList.remove('bg-accent', 'text-white', 'border-accent/20');
+    b.classList.add('text-on-surface-variant');
+    // Restore glass look for inactive
+    if (!b.classList.contains('glass')) b.classList.add('glass', 'glass-border');
   });
-  btn.classList.remove('bg-surface/80', 'backdrop-blur-md', 'border-outline-variant/30', 'text-on-surface-variant');
-  btn.classList.add('bg-primary-container', 'text-on-primary-container', 'border-primary/20');
+  btn.classList.remove('text-on-surface-variant', 'glass', 'glass-border');
+  btn.classList.add('bg-accent', 'text-white', 'border-accent/20');
   
   // Store selected category
   state.selectedCategory = btn.dataset.category || '';
@@ -507,10 +510,10 @@ window.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.unit-toggle-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.unit-toggle-btn').forEach(b => {
-        b.classList.remove('bg-surface-container-highest', 'text-on-surface');
+        b.classList.remove('bg-accent', 'text-white');
         b.classList.add('text-secondary');
       });
-      btn.classList.add('bg-surface-container-highest', 'text-on-surface');
+      btn.classList.add('bg-accent', 'text-white');
       btn.classList.remove('text-secondary');
       state.distanceUnit = btn.dataset.unit || 'meters';
       // Live-update the currently shown discovery distance
@@ -650,7 +653,7 @@ function showToast(message) {
   
   const toast = document.createElement('div');
   toast.id = 'app-toast';
-  toast.className = 'fixed top-20 left-1/2 -translate-x-1/2 z-[999] bg-on-surface text-surface px-6 py-3 text-sm font-body tracking-wide shadow-xl max-w-sm text-center transition-all duration-500';
+  toast.className = 'fixed top-20 left-1/2 -translate-x-1/2 z-[999] glass glass-border text-on-surface px-6 py-3 text-sm font-body tracking-wide shadow-xl max-w-sm text-center transition-all duration-500 rounded-full';
   toast.style.opacity = '0';
   toast.style.transform = 'translateX(-50%) translateY(-10px)';
   toast.textContent = message;
@@ -667,3 +670,94 @@ function showToast(message) {
     setTimeout(() => toast.remove(), 500);
   }, 4000);
 }
+
+// ============================================================
+// NEURAL NETWORK CANVAS OVERLAY
+// ============================================================
+function initNeuralCanvas() {
+  const canvas = document.getElementById('neural-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let nodes = [];
+  let animFrame;
+
+  function resize() {
+    canvas.width = canvas.parentElement.offsetWidth;
+    canvas.height = canvas.parentElement.offsetHeight;
+    generateNodes();
+  }
+
+  function generateNodes() {
+    nodes = [];
+    const count = Math.floor((canvas.width * canvas.height) / 18000);
+    const colors = ['#FFB5A7', '#B8E0D2', '#D4C5F9', '#A7D8FF', '#FFD6A5'];
+    for (let i = 0; i < count; i++) {
+      nodes.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: 3 + Math.random() * 4,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        phase: Math.random() * Math.PI * 2,
+        speed: 0.003 + Math.random() * 0.004
+      });
+    }
+  }
+
+  function draw(t) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Draw connections (fiber-optic threads)
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+    ctx.lineWidth = 0.5;
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i + 1; j < nodes.length; j++) {
+        const dx = nodes[i].x - nodes[j].x;
+        const dy = nodes[i].y - nodes[j].y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 120) {
+          const alpha = (1 - dist / 120) * 0.4;
+          ctx.strokeStyle = `rgba(255, 255, 255, ${alpha})`;
+          ctx.shadowColor = 'rgba(56, 182, 255, 0.15)';
+          ctx.shadowBlur = 4;
+          ctx.beginPath();
+          ctx.moveTo(nodes[i].x, nodes[i].y);
+          ctx.lineTo(nodes[j].x, nodes[j].y);
+          ctx.stroke();
+        }
+      }
+    }
+    ctx.shadowBlur = 0;
+
+    // Draw nodes (frosted glass spheres with pulsing cores)
+    for (const node of nodes) {
+      const scale = 1 + 0.05 * Math.sin(t * node.speed * 2 + node.phase);
+      const r = node.r * scale;
+
+      // Outer frosted sphere
+      ctx.beginPath();
+      ctx.arc(node.x, node.y, r + 2, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+      ctx.fill();
+
+      // Inner glowing core
+      const gradient = ctx.createRadialGradient(node.x, node.y, 0, node.x, node.y, r);
+      gradient.addColorStop(0, node.color);
+      gradient.addColorStop(1, 'rgba(255,255,255,0)');
+      ctx.beginPath();
+      ctx.arc(node.x, node.y, r, 0, Math.PI * 2);
+      ctx.fillStyle = gradient;
+      ctx.fill();
+    }
+
+    animFrame = requestAnimationFrame(draw);
+  }
+
+  window.addEventListener('resize', resize);
+  resize();
+  draw(0);
+}
+
+// Initialize neural canvas after DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(initNeuralCanvas, 500);
+});
