@@ -1,8 +1,19 @@
 // ============================================================
-// Wanderlost App — Pure Stitch Edition
+// Wanderlost App — Motion Engine Edition
 // ============================================================
 
 const BACKEND_URL = 'https://wanderlost-app.onrender.com';
+
+// Category Color Mapping
+const CATEGORY_COLORS = {
+  restaurant: '#FFB5A7',
+  cafe: '#D4C5F9',
+  bakery: '#FFD6A5',
+  bar: '#E8A0BF',
+  park: '#B8E0D2',
+  museum: '#A7D8FF',
+  default: '#38B6FF'
+};
 
 // State
 const state = {
@@ -15,8 +26,55 @@ const state = {
   savedPlaces: [],
   markers: [],
   selectedPlan: 'monthly',
-  distanceUnit: 'meters'  // 'meters' or 'feet'
+  distanceUnit: 'meters',
+  theme: localStorage.getItem('wanderlost-theme') || 'light',
+  sheetState: 'hidden' // 'hidden' | 'expanded' | 'collapsed'
 };
+
+// ============================================================
+// SPRING PHYSICS SOLVER
+// ============================================================
+function springAnimate(from, to, config, onUpdate, onComplete) {
+  const { stiffness = 200, damping = 0.7 } = config;
+  let velocity = 0;
+  let current = from;
+  const mass = 1;
+  const dampingForce = damping * 2 * Math.sqrt(stiffness * mass);
+  let lastTime = performance.now();
+  let raf;
+  function step(now) {
+    const dt = Math.min((now - lastTime) / 1000, 0.064);
+    lastTime = now;
+    const springForce = -stiffness * (current - to);
+    const dampForce = -dampingForce * velocity;
+    const acceleration = (springForce + dampForce) / mass;
+    velocity += acceleration * dt;
+    current += velocity * dt;
+    onUpdate(current);
+    if (Math.abs(current - to) < 0.5 && Math.abs(velocity) < 0.5) {
+      onUpdate(to);
+      if (onComplete) onComplete();
+      return;
+    }
+    raf = requestAnimationFrame(step);
+  }
+  raf = requestAnimationFrame(step);
+  return () => cancelAnimationFrame(raf);
+}
+
+// ============================================================
+// HAPTIC VIBRATION
+// ============================================================
+function haptic(duration = 10) {
+  if (navigator.vibrate) navigator.vibrate(duration);
+}
+
+// Get category color
+function getCategoryColor(type) {
+  if (!type) return CATEGORY_COLORS.default;
+  const key = type.toLowerCase().replace(/[^a-z]/g, '');
+  return CATEGORY_COLORS[key] || CATEGORY_COLORS.default;
+}
 
 // ============================================================
 // TAB NAVIGATION
@@ -85,29 +143,149 @@ function formatDistance(distKm) {
 }
 
 // ============================================================
-// DISCOVERY BOTTOM SHEET
+// DISCOVERY SHEET — SPRING MORPH + DRAG-TO-DISMISS
 // ============================================================
+let cancelSheetSpring = null;
+
 function openDiscoverySheet() {
-  document.getElementById('discovery-sheet').classList.add('open');
+  const sheet = document.getElementById('discovery-sheet');
+  sheet.classList.remove('collapsed');
+  state.sheetState = 'expanded';
+  haptic(15);
+  
+  // Apply category color glow
+  if (state.currentPlace) {
+    const color = getCategoryColor(state.currentPlace.type);
+    sheet.querySelector('.glow-category').style.boxShadow = 
+      `0 -4px 12px rgba(0,0,0,0.03), 0 -16px 48px rgba(0,0,0,0.06), 0 0 40px ${color}33`;
+    // Update sonar dot color
+    const sonarDot = document.querySelector('#sonar-marker .bg-accent');
+    if (sonarDot) sonarDot.style.backgroundColor = color;
+    // Update pill content
+    const pillTitle = document.getElementById('sheet-pill-title');
+    const pillDist = document.getElementById('sheet-pill-distance');
+    if (pillTitle) pillTitle.textContent = state.currentPlace.name;
+    if (pillDist) pillDist.textContent = state.currentPlace.distance || '';
+  }
+  
+  // Spring animate from off-screen to visible
+  if (cancelSheetSpring) cancelSheetSpring();
+  cancelSheetSpring = springAnimate(100, 0, { stiffness: 200, damping: 0.7 }, (v) => {
+    sheet.style.transform = `translateY(${v}%)`;
+  });
+  
+  // Trigger sonar burst
+  triggerSonarBurst();
 }
 
 function closeDiscoverySheet() {
-  document.getElementById('discovery-sheet').classList.remove('open');
+  const sheet = document.getElementById('discovery-sheet');
+  state.sheetState = 'hidden';
+  if (cancelSheetSpring) cancelSheetSpring();
+  cancelSheetSpring = springAnimate(0, 100, { stiffness: 300, damping: 0.8 }, (v) => {
+    sheet.style.transform = `translateY(${v}%)`;
+  });
+}
+
+function collapseDiscoverySheet() {
+  const sheet = document.getElementById('discovery-sheet');
+  sheet.classList.add('collapsed');
+  state.sheetState = 'collapsed';
+  haptic(8);
+}
+
+function expandDiscoverySheet() {
+  const sheet = document.getElementById('discovery-sheet');
+  sheet.classList.remove('collapsed');
+  state.sheetState = 'expanded';
+  haptic(12);
+}
+
+// Sonar Burst Sync
+function triggerSonarBurst() {
+  const sonar = document.getElementById('sonar-marker');
+  if (!sonar) return;
+  sonar.classList.add('sonar-burst');
+  setTimeout(() => sonar.classList.remove('sonar-burst'), 1600);
+}
+
+// Drag-to-dismiss setup
+function initSheetDrag() {
+  const handle = document.getElementById('sheet-drag-handle');
+  const sheet = document.getElementById('discovery-sheet');
+  if (!handle || !sheet) return;
+  
+  let startY = 0, currentTranslate = 0, dragging = false;
+  
+  function onStart(e) {
+    dragging = true;
+    startY = (e.touches ? e.touches[0].clientY : e.clientY);
+    currentTranslate = 0;
+    if (cancelSheetSpring) cancelSheetSpring();
+    handle.style.cursor = 'grabbing';
+  }
+  
+  function onMove(e) {
+    if (!dragging) return;
+    const y = (e.touches ? e.touches[0].clientY : e.clientY);
+    const delta = y - startY;
+    currentTranslate = Math.max(0, delta); // Only drag down
+    const pct = (currentTranslate / window.innerHeight) * 100;
+    sheet.style.transform = `translateY(${pct}%)`;
+  }
+  
+  function onEnd(e) {
+    if (!dragging) return;
+    dragging = false;
+    handle.style.cursor = 'grab';
+    const pct = (currentTranslate / window.innerHeight) * 100;
+    
+    if (pct > 25) {
+      // Dragged far enough — dismiss or collapse
+      if (state.sheetState === 'expanded') {
+        collapseDiscoverySheet();
+        cancelSheetSpring = springAnimate(pct, 0, { stiffness: 250, damping: 0.7 }, (v) => {
+          sheet.style.transform = `translateY(${v}%)`;
+        });
+      } else {
+        closeDiscoverySheet();
+      }
+    } else {
+      // Snap back
+      cancelSheetSpring = springAnimate(pct, 0, { stiffness: 300, damping: 0.7 }, (v) => {
+        sheet.style.transform = `translateY(${v}%)`;
+      });
+    }
+  }
+  
+  handle.addEventListener('pointerdown', onStart);
+  window.addEventListener('pointermove', onMove);
+  window.addEventListener('pointerup', onEnd);
+  
+  // Tap collapsed pill to expand
+  sheet.addEventListener('click', (e) => {
+    if (state.sheetState === 'collapsed' && !e.target.closest('button')) {
+      expandDiscoverySheet();
+    }
+  });
 }
 
 // ============================================================
 // CATEGORY SELECTION
 // ============================================================
 function selectCategory(btn) {
-  // Update active styling — glass pills with blue active
+  haptic(10);
+  // Update active styling — glass pills with blue active + glow
   document.querySelectorAll('.cat-btn').forEach(b => {
-    b.classList.remove('bg-accent', 'text-white', 'border-accent/20');
+    b.classList.remove('bg-accent', 'text-white', 'border-accent/20', 'active-glow');
     b.classList.add('text-on-surface-variant');
-    // Restore glass look for inactive
     if (!b.classList.contains('glass')) b.classList.add('glass', 'glass-border');
   });
   btn.classList.remove('text-on-surface-variant', 'glass', 'glass-border');
-  btn.classList.add('bg-accent', 'text-white', 'border-accent/20');
+  btn.classList.add('bg-accent', 'text-white', 'border-accent/20', 'active-glow');
+  
+  // Scroll selected into center
+  btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
   
   // Store selected category
   state.selectedCategory = btn.dataset.category || '';
@@ -161,34 +339,55 @@ function filterHelpItems(query) {
 // GOOGLE MAPS
 // ============================================================
 let map;
+// Map Themes
+const MAP_SILVER = [
+  {elementType:'geometry',stylers:[{color:'#f8f8f8'}]},
+  {elementType:'labels.icon',stylers:[{visibility:'off'}]},
+  {elementType:'labels.text.fill',stylers:[{color:'#3A3A3A'}]},
+  {elementType:'labels.text.stroke',stylers:[{color:'#ffffff'}]},
+  {featureType:'administrative.land_parcel',elementType:'labels.text.fill',stylers:[{color:'#bdbdbd'}]},
+  {featureType:'poi',elementType:'geometry',stylers:[{color:'#f0f0f0'}]},
+  {featureType:'poi',elementType:'labels.text.fill',stylers:[{color:'#757575'}]},
+  {featureType:'poi.park',elementType:'geometry',stylers:[{color:'#E2EBD8'}]},
+  {featureType:'road',elementType:'geometry',stylers:[{color:'#ffffff'}]},
+  {featureType:'road.arterial',elementType:'labels.text.fill',stylers:[{color:'#757575'}]},
+  {featureType:'road.highway',elementType:'geometry',stylers:[{color:'#f0f0f0'}]},
+  {featureType:'road.local',elementType:'labels.text.fill',stylers:[{color:'#9e9e9e'}]},
+  {featureType:'transit.line',elementType:'geometry',stylers:[{color:'#e5e5e5'}]},
+  {featureType:'water',elementType:'geometry',stylers:[{color:'#D4E4F7'}]},
+  {featureType:'water',elementType:'labels.text.fill',stylers:[{color:'#7BADD4'}]}
+];
+const MAP_MIDNIGHT = [
+  {elementType:'geometry',stylers:[{color:'#1a1d23'}]},
+  {elementType:'labels.icon',stylers:[{visibility:'off'}]},
+  {elementType:'labels.text.fill',stylers:[{color:'#8B949E'}]},
+  {elementType:'labels.text.stroke',stylers:[{color:'#0d1117'}]},
+  {featureType:'administrative.land_parcel',elementType:'labels.text.fill',stylers:[{color:'#484f58'}]},
+  {featureType:'poi',elementType:'geometry',stylers:[{color:'#21262d'}]},
+  {featureType:'poi',elementType:'labels.text.fill',stylers:[{color:'#6e7681'}]},
+  {featureType:'poi.park',elementType:'geometry',stylers:[{color:'#1a2617'}]},
+  {featureType:'road',elementType:'geometry',stylers:[{color:'#30363d'}]},
+  {featureType:'road.arterial',elementType:'labels.text.fill',stylers:[{color:'#6e7681'}]},
+  {featureType:'road.highway',elementType:'geometry',stylers:[{color:'#3a424d'}]},
+  {featureType:'road.local',elementType:'labels.text.fill',stylers:[{color:'#484f58'}]},
+  {featureType:'transit.line',elementType:'geometry',stylers:[{color:'#21262d'}]},
+  {featureType:'water',elementType:'geometry',stylers:[{color:'#0d1926'}]},
+  {featureType:'water',elementType:'labels.text.fill',stylers:[{color:'#2a4a6b'}]}
+];
+
 window.initMap = function() {
   map = new google.maps.Map(document.getElementById('map-bg'), {
     center: { lat: 47.3769, lng: 8.5417 },
     zoom: 14,
     disableDefaultUI: true,
-    styles: [
-      {elementType:'geometry',stylers:[{color:'#f5f5f5'}]},
-      {elementType:'labels.icon',stylers:[{visibility:'off'}]},
-      {elementType:'labels.text.fill',stylers:[{color:'#616161'}]},
-      {elementType:'labels.text.stroke',stylers:[{color:'#f5f5f5'}]},
-      {featureType:'administrative.land_parcel',elementType:'labels.text.fill',stylers:[{color:'#bdbdbd'}]},
-      {featureType:'poi',elementType:'geometry',stylers:[{color:'#eeeeee'}]},
-      {featureType:'poi',elementType:'labels.text.fill',stylers:[{color:'#757575'}]},
-      {featureType:'poi.park',elementType:'geometry',stylers:[{color:'#e5e5e5'}]},
-      {featureType:'road',elementType:'geometry',stylers:[{color:'#ffffff'}]},
-      {featureType:'road.arterial',elementType:'labels.text.fill',stylers:[{color:'#757575'}]},
-      {featureType:'road.highway',elementType:'geometry',stylers:[{color:'#dadada'}]},
-      {featureType:'road.local',elementType:'labels.text.fill',stylers:[{color:'#9e9e9e'}]},
-      {featureType:'transit.line',elementType:'geometry',stylers:[{color:'#e5e5e5'}]},
-      {featureType:'water',elementType:'geometry',stylers:[{color:'#c9c9c9'}]},
-      {featureType:'water',elementType:'labels.text.fill',stylers:[{color:'#9e9e9e'}]}
-    ]
+    styles: state.theme === 'dark' ? MAP_MIDNIGHT : MAP_SILVER
   });
 };
 
 // Add a marker to the map
 function addMapMarker(place) {
   if (!map || !place.lat || !place.lng) return;
+  const catColor = getCategoryColor(place.type);
   const marker = new google.maps.Marker({
     position: { lat: place.lat, lng: place.lng },
     map: map,
@@ -196,7 +395,7 @@ function addMapMarker(place) {
     icon: {
       path: google.maps.SymbolPath.CIRCLE,
       scale: 10,
-      fillColor: '#D4AF37',
+      fillColor: catColor,
       fillOpacity: 1,
       strokeColor: '#FFFFFF',
       strokeWeight: 3
@@ -526,6 +725,61 @@ window.addEventListener('DOMContentLoaded', () => {
 
   // Hide Google watermarks
   hideGoogleWatermarks();
+
+  // ============================================================
+  // THEME TOGGLE (Light/Dark)
+  // ============================================================
+  function applyTheme(theme) {
+    state.theme = theme;
+    localStorage.setItem('wanderlost-theme', theme);
+    document.documentElement.classList.toggle('dark', theme === 'dark');
+    document.querySelector('meta[name="theme-color"]').content = theme === 'dark' ? '#0D1117' : '#F9F9F9';
+    // Update map style
+    if (map) map.setOptions({ styles: theme === 'dark' ? MAP_MIDNIGHT : MAP_SILVER });
+    // Update filter UI grayscale
+    const mapBg = document.getElementById('map-bg');
+    if (mapBg) mapBg.style.filter = theme === 'dark' ? 'none' : 'grayscale(100%) contrast(1.05)';
+  }
+  // Apply saved theme on load
+  applyTheme(state.theme);
+  
+  // Theme toggle buttons
+  document.querySelectorAll('.theme-toggle-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      haptic(12);
+      document.querySelectorAll('.theme-toggle-btn').forEach(b => {
+        b.classList.remove('bg-accent', 'text-white');
+        b.classList.add('text-secondary');
+      });
+      btn.classList.add('bg-accent', 'text-white');
+      btn.classList.remove('text-secondary');
+      applyTheme(btn.dataset.theme);
+    });
+  });
+  // Set initial toggle state
+  document.querySelectorAll('.theme-toggle-btn').forEach(btn => {
+    if (btn.dataset.theme === state.theme) {
+      btn.classList.add('bg-accent', 'text-white');
+      btn.classList.remove('text-secondary');
+    } else {
+      btn.classList.remove('bg-accent', 'text-white');
+      btn.classList.add('text-secondary');
+    }
+  });
+
+  // ============================================================
+  // DRAG-TO-DISMISS SHEET INIT
+  // ============================================================
+  initSheetDrag();
+
+  // ============================================================
+  // HAPTIC VIBRATION ON ALL BUTTONS
+  // ============================================================
+  document.addEventListener('pointerdown', (e) => {
+    if (e.target.closest('button') || e.target.closest('.cat-btn') || e.target.closest('.nav-btn')) {
+      haptic(8);
+    }
+  });
 
   // ============================================================
   // AUTH GATE

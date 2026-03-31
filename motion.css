@@ -1,0 +1,224 @@
+/* ========== WANDERLOST MOTION ENGINE ========== */
+/* Theme Variables */
+:root {
+  --bg: #F9F9F9;
+  --bg-glass: rgba(255,255,255,0.45);
+  --bg-glass-strong: rgba(255,255,255,0.72);
+  --border-glass: rgba(255,255,255,0.5);
+  --text-primary: #1A1C1C;
+  --text-secondary: #5F5E5E;
+  --text-muted: rgba(95,94,94,0.6);
+  --sheet-bg: rgba(255,255,255,0.88);
+  --modal-bg: #FBFBFB;
+}
+html.dark {
+  --bg: #0D1117;
+  --bg-glass: rgba(30,35,50,0.55);
+  --bg-glass-strong: rgba(20,25,40,0.78);
+  --border-glass: rgba(255,255,255,0.1);
+  --text-primary: #E6EDF3;
+  --text-secondary: #8B949E;
+  --text-muted: rgba(139,148,158,0.5);
+  --sheet-bg: rgba(22,27,40,0.92);
+  --modal-bg: #161B28;
+}
+
+/* Dark mode overrides */
+html.dark body { background-color: var(--bg) !important; color: var(--text-primary) !important; }
+html.dark .modal-slide { background: var(--modal-bg) !important; }
+html.dark #auth-gate { background: rgba(13,17,23,0.94) !important; }
+html.dark #login-overlay, html.dark #forgot-overlay { background: rgba(13,17,23,0.96) !important; }
+html.dark .text-on-surface, html.dark .text-\[\#1A1C1C\] { color: var(--text-primary) !important; }
+html.dark .text-secondary, html.dark .text-\[\#5F5E5E\] { color: var(--text-secondary) !important; }
+html.dark .bg-surface, html.dark .bg-\[\#FBFBFB\], html.dark .bg-\[\#F9F9F9\] { background-color: var(--bg) !important; }
+html.dark .border-outline-variant\/20 { border-color: rgba(255,255,255,0.08) !important; }
+html.dark .bg-surface-container-low, html.dark .bg-surface-container-high,
+html.dark .bg-surface-container { background-color: rgba(30,35,50,0.4) !important; }
+
+/* Material Icons */
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+}
+
+/* ========== GLASSMORPHISM ENGINE ========== */
+.glass {
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  background: var(--bg-glass);
+}
+.glass-strong {
+  backdrop-filter: blur(30px) saturate(200%);
+  -webkit-backdrop-filter: blur(30px) saturate(200%);
+  background: var(--bg-glass-strong);
+}
+.glass-border { border: 0.5px solid var(--border-glass); }
+.glow-accent { box-shadow: 0 0 24px rgba(56,182,255,0.35), 0 0 60px rgba(56,182,255,0.12); }
+
+/* Multi-layered smooth shadow — 40px Z-elevation */
+.shadow-float {
+  box-shadow:
+    0 2px 4px rgba(0,0,0,0.02),
+    0 8px 16px rgba(0,0,0,0.04),
+    0 24px 48px rgba(0,0,0,0.06),
+    0 40px 80px rgba(56,182,255,0.08);
+}
+html.dark .shadow-float {
+  box-shadow:
+    0 2px 4px rgba(0,0,0,0.15),
+    0 8px 16px rgba(0,0,0,0.2),
+    0 24px 48px rgba(0,0,0,0.25),
+    0 40px 80px rgba(56,182,255,0.1);
+}
+
+/* Typography */
+.serif-headline { font-family: 'Cormorant Garamond', serif; }
+.font-serif-editorial { font-family: 'Cormorant Garamond', serif; }
+.editorial-tension { padding-left: 10%; padding-right: 15%; }
+
+/* ========== HAPTIC MICRO-INTERACTIONS ========== */
+button, .cat-btn, .nav-btn {
+  transition: transform 0.12s cubic-bezier(0.2,0,0,1), opacity 0.2s, color 0.2s, background 0.2s, box-shadow 0.3s !important;
+}
+button:active, .cat-btn:active, .nav-btn:active {
+  transform: scale(0.95) !important;
+}
+
+/* Neural Grid */
+.neural-grid {
+  background-size: 40px 40px;
+  background-image:
+    linear-gradient(to right, rgba(208,197,175,0.08) 0.5px, transparent 0.5px),
+    linear-gradient(to bottom, rgba(208,197,175,0.08) 0.5px, transparent 0.5px);
+}
+html.dark .neural-grid {
+  background-image:
+    linear-gradient(to right, rgba(255,255,255,0.03) 0.5px, transparent 0.5px),
+    linear-gradient(to bottom, rgba(255,255,255,0.03) 0.5px, transparent 0.5px);
+}
+
+.hide-scrollbar::-webkit-scrollbar { display: none; }
+.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ========== SONAR ANIMATIONS ========== */
+.sonar-circle { animation: sonar-pulse 3s cubic-bezier(0,0,0.2,1) infinite; }
+@keyframes sonar-pulse {
+  0% { transform: scale(1); opacity: 0.5; }
+  100% { transform: scale(4); opacity: 0; }
+}
+.sonar-burst .sonar-circle {
+  animation: sonar-burst-anim 0.5s cubic-bezier(0,0,0.2,1) !important;
+  animation-iteration-count: 3 !important;
+}
+@keyframes sonar-burst-anim {
+  0% { transform: scale(1); opacity: 0.7; }
+  100% { transform: scale(6); opacity: 0; }
+}
+
+/* ========== FLOATING BADGE ========== */
+@keyframes badge-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+.badge-floating { animation: badge-float 3s ease-in-out infinite; }
+
+/* ========== CATEGORY SNAP SCROLL ========== */
+#category-filters { scroll-snap-type: x mandatory; scroll-padding: 0 24px; }
+.cat-btn { scroll-snap-align: center; }
+.cat-btn.active-glow { transform: scale(1.08) !important; box-shadow: 0 0 20px rgba(56,182,255,0.25); }
+
+/* Tab Visibility */
+.tab-section { display: none; }
+.tab-section.active { display: block; }
+
+/* ========== MODAL SLIDING ========== */
+.modal-slide {
+  position: fixed; inset: 0; z-index: 200;
+  background: var(--modal-bg);
+  transform: translateY(100%);
+  transition: transform 0.4s cubic-bezier(0.32,0.72,0,1), visibility 0s 0.4s;
+  overflow-y: auto; pointer-events: none; visibility: hidden;
+}
+.modal-slide.open {
+  transform: translateY(0); pointer-events: auto; visibility: visible;
+  transition: transform 0.4s cubic-bezier(0.32,0.72,0,1), visibility 0s 0s;
+}
+
+/* ========== DISCOVERY SHEET — SPRING MORPH ========== */
+#discovery-sheet {
+  position: fixed; bottom: 0; left: 0; width: 100%; z-index: 100;
+  transform: translateY(100%);
+  transition: none;
+  will-change: transform;
+}
+#discovery-sheet .sheet-content {
+  background: var(--sheet-bg);
+  backdrop-filter: blur(30px) saturate(200%);
+  -webkit-backdrop-filter: blur(30px) saturate(200%);
+  border: 0.5px solid var(--border-glass);
+  border-radius: 28px 28px 0 0;
+  box-shadow: 0 -4px 12px rgba(0,0,0,0.03), 0 -16px 48px rgba(0,0,0,0.06), 0 -32px 80px rgba(56,182,255,0.06);
+  will-change: transform;
+  transition: border-radius 0.4s cubic-bezier(0.32,0.72,0,1), max-width 0.4s cubic-bezier(0.32,0.72,0,1);
+}
+.drag-handle {
+  width: 36px; height: 4px;
+  background: var(--text-muted);
+  border-radius: 9999px;
+  margin: 12px auto 0;
+  cursor: grab;
+  touch-action: none;
+}
+.drag-handle:active { cursor: grabbing; }
+
+/* Collapsed pill state */
+#discovery-sheet.collapsed .sheet-content {
+  border-radius: 9999px;
+  max-width: 340px;
+  margin: 0 auto 24px;
+}
+#discovery-sheet.collapsed .sheet-expanded { opacity: 0; max-height: 0; overflow: hidden; pointer-events: none; transition: opacity 0.2s, max-height 0.3s; }
+#discovery-sheet:not(.collapsed) .sheet-expanded { opacity: 1; max-height: 600px; transition: opacity 0.3s 0.1s, max-height 0.4s; }
+#discovery-sheet.collapsed .sheet-collapsed { display: flex !important; }
+#discovery-sheet:not(.collapsed) .sheet-collapsed { display: none !important; }
+
+/* Google Maps fixes */
+.gm-err-container, .gm-style-cc, .gmnoprint,
+button[title="Toggle fullscreen view"], .gm-style-pbc { display: none !important; }
+div[style*="z-index: 1000001"], div[style*="z-index: 1000000"] { display: none !important; }
+
+/* Body */
+body { background-color: var(--bg); margin: 0; color: var(--text-primary); }
+
+/* Auth Gate */
+#auth-gate {
+  position: fixed; inset: 0; z-index: 9999;
+  background: rgba(249,249,249,0.92);
+  backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+#auth-gate.hidden { opacity: 0; pointer-events: none; transform: translateY(-100%); }
+
+/* Login/Forgot Overlays */
+#login-overlay, #forgot-overlay {
+  position: fixed; inset: 0;
+  background: rgba(249,249,249,0.95);
+  backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  transform: translateY(100%);
+  transition: transform 0.4s cubic-bezier(0.32,0.72,0,1);
+  pointer-events: none; overflow-y: auto;
+}
+#login-overlay { z-index: 10000; }
+#forgot-overlay { z-index: 10001; }
+#login-overlay.open, #forgot-overlay.open { transform: translateY(0); pointer-events: auto; }
+
+/* Neural Canvas */
+#neural-canvas { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+@keyframes node-breathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+.node-pulse { animation: node-breathe 2s ease-in-out infinite; }
+
+/* Category Color Glow */
+.glow-category { transition: box-shadow 0.4s ease; }
