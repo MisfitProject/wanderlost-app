@@ -1,4 +1,6 @@
 /* ========== WANDERLOST MOTION ENGINE ========== */
+/* Brand Font */
+.font-brand { font-family: 'Bodoni Moda', serif; font-style: normal; letter-spacing: 0.02em; }
 /* Theme Variables */
 :root {
   --bg: #F9F9F9;
