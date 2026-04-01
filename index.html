@@ -1,115 +1,45 @@
 <!DOCTYPE html>
-<html class="light" lang="en">
+<html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
 <title>Wanderlost</title>
 <meta name="description" content="Discover hidden gems with AI-powered local exploration"/>
-<meta name="theme-color" content="#F9F9F9"/>
+<meta name="theme-color" content="#0D1117"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
-<meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <link rel="manifest" href="./manifest.json"/>
 <link rel="icon" type="image/png" href="./icon-192.png"/>
 <link rel="apple-touch-icon" href="./icon-192.png"/>
 
-<!-- Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,700;1,6..96,400&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700&family=Noto+Serif:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"/>
+<!-- Fonts: Only what we use -->
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,700;1,6..96,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 
-<!-- Tailwind -->
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<script id="tailwind-config">
-tailwind.config = {
-  darkMode: "class",
-  theme: {
-    extend: {
-      colors: {
-        "accent": "#38B6FF",
-        "accent-dark": "#2196DB",
-        "primary-fixed": "#ffe088",
-        "tertiary-fixed": "#dbe1ff",
-        "surface-bright": "#f9f9f9",
-        "surface-container-low": "#f3f3f3",
-        "on-tertiary-fixed-variant": "#27438a",
-        "on-tertiary-container": "#254188",
-        "on-secondary-fixed-variant": "#474747",
-        "on-tertiary": "#ffffff",
-        "primary": "#38B6FF",
-        "on-primary-fixed": "#241a00",
-        "on-secondary-fixed": "#1b1c1c",
-        "on-primary": "#ffffff",
-        "on-primary-fixed-variant": "#574500",
-        "inverse-on-surface": "#f0f1f1",
-        "secondary": "#5f5e5e",
-        "on-error": "#ffffff",
-        "inverse-primary": "#38B6FF",
-        "on-background": "#1a1c1c",
-        "surface-container-highest": "#e2e2e2",
-        "tertiary": "#415ba4",
-        "secondary-fixed": "#e4e2e1",
-        "error": "#ba1a1a",
-        "on-secondary-container": "#656464",
-        "on-primary-container": "#ffffff",
-        "surface-tint": "#38B6FF",
-        "outline-variant": "#d0c5af",
-        "surface-container-high": "#e8e8e8",
-        "inverse-surface": "#2f3131",
-        "error-container": "#ffdad6",
-        "surface": "#f9f9f9",
-        "surface-variant": "#e2e2e2",
-        "primary-container": "#38B6FF",
-        "on-secondary": "#ffffff",
-        "primary-fixed-dim": "#e9c349",
-        "outline": "#7f7663",
-        "tertiary-container": "#97b0ff",
-        "surface-dim": "#dadada",
-        "secondary-fixed-dim": "#c8c6c6",
-        "on-surface": "#1a1c1c",
-        "on-surface-variant": "#4d4635",
-        "tertiary-fixed-dim": "#b4c5ff",
-        "surface-container": "#eeeeee",
-        "on-error-container": "#93000a",
-        "on-tertiary-fixed": "#00174b",
-        "background": "#f9f9f9",
-        "secondary-container": "#e4e2e1",
-        "surface-container-lowest": "#ffffff"
-      },
-      fontFamily: {
-        "headline": ["Noto Serif"],
-        "body": ["Inter"],
-        "label": ["Inter"],
-        "serif": ["Cormorant Garamond", "serif"],
-        "serif-title": ["Cormorant Garamond", "serif"]
-      },
-      borderRadius: {"DEFAULT": "24px", "lg": "28px", "xl": "32px", "full": "9999px"},
-    },
-  },
-}
-</script>
-
+<!-- Design Engine -->
 <link rel="stylesheet" href="./motion.css"/>
 </head>
 
-<body class="bg-surface font-body text-on-surface antialiased">
+<body>
 
 <!-- ============================================================ -->
-<!-- AUTH GATE: Log In / Try for Free -->
+<!-- AUTH GATE -->
 <!-- ============================================================ -->
 <div id="auth-gate">
-  <div class="text-center px-8 max-w-sm w-full">
-    <div class="mb-2 text-[10px] tracking-[0.3em] text-secondary uppercase">The Secret City</div>
-    <h1 class="font-brand text-5xl text-on-surface mb-2">
-      <span class="text-accent">W</span>anderlost
+  <div style="text-align:center; padding:0 32px; max-width:380px; width:100%;">
+    <p class="type-meta" style="margin-bottom:12px;">The Secret City</p>
+    <h1 class="type-display" style="margin-bottom:8px;">
+      <span style="color:var(--accent)">W</span>anderlost
     </h1>
-    <p class="text-secondary text-sm mt-4 mb-12 font-serif italic">AI-powered local discovery</p>
+    <p class="type-body" style="margin-top:16px; margin-bottom:48px; font-style:italic;">AI-powered local discovery</p>
 
-    <button id="btn-open-login" class="w-full bg-accent text-white px-8 py-4 font-label text-xs font-semibold tracking-widest uppercase active:scale-[0.97] transition-transform mb-4 rounded-full glow-accent">
+    <button id="btn-open-login" class="btn-accent" style="width:100%; padding:16px 32px; margin-bottom:16px;">
       Log In
     </button>
-    <button id="btn-try-free" class="w-full glass glass-border text-on-surface px-8 py-4 font-label text-xs tracking-widest uppercase active:scale-[0.97] transition-transform hover:bg-white/60 rounded-full">
+    <button id="btn-try-free" class="btn-ghost" style="width:100%; padding:16px 32px;">
       Try for Free
     </button>
-    <p class="text-[10px] text-secondary mt-8 tracking-wide">By continuing you agree to our <button onclick="document.getElementById('auth-gate').classList.add('hidden');openModal('modal-terms');" class="underline text-on-surface">Terms</button> & <button onclick="document.getElementById('auth-gate').classList.add('hidden');openModal('modal-privacy');" class="underline text-on-surface">Privacy Policy</button></p>
+    <p class="type-meta" style="margin-top:32px;">By continuing you agree to our <button onclick="document.getElementById('auth-gate').classList.add('hidden');openModal('modal-terms');" style="text-decoration:underline; color:var(--text-primary); background:none; border:none; cursor:pointer; font:inherit;">Terms</button> & <button onclick="document.getElementById('auth-gate').classList.add('hidden');openModal('modal-privacy');" style="text-decoration:underline; color:var(--text-primary); background:none; border:none; cursor:pointer; font:inherit;">Privacy Policy</button></p>
   </div>
 </div>
 
@@ -117,30 +47,30 @@ tailwind.config = {
 <!-- LOGIN OVERLAY -->
 <!-- ============================================================ -->
 <div id="login-overlay">
-  <div class="w-full max-w-sm px-8">
-    <button id="btn-close-login" class="mb-8 text-secondary active:scale-95 transition-transform">
+  <div style="width:100%; max-width:360px; padding:0 32px;">
+    <button id="btn-close-login" style="background:none; border:none; cursor:pointer; color:var(--text-secondary); margin-bottom:32px; display:block;">
       <span class="material-symbols-outlined">arrow_back</span>
     </button>
-    <h2 class="font-serif-title text-4xl text-on-surface mb-2">Welcome back.</h2>
-    <p class="text-secondary text-sm mb-10 font-serif italic">Sign in to continue your journey</p>
+    <h2 class="type-title" style="font-size:2rem; margin-bottom:8px;">Welcome back.</h2>
+    <p class="type-body" style="font-style:italic; margin-bottom:40px;">Sign in to continue your journey</p>
 
-    <div class="space-y-6 mb-8">
-      <div>
-        <label class="block text-secondary font-label text-[10px] tracking-widest uppercase mb-2">Email Address</label>
-        <input id="login-email" type="email" placeholder="you@email.com" class="w-full bg-transparent border-x-0 border-t-0 border-b border-outline-variant/40 p-0 pb-3 text-on-surface font-body text-sm focus:ring-0 focus:border-accent focus:outline-none transition-colors" />
+    <div style="margin-bottom:32px;">
+      <div style="margin-bottom:24px;">
+        <span class="type-meta" style="display:block; margin-bottom:8px;">Email Address</span>
+        <input id="login-email" type="email" placeholder="you@email.com"/>
       </div>
       <div>
-        <label class="block text-secondary font-label text-[10px] tracking-widest uppercase mb-2">Password</label>
-        <input id="login-password" type="password" placeholder="••••••••" class="w-full bg-transparent border-x-0 border-t-0 border-b border-outline-variant/40 p-0 pb-3 text-on-surface font-body text-sm focus:ring-0 focus:border-accent focus:outline-none transition-colors tracking-widest" />
+        <span class="type-meta" style="display:block; margin-bottom:8px;">Password</span>
+        <input id="login-password" type="password" placeholder="••••••••" style="letter-spacing:0.15em;"/>
       </div>
     </div>
 
-    <button id="btn-login-submit" class="w-full bg-accent text-white px-8 py-4 font-label text-xs font-semibold tracking-widest uppercase active:scale-[0.97] transition-transform mb-6 rounded-full glow-accent">
+    <button id="btn-login-submit" class="btn-accent" style="width:100%; padding:16px; margin-bottom:24px;">
       Sign In
     </button>
 
-    <div class="text-center">
-      <button id="btn-open-forgot" class="text-secondary text-xs tracking-wide border-b border-outline-variant/30 pb-0.5 hover:text-accent transition-colors">Forgot my password?</button>
+    <div style="text-align:center;">
+      <button id="btn-open-forgot" style="background:none; border:none; cursor:pointer; color:var(--text-secondary); font-size:12px; border-bottom:0.5px solid var(--border-glass); padding-bottom:2px;">Forgot my password?</button>
     </div>
   </div>
 </div>
@@ -149,966 +79,439 @@ tailwind.config = {
 <!-- FORGOT PASSWORD OVERLAY -->
 <!-- ============================================================ -->
 <div id="forgot-overlay">
-  <div class="w-full max-w-sm px-8">
-    <button id="btn-close-forgot" class="mb-8 text-secondary active:scale-95 transition-transform">
+  <div style="width:100%; max-width:360px; padding:0 32px;">
+    <button id="btn-close-forgot" style="background:none; border:none; cursor:pointer; color:var(--text-secondary); margin-bottom:32px; display:block;">
       <span class="material-symbols-outlined">arrow_back</span>
     </button>
-    <h2 class="font-serif-title text-4xl text-on-surface mb-2">Reset Password.</h2>
-    <p class="text-secondary text-sm mb-10 font-serif italic">Enter your email and we'll send you a recovery link</p>
+    <h2 class="type-title" style="font-size:2rem; margin-bottom:8px;">Reset Password.</h2>
+    <p class="type-body" style="font-style:italic; margin-bottom:40px;">Enter your email and we'll send you a recovery link</p>
 
-    <div class="mb-8">
-      <label class="block text-secondary font-label text-[10px] tracking-widest uppercase mb-2">Email Address</label>
-      <input id="forgot-email" type="email" placeholder="you@email.com" class="w-full bg-transparent border-x-0 border-t-0 border-b border-outline-variant/40 p-0 pb-3 text-on-surface font-body text-sm focus:ring-0 focus:border-accent focus:outline-none transition-colors" />
+    <div style="margin-bottom:32px;">
+      <span class="type-meta" style="display:block; margin-bottom:8px;">Email Address</span>
+      <input id="forgot-email" type="email" placeholder="you@email.com"/>
     </div>
 
-    <button id="btn-forgot-submit" class="w-full bg-accent text-white px-8 py-4 font-label text-xs font-semibold tracking-widest uppercase active:scale-[0.97] transition-transform rounded-full glow-accent">
+    <button id="btn-forgot-submit" class="btn-accent" style="width:100%; padding:16px;">
       Send Recovery Link
     </button>
 
-    <p id="forgot-confirm-msg" class="text-center text-sm text-accent mt-6 hidden font-serif italic">Recovery link sent! Check your inbox.</p>
+    <p id="forgot-confirm-msg" class="hidden type-body" style="text-align:center; margin-top:24px; color:var(--accent); font-style:italic;">Recovery link sent! Check your inbox.</p>
   </div>
 </div>
 
 <!-- ============================================================ -->
-<!-- TAB: EXPLORE (home_refined_discovery_popup) -->
+<!-- TAB: EXPLORE -->
 <!-- ============================================================ -->
 <section id="tab-explore" class="tab-section active">
-  <!-- Top Navigation -->
-  <header class="fixed top-0 w-full flex justify-between items-center px-6 h-16 z-50 glass-strong glass-border" style="border-radius:0 0 20px 20px;">
-    <div class="flex items-center gap-4">
-      <button class="text-[#5F5E5E] hover:opacity-70 transition-opacity active:scale-95 duration-200" onclick="openModal('modal-settings')">
+  <!-- Top Bar -->
+  <header class="glass depth-float" style="position:fixed; top:0; width:100%; z-index:50; padding:0 24px; height:60px; display:flex; align-items:center; justify-content:space-between; border-radius:0 0 20px 20px;">
+    <div style="display:flex; align-items:center; gap:12px;">
+      <button style="background:none; border:none; cursor:pointer; color:var(--text-secondary);" onclick="openModal('modal-settings')">
         <span class="material-symbols-outlined">menu</span>
       </button>
-      <div class="font-brand text-2xl text-[#1A1C1C]"><span class="text-accent">W</span>anderlost</div>
+      <span class="font-brand" style="font-size:1.4rem; color:var(--text-primary);"><span style="color:var(--accent)">W</span>anderlost</span>
     </div>
-    <div class="flex items-center gap-4">
-      <div class="px-4 py-1.5 rounded-full glass glass-border flex items-center gap-2 badge-floating">
-        <span class="w-1.5 h-1.5 rounded-full bg-accent shadow-[0_0_8px_rgba(56,182,255,0.6)]"></span>
-        <span id="discovery-counter" class="text-[10px] font-label uppercase tracking-widest text-secondary font-medium">3 Free Discoveries</span>
-      </div>
+    <div>
+      <span id="discovery-counter" class="type-meta" style="color:var(--accent);">3 Credits</span>
     </div>
   </header>
 
   <!-- Map Canvas -->
-  <main class="relative w-full h-screen bg-[#FBFBFB] neural-grid overflow-hidden">
-    <div id="map-bg" class="absolute inset-0 z-0" style="filter: grayscale(100%) contrast(1.05);"></div>
+  <main style="position:relative; width:100%; height:100vh; overflow:hidden;">
+    <div id="map-bg" style="position:absolute; inset:0; z-index:0; filter:blur(20px) brightness(0.7);"></div>
     <canvas id="neural-canvas"></canvas>
 
     <!-- Category Filters -->
-    <div class="absolute top-20 left-0 w-full z-40">
-      <div id="category-filters" class="flex gap-2 px-6 overflow-x-auto hide-scrollbar py-2">
-        <button onclick="selectCategory(this)" data-category="" class="cat-btn flex-shrink-0 px-4 py-2 bg-accent text-white border border-accent/20 text-[10px] font-label font-bold uppercase tracking-wider transition-all rounded-full">All</button>
-        <button onclick="selectCategory(this)" data-category="restaurant" class="cat-btn flex-shrink-0 px-4 py-2 glass glass-border text-[10px] font-label font-bold uppercase tracking-wider text-on-surface-variant transition-all rounded-full">Restaurants</button>
-        <button onclick="selectCategory(this)" data-category="cafe" class="cat-btn flex-shrink-0 px-4 py-2 glass glass-border text-[10px] font-label font-bold uppercase tracking-wider text-on-surface-variant transition-all rounded-full">Cafes</button>
-        <button onclick="selectCategory(this)" data-category="bakery" class="cat-btn flex-shrink-0 px-4 py-2 glass glass-border text-[10px] font-label font-bold uppercase tracking-wider text-on-surface-variant transition-all rounded-full">Bakeries</button>
-        <button onclick="selectCategory(this)" data-category="bar" class="cat-btn flex-shrink-0 px-4 py-2 glass glass-border text-[10px] font-label font-bold uppercase tracking-wider text-on-surface-variant transition-all rounded-full">Bars</button>
-        <button onclick="selectCategory(this)" data-category="park" class="cat-btn flex-shrink-0 px-4 py-2 glass glass-border text-[10px] font-label font-bold uppercase tracking-wider text-on-surface-variant transition-all rounded-full">Parks</button>
-        <button onclick="selectCategory(this)" data-category="museum" class="cat-btn flex-shrink-0 px-4 py-2 glass glass-border text-[10px] font-label font-bold uppercase tracking-wider text-on-surface-variant transition-all rounded-full">Museums</button>
+    <div style="position:absolute; top:72px; left:0; width:100%; z-index:40;">
+      <div id="category-filters" class="hide-scrollbar" style="display:flex; gap:4px; padding:0 24px; overflow-x:auto;">
+        <button onclick="selectCategory(this)" data-category="" class="cat-btn active">All</button>
+        <button onclick="selectCategory(this)" data-category="restaurant" class="cat-btn">Restaurants</button>
+        <button onclick="selectCategory(this)" data-category="cafe" class="cat-btn">Cafes</button>
+        <button onclick="selectCategory(this)" data-category="bakery" class="cat-btn">Bakeries</button>
+        <button onclick="selectCategory(this)" data-category="bar" class="cat-btn">Bars</button>
+        <button onclick="selectCategory(this)" data-category="park" class="cat-btn">Parks</button>
+        <button onclick="selectCategory(this)" data-category="museum" class="cat-btn">Museums</button>
       </div>
     </div>
 
     <!-- Sonar Effect -->
-    <div id="sonar-marker" class="absolute top-[48%] left-[42%] -translate-x-1/2 -translate-y-1/2 hidden">
-      <div class="relative flex items-center justify-center">
-        <div class="absolute w-24 h-24 border border-accent/30 rounded-full sonar-circle" style="animation-delay:-1.5s;"></div>
-        <div class="absolute w-12 h-12 border border-accent/50 rounded-full sonar-circle"></div>
-        <div class="w-4 h-4 bg-accent rounded-full border-2 border-white shadow-[0_0_15px_rgba(56,182,255,0.5)] z-10"></div>
+    <div id="sonar-marker" style="position:absolute; top:48%; left:42%; transform:translate(-50%,-50%); display:none;">
+      <div style="position:relative; display:flex; align-items:center; justify-content:center;">
+        <div style="position:absolute; width:96px; height:96px; border:1px solid rgba(56,182,255,0.3); border-radius:50%; animation-delay:-1.5s;" class="sonar-circle"></div>
+        <div style="position:absolute; width:48px; height:48px; border:1px solid rgba(56,182,255,0.5); border-radius:50%;" class="sonar-circle"></div>
+        <div style="width:16px; height:16px; background:var(--accent); border-radius:50%; border:2px solid #fff; box-shadow:0 0 15px var(--accent-glow); z-index:10;"></div>
       </div>
     </div>
 
-    <!-- Discover Button -->
-    <div class="fixed bottom-28 left-1/2 -translate-x-1/2 w-full max-w-xs px-6 z-40">
-      <button id="btn-discover" class="w-full bg-accent text-white font-label text-[11px] font-bold uppercase tracking-[0.2em] py-5 px-10 shadow-[0_20px_40px_-10px_rgba(56,182,255,0.4)] hover:shadow-[0_25px_50px_-10px_rgba(56,182,255,0.6)] transition-all active:translate-y-1 rounded-full flex items-center justify-center gap-3 border border-white/20 glow-accent">
-        <span class="material-symbols-outlined text-sm">explore</span>
+    <!-- Discover Button (Morph Origin) -->
+    <div style="position:fixed; bottom:100px; left:50%; transform:translateX(-50%); width:100%; max-width:300px; padding:0 24px; z-index:40;">
+      <button id="btn-discover" class="btn-accent" style="width:100%; padding:18px 40px; display:flex; align-items:center; justify-content:center; gap:10px;">
+        <span class="material-symbols-outlined" style="font-size:16px;">explore</span>
         Discover Places
       </button>
     </div>
   </main>
 
-  <!-- Discovery Bottom Sheet — Spring Morph -->
+  <!-- Discovery Card (Morph Target) -->
   <div id="discovery-sheet">
-    <div class="sheet-content shadow-float pb-8 pt-0 px-0 max-w-3xl mx-auto glow-category">
-      <!-- Drag Handle -->
-      <div class="drag-handle" id="sheet-drag-handle"></div>
-      <!-- Collapsed Pill State -->
-      <div class="sheet-collapsed items-center gap-3 px-6 py-3" style="display:none;">
-        <span class="material-symbols-outlined text-accent text-base">location_on</span>
-        <span id="sheet-pill-title" class="text-sm font-medium truncate flex-1">Discovery</span>
-        <span id="sheet-pill-distance" class="text-[10px] text-secondary uppercase tracking-wider">...</span>
+    <div class="discovery-card">
+      <div style="display:flex; justify-content:center; padding-bottom:20px;">
+        <div style="width:36px; height:4px; border-radius:2px; background:var(--border-glass); cursor:pointer;" onclick="closeDiscoverySheet()"></div>
       </div>
-      <!-- Expanded Detail Card -->
-      <div class="sheet-expanded px-8 pt-4 pb-4">
-        <div class="flex justify-between items-start mb-5">
-          <div>
-            <span id="sheet-tag" class="inline-block px-3 py-1 rounded-full text-[9px] font-label uppercase tracking-[0.2em] text-secondary/60 mb-3" style="letter-spacing:0.2em;">Discovery</span>
-            <h1 id="sheet-title" class="font-serif text-3xl tracking-tight leading-tight italic font-bold">Loading...</h1>
-          </div>
-        </div>
-        <div class="flex flex-col gap-3 mb-6">
-          <div class="flex items-start gap-3">
-            <span class="material-symbols-outlined text-sm mt-0.5 text-accent">location_on</span>
-            <p id="sheet-address" class="text-[11px] uppercase tracking-wider text-secondary/60 leading-relaxed">...</p>
-          </div>
-          <div class="flex items-center gap-3">
-            <span class="material-symbols-outlined text-sm text-accent">straighten</span>
-            <p id="sheet-distance" class="text-[11px] font-medium text-accent tracking-wide">...</p>
-          </div>
-          <p id="sheet-desc" class="text-sm text-secondary/80 leading-relaxed mt-1">...</p>
-        </div>
-        <div class="grid grid-cols-2 gap-3">
-          <button id="btn-go-maps" class="flex items-center justify-center gap-2 text-white py-4 px-6 text-[10px] font-label font-bold uppercase tracking-widest hover:opacity-90 bg-accent rounded-full shadow-float">
-            <span class="material-symbols-outlined text-sm">map</span> Navigate
-          </button>
-          <button id="btn-save-place" class="flex items-center justify-center gap-2 glass glass-border py-4 px-6 text-[10px] font-label font-bold uppercase tracking-widest hover:bg-white/60 rounded-full">
-            <span class="material-symbols-outlined text-sm">bookmark</span> Save
-          </button>
-        </div>
+      <p id="sheet-tag" class="type-meta" style="margin-bottom:8px;">Discovery</p>
+      <h1 id="sheet-title" class="type-title" style="margin-bottom:24px;">Loading...</h1>
+      <p id="sheet-address" class="type-meta" style="margin-bottom:6px; color:var(--text-tertiary);">...</p>
+      <p id="sheet-distance" class="type-label" style="margin-bottom:16px; color:var(--accent);">...</p>
+      <p id="sheet-desc" class="type-body" style="margin-bottom:28px;">...</p>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+        <button id="btn-go-maps" class="btn-accent" style="padding:14px 20px; display:flex; align-items:center; justify-content:center; gap:8px;">
+          <span class="material-symbols-outlined" style="font-size:14px;">map</span> Navigate
+        </button>
+        <button id="btn-save-place" class="btn-ghost" style="padding:14px 20px; display:flex; align-items:center; justify-content:center; gap:8px;">
+          <span class="material-symbols-outlined" style="font-size:14px;">bookmark</span> Save
+        </button>
       </div>
     </div>
   </div>
 </section>
 
-
 <!-- ============================================================ -->
-<!-- TAB: HISTORY (history_refined_layout) -->
+<!-- TAB: HISTORY -->
 <!-- ============================================================ -->
 <section id="tab-history" class="tab-section">
-  <header class="glass-strong glass-border sticky top-0 z-50" style="border-radius:0 0 20px 20px;">
-    <div class="flex justify-between items-center w-full px-6 py-4">
-      <button class="text-[#5F5E5E] hover:opacity-70 transition-opacity active:scale-95 duration-200" onclick="openModal('modal-settings')">
-        <span class="material-symbols-outlined">menu</span>
-      </button>
-      <h1 class="text-2xl font-brand text-accent"><span class="text-accent">W</span>anderlost</h1>
-      <button onclick="showToast('History search coming in next update.')" class="text-[#5F5E5E] hover:opacity-70 transition-opacity active:scale-95 duration-200">
-        <span class="material-symbols-outlined">search</span>
-      </button>
+  <header class="glass depth-float" style="position:sticky; top:0; z-index:50; border-radius:0 0 20px 20px; padding:0 24px; height:60px; display:flex; align-items:center; justify-content:space-between;">
+    <div style="display:flex; align-items:center; gap:12px;">
+      <button style="background:none; border:none; cursor:pointer; color:var(--text-secondary);" onclick="openModal('modal-settings')"><span class="material-symbols-outlined">menu</span></button>
+      <span class="font-brand" style="font-size:1.4rem; color:var(--text-primary);"><span style="color:var(--accent)">W</span>anderlost</span>
     </div>
+    <button style="background:none; border:none; cursor:pointer; color:var(--text-secondary);" onclick="showToast('History search coming soon.')"><span class="material-symbols-outlined">search</span></button>
   </header>
-  <main class="max-w-3xl mx-auto px-6 pt-12 pb-32 overflow-y-auto" style="height:calc(100vh - 80px)">
-    <section class="mb-16">
-      <h2 class="font-serif-title text-5xl text-on-surface tracking-tight mb-2">History</h2>
-      <div class="h-px w-16 bg-primary mb-8"></div>
-      <p class="text-secondary font-body text-sm tracking-wide uppercase">Chronicle of your curated journeys</p>
+  <main style="max-width:640px; margin:0 auto; padding:48px 24px 128px; overflow-y:auto; height:calc(100vh - 60px);">
+    <section style="margin-bottom:48px;">
+      <p class="type-meta" style="margin-bottom:8px;">Chronicle</p>
+      <h2 class="type-display" style="font-size:2.5rem; margin-bottom:12px;">History</h2>
+      <div style="width:48px; height:2px; background:var(--accent); margin-bottom:16px;"></div>
+      <p class="type-body">Your curated journey through discovery.</p>
     </section>
-    <section class="mb-20">
-      <div class="flex items-center justify-between mb-8">
-        <h3 class="font-headline text-lg italic text-on-surface">Recent Discoveries</h3>
-        <span class="text-[10px] uppercase tracking-[0.2em] text-outline font-label">Volume 01</span>
+    <section style="margin-bottom:48px;">
+      <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:24px;">
+        <p class="type-label">Recent Discoveries</p>
+        <p class="type-meta">Volume 01</p>
       </div>
-      <div id="history-list" class="space-y-12">
-        <p class="text-secondary text-sm italic">No discoveries yet. Tap "Discover Places" on the Explore tab to begin your journey.</p>
+      <div id="history-list">
+        <p class="type-body" style="font-style:italic;">No discoveries yet. Tap "Discover Places" to begin.</p>
       </div>
     </section>
-    <!-- Premium Gate -->
-    <section class="mb-20 relative">
-      <div class="glass glass-border p-8 md:p-12 mb-12 relative overflow-hidden rounded-[24px]">
-        <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
-          <div class="text-center md:text-left">
-            <h3 class="font-serif-title text-3xl md:text-4xl mb-4 leading-tight">Join Premium to<br/>Unlock History</h3>
-            <div class="flex flex-wrap gap-6 justify-center md:justify-start">
-              <div class="flex items-center gap-2">
-                <span class="material-symbols-outlined text-lg">all_inclusive</span>
-                <span class="text-xs uppercase tracking-widest font-label font-semibold">Unlimited History</span>
-              </div>
-              <div class="flex items-center gap-2">
-                <span class="material-symbols-outlined text-lg">book_5</span>
-                <span class="text-xs uppercase tracking-widest font-label font-semibold">Permanent Log</span>
-              </div>
-            </div>
-          </div>
-          <button onclick="openModal('modal-premium')" class="bg-accent text-white px-10 py-4 font-label text-[11px] uppercase tracking-[0.2em] font-bold hover:opacity-90 transition-opacity whitespace-nowrap rounded-full glow-accent">
-            Upgrade Now
-          </button>
+    <section style="margin-bottom:48px;">
+      <div class="glass" style="border-radius:24px; padding:32px; text-align:center;">
+        <p class="type-meta" style="margin-bottom:12px;">Premium Feature</p>
+        <h3 class="type-title" style="margin-bottom:16px;">Unlock Full History</h3>
+        <div style="display:flex; gap:24px; justify-content:center; margin-bottom:24px;">
+          <div style="display:flex; align-items:center; gap:6px;"><span class="material-symbols-outlined" style="font-size:16px; color:var(--accent);">all_inclusive</span><span class="type-meta">Unlimited</span></div>
+          <div style="display:flex; align-items:center; gap:6px;"><span class="material-symbols-outlined" style="font-size:16px; color:var(--accent);">book_5</span><span class="type-meta">Permanent</span></div>
         </div>
-        <div class="absolute top-0 right-0 opacity-10 translate-x-1/4 -translate-y-1/4">
-          <span class="material-symbols-outlined text-[200px]">auto_stories</span>
-        </div>
-      </div>
-      <!-- Blurred Past Discoveries -->
-      <div class="relative">
-        <div class="flex items-center justify-between mb-8">
-          <h3 class="font-headline text-lg italic text-secondary/60">Past Discoveries</h3>
-          <span class="text-[10px] uppercase tracking-[0.2em] text-outline/40 font-label">Volume 00</span>
-        </div>
-        <div class="space-y-12 filter blur-md pointer-events-none opacity-40 select-none">
-          <div class="group flex flex-col md:flex-row gap-6 items-start">
-            <div class="w-full md:w-32 h-32 bg-surface-container-high"></div>
-            <div class="flex-1 border-b border-outline-variant/20 pb-6 w-full">
-              <h4 class="font-serif-title text-2xl mb-2">The Emerald Courtyard</h4>
-              <p class="text-secondary text-sm mb-4 font-body leading-relaxed">A botanical garden hidden in the industrial district.</p>
-            </div>
-          </div>
-          <div class="group flex flex-col md:flex-row gap-6 items-start">
-            <div class="w-full md:w-32 h-32 bg-surface-container-high"></div>
-            <div class="flex-1 border-b border-outline-variant/20 pb-6 w-full">
-              <h4 class="font-serif-title text-2xl mb-2">Midnight Records</h4>
-              <p class="text-secondary text-sm mb-4 font-body leading-relaxed">Vinyl shop specializing in obscure jazz pressings.</p>
-            </div>
-          </div>
-        </div>
-        <!-- Locked Overlay -->
-        <div class="absolute inset-0 flex items-center justify-center">
-          <div class="text-center group cursor-pointer" onclick="openModal('modal-premium')">
-            <div class="inline-flex items-center justify-center w-16 h-16 rounded-full border border-accent text-accent mb-4 transition-transform group-hover:scale-110">
-              <span class="material-symbols-outlined text-3xl">lock</span>
-            </div>
-            <p class="font-serif-title text-xl text-on-surface">12 More Nodes Hidden</p>
-            <p class="text-[10px] uppercase tracking-widest text-secondary mt-2">Become a member to Reveal</p>
-          </div>
-        </div>
+        <button onclick="openModal('modal-premium')" class="btn-accent" style="padding:14px 32px;">Upgrade Now</button>
       </div>
     </section>
   </main>
 </section>
 
 <!-- ============================================================ -->
-<!-- TAB: PROFILE (my_account) -->
+<!-- TAB: PROFILE -->
 <!-- ============================================================ -->
 <section id="tab-profile" class="tab-section">
-  <header class="sticky top-0 w-full flex justify-between items-center px-6 h-16 z-50 glass-strong glass-border" style="border-radius:0 0 20px 20px;">
-    <div class="flex items-center gap-4">
-      <span class="material-symbols-outlined text-accent cursor-pointer" onclick="openModal('modal-settings')">menu</span>
-      <h1 class="font-brand text-2xl text-[#1A1C1C]"><span class="text-accent">W</span>anderlost</h1>
+  <header class="glass depth-float" style="position:sticky; top:0; z-index:50; border-radius:0 0 20px 20px; padding:0 24px; height:60px; display:flex; align-items:center; justify-content:space-between;">
+    <div style="display:flex; align-items:center; gap:12px;">
+      <button style="background:none; border:none; cursor:pointer; color:var(--text-secondary);" onclick="openModal('modal-settings')"><span class="material-symbols-outlined">menu</span></button>
+      <span class="font-brand" style="font-size:1.4rem; color:var(--text-primary);"><span style="color:var(--accent)">W</span>anderlost</span>
     </div>
-    <div class="flex items-center gap-4">
-      <span class="material-symbols-outlined text-accent cursor-pointer">notifications</span>
-    </div>
+    <button style="background:none; border:none; cursor:pointer; color:var(--text-secondary);"><span class="material-symbols-outlined">notifications</span></button>
   </header>
-  <main class="pt-8 px-6 max-w-screen-md mx-auto pb-32 overflow-y-auto" style="height:calc(100vh - 80px)">
-    <section class="flex flex-col items-center mb-12">
-      <div class="relative group cursor-pointer">
-        <div class="w-32 h-32 rounded-full overflow-hidden ring-2 ring-accent/30 border-[0.5px] border-white/50">
-          <img alt="User Profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbCapbZpiJc0BoOIFDF4-jr2t60HAk4MD7Y1P4UjJmtjBurdVbLboys9VXiT_G3m6O_naZH3o49c3Oohe1ZE7W_BWVW1jfgKNFy7857lW6LMPBogSgm373r9DfFNKffCSkge5ujAUrmfRa-12AG8mkeY7unycNVvWC6S9yPxB8ej_0_wFuKeGlMpw0rjto_7oA2iwPHPdaMaRE3adFCVllYMTmQywG7-78J-dg2sInYud1kqjGZx3hzWq5c7IqWh1lFJIBST_JtjY"/>
-        </div>
-        <div class="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity rounded-full">
-          <div class="bg-primary-container p-2 rounded-full shadow-lg">
-            <span class="material-symbols-outlined text-on-primary-container text-xl">upload</span>
-          </div>
-        </div>
+  <main style="padding:32px 24px 128px; max-width:480px; margin:0 auto; overflow-y:auto; height:calc(100vh - 60px);">
+    <section style="display:flex; flex-direction:column; align-items:center; margin-bottom:40px;">
+      <div style="width:100px; height:100px; border-radius:50%; overflow:hidden; border:2px solid var(--accent); opacity:0.9;">
+        <img alt="User" style="width:100%; height:100%; object-fit:cover;" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbCapbZpiJc0BoOIFDF4-jr2t60HAk4MD7Y1P4UjJmtjBurdVbLboys9VXiT_G3m6O_naZH3o49c3Oohe1ZE7W_BWVW1jfgKNFy7857lW6LMPBogSgm373r9DfFNKffCSkge5ujAUrmfRa-12AG8mkeY7unycNVvWC6S9yPxB8ej_0_wFuKeGlMpw0rjto_7oA2iwPHPdaMaRE3adFCVllYMTmQywG7-78J-dg2sInYud1kqjGZx3hzWq5c7IqWh1lFJIBST_JtjY"/>
       </div>
-      <h2 id="profile-display-name" class="mt-6 font-serif text-3xl tracking-tight text-on-surface">Explorer</h2>
-      <p class="text-secondary font-label text-[10px] tracking-[0.2em] uppercase mt-1">Nomad Explorer</p>
+      <h2 id="profile-display-name" class="type-title" style="margin-top:16px;">Explorer</h2>
+      <p class="type-meta" style="margin-top:4px;">Nomad Explorer</p>
     </section>
-    <section class="mb-12">
-      <div class="glass glass-border rounded-[24px] p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+    <section style="margin-bottom:32px;">
+      <div class="glass" style="border-radius:20px; padding:24px; display:flex; justify-content:space-between; align-items:center;">
         <div>
-          <p class="text-secondary font-label text-[10px] tracking-widest uppercase mb-1">Account Tier</p>
-          <h3 class="font-headline text-xl flex items-center gap-2">Membership: Free <span class="material-symbols-outlined text-accent text-sm">info</span></h3>
+          <p class="type-meta" style="margin-bottom:4px;">Account Tier</p>
+          <p class="type-label" style="color:var(--text-primary);">Free Membership</p>
         </div>
-        <button onclick="openModal('modal-premium')" class="bg-accent text-white px-8 py-3 font-label text-xs font-semibold tracking-widest uppercase hover:opacity-90 transition-opacity active:scale-[0.98] rounded-full glow-accent">
-          Join Premium
-        </button>
+        <button onclick="openModal('modal-premium')" class="btn-accent" style="padding:10px 24px; font-size:10px;">Premium</button>
       </div>
     </section>
-    <section class="mb-16">
-      <div class="space-y-0">
-        <div class="flex justify-between items-center py-4 border-b-[0.5px] border-outline-variant/20 group">
-          <div class="flex-1"><span class="block text-secondary font-label text-[10px] tracking-widest uppercase mb-1">Full Name</span><input id="profile-fullname" type="text" value="Explorer" class="w-full bg-transparent border-x-0 border-t-0 border-b border-transparent p-0 text-on-surface font-body text-sm focus:ring-0 focus:border-primary focus:outline-none transition-colors" /></div>
-          <span class="material-symbols-outlined text-outline-variant text-sm cursor-pointer group-hover:text-primary transition-colors">edit</span>
-        </div>
-        <div class="flex justify-between items-center py-4 border-b-[0.5px] border-outline-variant/20 group">
-          <div class="flex-1"><span class="block text-secondary font-label text-[10px] tracking-widest uppercase mb-1">Email Address</span><input type="email" placeholder="Add email" class="w-full bg-transparent border-x-0 border-t-0 border-b border-transparent p-0 text-on-surface font-body text-sm focus:ring-0 focus:border-primary focus:outline-none transition-colors" /></div>
-          <span class="material-symbols-outlined text-outline-variant text-sm cursor-pointer group-hover:text-primary transition-colors">mail</span>
-        </div>
-        <div class="flex justify-between items-center py-4 border-b-[0.5px] border-outline-variant/20 group">
-          <div class="flex-1"><span class="block text-secondary font-label text-[10px] tracking-widest uppercase mb-1">Date of Birth</span><input type="date" class="w-full bg-transparent border-x-0 border-t-0 border-b border-transparent p-0 text-secondary font-body text-sm focus:ring-0 focus:border-primary focus:outline-none transition-colors" /></div>
-          <span class="material-symbols-outlined text-outline-variant text-sm cursor-pointer group-hover:text-primary transition-colors">calendar_today</span>
-        </div>
-        <div class="flex justify-between items-center py-4 border-b-[0.5px] border-outline-variant/20 group">
-          <div class="flex-1"><span class="block text-secondary font-label text-[10px] tracking-widest uppercase mb-1">Password</span><input id="profile-password" type="password" placeholder="New password" class="w-full bg-transparent border-x-0 border-t-0 border-b border-transparent p-0 text-on-surface font-body text-sm focus:ring-0 focus:border-primary focus:outline-none transition-colors tracking-widest" /></div>
-          <span class="material-symbols-outlined text-outline-variant text-sm cursor-pointer group-hover:text-primary transition-colors">lock</span>
-        </div>
-        <div class="flex justify-between items-center py-4 border-b-[0.5px] border-outline-variant/20 group">
-          <div class="flex-1"><span class="block text-secondary font-label text-[10px] tracking-widest uppercase mb-1">Confirm Password</span><input id="profile-password-confirm" type="password" placeholder="Repeat password" class="w-full bg-transparent border-x-0 border-t-0 border-b border-transparent p-0 text-on-surface font-body text-sm focus:ring-0 focus:border-primary focus:outline-none transition-colors tracking-widest" /></div>
-          <span class="material-symbols-outlined text-outline-variant text-sm cursor-pointer group-hover:text-primary transition-colors">lock</span>
-        </div>
-      </div>
-      <button id="btn-save-profile" class="w-full mt-6 bg-accent text-white px-8 py-3.5 font-label text-xs font-semibold tracking-widest uppercase active:scale-[0.97] transition-transform hover:opacity-90 rounded-full glow-accent">
-        Save Changes
-      </button>
+    <section style="margin-bottom:32px;">
+      <div style="padding:16px 0; border-bottom:0.5px solid var(--border-glass);"><span class="type-meta" style="display:block; margin-bottom:6px;">Full Name</span><input id="profile-fullname" type="text" value="Explorer"/></div>
+      <div style="padding:16px 0; border-bottom:0.5px solid var(--border-glass);"><span class="type-meta" style="display:block; margin-bottom:6px;">Email Address</span><input type="email" placeholder="Add email"/></div>
+      <div style="padding:16px 0; border-bottom:0.5px solid var(--border-glass);"><span class="type-meta" style="display:block; margin-bottom:6px;">Date of Birth</span><input type="date"/></div>
+      <div style="padding:16px 0; border-bottom:0.5px solid var(--border-glass);"><span class="type-meta" style="display:block; margin-bottom:6px;">Password</span><input id="profile-password" type="password" placeholder="New password"/></div>
+      <div style="padding:16px 0; border-bottom:0.5px solid var(--border-glass);"><span class="type-meta" style="display:block; margin-bottom:6px;">Confirm Password</span><input id="profile-password-confirm" type="password" placeholder="Repeat password"/></div>
+      <button id="btn-save-profile" class="btn-accent" style="width:100%; padding:14px; margin-top:20px;">Save Changes</button>
     </section>
-    <!-- Saved Places Gate -->
-    <section class="mb-12 relative">
-      <div class="flex items-baseline justify-between mb-6">
-        <h3 class="font-serif text-2xl text-on-surface">Saved Places</h3>
-        <span class="text-secondary font-label text-[10px] tracking-widest uppercase">View All</span>
-      </div>
-      <div class="relative">
-        <div class="flex overflow-x-auto gap-6 pb-8 hide-scrollbar snap-x filter blur-md pointer-events-none opacity-40 select-none">
-          <div class="min-w-[260px] snap-start group">
-            <div class="aspect-[4/5] bg-surface-container-low mb-4 overflow-hidden">
-              <img alt="Kyoto" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmHGZeXsqiNDNSPnXv5v6eb8f7UkfQeDYxLZXvHPjHS1e_w9sOdUGvhCJLGNBT1eNA6Umsr6QU0vTPGrL2RN6Ztuk2C0IPJMmUispnlU7Wy7uCbj1oHtiBt2kzgs1OyU_hUIxFnxU3ekXm48390ROEe0iR_PF9VrwS2LcWoNYGCialDLgvg-Xdh492FB194wREX9M3J4w5ywULqdpmQBCFx3lDS7R1eDhGGhjS31acOHbZ-j8qM1Wsa5PLJvCHqPI7edT-oU8pMBk"/>
-            </div>
-            <div class="px-1"><span class="text-secondary font-label text-[9px] tracking-widest uppercase">35.0116° N, 135.7681° E</span><h4 class="font-headline text-lg mt-1">Gion District</h4></div>
-          </div>
-          <div class="min-w-[260px] snap-start group">
-            <div class="aspect-[4/5] bg-surface-container-low mb-4 overflow-hidden">
-              <img alt="Taj Mahal" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjV-sEslIcXBFhgDlXK8o73LnhAW8_pu4Ne00IrYeZaanv1nbGfWOKYYP8EhqwX6Uzjvwahkj9CS8dgumnfAKti0pdb0N8XNEu6neh5EBtT6XdlrDBnYF9L1qCT_ptAiiD-SXKRSdY_BjbRQyQRTXTpA7QJCte90bHYmk_QMHCMED0xgnStzEZ92aOeLE7rwq6ODxk7KfSJL4b6elmaZMj4gq0StaY_NV5HN39k8wDvyFYj60iis2EzfIDF2cskYeUdnajbpWDkk0"/>
-            </div>
-            <div class="px-1"><span class="text-secondary font-label text-[9px] tracking-widest uppercase">27.1751° N, 78.0421° E</span><h4 class="font-headline text-lg mt-1">The Ivory Tomb</h4></div>
-          </div>
-        </div>
-        <!-- Locked Overlay -->
-        <div class="absolute inset-0 flex items-center justify-center -translate-y-4">
-          <div class="text-center group cursor-pointer" onclick="openModal('modal-premium')">
-            <div class="inline-flex items-center justify-center w-16 h-16 rounded-full border border-accent text-accent mb-4 transition-transform group-hover:scale-110 bg-surface/50 backdrop-blur-sm">
-              <span class="material-symbols-outlined text-3xl">lock</span>
-            </div>
-            <p class="font-serif-title text-xl text-on-surface">Premium Feature</p>
-            <p class="text-[10px] uppercase tracking-widest text-secondary mt-2 border-b border-secondary/30 inline-block pb-0.5 group-hover:text-accent transition-colors">Upgrade to unlock Saves</p>
-          </div>
-        </div>
-      </div>
-    </section>
-    <section class="mb-24 flex flex-col items-center text-center gap-4">
-      <p class="text-secondary font-body text-sm max-w-[300px]">Customize your data preferences or deactivate your account at any time.</p>
-      <button onclick="openModal('modal-settings')" class="text-secondary border-b border-outline-variant/30 font-label text-[10px] tracking-[0.2em] uppercase py-1 hover:text-primary transition-colors">
-        Privacy Settings
-      </button>
+    <section style="text-align:center; margin-bottom:48px;">
+      <p class="type-body" style="margin-bottom:12px;">Customize your data preferences at any time.</p>
+      <button onclick="openModal('modal-settings')" class="type-label" style="background:none; border:none; cursor:pointer; color:var(--accent); text-decoration:underline;">Privacy Settings</button>
     </section>
   </main>
 </section>
 
 <!-- ============================================================ -->
-<!-- SHARED BOTTOM NAV — Floating Glass Dock -->
+<!-- BOTTOM NAV -->
 <!-- ============================================================ -->
-<nav id="bottom-nav" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[150] flex justify-around items-center h-16 px-6 glass-strong glass-border rounded-full shadow-[0_8px_32px_rgba(0,0,0,0.08)] w-[280px]">
-  <button onclick="switchTab('tab-explore')" data-tab="tab-explore" class="nav-btn relative flex flex-col items-center justify-center text-accent active:translate-y-[-2px] duration-300 transition-all">
-    <span class="absolute inset-0 bg-accent/15 rounded-full"></span>
-    <span class="material-symbols-outlined relative z-10" style="font-variation-settings:'FILL' 1;">explore</span>
-  </button>
-  <button onclick="switchTab('tab-history')" data-tab="tab-history" class="nav-btn relative flex flex-col items-center justify-center text-[#5F5E5E] hover:text-accent transition-colors opacity-70">
-    <span class="material-symbols-outlined relative z-10">history</span>
-  </button>
-  <button onclick="switchTab('tab-profile')" data-tab="tab-profile" class="nav-btn relative flex flex-col items-center justify-center text-[#5F5E5E] hover:text-accent transition-colors opacity-70">
-    <span class="material-symbols-outlined relative z-10">person</span>
-  </button>
+<nav class="glass depth-float" style="position:fixed; bottom:24px; left:50%; transform:translateX(-50%); z-index:150; display:flex; justify-content:space-around; align-items:center; height:56px; width:240px; border-radius:9999px;">
+  <button onclick="switchTab('tab-explore')" data-tab="tab-explore" class="nav-btn active"><span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">explore</span></button>
+  <button onclick="switchTab('tab-history')" data-tab="tab-history" class="nav-btn"><span class="material-symbols-outlined">history</span></button>
+  <button onclick="switchTab('tab-profile')" data-tab="tab-profile" class="nav-btn"><span class="material-symbols-outlined">person</span></button>
 </nav>
 
 <!-- ============================================================ -->
-<!-- MODAL: SETTINGS (settings_updated_colors) -->
+<!-- MODAL: SETTINGS -->
 <!-- ============================================================ -->
 <div id="modal-settings" class="modal-slide">
-  <header class="fixed top-0 w-full flex justify-between items-center px-6 h-16 z-50 glass-strong glass-border" style="border-radius:0 0 20px 20px;">
-    <div class="flex items-center gap-4">
-      <button class="text-[#5F5E5E] active:scale-95 duration-200" onclick="closeModal('modal-settings')">
-        <span class="material-symbols-outlined">arrow_back</span>
-      </button>
-      <h1 class="font-serif italic text-2xl text-[#1A1C1C]">Settings</h1>
+  <header class="glass" style="position:fixed; top:0; width:100%; z-index:50; border-radius:0 0 20px 20px; padding:0 24px; height:60px; display:flex; align-items:center; justify-content:space-between;">
+    <div style="display:flex; align-items:center; gap:12px;">
+      <button style="background:none; border:none; cursor:pointer; color:var(--text-secondary);" onclick="closeModal('modal-settings')"><span class="material-symbols-outlined">arrow_back</span></button>
+      <span class="type-title" style="font-size:1.3rem;">Settings</span>
     </div>
-    <span class="material-symbols-outlined text-accent cursor-pointer">notifications</span>
   </header>
-  <main class="pt-24 pb-32 px-6 max-w-2xl mx-auto">
-    <section class="mb-12 flex items-end justify-between">
-      <div>
-        <p class="text-[10px] tracking-[0.2em] uppercase text-secondary font-medium mb-2">User Profile</p>
-        <h2 class="text-4xl font-serif-editorial leading-none">Explorer</h2>
+  <main style="padding:80px 24px 128px; max-width:560px; margin:0 auto;">
+    <section style="margin-bottom:40px;"><p class="type-meta" style="margin-bottom:8px;">User Profile</p><h2 class="type-display" style="font-size:2rem;">Explorer</h2></section>
+    <section style="margin-bottom:32px;">
+      <h3 class="type-title" style="font-size:1.3rem; padding-bottom:8px; border-bottom:0.5px solid var(--border-glass); margin-bottom:20px;">Membership</h3>
+      <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:12px;"><span class="type-meta">Status</span><span class="type-label" style="color:var(--accent);">Free</span></div>
+      <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:16px;"><span class="type-meta">Next Bill</span><span class="type-body" style="font-size:13px;">N/A</span></div>
+      <div style="display:flex; gap:12px;">
+        <button onclick="openModal('modal-premium')" class="btn-accent" style="padding:10px 20px; font-size:10px;">Manage</button>
+        <button onclick="showToast('You are on the Free plan.')" class="btn-ghost" style="padding:10px 20px; font-size:10px;">Cancel</button>
       </div>
     </section>
-    <section class="mb-10">
-      <h3 class="text-2xl font-serif-editorial border-b-[0.5px] border-outline-variant/20 pb-2 mb-6">Membership</h3>
-      <div class="space-y-6">
-        <div class="flex justify-between items-baseline">
-          <span class="text-xs tracking-widest uppercase text-secondary">Status</span>
-          <span class="text-primary font-semibold italic font-serif text-lg">Free</span>
-        </div>
-        <div class="flex justify-between items-baseline">
-          <span class="text-xs tracking-widest uppercase text-secondary">Next Bill Info</span>
-          <span class="text-sm font-body">N/A — Not subscribed</span>
-        </div>
-        <div class="pt-4 flex gap-4">
-          <button onclick="openModal('modal-premium')" class="px-6 py-3 bg-accent text-white text-xs font-bold tracking-widest uppercase hover:opacity-90 transition-all rounded-full glow-accent">Manage Subscription</button>
-          <button onclick="showToast('You are on the Free Membership. No cancellation required.')" class="px-6 py-3 border text-xs font-bold tracking-widest uppercase transition-all border-on-surface text-on-surface hover:bg-on-surface/5">Cancel Membership</button>
+    <section style="margin-bottom:32px;">
+      <h3 class="type-title" style="font-size:1.3rem; padding-bottom:8px; border-bottom:0.5px solid var(--border-glass); margin-bottom:20px;">App Preferences</h3>
+      <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 0;">
+        <div><span class="type-label" style="display:block; color:var(--text-primary); margin-bottom:2px;">Distance Units</span><span class="type-meta">Affects map and navigation</span></div>
+        <div class="glass" style="display:flex; border-radius:9999px; overflow:hidden;">
+          <button data-unit="meters" class="unit-toggle-btn" style="padding:8px 16px; font-size:10px; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; border:none; cursor:pointer; background:var(--accent); color:#fff;">Meters</button>
+          <button data-unit="feet" class="unit-toggle-btn" style="padding:8px 16px; font-size:10px; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; border:none; cursor:pointer; background:transparent; color:var(--text-secondary);">Feet</button>
         </div>
       </div>
-    </section>
-    <!-- App Preferences -->
-    <section class="mb-10">
-      <h3 class="text-2xl font-serif-editorial border-b-[0.5px] border-outline-variant/20 pb-2 mb-6">App Preferences</h3>
-      <div class="flex justify-between items-center py-4">
-        <div>
-          <span class="block text-sm font-medium">Distance Units</span>
-          <span class="text-[10px] text-secondary uppercase tracking-tighter">Affects map and navigation</span>
-        </div>
-        <div class="flex glass glass-border rounded-full overflow-hidden">
-          <button data-unit="meters" class="unit-toggle-btn px-4 py-2 text-[10px] font-bold tracking-widest uppercase bg-accent text-white">Meters</button>
-          <button data-unit="feet" class="unit-toggle-btn px-4 py-2 text-[10px] font-bold tracking-widest uppercase text-secondary hover:bg-white/40 transition-colors">Feet</button>
-        </div>
-      </div>
-      <!-- Theme Toggle -->
-      <div class="flex justify-between items-center py-4 border-t border-outline-variant/20">
-        <div>
-          <span class="block text-sm font-medium">Appearance</span>
-          <span class="text-[10px] text-secondary uppercase tracking-tighter">Silver or Midnight theme</span>
-        </div>
-        <div class="flex glass glass-border rounded-full overflow-hidden">
-          <button data-theme="light" class="theme-toggle-btn px-4 py-2 text-[10px] font-bold tracking-widest uppercase bg-accent text-white">Light</button>
-          <button data-theme="dark" class="theme-toggle-btn px-4 py-2 text-[10px] font-bold tracking-widest uppercase text-secondary hover:bg-white/40 transition-colors">Dark</button>
+      <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 0; border-top:0.5px solid var(--border-glass);">
+        <div><span class="type-label" style="display:block; color:var(--text-primary); margin-bottom:2px;">Appearance</span><span class="type-meta">Silver or Midnight theme</span></div>
+        <div class="glass" style="display:flex; border-radius:9999px; overflow:hidden;">
+          <button data-theme="light" class="theme-toggle-btn" style="padding:8px 16px; font-size:10px; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; border:none; cursor:pointer; background:transparent; color:var(--text-secondary);">Light</button>
+          <button data-theme="dark" class="theme-toggle-btn" style="padding:8px 16px; font-size:10px; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; border:none; cursor:pointer; background:var(--accent); color:#fff;">Dark</button>
         </div>
       </div>
     </section>
-    <section class="mb-10">
-      <h3 class="text-2xl font-serif-editorial border-b-[0.5px] border-outline-variant/20 pb-2 mb-4">Legal & Support</h3>
-      <ul class="divide-y divide-outline-variant/20">
-        <li><a class="flex justify-between items-center py-4 group cursor-pointer" onclick="openModal('modal-help')"><span class="text-sm group-hover:pl-2 transition-all duration-300">Help Center</span><span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">arrow_outward</span></a></li>
-        <li><a class="flex justify-between items-center py-4 group cursor-pointer" onclick="openModal('modal-terms')"><span class="text-sm group-hover:pl-2 transition-all duration-300">Terms & Conditions</span><span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">arrow_outward</span></a></li>
-        <li><a class="flex justify-between items-center py-4 group cursor-pointer" onclick="openModal('modal-privacy')"><span class="text-sm group-hover:pl-2 transition-all duration-300">Privacy Policy</span><span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">arrow_outward</span></a></li>
-        <li><a class="flex justify-between items-center py-4 group cursor-pointer" onclick="openModal('modal-safety')"><span class="text-sm group-hover:pl-2 transition-all duration-300">Safety & Responsibility</span><span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">arrow_outward</span></a></li>
-      </ul>
+    <section style="margin-bottom:32px;">
+      <h3 class="type-title" style="font-size:1.3rem; padding-bottom:8px; border-bottom:0.5px solid var(--border-glass); margin-bottom:16px;">Legal & Support</h3>
+      <div style="padding:12px 0; border-bottom:0.5px solid var(--border-glass); cursor:pointer;" onclick="openModal('modal-help')"><span class="type-body" style="color:var(--text-primary);">Help Center</span></div>
+      <div style="padding:12px 0; border-bottom:0.5px solid var(--border-glass); cursor:pointer;" onclick="openModal('modal-terms')"><span class="type-body" style="color:var(--text-primary);">Terms & Conditions</span></div>
+      <div style="padding:12px 0; border-bottom:0.5px solid var(--border-glass); cursor:pointer;" onclick="openModal('modal-privacy')"><span class="type-body" style="color:var(--text-primary);">Privacy Policy</span></div>
+      <div style="padding:12px 0; border-bottom:0.5px solid var(--border-glass); cursor:pointer;" onclick="openModal('modal-safety')"><span class="type-body" style="color:var(--text-primary);">Safety & Responsibility</span></div>
     </section>
-    <!-- Account Actions -->
-    <section class="mb-16">
-      <div class="py-4">
-        <button onclick="window.location.reload()" class="text-sm text-secondary font-medium underline underline-offset-4 decoration-outline-variant hover:text-on-surface transition-colors">Log out</button>
-      </div>
-    </section>
-    <section class="bg-surface-container-low p-8 border-l-4 border-error/30">
-      <h3 class="text-xl font-serif-editorial text-error mb-4">Danger Zone</h3>
-      <p class="text-xs text-secondary mb-6 leading-relaxed">Actions performed in this area are irreversible. Your data and account history will be purged from our servers immediately.</p>
-      <div class="flex flex-col gap-4 items-start">
-        <button onclick="if(confirm('Are you absolutely sure you want to delete your account? This cannot be undone.')) { showToast('Account deletion initiated. You will be logged out.'); setTimeout(() => location.reload(), 2500); }" class="text-xs font-bold tracking-widest uppercase text-error hover:underline transition-all">Delete my account</button>
-        <button onclick="if(confirm('Warning: This will clear all your history and saved places locally.')) { showToast('Local data purged successfully.'); state.history = []; state.savedPlaces = []; renderHistory(); }" class="text-xs font-bold tracking-widest uppercase text-error hover:underline transition-all">Delete my data</button>
-      </div>
+    <section style="margin-bottom:32px;"><button onclick="window.location.reload()" style="background:none; border:none; cursor:pointer; color:var(--text-secondary); text-decoration:underline; font-size:13px; display:block;">Log out</button></section>
+    <section class="glass" style="padding:24px; border-radius:16px; border-left:3px solid #FF4444;">
+      <p class="type-label" style="color:#FF4444; margin-bottom:12px;">Danger Zone</p>
+      <p class="type-body" style="margin-bottom:16px; font-size:12px;">Actions here are irreversible.</p>
+      <button onclick="if(confirm('Delete account?')){showToast('Account deletion initiated.');setTimeout(()=>location.reload(),2500);}" style="background:none; border:none; cursor:pointer; color:#FF4444; font-size:10px; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; display:block; margin-bottom:8px;">Delete my account</button>
+      <button onclick="if(confirm('Clear all data?')){showToast('Data purged.');state.history=[];state.savedPlaces=[];renderHistory();}" style="background:none; border:none; cursor:pointer; color:#FF4444; font-size:10px; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; display:block;">Delete my data</button>
     </section>
   </main>
 </div>
 
 <!-- ============================================================ -->
-<!-- MODAL: SAFETY (safety_responsibility) -->
+<!-- MODAL: SAFETY -->
 <!-- ============================================================ -->
 <div id="modal-safety" class="modal-slide">
-  <header class="sticky top-0 w-full z-50 glass-strong glass-border" style="border-radius:0 0 20px 20px;">
-    <div class="flex items-center px-6 h-16 w-full max-w-7xl mx-auto justify-between">
-      <div class="flex items-center gap-4">
-        <button class="active:scale-95 transition-transform text-accent" onclick="closeModal('modal-safety')">
-          <span class="material-symbols-outlined">arrow_back</span>
-        </button>
-        <h1 class="font-['Noto_Serif'] font-normal tracking-tight text-[#1A1C1C] text-lg">Safety & Responsibility</h1>
-      </div>
-      <div class="text-xl font-serif text-[#1A1C1C] italic">W.</div>
-    </div>
+  <header class="glass" style="position:sticky; top:0; z-index:50; border-radius:0 0 20px 20px; padding:0 24px; height:60px; display:flex; align-items:center; gap:12px;">
+    <button style="background:none; border:none; cursor:pointer; color:var(--accent);" onclick="closeModal('modal-safety')"><span class="material-symbols-outlined">arrow_back</span></button>
+    <span class="type-label" style="color:var(--text-primary);">Safety & Responsibility</span>
   </header>
-  <main class="pt-8 pb-32 px-[10%]">
-    <section class="mb-4">
-      <span class="font-label text-[10px] uppercase tracking-[0.2em] text-primary mb-2 block">Protocol 01</span>
-      <h2 class="font-serif-title text-5xl leading-tight text-on-surface mb-4">The Digital Curator's Liability.</h2>
-      <p class="text-[10px] uppercase tracking-widest text-outline mb-8">Last Updated: March 27, 2026</p>
-      <p class="font-serif italic text-secondary leading-relaxed text-lg">Wanderlost is a discovery interface, not a travel guide. We provide data-driven recommendations based on public information. You are responsible for your own journey.</p>
-    </section>
-
-    <section class="mb-12 mt-12">
-      <h3 class="font-serif-title text-3xl text-on-surface mb-1">Self-Preservation</h3>
-      <span class="font-label text-[10px] uppercase tracking-[0.2em] text-primary mb-6 block">Section 01</span>
-      <div class="space-y-6">
-        <div>
-          <h4 class="font-headline text-sm font-bold mb-1">Environmental Intelligence</h4>
-          <p class="text-sm text-secondary leading-relaxed">Assess the environment upon arrival. If it feels wrong, leave.</p>
-        </div>
-        <div>
-          <h4 class="font-headline text-sm font-bold mb-1">Tactical Awareness</h4>
-          <p class="text-sm text-secondary leading-relaxed">Emergency Readiness: Always identify your closest exit or transit point.</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="mb-12">
-      <h3 class="font-serif-title text-3xl text-on-surface mb-1">Self-Responsibility</h3>
-      <span class="font-label text-[10px] uppercase tracking-[0.2em] text-primary mb-6 block">Section 02</span>
-      <div class="space-y-6">
-        <div>
-          <h4 class="font-headline text-sm font-bold mb-1">No Agency</h4>
-          <p class="text-sm text-secondary leading-relaxed">Wanderlost does not act as an agent, guide, or insurer.</p>
-        </div>
-        <div>
-          <h4 class="font-headline text-sm font-bold mb-1">Private Property</h4>
-          <p class="text-sm text-secondary leading-relaxed">Never trespass. If a location is restricted, do not enter.</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="mb-12">
-      <h3 class="font-serif-title text-3xl text-on-surface mb-1">Disclaimer of Liability</h3>
-      <span class="font-label text-[10px] uppercase tracking-[0.2em] text-primary mb-6 block">Section 03</span>
-      <div class="bg-surface-container-low p-6 border-l-2 border-error/50">
-        <p class="text-sm text-secondary leading-relaxed">By using Wanderlost, you acknowledge that all travel is undertaken at your own risk. Safety is a personal coordinate.</p>
-      </div>
-    </section>
-
-    <div class="text-center mt-16 mb-8 pt-8 border-t border-outline-variant/20">
-      <p class="text-[13px] text-secondary">Please also review our <button onclick="openModal('modal-terms');closeModal('modal-safety');" class="text-on-surface underline decoration-outline-variant hover:text-primary transition-colors">Terms &amp; Conditions</button></p>
-    </div>
-    <div class="text-center mb-8">
-      <p class="text-sm text-secondary mb-2">Have questions about your safety?</p>
-      <button onclick="window.location.href='mailto:support@wanderlost.com'" class="text-primary font-serif italic text-lg border-b border-primary/30 hover:border-primary transition-colors">Contact the Curator</button>
-    </div>
+  <main style="padding:32px 10%; max-width:640px; margin:0 auto; padding-bottom:128px;">
+    <p class="type-meta" style="margin-bottom:8px; color:var(--accent);">Protocol 01</p>
+    <h2 class="type-display" style="font-size:2.2rem; margin-bottom:12px;">The Digital Curator's Liability.</h2>
+    <p class="type-meta" style="margin-bottom:24px;">Last Updated: March 27, 2026</p>
+    <p class="type-body" style="font-size:15px; font-style:italic; margin-bottom:32px;">Wanderlost is a discovery interface, not a travel guide. You are responsible for your own journey.</p>
+    <h3 class="type-title" style="font-size:1.3rem; margin-bottom:6px;">Self-Preservation</h3>
+    <p class="type-meta" style="margin-bottom:16px; color:var(--accent);">Section 01</p>
+    <div style="margin-bottom:24px;"><p class="type-label" style="color:var(--text-primary); margin-bottom:4px;">Environmental Intelligence</p><p class="type-body">Assess the environment upon arrival. If it feels wrong, leave.</p></div>
+    <div style="margin-bottom:32px;"><p class="type-label" style="color:var(--text-primary); margin-bottom:4px;">Tactical Awareness</p><p class="type-body">Always identify your closest exit or transit point.</p></div>
+    <h3 class="type-title" style="font-size:1.3rem; margin-bottom:6px;">Self-Responsibility</h3>
+    <p class="type-meta" style="margin-bottom:16px; color:var(--accent);">Section 02</p>
+    <div style="margin-bottom:24px;"><p class="type-label" style="color:var(--text-primary); margin-bottom:4px;">No Agency</p><p class="type-body">Wanderlost does not act as an agent, guide, or insurer.</p></div>
+    <div style="margin-bottom:32px;"><p class="type-label" style="color:var(--text-primary); margin-bottom:4px;">Private Property</p><p class="type-body">Never trespass. If a location is restricted, do not enter.</p></div>
+    <h3 class="type-title" style="font-size:1.3rem; margin-bottom:6px;">Disclaimer</h3>
+    <p class="type-meta" style="margin-bottom:16px; color:var(--accent);">Section 03</p>
+    <div class="glass" style="padding:20px; border-radius:12px; border-left:2px solid #FF4444;"><p class="type-body">By using Wanderlost, you acknowledge that all travel is undertaken at your own risk.</p></div>
   </main>
 </div>
 
 <!-- ============================================================ -->
-<!-- MODAL: PRIVACY POLICY (from screenshot) -->
+<!-- MODAL: PRIVACY -->
 <!-- ============================================================ -->
 <div id="modal-privacy" class="modal-slide">
-  <header class="sticky top-0 w-full z-50 glass-strong glass-border" style="border-radius:0 0 20px 20px;">
-    <div class="flex items-center px-6 h-16 w-full max-w-7xl mx-auto justify-between">
-      <div class="flex items-center gap-4">
-        <button class="active:scale-95 transition-transform text-accent" onclick="closeModal('modal-privacy')">
-          <span class="material-symbols-outlined">arrow_back</span>
-        </button>
-        <h1 class="font-['Noto_Serif'] font-normal tracking-tight text-[#1A1C1C] text-lg">Privacy Policy</h1>
-      </div>
-      <div class="text-xl font-serif text-[#1A1C1C] italic">W.</div>
-    </div>
+  <header class="glass" style="position:sticky; top:0; z-index:50; border-radius:0 0 20px 20px; padding:0 24px; height:60px; display:flex; align-items:center; gap:12px;">
+    <button style="background:none; border:none; cursor:pointer; color:var(--accent);" onclick="closeModal('modal-privacy')"><span class="material-symbols-outlined">arrow_back</span></button>
+    <span class="type-label" style="color:var(--text-primary);">Privacy Policy</span>
   </header>
-  <main class="pt-8 pb-32 px-[10%]">
-    <section class="mb-4">
-      <span class="font-label text-[10px] uppercase tracking-[0.2em] text-primary mb-2 block">Legal & Privacy</span>
-      <h2 class="font-serif-title text-5xl leading-tight text-on-surface mb-4">Respecting the Digital Horizon.</h2>
-      <p class="text-[10px] uppercase tracking-widest text-outline mb-8">Last Updated: March 27, 2026</p>
-      <p class="font-serif italic text-secondary leading-relaxed text-lg">At Wanderlost, your privacy is the bedrock of our exploration. We curate experiences, not personal data for profit. This document outlines our commitment to your digital sovereignty.</p>
-    </section>
-
-    <section class="mb-12 mt-12">
-      <h3 class="font-serif-title text-3xl text-on-surface mb-1">Data We Collect</h3>
-      <span class="font-label text-[10px] uppercase tracking-[0.2em] text-primary mb-6 block">Section 01</span>
-      <div class="space-y-6">
-        <div><h4 class="font-headline text-sm font-bold mb-1">Precise Location Data</h4><p class="text-sm text-secondary leading-relaxed">Required for real-time navigation and the Neural Map functionality. We only track location when the app is active or in background-tracking mode.</p></div>
-        <div><h4 class="font-headline text-sm font-bold mb-1">Account Information</h4><p class="text-sm text-secondary leading-relaxed">Name, email address, and verified credentials used to synchronize your Journal across devices.</p></div>
-        <div><h4 class="font-headline text-sm font-bold mb-1">Usage Data & Identifiers</h4><p class="text-sm text-secondary leading-relaxed">Anonymous device identifiers and interaction logs to improve the fluidity of the Wanderlost interface.</p></div>
-      </div>
-    </section>
-
-    <section class="mb-12">
-      <h3 class="font-serif-title text-3xl text-on-surface mb-1">Data Utilization</h3>
-      <span class="font-label text-[10px] uppercase tracking-[0.2em] text-primary mb-6 block">Section 02</span>
-      <div class="bg-surface-container-low p-6 border-l-2 border-primary mb-6">
-        <h4 class="font-headline text-base font-bold mb-2">The Neural Map</h4>
-        <p class="text-sm text-secondary leading-relaxed">Your data fuels the "Neural Map"â€”our proprietary algorithmic curation that suggests hidden gems based on movement patterns rather than commercial influence.</p>
-      </div>
-    </section>
-
-    <section class="mb-12">
-      <h3 class="font-serif-title text-3xl text-on-surface mb-1">Third Party Ecosystem</h3>
-      <span class="font-label text-[10px] uppercase tracking-[0.2em] text-primary mb-6 block">Section 03</span>
-      <div class="space-y-4">
-        <div class="flex justify-between py-3 border-b border-outline-variant/20"><span class="text-sm">Map Services</span><span class="text-sm text-secondary">Google Maps SDK</span></div>
-        <div class="flex justify-between py-3 border-b border-outline-variant/20"><span class="text-sm">Payment Processors</span><span class="text-sm text-secondary">Stripe / Apple Pay</span></div>
-        <div class="flex justify-between py-3 border-b border-outline-variant/20"><span class="text-sm">Analytics</span><span class="text-sm text-secondary">In-house (Encrypted)</span></div>
-      </div>
-    </section>
-
-    <section class="mb-12">
-      <h3 class="font-serif-title text-3xl text-on-surface mb-1">Safety Disclaimer</h3>
-      <span class="font-label text-[10px] uppercase tracking-[0.2em] text-primary mb-6 block">Section 04</span>
-      <p class="text-sm text-secondary leading-relaxed">While our Neural Map provides curated navigation, data sources may occasionally vary due to atmospheric or signal interference. Wanderlost is a tool for exploration, not a substitute for personal judgment.</p>
-      <p class="text-xs uppercase tracking-widest text-on-surface font-bold mt-4">User responsibility is mandatory.</p>
-    </section>
-
-    <div class="text-center mt-16 mb-8 pt-8 border-t border-outline-variant/20">
-      <p class="text-[13px] text-secondary">Please also review our <button onclick="openModal('modal-terms');closeModal('modal-privacy');" class="text-on-surface underline decoration-outline-variant hover:text-primary transition-colors">Terms &amp; Conditions</button></p>
-    </div>
-    <div class="text-center mb-8">
-      <p class="text-sm text-secondary mb-2">Have questions about your digital footprint?</p>
-      <button onclick="window.location.href='mailto:support@wanderlost.com'" class="text-primary font-serif italic text-lg border-b border-primary/30 hover:border-primary transition-colors">Contact the Curator</button>
-    </div>
+  <main style="padding:32px 10%; max-width:640px; margin:0 auto; padding-bottom:128px;">
+    <p class="type-meta" style="margin-bottom:8px; color:var(--accent);">Legal & Privacy</p>
+    <h2 class="type-display" style="font-size:2.2rem; margin-bottom:12px;">Respecting the Digital Horizon.</h2>
+    <p class="type-meta" style="margin-bottom:24px;">Last Updated: March 27, 2026</p>
+    <p class="type-body" style="font-size:15px; font-style:italic; margin-bottom:32px;">Your privacy is the bedrock of our exploration.</p>
+    <h3 class="type-title" style="font-size:1.3rem; margin-bottom:6px;">Data We Collect</h3>
+    <p class="type-meta" style="margin-bottom:16px; color:var(--accent);">Section 01</p>
+    <div style="margin-bottom:24px;"><p class="type-label" style="color:var(--text-primary); margin-bottom:4px;">Location Data</p><p class="type-body">Required for navigation. Only tracked when active.</p></div>
+    <div style="margin-bottom:24px;"><p class="type-label" style="color:var(--text-primary); margin-bottom:4px;">Account Info</p><p class="type-body">Name and email to sync your Journal.</p></div>
+    <div style="margin-bottom:32px;"><p class="type-label" style="color:var(--text-primary); margin-bottom:4px;">Usage Data</p><p class="type-body">Anonymous identifiers to improve the interface.</p></div>
+    <h3 class="type-title" style="font-size:1.3rem; margin-bottom:6px;">Data Utilization</h3>
+    <p class="type-meta" style="margin-bottom:16px; color:var(--accent);">Section 02</p>
+    <div class="glass" style="padding:20px; border-radius:12px; border-left:2px solid var(--accent); margin-bottom:32px;"><p class="type-label" style="color:var(--text-primary); margin-bottom:4px;">The Neural Map</p><p class="type-body">Curation based on movement patterns, not commercial influence.</p></div>
+    <h3 class="type-title" style="font-size:1.3rem; margin-bottom:6px;">Third Parties</h3>
+    <p class="type-meta" style="margin-bottom:16px; color:var(--accent);">Section 03</p>
+    <div style="padding:12px 0; border-bottom:0.5px solid var(--border-glass); display:flex; justify-content:space-between;"><span class="type-body" style="color:var(--text-primary);">Maps</span><span class="type-body">Google Maps SDK</span></div>
+    <div style="padding:12px 0; border-bottom:0.5px solid var(--border-glass); display:flex; justify-content:space-between;"><span class="type-body" style="color:var(--text-primary);">Payments</span><span class="type-body">Stripe / Apple Pay</span></div>
+    <div style="padding:12px 0; border-bottom:0.5px solid var(--border-glass); display:flex; justify-content:space-between;"><span class="type-body" style="color:var(--text-primary);">Analytics</span><span class="type-body">In-house (Encrypted)</span></div>
   </main>
 </div>
 
 <!-- ============================================================ -->
-<!-- MODAL: TERMS & CONDITIONS -->
+<!-- MODAL: TERMS -->
 <!-- ============================================================ -->
 <div id="modal-terms" class="modal-slide">
-  <header class="sticky top-0 w-full z-50 glass-strong glass-border" style="border-radius:0 0 20px 20px;">
-    <div class="flex items-center px-6 h-16 w-full max-w-7xl mx-auto justify-between">
-      <div class="flex items-center gap-4">
-        <button class="active:scale-95 transition-transform text-accent" onclick="closeModal('modal-terms')">
-          <span class="material-symbols-outlined">arrow_back</span>
-        </button>
-        <h1 class="font-['Noto_Serif'] font-normal tracking-tight text-[#1A1C1C] text-lg">Terms &amp; Conditions</h1>
-      </div>
-      <div class="text-xl font-serif text-[#1A1C1C] italic">W.</div>
-    </div>
+  <header class="glass" style="position:sticky; top:0; z-index:50; border-radius:0 0 20px 20px; padding:0 24px; height:60px; display:flex; align-items:center; gap:12px;">
+    <button style="background:none; border:none; cursor:pointer; color:var(--accent);" onclick="closeModal('modal-terms')"><span class="material-symbols-outlined">arrow_back</span></button>
+    <span class="type-label" style="color:var(--text-primary);">Terms & Conditions</span>
   </header>
-  <main class="pt-8 pb-32 px-[10%]">
-    <section class="mb-4">
-      <span class="font-label text-[10px] uppercase tracking-[0.2em] text-primary mb-2 block">Legal Framework</span>
-      <h2 class="font-serif-title text-5xl leading-tight text-on-surface mb-4">Terms of Engagement.</h2>
-      <p class="text-[10px] uppercase tracking-widest text-outline mb-8">Last Updated: March 27, 2026</p>
-      <p class="font-serif italic text-secondary leading-relaxed text-lg">By accessing Wanderlost, you agree to be bound by these Terms of Service. Please read them carefully before using our discovery platform.</p>
-    </section>
-
-    <section class="mb-12 mt-12">
-      <h3 class="font-serif-title text-3xl text-on-surface mb-1">Acceptance of Terms</h3>
-      <span class="font-label text-[10px] uppercase tracking-[0.2em] text-primary mb-6 block">Section 01</span>
-      <div class="space-y-4">
-        <p class="text-sm text-secondary leading-relaxed">By downloading, installing, or using Wanderlost (the "Application"), you acknowledge that you have read, understood, and agree to be bound by these Terms and Conditions. If you do not agree, you must not use the Application.</p>
-        <p class="text-sm text-secondary leading-relaxed">These terms constitute a legally binding agreement between you ("User") and Wanderlost ("Company", "we", "us").</p>
-      </div>
-    </section>
-
-    <section class="mb-12">
-      <h3 class="font-serif-title text-3xl text-on-surface mb-1">Use of Service</h3>
-      <span class="font-label text-[10px] uppercase tracking-[0.2em] text-primary mb-6 block">Section 02</span>
-      <div class="space-y-6">
-        <div class="bg-surface-container-low p-6 border-l-2 border-primary">
-          <h4 class="font-headline text-base font-bold mb-2">Eligibility</h4>
-          <p class="text-sm text-secondary leading-relaxed">You must be at least 18 years old to use Wanderlost. By using the Application, you represent and warrant that you meet this requirement.</p>
-        </div>
-        <div>
-          <h4 class="font-headline text-sm font-bold mb-1">Account Responsibility</h4>
-          <p class="text-sm text-secondary leading-relaxed">You are responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account.</p>
-        </div>
-        <div>
-          <h4 class="font-headline text-sm font-bold mb-1">Prohibited Conduct</h4>
-          <p class="text-sm text-secondary leading-relaxed">You agree not to misuse the service, including but not limited to: reverse engineering the discovery algorithm, scraping location data, or using the application for any unlawful purpose.</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="mb-12">
-      <h3 class="font-serif-title text-3xl text-on-surface mb-1">Subscription &amp; Billing</h3>
-      <span class="font-label text-[10px] uppercase tracking-[0.2em] text-primary mb-6 block">Section 03</span>
-      <div class="space-y-4">
-        <div class="flex justify-between py-3 border-b border-outline-variant/20"><span class="text-sm">Free Tier</span><span class="text-sm text-secondary">3 discoveries per session</span></div>
-        <div class="flex justify-between py-3 border-b border-outline-variant/20"><span class="text-sm">Premium Monthly</span><span class="text-sm text-secondary">20 CHF / month</span></div>
-        <div class="flex justify-between py-3 border-b border-outline-variant/20"><span class="text-sm">Premium Annual</span><span class="text-sm text-secondary">200 CHF / year</span></div>
-        <div class="flex justify-between py-3 border-b border-outline-variant/20"><span class="text-sm">Cancellation</span><span class="text-sm text-secondary">Anytime, effective end of billing cycle</span></div>
-      </div>
-      <p class="text-sm text-secondary leading-relaxed mt-6">Subscriptions automatically renew unless cancelled at least 24 hours before the end of the current billing period. No refunds will be issued for partial billing periods.</p>
-    </section>
-
-    <section class="mb-12">
-      <h3 class="font-serif-title text-3xl text-on-surface mb-1">Limitation of Liability</h3>
-      <span class="font-label text-[10px] uppercase tracking-[0.2em] text-primary mb-6 block">Section 04</span>
-      <div class="bg-surface-container-low p-6 border-l-2 border-error/50">
-        <p class="text-sm text-secondary leading-relaxed">Wanderlost provides location-based recommendations "as is" without warranties of any kind. We are not liable for any damages, injuries, or losses arising from the use of our recommendations. <strong class="text-on-surface font-medium">All travel is undertaken at your own risk.</strong></p>
-      </div>
-    </section>
-
-    <section class="mb-12">
-      <h3 class="font-serif-title text-3xl text-on-surface mb-1">Intellectual Property</h3>
-      <span class="font-label text-[10px] uppercase tracking-[0.2em] text-primary mb-6 block">Section 05</span>
-      <p class="text-sm text-secondary leading-relaxed">All content, design, algorithms, and branding within Wanderlost are the exclusive property of the Company. You may not copy, modify, distribute, or create derivative works without prior written consent.</p>
-    </section>
-
-    <section class="mb-12">
-      <h3 class="font-serif-title text-3xl text-on-surface mb-1">Governing Law</h3>
-      <span class="font-label text-[10px] uppercase tracking-[0.2em] text-primary mb-6 block">Section 06</span>
-      <p class="text-sm text-secondary leading-relaxed">These Terms shall be governed by and construed in accordance with the laws of Switzerland. Any disputes arising from these Terms shall be subject to the exclusive jurisdiction of the courts of Zurich.</p>
-    </section>
-
-    <div class="text-center mt-16 mb-8 pt-8 border-t border-outline-variant/20">
-      <p class="text-[13px] text-secondary">Please also review our <button onclick="openModal('modal-privacy');closeModal('modal-terms');" class="text-on-surface underline decoration-outline-variant hover:text-primary transition-colors">Privacy Policy</button></p>
-    </div>
-    <div class="text-center mb-8">
-      <p class="text-sm text-secondary mb-2">Questions about our terms?</p>
-      <button onclick="window.location.href='mailto:support@wanderlost.com'" class="text-primary font-serif italic text-lg border-b border-primary/30 hover:border-primary transition-colors">Contact the Curator</button>
-    </div>
+  <main style="padding:32px 10%; max-width:640px; margin:0 auto; padding-bottom:128px;">
+    <p class="type-meta" style="margin-bottom:8px; color:var(--accent);">Legal Framework</p>
+    <h2 class="type-display" style="font-size:2.2rem; margin-bottom:12px;">Terms of Engagement.</h2>
+    <p class="type-meta" style="margin-bottom:24px;">Last Updated: March 27, 2026</p>
+    <p class="type-body" style="font-size:15px; font-style:italic; margin-bottom:32px;">By accessing Wanderlost, you agree to these Terms of Service.</p>
+    <h3 class="type-title" style="font-size:1.3rem; margin-bottom:6px;">Acceptance</h3>
+    <p class="type-meta" style="margin-bottom:16px; color:var(--accent);">Section 01</p>
+    <p class="type-body" style="margin-bottom:32px;">By using Wanderlost, you agree to these Terms. These constitute a binding agreement between you and Wanderlost.</p>
+    <h3 class="type-title" style="font-size:1.3rem; margin-bottom:6px;">Use of Service</h3>
+    <p class="type-meta" style="margin-bottom:16px; color:var(--accent);">Section 02</p>
+    <div class="glass" style="padding:20px; border-radius:12px; border-left:2px solid var(--accent); margin-bottom:16px;"><p class="type-label" style="color:var(--text-primary); margin-bottom:4px;">Eligibility</p><p class="type-body">You must be at least 18 years old.</p></div>
+    <div style="margin-bottom:24px;"><p class="type-label" style="color:var(--text-primary); margin-bottom:4px;">Account Responsibility</p><p class="type-body">You are responsible for all activity under your account.</p></div>
+    <div style="margin-bottom:32px;"><p class="type-label" style="color:var(--text-primary); margin-bottom:4px;">Prohibited Conduct</p><p class="type-body">No reverse engineering, scraping, or unlawful use.</p></div>
+    <h3 class="type-title" style="font-size:1.3rem; margin-bottom:6px;">Billing</h3>
+    <p class="type-meta" style="margin-bottom:16px; color:var(--accent);">Section 03</p>
+    <div style="padding:12px 0; border-bottom:0.5px solid var(--border-glass); display:flex; justify-content:space-between;"><span class="type-body" style="color:var(--text-primary);">Free Tier</span><span class="type-body">3 discoveries/session</span></div>
+    <div style="padding:12px 0; border-bottom:0.5px solid var(--border-glass); display:flex; justify-content:space-between;"><span class="type-body" style="color:var(--text-primary);">Monthly</span><span class="type-body">20 CHF/month</span></div>
+    <div style="padding:12px 0; border-bottom:0.5px solid var(--border-glass); display:flex; justify-content:space-between; margin-bottom:32px;"><span class="type-body" style="color:var(--text-primary);">Annual</span><span class="type-body">200 CHF/year</span></div>
+    <h3 class="type-title" style="font-size:1.3rem; margin-bottom:6px;">Liability</h3>
+    <p class="type-meta" style="margin-bottom:16px; color:var(--accent);">Section 04</p>
+    <div class="glass" style="padding:20px; border-radius:12px; border-left:2px solid #FF4444;"><p class="type-body">Recommendations are "as is." All travel is at your own risk.</p></div>
   </main>
 </div>
 
 <!-- ============================================================ -->
-<!-- MODAL: HELP CENTER -->
+<!-- MODAL: HELP -->
 <!-- ============================================================ -->
 <div id="modal-help" class="modal-slide">
-  <header class="sticky top-0 w-full z-50 glass-strong glass-border" style="border-radius:0 0 20px 20px;">
-    <div class="flex items-center px-6 h-16 w-full max-w-7xl mx-auto justify-between">
-      <div class="flex items-center gap-4">
-        <button class="active:scale-95 transition-transform text-accent" onclick="closeModal('modal-help')">
-          <span class="material-symbols-outlined">arrow_back</span>
-        </button>
-        <h1 class="font-['Noto_Serif'] font-normal tracking-tight text-[#1A1C1C] text-lg">Help Center</h1>
-      </div>
-      <div class="text-xl font-serif text-[#1A1C1C] italic">W.</div>
-    </div>
+  <header class="glass" style="position:sticky; top:0; z-index:50; border-radius:0 0 20px 20px; padding:0 24px; height:60px; display:flex; align-items:center; gap:12px;">
+    <button style="background:none; border:none; cursor:pointer; color:var(--accent);" onclick="closeModal('modal-help')"><span class="material-symbols-outlined">arrow_back</span></button>
+    <span class="type-label" style="color:var(--text-primary);">Help Center</span>
   </header>
-  <main class="pt-8 pb-32 px-[8%] max-w-3xl mx-auto">
-    <!-- Header -->
-    <section class="mb-8">
-      <span class="font-label text-[10px] uppercase tracking-[0.2em] text-primary mb-2 block">Support</span>
-      <h2 class="font-serif-title text-4xl leading-tight text-on-surface mb-6">How can we help?</h2>
+  <main style="padding:32px 8%; max-width:640px; margin:0 auto; padding-bottom:128px;">
+    <p class="type-meta" style="margin-bottom:8px; color:var(--accent);">Support</p>
+    <h2 class="type-display" style="font-size:2rem; margin-bottom:24px;">How can we help?</h2>
+    <div style="position:relative; margin-bottom:32px;">
+      <span class="material-symbols-outlined" style="position:absolute; left:16px; top:50%; transform:translateY(-50%); color:var(--text-tertiary);">search</span>
+      <input id="help-search" type="text" placeholder="Search for answers..." oninput="filterHelpItems(this.value)" style="padding:14px 16px 14px 48px; border-radius:9999px; border:0.5px solid var(--border-glass); background:var(--bg-glass);"/>
+    </div>
+    <section class="help-category" style="margin-bottom:32px;">
+      <h3 class="type-title" style="font-size:1.1rem; padding-bottom:8px; border-bottom:0.5px solid var(--border-glass); margin-bottom:0;">Getting Started</h3>
+      <div class="help-item"><button onclick="toggleHelpItem(this)" class="help-q" style="width:100%; display:flex; justify-content:space-between; align-items:center; padding:16px 0; background:none; border:none; cursor:pointer; text-align:left;"><span class="type-body" style="color:var(--text-primary);">How do discoveries work?</span><span class="material-symbols-outlined" style="color:var(--text-tertiary); font-size:18px;">chevron_right</span></button><div class="help-a hidden" style="padding-bottom:16px;"><p class="type-body">The "Discover" button reveals a hidden gem near you rated 4.8+.</p></div></div>
+      <div class="help-item"><button onclick="toggleHelpItem(this)" class="help-q" style="width:100%; display:flex; justify-content:space-between; align-items:center; padding:16px 0; background:none; border:none; cursor:pointer; text-align:left;"><span class="type-body" style="color:var(--text-primary);">Why only 3 free places?</span><span class="material-symbols-outlined" style="color:var(--text-tertiary); font-size:18px;">chevron_right</span></button><div class="help-a hidden" style="padding-bottom:16px;"><p class="type-body">Join Premium for unlimited discoveries.</p></div></div>
     </section>
-
-    <!-- Search Bar -->
-    <section class="mb-12">
-      <div class="relative">
-        <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline-variant text-xl">search</span>
-        <input id="help-search" type="text" placeholder="Search for answers..." oninput="filterHelpItems(this.value)" class="w-full pl-12 pr-6 py-4 border border-outline-variant/30 rounded-full bg-surface text-sm text-on-surface placeholder:text-outline-variant/60 font-body tracking-wide focus:outline-none focus:border-primary/50 transition-colors"/>
-      </div>
+    <section class="help-category" style="margin-bottom:32px;">
+      <h3 class="type-title" style="font-size:1.1rem; padding-bottom:8px; border-bottom:0.5px solid var(--border-glass); margin-bottom:0;">Account & Billing</h3>
+      <div class="help-item"><button onclick="toggleHelpItem(this)" class="help-q" style="width:100%; display:flex; justify-content:space-between; align-items:center; padding:16px 0; background:none; border:none; cursor:pointer; text-align:left;"><span class="type-body" style="color:var(--text-primary);">How to cancel subscription?</span><span class="material-symbols-outlined" style="color:var(--text-tertiary); font-size:18px;">chevron_right</span></button><div class="help-a hidden" style="padding-bottom:16px;"><p class="type-body">iOS: Settings > Apple ID > Subscriptions. Android: Google Play > Subscriptions.</p></div></div>
+      <div class="help-item"><button onclick="toggleHelpItem(this)" class="help-q" style="width:100%; display:flex; justify-content:space-between; align-items:center; padding:16px 0; background:none; border:none; cursor:pointer; text-align:left;"><span class="type-body" style="color:var(--text-primary);">How to delete my account?</span><span class="material-symbols-outlined" style="color:var(--text-tertiary); font-size:18px;">chevron_right</span></button><div class="help-a hidden" style="padding-bottom:16px;"><p class="type-body">Settings > Danger Zone > Delete my account.</p></div></div>
     </section>
-
-    <!-- Getting Started -->
-    <section class="help-category mb-10">
-      <h3 class="text-xl font-serif-editorial border-b-[0.5px] border-outline-variant/20 pb-2 mb-0">Getting Started</h3>
-      <div class="divide-y divide-outline-variant/10">
-        <div class="help-item">
-          <button onclick="toggleHelpItem(this)" class="help-q w-full flex justify-between items-center py-5 text-left group">
-            <span class="text-sm font-medium text-on-surface group-hover:text-primary transition-colors pr-4">How do &ldquo;Discoveries&rdquo; work?</span>
-            <span class="material-symbols-outlined text-outline-variant text-lg flex-shrink-0 transition-transform duration-300">chevron_right</span>
-          </button>
-          <div class="help-a hidden pb-6 pl-0 pr-8">
-            <p class="text-sm text-secondary leading-relaxed">The &ldquo;Discover Places&rdquo; button reveals one high-quality hidden gem near your current location. These are places with a 4.8+ rating and a high density of local reviews. Once you tap the button, a new pulsating dot appears on your map.</p>
-          </div>
-        </div>
-        <div class="help-item">
-          <button onclick="toggleHelpItem(this)" class="help-q w-full flex justify-between items-center py-5 text-left group">
-            <span class="text-sm font-medium text-on-surface group-hover:text-primary transition-colors pr-4">What are the pulsating dots on the map?</span>
-            <span class="material-symbols-outlined text-outline-variant text-lg flex-shrink-0 transition-transform duration-300">chevron_right</span>
-          </button>
-          <div class="help-a hidden pb-6 pl-0 pr-8">
-            <p class="text-sm text-secondary leading-relaxed">Each dot represents a &ldquo;Discovery.&rdquo; The color indicates the type of place (e.g., Food, Nature, or Culture). A pulsating dot means the place has been revealed but not yet visited or saved to your history.</p>
-          </div>
-        </div>
-        <div class="help-item">
-          <button onclick="toggleHelpItem(this)" class="help-q w-full flex justify-between items-center py-5 text-left group">
-            <span class="text-sm font-medium text-on-surface group-hover:text-primary transition-colors pr-4">Why can I only see 3 places for free?</span>
-            <span class="material-symbols-outlined text-outline-variant text-lg flex-shrink-0 transition-transform duration-300">chevron_right</span>
-          </button>
-          <div class="help-a hidden pb-6 pl-0 pr-8">
-            <p class="text-sm text-secondary leading-relaxed">Wanderlost is a niche tool designed for high-quality exploration. We offer the first 3 discoveries for free so you can experience the network. To unlock unlimited discoveries and advanced features, you can join our Premium membership.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Account & Profile -->
-    <section class="help-category mb-10">
-      <h3 class="text-xl font-serif-editorial border-b-[0.5px] border-outline-variant/20 pb-2 mb-0">Account &amp; Profile</h3>
-      <div class="divide-y divide-outline-variant/10">
-        <div class="help-item">
-          <button onclick="toggleHelpItem(this)" class="help-q w-full flex justify-between items-center py-5 text-left group">
-            <span class="text-sm font-medium text-on-surface group-hover:text-primary transition-colors pr-4">How do I change my profile picture?</span>
-            <span class="material-symbols-outlined text-outline-variant text-lg flex-shrink-0 transition-transform duration-300">chevron_right</span>
-          </button>
-          <div class="help-a hidden pb-6 pl-0 pr-8">
-            <p class="text-sm text-secondary leading-relaxed">Go to My Account, tap on your current profile picture (or the placeholder circle), and select &ldquo;Upload Picture.&rdquo; You can choose a photo from your library or take a new one.</p>
-          </div>
-        </div>
-        <div class="help-item">
-          <button onclick="toggleHelpItem(this)" class="help-q w-full flex justify-between items-center py-5 text-left group">
-            <span class="text-sm font-medium text-on-surface group-hover:text-primary transition-colors pr-4">How do I reset my password?</span>
-            <span class="material-symbols-outlined text-outline-variant text-lg flex-shrink-0 transition-transform duration-300">chevron_right</span>
-          </button>
-          <div class="help-a hidden pb-6 pl-0 pr-8">
-            <p class="text-sm text-secondary leading-relaxed">In the My Account section, tap on the &ldquo;Password&rdquo; field. You will be prompted to enter your current password and then set a new one. If you&rsquo;ve forgotten your password, use the &ldquo;Forgot Password&rdquo; link on the login screen to receive a reset email.</p>
-          </div>
-        </div>
-        <div class="help-item">
-          <button onclick="toggleHelpItem(this)" class="help-q w-full flex justify-between items-center py-5 text-left group">
-            <span class="text-sm font-medium text-on-surface group-hover:text-primary transition-colors pr-4">How can I delete my account and data?</span>
-            <span class="material-symbols-outlined text-outline-variant text-lg flex-shrink-0 transition-transform duration-300">chevron_right</span>
-          </button>
-          <div class="help-a hidden pb-6 pl-0 pr-8">
-            <p class="text-sm text-secondary leading-relaxed">We respect your privacy. Go to Settings, scroll to the bottom, and select <strong class="text-on-surface">Delete my account</strong>. This will permanently remove your profile, history, and saved places. To remove only your activity data while keeping your account, select <strong class="text-on-surface">Delete my data</strong>.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Premium & Billing -->
-    <section class="help-category mb-10">
-      <h3 class="text-xl font-serif-editorial border-b-[0.5px] border-outline-variant/20 pb-2 mb-0">Premium &amp; Billing</h3>
-      <div class="divide-y divide-outline-variant/10">
-        <div class="help-item">
-          <button onclick="toggleHelpItem(this)" class="help-q w-full flex justify-between items-center py-5 text-left group">
-            <span class="text-sm font-medium text-on-surface group-hover:text-primary transition-colors pr-4">What is included in the Premium plan?</span>
-            <span class="material-symbols-outlined text-outline-variant text-lg flex-shrink-0 transition-transform duration-300">chevron_right</span>
-          </button>
-          <div class="help-a hidden pb-6 pl-0 pr-8">
-            <p class="text-sm text-secondary leading-relaxed">Premium members get unlimited discoveries, the ability to filter the map by category (e.g., only show Bakeries), a full history log of every place visited, and the ability to save places to a custom itinerary.</p>
-          </div>
-        </div>
-        <div class="help-item">
-          <button onclick="toggleHelpItem(this)" class="help-q w-full flex justify-between items-center py-5 text-left group">
-            <span class="text-sm font-medium text-on-surface group-hover:text-primary transition-colors pr-4">How do I cancel my subscription?</span>
-            <span class="material-symbols-outlined text-outline-variant text-lg flex-shrink-0 transition-transform duration-300">chevron_right</span>
-          </button>
-          <div class="help-a hidden pb-6 pl-0 pr-8">
-            <p class="text-sm text-secondary leading-relaxed mb-3">Subscriptions are managed directly through your device&rsquo;s store:</p>
-            <div class="space-y-2 ml-1">
-              <div class="flex gap-3 items-start"><span class="font-label text-[10px] text-primary font-bold mt-0.5">iOS</span><span class="text-sm text-secondary">Settings &gt; Apple ID &gt; Subscriptions &gt; Wanderlost &gt; Cancel</span></div>
-              <div class="flex gap-3 items-start"><span class="font-label text-[10px] text-primary font-bold mt-0.5">Android</span><span class="text-sm text-secondary">Google Play Store &gt; Menu &gt; Subscriptions &gt; Wanderlost &gt; Cancel</span></div>
-            </div>
-          </div>
-        </div>
-        <div class="help-item">
-          <button onclick="toggleHelpItem(this)" class="help-q w-full flex justify-between items-center py-5 text-left group">
-            <span class="text-sm font-medium text-on-surface group-hover:text-primary transition-colors pr-4">I paid for Premium but it&rsquo;s not showing up</span>
-            <span class="material-symbols-outlined text-outline-variant text-lg flex-shrink-0 transition-transform duration-300">chevron_right</span>
-          </button>
-          <div class="help-a hidden pb-6 pl-0 pr-8">
-            <p class="text-sm text-secondary leading-relaxed">Go to Settings and tap <strong class="text-on-surface">Manage Membership</strong>. Look for a button that says &ldquo;Restore Purchases.&rdquo; If the issue persists, ensure you are logged into the same Apple or Google account used for the purchase.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Technical Issues -->
-    <section class="help-category mb-10">
-      <h3 class="text-xl font-serif-editorial border-b-[0.5px] border-outline-variant/20 pb-2 mb-0">Technical Issues</h3>
-      <div class="divide-y divide-outline-variant/10">
-        <div class="help-item">
-          <button onclick="toggleHelpItem(this)" class="help-q w-full flex justify-between items-center py-5 text-left group">
-            <span class="text-sm font-medium text-on-surface group-hover:text-primary transition-colors pr-4">The map isn&rsquo;t loading my location</span>
-            <span class="material-symbols-outlined text-outline-variant text-lg flex-shrink-0 transition-transform duration-300">chevron_right</span>
-          </button>
-          <div class="help-a hidden pb-6 pl-0 pr-8">
-            <p class="text-sm text-secondary leading-relaxed">Ensure that Location Services are enabled for Wanderlost in your phone&rsquo;s privacy settings. For the best experience, set location access to &ldquo;While Using the App.&rdquo;</p>
-          </div>
-        </div>
-        <div class="help-item">
-          <button onclick="toggleHelpItem(this)" class="help-q w-full flex justify-between items-center py-5 text-left group">
-            <span class="text-sm font-medium text-on-surface group-hover:text-primary transition-colors pr-4">Why can&rsquo;t I see any dots in my area?</span>
-            <span class="material-symbols-outlined text-outline-variant text-lg flex-shrink-0 transition-transform duration-300">chevron_right</span>
-          </button>
-          <div class="help-a hidden pb-6 pl-0 pr-8">
-            <p class="text-sm text-secondary leading-relaxed">Wanderlost has a very high bar for recommendations (&gt;4.8 stars and 80% local reviews). If you are in a very remote area or a place without highly-vetted local favorites, the map may appear empty. Try panning the map to a nearby neighborhood or city center.</p>
-          </div>
-        </div>
-        <div class="help-item">
-          <button onclick="toggleHelpItem(this)" class="help-q w-full flex justify-between items-center py-5 text-left group">
-            <span class="text-sm font-medium text-on-surface group-hover:text-primary transition-colors pr-4">The &ldquo;Go to Google Maps&rdquo; button isn&rsquo;t working</span>
-            <span class="material-symbols-outlined text-outline-variant text-lg flex-shrink-0 transition-transform duration-300">chevron_right</span>
-          </button>
-          <div class="help-a hidden pb-6 pl-0 pr-8">
-            <p class="text-sm text-secondary leading-relaxed">This button requires the Google Maps app to be installed on your device. If it is installed and still not working, check your internet connection or try restarting the app.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Safety & Responsibility -->
-    <section class="help-category mb-10">
-      <h3 class="text-xl font-serif-editorial border-b-[0.5px] border-outline-variant/20 pb-2 mb-0">Safety &amp; Responsibility</h3>
-      <div class="divide-y divide-outline-variant/10">
-        <div class="help-item">
-          <button onclick="toggleHelpItem(this)" class="help-q w-full flex justify-between items-center py-5 text-left group">
-            <span class="text-sm font-medium text-on-surface group-hover:text-primary transition-colors pr-4">Is the information in the app verified?</span>
-            <span class="material-symbols-outlined text-outline-variant text-lg flex-shrink-0 transition-transform duration-300">chevron_right</span>
-          </button>
-          <div class="help-a hidden pb-6 pl-0 pr-8">
-            <p class="text-sm text-secondary leading-relaxed">Wanderlost uses a data-driven algorithm to find highly-rated spots. We do not manually curate or visit these locations. Conditions on the ground can change, so always use your own judgment when visiting a new area.</p>
-          </div>
-        </div>
-        <div class="help-item">
-          <button onclick="toggleHelpItem(this)" class="help-q w-full flex justify-between items-center py-5 text-left group">
-            <span class="text-sm font-medium text-on-surface group-hover:text-primary transition-colors pr-4">What should I do if a location feels unsafe?</span>
-            <span class="material-symbols-outlined text-outline-variant text-lg flex-shrink-0 transition-transform duration-300">chevron_right</span>
-          </button>
-          <div class="help-a hidden pb-6 pl-0 pr-8">
-            <p class="text-sm text-secondary leading-relaxed">Your safety is your responsibility. If you arrive at a discovery and the environment feels uncomfortable or different than expected, leave immediately. Wanderlost is a recommendation tool, not a safety guide.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Contact Footer -->
-    <div class="text-center mt-12 mb-8 py-8 border-t border-outline-variant/20">
-      <span class="material-symbols-outlined text-primary text-3xl mb-3 block">support_agent</span>
-      <p class="text-sm text-secondary mb-3">Still need help?</p>
-      <button onclick="window.location.href='mailto:support@wanderlost.com'" class="text-primary font-serif italic text-lg border-b border-primary/30 hover:border-primary transition-colors">Contact the Curator</button>
+    <div style="text-align:center; padding-top:24px; border-top:0.5px solid var(--border-glass);">
+      <p class="type-body" style="margin-bottom:8px;">Still need help?</p>
+      <button onclick="window.location.href='mailto:support@wanderlost.com'" style="background:none; border:none; cursor:pointer; color:var(--accent); font-size:15px; font-style:italic; border-bottom:1px solid var(--accent);">Contact the Curator</button>
     </div>
   </main>
 </div>
 
 <!-- ============================================================ -->
-<!-- MODAL: PREMIUM (premium_upsell) -->
+<!-- MODAL: PREMIUM -->
 <!-- ============================================================ -->
-<div id="modal-premium" class="modal-slide" style="background:rgba(26,28,28,0.15);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);">
-  <div class="flex items-center justify-center min-h-screen p-4 sm:p-6">
-    <div class="relative w-full max-w-4xl glass glass-border shadow-2xl flex flex-col md:flex-row overflow-hidden rounded-[32px] max-h-[90vh] overflow-y-auto">
-      <button class="absolute top-6 right-6 z-20 text-secondary hover:text-on-surface transition-colors" onclick="closeModal('modal-premium')">
-        <span class="material-symbols-outlined text-2xl">close</span>
-      </button>
-      <div class="hidden md:block md:w-5/12 relative bg-surface-container">
-        <img class="absolute inset-0 w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDR2pcdkAvsm7erOFslp8-irFmg-D0oUliN9yiXJv4BUfGvhzVZVt0TwUXDZfGop7kx5MXlj0EIIRhucVVLUt7fXrG2QQzFxZF8Qf8wQh6q-K5x57Vw_bSeygB_OgPoRCZBWXEuv0pmKNzFEnqRCTzXXIeCtCDeAIgHn2TUzPGGbbhONQsCRVhh0SPqVYH_DhE_wXamazI2gv_opMpIU-p_3DFLBDxvWNnLFdr3lLIMvUii5tjqbvmC2v73bP93OweBi8xkgO8PS2g"/>
-        <div class="absolute inset-0 bg-primary/10 mix-blend-multiply"></div>
-        <div class="absolute bottom-10 left-10 right-10">
-          <p class="font-serif italic text-xl text-white leading-relaxed">"The journey of a thousand miles begins with a single step into the unknown."</p>
-        </div>
+<div id="modal-premium" class="modal-slide" style="background:rgba(0,0,0,0.6); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);">
+  <div style="display:flex; align-items:center; justify-content:center; min-height:100vh; padding:16px;">
+    <div class="glass" style="position:relative; width:100%; max-width:440px; border-radius:28px; padding:40px 32px; max-height:90vh; overflow-y:auto;">
+      <button style="position:absolute; top:20px; right:20px; background:none; border:none; cursor:pointer; color:var(--text-secondary);" onclick="closeModal('modal-premium')"><span class="material-symbols-outlined">close</span></button>
+      <p class="type-meta" style="margin-bottom:12px; color:var(--accent);">Membership</p>
+      <h2 class="type-display" style="font-size:2rem; margin-bottom:12px;">Unlock everything.</h2>
+      <p class="type-body" style="margin-bottom:32px; font-size:15px;">Join a curated world of modern explorers.</p>
+      <div style="margin-bottom:32px;">
+        <div style="display:flex; align-items:start; gap:12px; margin-bottom:16px;"><span class="material-symbols-outlined" style="color:var(--accent); font-size:18px; margin-top:2px; font-variation-settings:'FILL' 1;">check_circle</span><div><span class="type-label" style="color:var(--text-primary); display:block;">Unlimited Discoveries</span><span class="type-body" style="font-size:12px;">No limits.</span></div></div>
+        <div style="display:flex; align-items:start; gap:12px; margin-bottom:16px;"><span class="material-symbols-outlined" style="color:var(--accent); font-size:18px; margin-top:2px; font-variation-settings:'FILL' 1;">check_circle</span><div><span class="type-label" style="color:var(--text-primary); display:block;">Filter by Category</span><span class="type-body" style="font-size:12px;">Target what you want.</span></div></div>
+        <div style="display:flex; align-items:start; gap:12px; margin-bottom:16px;"><span class="material-symbols-outlined" style="color:var(--accent); font-size:18px; margin-top:2px; font-variation-settings:'FILL' 1;">check_circle</span><div><span class="type-label" style="color:var(--text-primary); display:block;">Save Places</span><span class="type-body" style="font-size:12px;">Build itineraries.</span></div></div>
+        <div style="display:flex; align-items:start; gap:12px;"><span class="material-symbols-outlined" style="color:var(--accent); font-size:18px; margin-top:2px; font-variation-settings:'FILL' 1;">check_circle</span><div><span class="type-label" style="color:var(--text-primary); display:block;">Full History</span><span class="type-body" style="font-size:12px;">Permanent log.</span></div></div>
       </div>
-      <div class="w-full md:w-7/12 p-8 md:p-16 flex flex-col justify-center">
-        <div class="mb-12">
-          <span class="font-label text-[10px] tracking-[0.2em] uppercase text-primary font-semibold mb-4 block">Membership</span>
-          <h2 class="font-serif text-4xl md:text-5xl text-on-surface leading-tight mb-6">Unlock the possibilities.</h2>
-          <p class="text-secondary text-lg font-light leading-relaxed max-w-md">Join a curated world of modern explorers.</p>
-        </div>
-        <ul class="space-y-6 mb-12">
-          <li class="flex items-start gap-4"><span class="material-symbols-outlined text-primary mt-0.5" style="font-variation-settings:'FILL' 1;">check_circle</span><div><span class="font-medium text-on-surface block">Unlimited Discoveries</span><span class="text-secondary text-sm">No more limits. The network is yours.</span></div></li>
-          <li class="flex items-start gap-4"><span class="material-symbols-outlined text-primary mt-0.5" style="font-variation-settings:'FILL' 1;">check_circle</span><div><span class="font-medium text-on-surface block">Filter by Category</span><span class="text-secondary text-sm">Target specifically what you're looking for.</span></div></li>
-          <li class="flex items-start gap-4"><span class="material-symbols-outlined text-primary mt-0.5" style="font-variation-settings:'FILL' 1;">check_circle</span><div><span class="font-medium text-on-surface block">Save Places</span><span class="text-secondary text-sm">Build custom itineraries for future trips.</span></div></li>
-          <li class="flex items-start gap-4"><span class="material-symbols-outlined text-primary mt-0.5" style="font-variation-settings:'FILL' 1;">check_circle</span><div><span class="font-medium text-on-surface block">Show Your History</span><span class="text-secondary text-sm">Full permanent log of every place you've been.</span></div></li>
-        </ul>
-        <button onclick="openModal('modal-checkout');closeModal('modal-premium');" class="w-full bg-accent text-white px-8 py-5 text-sm font-semibold tracking-widest uppercase hover:opacity-90 transition-all active:scale-[0.98] rounded-full glow-accent">
-          Start Your Journey — 20 CHF/mo
-        </button>
-        <p class="text-center mt-6"><button onclick="showToast('No previous purchases found for this account.')" class="text-secondary text-xs underline underline-offset-4 decoration-outline-variant hover:text-on-surface transition-colors">Restore Purchase</button></p>
-      </div>
+      <button onclick="openModal('modal-checkout');closeModal('modal-premium');" class="btn-accent" style="width:100%; padding:16px;">Start Your Journey — 20 CHF/mo</button>
+      <p style="text-align:center; margin-top:16px;"><button onclick="showToast('No purchases found.')" style="background:none; border:none; cursor:pointer; color:var(--text-secondary); font-size:11px; text-decoration:underline;">Restore Purchase</button></p>
     </div>
   </div>
 </div>
 
 <!-- ============================================================ -->
-<!-- MODAL: CHECKOUT (checkout) -->
+<!-- MODAL: CHECKOUT -->
 <!-- ============================================================ -->
 <div id="modal-checkout" class="modal-slide">
-  <header class="fixed top-0 w-full flex justify-between items-center px-6 h-16 z-50 glass-strong glass-border" style="border-radius:0 0 20px 20px;">
-    <div class="flex items-center gap-4">
-      <button class="text-[#5F5E5E] active:scale-95 duration-200" onclick="closeModal('modal-checkout')">
-        <span class="material-symbols-outlined">close</span>
-      </button>
-      <h1 class="serif-headline text-2xl tracking-tight text-on-surface">Checkout</h1>
+  <header class="glass" style="position:fixed; top:0; width:100%; z-index:50; border-radius:0 0 20px 20px; padding:0 24px; height:60px; display:flex; align-items:center; justify-content:space-between;">
+    <div style="display:flex; align-items:center; gap:12px;">
+      <button style="background:none; border:none; cursor:pointer; color:var(--text-secondary);" onclick="closeModal('modal-checkout')"><span class="material-symbols-outlined">close</span></button>
+      <span class="type-label" style="color:var(--text-primary);">Checkout</span>
     </div>
-    <span class="text-accent font-brand text-2xl">Wanderlost</span>
+    <span class="font-brand" style="color:var(--accent); font-size:1.2rem;">Wanderlost</span>
   </header>
-  <main class="pt-24 pb-32 max-w-2xl mx-auto px-6">
-    <section class="mb-12">
-      <h2 class="uppercase tracking-[0.1em] text-secondary text-[0.6875rem] font-semibold mb-6">Select Your Journey</h2>
-      <div class="flex p-1 glass glass-border rounded-full items-center">
-        <button data-plan="monthly" class="plan-toggle-btn flex-1 py-4 text-center text-sm font-medium bg-accent text-white rounded-full">20 CHF Monthly</button>
-        <button data-plan="annual" class="plan-toggle-btn flex-1 py-4 text-center text-sm font-medium text-secondary hover:text-on-surface transition-colors">200 CHF Annual</button>
+  <main style="padding:80px 24px 128px; max-width:480px; margin:0 auto;">
+    <section style="margin-bottom:32px;">
+      <p class="type-meta" style="margin-bottom:16px;">Select Your Journey</p>
+      <div class="glass" style="display:flex; border-radius:9999px; overflow:hidden; padding:4px;">
+        <button data-plan="monthly" class="plan-toggle-btn" style="flex:1; padding:12px; text-align:center; font-size:12px; font-weight:600; border:none; cursor:pointer; border-radius:9999px; background:var(--accent); color:#fff;">20 CHF Monthly</button>
+        <button data-plan="annual" class="plan-toggle-btn" style="flex:1; padding:12px; text-align:center; font-size:12px; font-weight:600; border:none; cursor:pointer; border-radius:9999px; background:transparent; color:var(--text-secondary);">200 CHF Annual</button>
       </div>
     </section>
-    <section class="mb-12">
-      <h2 class="uppercase tracking-[0.1em] text-secondary text-[0.6875rem] font-semibold mb-6">Express Checkout</h2>
-      <div class="grid grid-cols-2 gap-4">
-        <button class="flex items-center justify-center gap-2 bg-on-surface text-surface py-4 active:scale-[0.98] transition-transform"><span class="font-semibold tracking-tight text-lg">Apple Pay</span></button>
-        <button class="flex items-center justify-center gap-2 bg-surface-container-lowest border border-outline-variant/30 text-on-surface py-4 active:scale-[0.98] transition-transform"><span class="font-semibold tracking-tight text-lg italic">G Pay</span></button>
+    <section style="margin-bottom:32px;">
+      <p class="type-meta" style="margin-bottom:16px;">Express Checkout</p>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+        <button class="btn-ghost" style="padding:14px; font-size:14px; font-weight:700;">Apple Pay</button>
+        <button class="btn-ghost" style="padding:14px; font-size:14px; font-weight:700; font-style:italic;">G Pay</button>
       </div>
     </section>
-    <div class="flex items-center gap-4 mb-12">
-      <div class="h-[0.5px] flex-1 bg-outline-variant/30"></div>
-      <span class="uppercase tracking-widest text-secondary text-[10px]">Or pay manually</span>
-      <div class="h-[0.5px] flex-1 bg-outline-variant/30"></div>
-    </div>
-    <section class="mb-12">
-      <form id="checkout-form" class="space-y-8">
-        <div><label class="block uppercase tracking-widest text-secondary text-[0.6875rem] mb-2">Cardholder Name</label><input class="w-full bg-transparent border-0 border-b border-outline-variant/40 focus:border-primary focus:ring-0 px-0 py-2 text-on-surface placeholder:text-outline-variant/60 font-medium transition-colors" placeholder="FULL NAME" type="text" required/></div>
-        <div><label class="block uppercase tracking-widest text-secondary text-[0.6875rem] mb-2">Card Number</label><input class="w-full bg-transparent border-0 border-b border-outline-variant/40 focus:border-primary focus:ring-0 px-0 py-2 text-on-surface placeholder:text-outline-variant/60 font-medium transition-colors" placeholder="0000 0000 0000 0000" type="text" required/></div>
-        <div class="grid grid-cols-2 gap-8">
-          <div><label class="block uppercase tracking-widest text-secondary text-[0.6875rem] mb-2">Expiry</label><input class="w-full bg-transparent border-0 border-b border-outline-variant/40 focus:border-primary focus:ring-0 px-0 py-2 text-on-surface placeholder:text-outline-variant/60 font-medium transition-colors" placeholder="MM/YY" type="text" required/></div>
-          <div><label class="block uppercase tracking-widest text-secondary text-[0.6875rem] mb-2">CVC</label><input class="w-full bg-transparent border-0 border-b border-outline-variant/40 focus:border-primary focus:ring-0 px-0 py-2 text-on-surface placeholder:text-outline-variant/60 font-medium transition-colors" placeholder="123" type="text" required/></div>
+    <div style="display:flex; align-items:center; gap:12px; margin-bottom:32px;"><div style="flex:1; height:0.5px; background:var(--border-glass);"></div><span class="type-meta">Or pay manually</span><div style="flex:1; height:0.5px; background:var(--border-glass);"></div></div>
+    <section style="margin-bottom:32px;">
+      <form id="checkout-form">
+        <div style="margin-bottom:24px;"><span class="type-meta" style="display:block; margin-bottom:8px;">Cardholder Name</span><input type="text" placeholder="Full Name" required/></div>
+        <div style="margin-bottom:24px;"><span class="type-meta" style="display:block; margin-bottom:8px;">Card Number</span><input type="text" placeholder="0000 0000 0000 0000" required/></div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px;">
+          <div><span class="type-meta" style="display:block; margin-bottom:8px;">Expiry</span><input type="text" placeholder="MM/YY" required/></div>
+          <div><span class="type-meta" style="display:block; margin-bottom:8px;">CVC</span><input type="text" placeholder="123" required/></div>
         </div>
       </form>
     </section>
-    <section class="p-8 glass glass-border rounded-[24px] mb-12">
-      <div class="flex justify-between items-end">
-        <div><span class="uppercase tracking-widest text-secondary text-[10px] block mb-1">Total Due Today</span><h3 id="checkout-total" class="serif-headline text-4xl text-on-surface">20.00 CHF</h3></div>
-        <div class="text-right"><span class="uppercase tracking-widest text-secondary text-[10px] block mb-1">Premium Access</span><span id="checkout-billing" class="text-on-surface text-sm font-medium">Billed Monthly</span></div>
+    <section class="glass" style="padding:24px; border-radius:20px; margin-bottom:24px;">
+      <div style="display:flex; justify-content:space-between; align-items:flex-end;">
+        <div><span class="type-meta" style="display:block; margin-bottom:4px;">Total Due Today</span><h3 id="checkout-total" class="type-title" style="font-size:1.8rem;">20.00 CHF</h3></div>
+        <div style="text-align:right;"><span class="type-meta" style="display:block; margin-bottom:4px;">Premium Access</span><span id="checkout-billing" class="type-label" style="color:var(--text-primary);">Billed Monthly</span></div>
       </div>
-      <div class="mt-8 pt-8 border-t border-outline-variant/20">
-        <p class="text-[11px] text-secondary leading-relaxed tracking-wide">By confirming, you agree to Wanderlost's Terms of Service and Privacy Policy.</p>
-      </div>
+      <div style="margin-top:20px; padding-top:16px; border-top:0.5px solid var(--border-glass);"><p class="type-body" style="font-size:11px;">By confirming, you agree to our Terms and Privacy Policy.</p></div>
     </section>
-    <button id="btn-confirm-payment" class="w-full bg-accent text-white py-5 text-sm font-bold tracking-[0.2em] uppercase active:scale-[0.99] transition-all hover:opacity-90 rounded-full glow-accent">
-      Confirm Payment
-    </button>
+    <button id="btn-confirm-payment" class="btn-accent" style="width:100%; padding:16px;">Confirm Payment</button>
+    <div style="text-align:center; margin-top:16px; display:flex; align-items:center; justify-content:center; gap:6px;"><span class="material-symbols-outlined" style="font-size:14px; color:var(--accent);">verified_user</span><span class="type-meta">Encrypted & Secure</span></div>
   </main>
-  <footer class="pb-12 text-center">
-    <div class="flex justify-center items-center gap-2 mb-2">
-      <span class="material-symbols-outlined text-primary text-sm">verified_user</span>
-      <span class="uppercase tracking-widest text-secondary text-[9px]">Encrypted & Secure Transaction</span>
-    </div>
-  </footer>
 </div>
 
 <!-- ============================================================ -->
@@ -1116,17 +519,13 @@ tailwind.config = {
 <!-- ============================================================ -->
 <script src="./app.js"></script>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB1RVtX565j0NYmTtFebx1nmDCrh6X0rYM&libraries=places&callback=initMap"></script>
-
-<!-- Service Worker Registration -->
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js').then(reg => {
       reg.addEventListener('updatefound', () => {
-        const newWorker = reg.installing;
-        newWorker.addEventListener('statechange', () => {
-          if (newWorker.state === 'activated') location.reload();
-        });
+        const nw = reg.installing;
+        nw.addEventListener('statechange', () => { if (nw.state === 'activated') location.reload(); });
       });
     });
   });
