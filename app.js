@@ -1,376 +1,726 @@
-// ================================================================
-// WANDERLOST — Engine v60 (from scratch)
-// ================================================================
+// ============================================================
+// WANDERLOST — App Engine (from scratch)
+// ============================================================
 
-// — State —
-const S = {
-  credits: 3, subscribed: false, place: null,
-  history: [], saved: [], markers: [],
-  tab: 'tab-explore', cat: '', plan: 'monthly',
+// --- State ---
+const APP = {
+  credits: 3,
+  subscribed: false,
+  place: null,
+  history: [],
+  saved: [],
+  markers: [],
+  tab: 'tab-explore',
+  cat: '',
+  plan: 'monthly',
   unit: 'meters',
   theme: localStorage.getItem('wl-theme') || 'dark'
 };
 
-// — Helpers —
-const $ = id => document.getElementById(id);
-const haptic = (ms = 10) => { if (navigator.vibrate) navigator.vibrate(ms); };
+// --- Shorthand ---
+const el = (id) => document.getElementById(id);
+const vibrate = (ms = 10) => { if (navigator.vibrate) navigator.vibrate(ms); };
 
-// ================================================================
+// ============================================================
 // TOAST
-// ================================================================
-function toast(msg) {
-  const old = $('toast'); if (old) old.remove();
-  const el = document.createElement('div');
-  el.id = 'toast';
-  Object.assign(el.style, {
-    position:'fixed',top:'80px',left:'50%',transform:'translateX(-50%) translateY(-10px)',
-    zIndex:'999',padding:'12px 24px',fontSize:'13px',textAlign:'center',
-    maxWidth:'320px',borderRadius:'9999px',opacity:'0',
-    background:'var(--bg-glass-solid)',backdropFilter:'blur(40px)',
-    border:'.5px solid var(--border)',color:'var(--text-1)',
-    boxShadow:'var(--shadow)',transition:'all .5s var(--smooth)',
-    fontFamily:'Inter,sans-serif',letterSpacing:'.03em'
-  });
-  el.textContent = msg;
-  document.body.appendChild(el);
-  requestAnimationFrame(() => { el.style.opacity = '1'; el.style.transform = 'translateX(-50%) translateY(0)'; });
-  setTimeout(() => { el.style.opacity = '0'; el.style.transform = 'translateX(-50%) translateY(-10px)'; setTimeout(() => el.remove(), 500); }, 4000);
-}
-window.toast = toast; // expose for inline onclick
+// ============================================================
+function showToast(msg) {
+  const old = el('wl-toast');
+  if (old) old.remove();
 
-// ================================================================
-// TABS
-// ================================================================
-function switchTab(id) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  const t = $(id); if (t) t.classList.add('active');
-  document.querySelectorAll('.dock-btn').forEach(b => {
-    const icon = b.querySelector('.material-symbols-outlined');
-    if (b.dataset.tab === id) { b.classList.add('active'); icon.style.fontVariationSettings = "'FILL' 1"; }
-    else { b.classList.remove('active'); icon.style.fontVariationSettings = "'FILL' 0"; }
+  const t = document.createElement('div');
+  t.id = 'wl-toast';
+  Object.assign(t.style, {
+    position: 'fixed', top: '80px', left: '50%',
+    transform: 'translateX(-50%) translateY(-10px)',
+    zIndex: '9999', padding: '12px 24px', fontSize: '13px',
+    textAlign: 'center', maxWidth: '320px', borderRadius: '9999px',
+    opacity: '0',
+    background: 'var(--surface-solid)',
+    backdropFilter: 'blur(40px)',
+    border: '0.5px solid var(--border)',
+    color: 'var(--text)',
+    boxShadow: 'var(--shadow)',
+    transition: 'all 0.5s var(--ease)',
+    fontFamily: "'Inter', sans-serif",
+    letterSpacing: '0.03em'
   });
-  S.tab = id;
+  t.textContent = msg;
+  document.body.appendChild(t);
+
+  requestAnimationFrame(() => {
+    t.style.opacity = '1';
+    t.style.transform = 'translateX(-50%) translateY(0)';
+  });
+
+  setTimeout(() => {
+    t.style.opacity = '0';
+    t.style.transform = 'translateX(-50%) translateY(-10px)';
+    setTimeout(() => t.remove(), 500);
+  }, 4000);
+}
+window.showToast = showToast;
+
+// ============================================================
+// TAB NAVIGATION
+// ============================================================
+function switchTab(tabId) {
+  vibrate(8);
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  const target = el(tabId);
+  if (target) target.classList.add('active');
+
+  document.querySelectorAll('.dock-btn').forEach(btn => {
+    const icon = btn.querySelector('.material-symbols-outlined');
+    if (btn.dataset.tab === tabId) {
+      btn.classList.add('active');
+      icon.style.fontVariationSettings = "'FILL' 1";
+    } else {
+      btn.classList.remove('active');
+      icon.style.fontVariationSettings = "'FILL' 0";
+    }
+  });
+
+  APP.tab = tabId;
 }
 window.switchTab = switchTab;
 
-// ================================================================
+// ============================================================
 // MODALS
-// ================================================================
-function openModal(id) { const el = $(id); if (el) { el.classList.add('open'); document.body.style.overflow = 'hidden'; } }
-function closeModal(id) { const el = $(id); if (el) { el.classList.remove('open'); if (!document.querySelector('.modal.open')) document.body.style.overflow = ''; } }
+// ============================================================
+function openModal(id) {
+  const m = el(id);
+  if (m) {
+    m.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+function closeModal(id) {
+  const m = el(id);
+  if (m) {
+    m.classList.remove('open');
+    if (!document.querySelector('.modal.open')) {
+      document.body.style.overflow = '';
+    }
+  }
+}
+
+function closeAuthOpenModal(id) {
+  el('auth-gate').classList.add('hidden');
+  openModal(id);
+}
+
 window.openModal = openModal;
 window.closeModal = closeModal;
+window.closeAuthOpenModal = closeAuthOpenModal;
 
-// ================================================================
+// ============================================================
 // DISCOVERY SHEET
-// ================================================================
-function openSheet() { $('discovery-sheet').classList.add('open'); $('btn-discover')?.classList.add('morphing'); haptic(15); }
-function closeSheet() { $('discovery-sheet').classList.remove('open'); $('btn-discover')?.classList.remove('morphing'); }
+// ============================================================
+function openSheet() {
+  el('discovery-sheet').classList.add('open');
+  el('btn-discover')?.classList.add('morphing');
+  vibrate(15);
+}
+
+function closeSheet() {
+  el('discovery-sheet').classList.remove('open');
+  el('btn-discover')?.classList.remove('morphing');
+}
 window.closeSheet = closeSheet;
 
-// ================================================================
+// ============================================================
 // CATEGORIES
-// ================================================================
+// ============================================================
 function pickCat(btn) {
-  haptic(10);
-  document.querySelectorAll('.cat-pill').forEach(b => b.classList.remove('active'));
+  vibrate(10);
+  document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
   btn.classList.add('active');
   btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-  S.cat = btn.dataset.cat || '';
+  APP.cat = btn.dataset.cat || '';
 }
 window.pickCat = pickCat;
 
-// ================================================================
-// FAQ
-// ================================================================
+// ============================================================
+// FAQ ACCORDION
+// ============================================================
 function toggleFaq(btn) {
   const item = btn.closest('.faq-item');
   const answer = item.querySelector('.faq-a');
   const icon = btn.querySelector('.material-symbols-outlined');
-  // Close others
+
+  // Close all others
   document.querySelectorAll('.faq-item').forEach(other => {
-    if (other !== item) { other.querySelector('.faq-a').classList.add('hidden'); const i = other.querySelector('button .material-symbols-outlined'); if (i) { i.style.transform = ''; i.textContent = 'chevron_right'; } }
+    if (other !== item) {
+      other.querySelector('.faq-a')?.classList.add('hidden');
+      const otherIcon = other.querySelector('button .material-symbols-outlined');
+      if (otherIcon) { otherIcon.style.transform = ''; otherIcon.textContent = 'chevron_right'; }
+    }
   });
-  const open = !answer.classList.contains('hidden');
+
+  const isOpen = !answer.classList.contains('hidden');
   answer.classList.toggle('hidden');
-  icon.style.transform = open ? '' : 'rotate(90deg)';
-  icon.textContent = open ? 'chevron_right' : 'expand_more';
+  icon.style.transform = isOpen ? '' : 'rotate(90deg)';
+  icon.textContent = isOpen ? 'chevron_right' : 'expand_more';
 }
 window.toggleFaq = toggleFaq;
 
-// ================================================================
+// ============================================================
 // DISTANCE
-// ================================================================
-function fmtDist(km) {
-  if (S.unit === 'feet') { const ft = km * 3280.84; return ft < 5280 ? Math.round(ft) + ' ft away' : (ft / 5280).toFixed(1) + ' mi away'; }
+// ============================================================
+function formatDist(km) {
+  if (APP.unit === 'feet') {
+    const ft = km * 3280.84;
+    return ft < 5280 ? Math.round(ft) + ' ft away' : (ft / 5280).toFixed(1) + ' mi away';
+  }
   return km < 1 ? Math.round(km * 1000) + ' m away' : km.toFixed(1) + ' km away';
 }
+
 function haversine(lat1, lon1, lat2, lon2) {
-  const R = 6371, dLat = (lat2 - lat1) * Math.PI / 180, dLon = (lon2 - lon1) * Math.PI / 180;
-  const a = Math.sin(dLat / 2) ** 2 + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) ** 2;
+  const R = 6371;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat / 2) ** 2 +
+            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+            Math.sin(dLon / 2) ** 2;
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
-// ================================================================
+// ============================================================
 // GOOGLE MAPS
-// ================================================================
+// ============================================================
 let map, placesService;
-const CAT_COLORS = { restaurant:'#FFB5A7', cafe:'#D4C5F9', bakery:'#FFD6A5', bar:'#E8A0BF', park:'#B8E0D2', museum:'#A7D8FF' };
+
+const COLORS = {
+  restaurant: '#FFB5A7', cafe: '#D4C5F9', bakery: '#FFD6A5',
+  bar: '#E8A0BF', park: '#B8E0D2', museum: '#A7D8FF'
+};
+
 const MAP_DARK = [
-  {elementType:'geometry',stylers:[{color:'#1a1d23'}]},{elementType:'labels.icon',stylers:[{visibility:'off'}]},
-  {elementType:'labels.text.fill',stylers:[{color:'#8B949E'}]},{elementType:'labels.text.stroke',stylers:[{color:'#0d1117'}]},
-  {featureType:'poi',elementType:'geometry',stylers:[{color:'#21262d'}]},{featureType:'poi.park',elementType:'geometry',stylers:[{color:'#1a2617'}]},
-  {featureType:'road',elementType:'geometry',stylers:[{color:'#30363d'}]},{featureType:'road.highway',elementType:'geometry',stylers:[{color:'#3a424d'}]},
-  {featureType:'water',elementType:'geometry',stylers:[{color:'#0d1926'}]}
+  { elementType: 'geometry', stylers: [{ color: '#1a1d23' }] },
+  { elementType: 'labels.icon', stylers: [{ visibility: 'off' }] },
+  { elementType: 'labels.text.fill', stylers: [{ color: '#8B949E' }] },
+  { elementType: 'labels.text.stroke', stylers: [{ color: '#0d1117' }] },
+  { featureType: 'poi', elementType: 'geometry', stylers: [{ color: '#21262d' }] },
+  { featureType: 'poi.park', elementType: 'geometry', stylers: [{ color: '#1a2617' }] },
+  { featureType: 'road', elementType: 'geometry', stylers: [{ color: '#30363d' }] },
+  { featureType: 'road.highway', elementType: 'geometry', stylers: [{ color: '#3a424d' }] },
+  { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#0d1926' }] }
 ];
+
 const MAP_LIGHT = [
-  {elementType:'geometry',stylers:[{color:'#f8f8f8'}]},{elementType:'labels.icon',stylers:[{visibility:'off'}]},
-  {elementType:'labels.text.fill',stylers:[{color:'#3A3A3A'}]},{elementType:'labels.text.stroke',stylers:[{color:'#ffffff'}]},
-  {featureType:'poi',elementType:'geometry',stylers:[{color:'#f0f0f0'}]},{featureType:'poi.park',elementType:'geometry',stylers:[{color:'#E2EBD8'}]},
-  {featureType:'road',elementType:'geometry',stylers:[{color:'#ffffff'}]},{featureType:'water',elementType:'geometry',stylers:[{color:'#D4E4F7'}]}
+  { elementType: 'geometry', stylers: [{ color: '#f8f8f8' }] },
+  { elementType: 'labels.icon', stylers: [{ visibility: 'off' }] },
+  { elementType: 'labels.text.fill', stylers: [{ color: '#3A3A3A' }] },
+  { elementType: 'labels.text.stroke', stylers: [{ color: '#ffffff' }] },
+  { featureType: 'poi', elementType: 'geometry', stylers: [{ color: '#f0f0f0' }] },
+  { featureType: 'poi.park', elementType: 'geometry', stylers: [{ color: '#E2EBD8' }] },
+  { featureType: 'road', elementType: 'geometry', stylers: [{ color: '#ffffff' }] },
+  { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#D4E4F7' }] }
 ];
 
 window.initMap = function () {
-  map = new google.maps.Map($('map'), { center: { lat: 47.3769, lng: 8.5417 }, zoom: 2, disableDefaultUI: true, styles: S.theme === 'light' ? MAP_LIGHT : MAP_DARK });
+  map = new google.maps.Map(el('map'), {
+    center: { lat: 47.3769, lng: 8.5417 },
+    zoom: 2,
+    disableDefaultUI: true,
+    styles: APP.theme === 'light' ? MAP_LIGHT : MAP_DARK
+  });
 };
 
+// ============================================================
+// POWER ZOOM (zoom 2 → 15, 3s, blur clears)
+// ============================================================
 function powerZoom() {
-  const el = $('map');
-  if (!map || !el) return;
-  const start = performance.now(), dur = 3000;
-  function ease(t) { return t === 1 ? 1 : 1 - Math.pow(2, -10 * t); }
+  const mapEl = el('map');
+  if (!map || !mapEl) return;
+
+  const start = performance.now();
+  const duration = 3000;
+
+  function easeOutExpo(t) {
+    return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
+  }
+
   (function step(now) {
-    const t = Math.min((now - start) / dur, 1), e = ease(t);
+    const t = Math.min((now - start) / duration, 1);
+    const e = easeOutExpo(t);
+
     map.setZoom(2 + 13 * e);
-    el.style.filter = `blur(${20 * (1 - e)}px) brightness(${0.7 + 0.3 * e})`;
-    if (t < 1) requestAnimationFrame(step); else el.style.filter = 'none';
+    const blur = 20 * (1 - e);
+    const brightness = 0.7 + 0.3 * e;
+    mapEl.style.filter = `blur(${blur}px) brightness(${brightness})`;
+
+    if (t < 1) {
+      requestAnimationFrame(step);
+    } else {
+      mapEl.style.filter = 'none';
+    }
   })(start);
 }
 
-function addMarker(p) {
-  if (!map || !p.lat || !p.lng) return;
-  const color = CAT_COLORS[p.type?.toLowerCase().replace(/[^a-z]/g, '')] || '#38B6FF';
-  const m = new google.maps.Marker({
-    position: { lat: p.lat, lng: p.lng }, map, title: p.name,
-    icon: { path: google.maps.SymbolPath.CIRCLE, scale: 10, fillColor: color, fillOpacity: 1, strokeColor: '#FFF', strokeWeight: 3 },
+// ============================================================
+// MAP MARKERS
+// ============================================================
+function addMarker(place) {
+  if (!map || !place.lat || !place.lng) return;
+
+  const key = place.type?.toLowerCase().replace(/[^a-z]/g, '');
+  const color = COLORS[key] || '#38B6FF';
+
+  const marker = new google.maps.Marker({
+    position: { lat: place.lat, lng: place.lng },
+    map,
+    title: place.name,
+    icon: {
+      path: google.maps.SymbolPath.CIRCLE,
+      scale: 10,
+      fillColor: color,
+      fillOpacity: 1,
+      strokeColor: '#FFF',
+      strokeWeight: 3
+    },
     animation: google.maps.Animation.DROP
   });
-  m.addListener('click', () => { S.place = p; fillSheet(p); openSheet(); });
-  S.markers.push(m);
+
+  marker.addListener('click', () => {
+    APP.place = place;
+    fillSheet(place);
+    openSheet();
+  });
+
+  APP.markers.push(marker);
 }
 
+// Hide Google watermarks
 function hideWatermarks() {
   const s = document.createElement('style');
   s.innerHTML = '.dismissButton,.gm-err-container,.gm-style-mtc,.gm-style-bg,div[style*="background-image: url"]{display:none!important}.gm-style div,.gm-style span{background-color:transparent!important}';
   document.head.appendChild(s);
-  setInterval(() => { document.querySelectorAll('.gm-style div').forEach(d => { if (d.innerHTML.includes('development purposes only')) d.style.display = 'none'; }); }, 500);
+  setInterval(() => {
+    document.querySelectorAll('.gm-style div').forEach(d => {
+      if (d.innerHTML.includes('development purposes only')) d.style.display = 'none';
+    });
+  }, 500);
 }
 window.gm_authFailure = hideWatermarks;
 
-// ================================================================
-// DISCOVERY
-// ================================================================
+// ============================================================
+// DISCOVERY ENGINE
+// ============================================================
 function fillSheet(p) {
-  $('s-name').textContent = p.name;
-  $('s-tag').textContent = p.type || 'Discovery';
-  $('s-addr').textContent = p.address || 'Nearby';
-  $('s-dist').textContent = p.distance || 'Close by';
-  $('s-desc').textContent = p.description || '';
+  el('s-name').textContent = p.name;
+  el('s-tag').textContent = p.type || 'Discovery';
+  el('s-addr').textContent = p.address || 'Nearby';
+  el('s-dist').textContent = p.distance || 'Close by';
+  el('s-desc').textContent = p.description || '';
 }
 
 async function discover() {
-  const btn = $('btn-discover');
-  if (!S.subscribed && S.credits <= 0) { openModal('modal-premium'); return; }
+  const btn = el('btn-discover');
+
+  if (!APP.subscribed && APP.credits <= 0) {
+    openModal('modal-premium');
+    return;
+  }
+
   btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:16px;animation:spin 1s linear infinite">progress_activity</span> Scanning...';
   btn.disabled = true;
+
   try {
-    const pos = await new Promise((res, rej) => navigator.geolocation.getCurrentPosition(res, rej, { enableHighAccuracy: true, timeout: 10000 }));
+    const pos = await new Promise((res, rej) =>
+      navigator.geolocation.getCurrentPosition(res, rej, { enableHighAccuracy: true, timeout: 10000 })
+    );
+
     const { latitude: lat, longitude: lng } = pos.coords;
     if (map) { map.panTo({ lat, lng }); map.setZoom(15); }
-    $('sonar').style.display = 'block';
-    btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:16px;animation:spin 1s linear infinite">progress_activity</span> Discovering...';
-    if (!placesService && map) placesService = new google.maps.places.PlacesService(map);
-    if (!placesService) throw new Error('No places service');
-    const req = { location: new google.maps.LatLng(lat, lng), radius: 2000 };
-    if (S.cat) req.type = S.cat; else req.keyword = 'hidden gem local favorite';
-    const results = await new Promise((res, rej) => {
-      placesService.nearbySearch(req, (r, s) => { if (s === google.maps.places.PlacesServiceStatus.OK) res(r); else if (s === google.maps.places.PlacesServiceStatus.ZERO_RESULTS) res([]); else rej(new Error(s)); });
-    });
-    if (!results.length) { toast('No places found. Try a different category!'); resetBtn(); return; }
-    let cands = results.filter(p => (p.rating || 0) >= 4.0); if (!cands.length) cands = results;
-    const t = cands[Math.floor(Math.random() * cands.length)];
-    const pLat = t.geometry.location.lat(), pLng = t.geometry.location.lng();
-    const dist = haversine(lat, lng, pLat, pLng);
-    S.place = {
-      name: t.name || 'Hidden Gem', type: t.types?.[0] || S.cat || 'Discovery',
-      address: t.vicinity || 'A local favorite', distance: fmtDist(dist), distKm: dist,
-      description: t.rating ? 'Rating: ' + t.rating + ' — Highly rated by locals' : 'A secret spot favored by locals.',
-      lat: pLat, lng: pLng, discoveredAt: new Date()
-    };
-    fillSheet(S.place); addMarker(S.place);
-    if (map) map.panTo({ lat: pLat, lng: pLng });
-    openSheet(); addHistory(S.place);
-    if (!S.subscribed) { S.credits--; $('credits').textContent = S.credits + ' Credit' + (S.credits === 1 ? '' : 's'); }
-  } catch (e) { console.error(e); toast('Could not discover places. Check location permissions.'); }
-  resetBtn();
-}
-function resetBtn() { const b = $('btn-discover'); b.innerHTML = '<span class="material-symbols-outlined" style="font-size:16px">explore</span> Discover Places'; b.disabled = false; }
 
-// ================================================================
+    el('sonar').style.display = 'block';
+    btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:16px;animation:spin 1s linear infinite">progress_activity</span> Discovering...';
+
+    if (!placesService && map) placesService = new google.maps.places.PlacesService(map);
+    if (!placesService) throw new Error('Places service unavailable');
+
+    const req = { location: new google.maps.LatLng(lat, lng), radius: 2000 };
+    if (APP.cat) req.type = APP.cat;
+    else req.keyword = 'hidden gem local favorite';
+
+    const results = await new Promise((res, rej) => {
+      placesService.nearbySearch(req, (r, s) => {
+        if (s === google.maps.places.PlacesServiceStatus.OK) res(r);
+        else if (s === google.maps.places.PlacesServiceStatus.ZERO_RESULTS) res([]);
+        else rej(new Error(s));
+      });
+    });
+
+    if (!results.length) {
+      showToast('No places found nearby. Try a different category!');
+      resetDiscoverBtn();
+      return;
+    }
+
+    let candidates = results.filter(p => (p.rating || 0) >= 4.0);
+    if (!candidates.length) candidates = results;
+    const target = candidates[Math.floor(Math.random() * candidates.length)];
+    const pLat = target.geometry.location.lat();
+    const pLng = target.geometry.location.lng();
+    const dist = haversine(lat, lng, pLat, pLng);
+
+    APP.place = {
+      name: target.name || 'Hidden Gem',
+      type: target.types?.[0] || APP.cat || 'Discovery',
+      address: target.vicinity || 'A local favorite',
+      distance: formatDist(dist),
+      distKm: dist,
+      description: target.rating
+        ? 'Rating: ' + target.rating + ' — Highly rated by locals'
+        : 'A secret spot favored by locals.',
+      lat: pLat,
+      lng: pLng,
+      discoveredAt: new Date()
+    };
+
+    fillSheet(APP.place);
+    addMarker(APP.place);
+    if (map) map.panTo({ lat: pLat, lng: pLng });
+    openSheet();
+    addToHistory(APP.place);
+
+    if (!APP.subscribed) {
+      APP.credits--;
+      el('credits').textContent = APP.credits + ' Credit' + (APP.credits === 1 ? '' : 's');
+    }
+  } catch (err) {
+    console.error('Discovery error:', err);
+    showToast('Could not discover places. Check location permissions.');
+  }
+
+  resetDiscoverBtn();
+}
+
+function resetDiscoverBtn() {
+  const btn = el('btn-discover');
+  btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:16px;">explore</span> Discover Places';
+  btn.disabled = false;
+}
+
+// ============================================================
 // HISTORY
-// ================================================================
-function addHistory(p) { S.history.unshift(p); renderHistory(); }
+// ============================================================
+function addToHistory(place) {
+  APP.history.unshift(place);
+  renderHistory();
+}
+
 function renderHistory() {
-  const el = $('history-list'); if (!el || !S.history.length) return;
-  el.innerHTML = S.history.map(p => {
-    const d = p.discoveredAt ? new Date(p.discoveredAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Today';
-    return `<div style="padding:20px 0;border-bottom:.5px solid var(--border)"><p class="t-meta" style="margin-bottom:6px">${p.type || 'Discovery'} · ${d}</p><h3 class="t-title" style="font-size:1.3rem;margin-bottom:8px">${p.name}</h3><p class="t-body">${p.description || ''}</p></div>`;
+  const list = el('history-list');
+  if (!list || !APP.history.length) return;
+
+  list.innerHTML = APP.history.map(p => {
+    const date = p.discoveredAt
+      ? new Date(p.discoveredAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+      : 'Today';
+
+    return `<div style="padding:20px 0; border-bottom:0.5px solid var(--border);">
+      <p class="t-meta" style="margin-bottom:6px;">${p.type || 'Discovery'} · ${date}</p>
+      <h3 class="t-title" style="font-size:1.3rem; margin-bottom:8px;">${p.name}</h3>
+      <p class="t-body">${p.description || ''}</p>
+    </div>`;
   }).join('');
 }
 window.renderHistory = renderHistory;
 
-// ================================================================
-// NAVIGATE / SAVE
-// ================================================================
-function goMaps() {
-  if (!S.place) return;
-  const { lat, lng, name, address } = S.place;
+// ============================================================
+// NAVIGATE & SAVE
+// ============================================================
+function goToMaps() {
+  if (!APP.place) return;
+  const { lat, lng, name, address } = APP.place;
   const q = encodeURIComponent((name || '') + ' ' + (address || ''));
-  const url = /iPhone|iPad|iPod/i.test(navigator.userAgent) ? `http://maps.apple.com/?q=${encodeURIComponent(name)}&ll=${lat},${lng}` : `https://www.google.com/maps/search/?api=1&query=${q}`;
-  window.open(url, '_blank'); closeSheet();
-}
-function savePlace() {
-  if (!S.place) return;
-  const btn = $('btn-save');
-  if (S.saved.find(p => p.name === S.place.name)) { btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:14px">check</span> Already Saved'; return; }
-  S.saved.push({ ...S.place });
-  btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:14px">bookmark_added</span> Saved!';
-  setTimeout(() => { btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:14px">bookmark</span> Save'; }, 2000);
+  const url = /iPhone|iPad|iPod/i.test(navigator.userAgent)
+    ? `http://maps.apple.com/?q=${encodeURIComponent(name)}&ll=${lat},${lng}`
+    : `https://www.google.com/maps/search/?api=1&query=${q}`;
+  window.open(url, '_blank');
+  closeSheet();
 }
 
-// ================================================================
-// PAYMENT
-// ================================================================
-function confirmPay() {
-  const form = $('pay-form'); if (!form.checkValidity()) { form.reportValidity(); return; }
-  const btn = $('btn-pay'); btn.textContent = 'Verifying...'; btn.disabled = true;
+function savePlace() {
+  if (!APP.place) return;
+  const btn = el('btn-save');
+  if (APP.saved.find(p => p.name === APP.place.name)) {
+    btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:14px;">check</span> Already Saved';
+    return;
+  }
+  APP.saved.push({ ...APP.place });
+  btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:14px;">bookmark_added</span> Saved!';
   setTimeout(() => {
-    btn.textContent = 'Authorized ✓'; S.subscribed = true; S.credits = 999;
-    setTimeout(() => { closeModal('modal-checkout'); $('credits').textContent = 'Premium'; btn.textContent = 'Confirm Payment'; btn.disabled = false; }, 1200);
+    btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:14px;">bookmark</span> Save';
   }, 2000);
 }
 
-// ================================================================
-// THEME
-// ================================================================
-function applyTheme(t) {
-  S.theme = t; localStorage.setItem('wl-theme', t);
-  document.documentElement.classList.toggle('light', t === 'light');
-  document.querySelector('meta[name="theme-color"]').content = t === 'light' ? '#F0F2F5' : '#0D1117';
-  if (map) map.setOptions({ styles: t === 'light' ? MAP_LIGHT : MAP_DARK });
+// ============================================================
+// PAYMENT
+// ============================================================
+function confirmPayment() {
+  const form = el('pay-form');
+  if (!form.checkValidity()) { form.reportValidity(); return; }
+
+  const btn = el('btn-pay');
+  btn.textContent = 'Verifying...';
+  btn.disabled = true;
+
+  setTimeout(() => {
+    btn.textContent = 'Authorized ✓';
+    APP.subscribed = true;
+    APP.credits = 999;
+    setTimeout(() => {
+      closeModal('modal-checkout');
+      el('credits').textContent = 'Premium';
+      btn.textContent = 'Confirm Payment';
+      btn.disabled = false;
+    }, 1200);
+  }, 2000);
 }
 
-// ================================================================
+// ============================================================
+// THEME
+// ============================================================
+function applyTheme(theme) {
+  APP.theme = theme;
+  localStorage.setItem('wl-theme', theme);
+  document.documentElement.classList.toggle('light', theme === 'light');
+  document.querySelector('meta[name="theme-color"]').content =
+    theme === 'light' ? '#F0F2F5' : '#0D1117';
+  if (map) map.setOptions({ styles: theme === 'light' ? MAP_LIGHT : MAP_DARK });
+}
+
+// ============================================================
 // NEURAL CANVAS
-// ================================================================
-function initCanvas() {
-  const c = $('neural-canvas'); if (!c) return;
-  const ctx = c.getContext('2d'); let nodes = [];
-  const colors = ['#FFB5A7','#B8E0D2','#D4C5F9','#A7D8FF','#FFD6A5'];
-  function resize() { c.width = c.parentElement.offsetWidth; c.height = c.parentElement.offsetHeight; gen(); }
-  function gen() { nodes = []; const n = Math.floor(c.width * c.height / 18000); for (let i = 0; i < n; i++) nodes.push({ x: Math.random() * c.width, y: Math.random() * c.height, r: 3 + Math.random() * 4, color: colors[Math.floor(Math.random() * colors.length)], phase: Math.random() * Math.PI * 2, speed: .003 + Math.random() * .004 }); }
-  function draw(t) {
-    ctx.clearRect(0, 0, c.width, c.height); ctx.lineWidth = .5;
-    for (let i = 0; i < nodes.length; i++) for (let j = i + 1; j < nodes.length; j++) {
-      const dx = nodes[i].x - nodes[j].x, dy = nodes[i].y - nodes[j].y, d = Math.sqrt(dx * dx + dy * dy);
-      if (d < 120) { ctx.strokeStyle = `rgba(255,255,255,${(1 - d / 120) * .4})`; ctx.shadowColor = 'rgba(56,182,255,.15)'; ctx.shadowBlur = 4; ctx.beginPath(); ctx.moveTo(nodes[i].x, nodes[i].y); ctx.lineTo(nodes[j].x, nodes[j].y); ctx.stroke(); }
+// ============================================================
+function initNeuralCanvas() {
+  const canvas = el('neural-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let nodes = [];
+  const palette = ['#FFB5A7', '#B8E0D2', '#D4C5F9', '#A7D8FF', '#FFD6A5'];
+
+  function resize() {
+    canvas.width = canvas.parentElement.offsetWidth;
+    canvas.height = canvas.parentElement.offsetHeight;
+    generateNodes();
+  }
+
+  function generateNodes() {
+    nodes = [];
+    const count = Math.floor((canvas.width * canvas.height) / 18000);
+    for (let i = 0; i < count; i++) {
+      nodes.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: 3 + Math.random() * 4,
+        color: palette[Math.floor(Math.random() * palette.length)],
+        phase: Math.random() * Math.PI * 2,
+        speed: 0.003 + Math.random() * 0.004
+      });
     }
+  }
+
+  function draw(time) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.lineWidth = 0.5;
+
+    // Draw connections
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i + 1; j < nodes.length; j++) {
+        const dx = nodes[i].x - nodes[j].x;
+        const dy = nodes[i].y - nodes[j].y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 120) {
+          const alpha = (1 - dist / 120) * 0.4;
+          ctx.strokeStyle = `rgba(255,255,255,${alpha})`;
+          ctx.shadowColor = 'rgba(56,182,255,0.15)';
+          ctx.shadowBlur = 4;
+          ctx.beginPath();
+          ctx.moveTo(nodes[i].x, nodes[i].y);
+          ctx.lineTo(nodes[j].x, nodes[j].y);
+          ctx.stroke();
+        }
+      }
+    }
+
+    // Draw nodes
     ctx.shadowBlur = 0;
     for (const n of nodes) {
-      const s = 1 + .05 * Math.sin(t * n.speed * 2 + n.phase), r = n.r * s;
-      ctx.beginPath(); ctx.arc(n.x, n.y, r + 2, 0, Math.PI * 2); ctx.fillStyle = 'rgba(255,255,255,.15)'; ctx.fill();
+      const scale = 1 + 0.05 * Math.sin(time * n.speed * 2 + n.phase);
+      const r = n.r * scale;
+
+      // Outer glow
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, r + 2, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255,255,255,0.15)';
+      ctx.fill();
+
+      // Core gradient
       const g = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, r);
-      g.addColorStop(0, n.color); g.addColorStop(1, 'rgba(255,255,255,0)');
-      ctx.beginPath(); ctx.arc(n.x, n.y, r, 0, Math.PI * 2); ctx.fillStyle = g; ctx.fill();
+      g.addColorStop(0, n.color);
+      g.addColorStop(1, 'rgba(255,255,255,0)');
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
+      ctx.fillStyle = g;
+      ctx.fill();
     }
+
     requestAnimationFrame(draw);
   }
-  window.addEventListener('resize', resize); resize(); draw(0);
+
+  window.addEventListener('resize', resize);
+  resize();
+  draw(0);
 }
 
-// ================================================================
-// INIT
-// ================================================================
+// ============================================================
+// INITIALIZATION
+// ============================================================
 document.addEventListener('DOMContentLoaded', () => {
-  applyTheme(S.theme);
+
+  // Theme
+  applyTheme(APP.theme);
   hideWatermarks();
 
+  // --- BUTTON BINDINGS ---
+
   // Discover
-  $('btn-discover')?.addEventListener('click', discover);
-  $('btn-navigate')?.addEventListener('click', goMaps);
-  $('btn-save')?.addEventListener('click', savePlace);
-  $('btn-pay')?.addEventListener('click', confirmPay);
+  el('btn-discover')?.addEventListener('click', discover);
+  el('btn-navigate')?.addEventListener('click', goToMaps);
+  el('btn-save')?.addEventListener('click', savePlace);
+  el('btn-pay')?.addEventListener('click', confirmPayment);
 
-  // Auth
-  $('btn-try-free')?.addEventListener('click', () => { $('auth-gate').classList.add('hidden'); setTimeout(powerZoom, 300); });
-  $('btn-login-open')?.addEventListener('click', () => $('login-slide').classList.add('open'));
-  $('btn-login-close')?.addEventListener('click', () => $('login-slide').classList.remove('open'));
-  $('btn-login-submit')?.addEventListener('click', () => {
-    if (!$('login-email').value.trim() || !$('login-password').value) { toast('Please fill in all fields'); return; }
-    const b = $('btn-login-submit'); b.textContent = 'Signing in...'; b.disabled = true;
-    setTimeout(() => { $('login-slide').classList.remove('open'); $('auth-gate').classList.add('hidden'); b.textContent = 'Sign In'; b.disabled = false; toast('Welcome back, Explorer!'); setTimeout(powerZoom, 300); }, 1500);
-  });
-  $('btn-forgot-open')?.addEventListener('click', () => $('forgot-slide').classList.add('open'));
-  $('btn-forgot-close')?.addEventListener('click', () => { $('forgot-slide').classList.remove('open'); $('forgot-msg').classList.add('hidden'); });
-  $('btn-forgot-submit')?.addEventListener('click', () => {
-    if (!$('forgot-email').value.trim()) { toast('Please enter your email'); return; }
-    const b = $('btn-forgot-submit'); b.textContent = 'Sending...'; b.disabled = true;
-    setTimeout(() => { b.textContent = 'Send Recovery Link'; b.disabled = false; $('forgot-msg').classList.remove('hidden'); }, 1500);
+  // Auth: Try for Free
+  el('btn-try-free')?.addEventListener('click', () => {
+    el('auth-gate').classList.add('hidden');
+    setTimeout(powerZoom, 300);
   });
 
-  // Profile
-  $('btn-save-profile')?.addEventListener('click', () => {
-    if ($('pf-pw').value && $('pf-pw').value !== $('pf-pw2').value) { toast('Passwords do not match'); return; }
-    const b = $('btn-save-profile'); b.textContent = 'Saving...'; b.disabled = true;
+  // Auth: Login
+  el('btn-login-open')?.addEventListener('click', () => el('login-slide').classList.add('open'));
+  el('btn-login-back')?.addEventListener('click', () => el('login-slide').classList.remove('open'));
+  el('btn-login-submit')?.addEventListener('click', () => {
+    const email = el('login-email').value.trim();
+    const pw = el('login-pw').value;
+    if (!email || !pw) { showToast('Please fill in all fields.'); return; }
+
+    const btn = el('btn-login-submit');
+    btn.textContent = 'Signing in...';
+    btn.disabled = true;
+
     setTimeout(() => {
-      const name = $('pf-name')?.value.trim();
-      if (name) $('display-name').textContent = name;
-      b.textContent = 'Save Changes'; b.disabled = false;
-      toast('Profile updated successfully');
+      el('login-slide').classList.remove('open');
+      el('auth-gate').classList.add('hidden');
+      btn.textContent = 'Sign In';
+      btn.disabled = false;
+      showToast('Welcome back, Explorer!');
+      setTimeout(powerZoom, 300);
+    }, 1500);
+  });
+
+  // Auth: Forgot Password
+  el('btn-forgot-open')?.addEventListener('click', () => el('forgot-slide').classList.add('open'));
+  el('btn-forgot-back')?.addEventListener('click', () => {
+    el('forgot-slide').classList.remove('open');
+    el('forgot-msg').classList.add('hidden');
+  });
+  el('btn-forgot-submit')?.addEventListener('click', () => {
+    if (!el('forgot-email').value.trim()) { showToast('Please enter your email.'); return; }
+    const btn = el('btn-forgot-submit');
+    btn.textContent = 'Sending...';
+    btn.disabled = true;
+    setTimeout(() => {
+      btn.textContent = 'Send Recovery Link';
+      btn.disabled = false;
+      el('forgot-msg').classList.remove('hidden');
+    }, 1500);
+  });
+
+  // Profile Save
+  el('btn-save-profile')?.addEventListener('click', () => {
+    const pw = el('pf-pw').value;
+    const pw2 = el('pf-pw2').value;
+    if (pw && pw !== pw2) { showToast('Passwords do not match.'); return; }
+
+    const btn = el('btn-save-profile');
+    btn.textContent = 'Saving...';
+    btn.disabled = true;
+
+    setTimeout(() => {
+      const name = el('pf-name')?.value.trim();
+      if (name) el('display-name').textContent = name;
+      btn.textContent = 'Save Changes';
+      btn.disabled = false;
+      showToast('Profile updated successfully.');
     }, 1200);
   });
 
   // Plan toggle
-  document.querySelectorAll('.plan-btn').forEach(b => b.addEventListener('click', () => {
-    document.querySelectorAll('.plan-btn').forEach(x => { x.style.background = 'transparent'; x.style.color = 'var(--text-2)'; });
-    b.style.background = 'var(--accent)'; b.style.color = '#fff';
-    S.plan = b.dataset.plan;
-    $('pay-total').textContent = S.plan === 'annual' ? '200.00 CHF' : '20.00 CHF';
-    $('pay-cycle').textContent = S.plan === 'annual' ? 'Billed Annually' : 'Billed Monthly';
-  }));
+  document.querySelectorAll('.plan-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.plan-btn').forEach(b => {
+        b.style.background = 'transparent';
+        b.style.color = 'var(--text-dim)';
+      });
+      btn.style.background = 'var(--blue)';
+      btn.style.color = '#fff';
+      APP.plan = btn.dataset.plan;
+      el('pay-total').textContent = APP.plan === 'annual' ? '200.00 CHF' : '20.00 CHF';
+      el('pay-cycle').textContent = APP.plan === 'annual' ? 'Billed Annually' : 'Billed Monthly';
+    });
+  });
 
   // Unit toggle
-  document.querySelectorAll('.unit-btn').forEach(b => b.addEventListener('click', () => {
-    document.querySelectorAll('.unit-btn').forEach(x => { x.style.background = 'transparent'; x.style.color = 'var(--text-2)'; });
-    b.style.background = 'var(--accent)'; b.style.color = '#fff';
-    S.unit = b.dataset.unit || 'meters';
-    if (S.place?.distKm !== undefined) $('s-dist').textContent = fmtDist(S.place.distKm);
-  }));
+  document.querySelectorAll('.unit-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.unit-btn').forEach(b => {
+        b.style.background = 'transparent';
+        b.style.color = 'var(--text-dim)';
+      });
+      btn.style.background = 'var(--blue)';
+      btn.style.color = '#fff';
+      APP.unit = btn.dataset.unit || 'meters';
+      if (APP.place?.distKm !== undefined) {
+        el('s-dist').textContent = formatDist(APP.place.distKm);
+      }
+    });
+  });
 
   // Theme toggle
-  document.querySelectorAll('.theme-btn').forEach(b => b.addEventListener('click', () => {
-    haptic(12);
-    document.querySelectorAll('.theme-btn').forEach(x => { x.style.background = 'transparent'; x.style.color = 'var(--text-2)'; });
-    b.style.background = 'var(--accent)'; b.style.color = '#fff';
-    applyTheme(b.dataset.theme);
-  }));
-  document.querySelectorAll('.theme-btn').forEach(b => { if (b.dataset.theme === S.theme) { b.style.background = 'var(--accent)'; b.style.color = '#fff'; } });
+  document.querySelectorAll('.theme-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      vibrate(12);
+      document.querySelectorAll('.theme-btn').forEach(b => {
+        b.style.background = 'transparent';
+        b.style.color = 'var(--text-dim)';
+      });
+      btn.style.background = 'var(--blue)';
+      btn.style.color = '#fff';
+      applyTheme(btn.dataset.theme);
+    });
+  });
 
-  // Haptic feedback
-  document.addEventListener('pointerdown', e => { if (e.target.closest('button')) haptic(8); });
+  // Set initial theme button
+  document.querySelectorAll('.theme-btn').forEach(btn => {
+    if (btn.dataset.theme === APP.theme) {
+      btn.style.background = 'var(--blue)';
+      btn.style.color = '#fff';
+    }
+  });
 
-  // Neural canvas
-  setTimeout(initCanvas, 500);
+  // Haptic on all buttons
+  document.addEventListener('pointerdown', e => {
+    if (e.target.closest('button')) vibrate(8);
+  });
 
-  console.log('Wanderlost v60 — Ready');
+  // Neural Canvas
+  setTimeout(initNeuralCanvas, 500);
+
+  console.log('Wanderlost v62 — Ready');
 });

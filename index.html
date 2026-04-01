@@ -1,395 +1,613 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-<title>Wanderlost — Discover Hidden Gems</title>
-<meta name="description" content="AI-powered local discovery"/>
-<meta name="theme-color" content="#0D1117"/>
-<meta name="apple-mobile-web-app-capable" content="yes"/>
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-<link rel="manifest" href="./manifest.json"/>
-<link rel="icon" href="./icon-192.png"/>
-<link rel="apple-touch-icon" href="./icon-192.png"/>
-<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="./motion.css"/>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <title>Wanderlost — Discover Hidden Gems</title>
+  <meta name="description" content="AI-powered local discovery. Find hidden gems near you."/>
+  <meta name="theme-color" content="#0D1117"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <link rel="manifest" href="./manifest.json"/>
+  <link rel="icon" href="./icon-192.png"/>
+  <link rel="apple-touch-icon" href="./icon-192.png"/>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="./style.css"/>
 </head>
 <body>
 
-<!-- ========== AUTH GATE ========== -->
+<!-- ==================== AUTH GATE ==================== -->
 <div id="auth-gate">
-  <div style="text-align:center;padding:0 32px;max-width:380px;width:100%">
-    <p class="t-meta" style="margin-bottom:12px">The Secret City</p>
-    <h1 class="t-display" style="margin-bottom:8px"><span style="color:var(--accent)">W</span>anderlost</h1>
-    <p class="t-body" style="margin-top:16px;margin-bottom:48px;font-style:italic">AI-powered local discovery</p>
-    <button id="btn-login-open" class="btn btn-primary" style="width:100%;padding:16px;margin-bottom:16px">Log In</button>
-    <button id="btn-try-free" class="btn btn-ghost" style="width:100%;padding:16px">Try for Free</button>
-    <p class="t-meta" style="margin-top:32px">By continuing you agree to our
-      <button onclick="document.getElementById('auth-gate').classList.add('hidden');openModal('modal-terms')" style="text-decoration:underline;color:var(--text-1);background:none;border:none;cursor:pointer;font:inherit">Terms</button> &
-      <button onclick="document.getElementById('auth-gate').classList.add('hidden');openModal('modal-privacy')" style="text-decoration:underline;color:var(--text-1);background:none;border:none;cursor:pointer;font:inherit">Privacy</button>
+  <div style="text-align:center; padding:0 32px; max-width:380px; width:100%;">
+    <p class="t-meta" style="margin-bottom:12px;">The Secret City</p>
+    <h1 class="t-display" style="margin-bottom:8px;">
+      <span style="color:var(--blue)">W</span>anderlost
+    </h1>
+    <p class="t-body" style="margin-top:16px; margin-bottom:48px; font-style:italic;">
+      AI-powered local discovery
+    </p>
+    <button id="btn-login-open" class="btn btn-blue" style="width:100%; margin-bottom:16px;">
+      Log In
+    </button>
+    <button id="btn-try-free" class="btn btn-outline" style="width:100%;">
+      Try for Free
+    </button>
+    <p class="t-meta" style="margin-top:32px;">
+      By continuing you agree to our
+      <button onclick="closeAuthOpenModal('modal-terms')" style="text-decoration:underline; color:var(--text); background:none; border:none; cursor:pointer; font:inherit;">Terms</button> &amp;
+      <button onclick="closeAuthOpenModal('modal-privacy')" style="text-decoration:underline; color:var(--text); background:none; border:none; cursor:pointer; font:inherit;">Privacy</button>
     </p>
   </div>
 </div>
 
-<!-- ========== LOGIN SLIDE ========== -->
+<!-- ==================== LOGIN SLIDE ==================== -->
 <div id="login-slide" class="auth-slide">
-  <div style="width:100%;max-width:340px;padding:0 32px">
-    <button id="btn-login-close" style="background:none;border:none;cursor:pointer;color:var(--text-2);margin-bottom:32px;display:block"><span class="material-symbols-outlined">arrow_back</span></button>
-    <h2 class="t-title" style="font-size:2rem;margin-bottom:8px">Welcome back.</h2>
-    <p class="t-body" style="font-style:italic;margin-bottom:40px">Sign in to continue your journey</p>
-    <div style="margin-bottom:24px"><span class="t-meta" style="display:block;margin-bottom:8px">Email Address</span><input id="login-email" type="email" placeholder="you@email.com"/></div>
-    <div style="margin-bottom:32px"><span class="t-meta" style="display:block;margin-bottom:8px">Password</span><input id="login-password" type="password" placeholder="••••••••" style="letter-spacing:.15em"/></div>
-    <button id="btn-login-submit" class="btn btn-primary" style="width:100%;padding:16px;margin-bottom:24px">Sign In</button>
-    <div style="text-align:center"><button id="btn-forgot-open" style="background:none;border:none;cursor:pointer;color:var(--text-2);font-size:12px;border-bottom:.5px solid var(--border);padding-bottom:2px">Forgot my password?</button></div>
+  <div style="width:100%; max-width:340px; padding:0 32px;">
+    <button id="btn-login-back" style="background:none; border:none; cursor:pointer; color:var(--text-dim); margin-bottom:32px; display:block;">
+      <span class="material-symbols-outlined">arrow_back</span>
+    </button>
+    <h2 class="t-title" style="font-size:2rem; margin-bottom:8px;">Welcome back.</h2>
+    <p class="t-body" style="font-style:italic; margin-bottom:40px;">Sign in to continue your journey</p>
+
+    <div style="margin-bottom:24px;">
+      <span class="t-meta" style="display:block; margin-bottom:8px;">Email Address</span>
+      <input id="login-email" type="email" placeholder="you@email.com"/>
+    </div>
+    <div style="margin-bottom:32px;">
+      <span class="t-meta" style="display:block; margin-bottom:8px;">Password</span>
+      <input id="login-pw" type="password" placeholder="••••••••" style="letter-spacing:0.15em;"/>
+    </div>
+
+    <button id="btn-login-submit" class="btn btn-blue" style="width:100%; margin-bottom:24px;">Sign In</button>
+    <div style="text-align:center;">
+      <button id="btn-forgot-open" style="background:none; border:none; cursor:pointer; color:var(--text-dim); font-size:12px; border-bottom:0.5px solid var(--border); padding-bottom:2px;">
+        Forgot my password?
+      </button>
+    </div>
   </div>
 </div>
 
-<!-- ========== FORGOT SLIDE ========== -->
+<!-- ==================== FORGOT SLIDE ==================== -->
 <div id="forgot-slide" class="auth-slide">
-  <div style="width:100%;max-width:340px;padding:0 32px">
-    <button id="btn-forgot-close" style="background:none;border:none;cursor:pointer;color:var(--text-2);margin-bottom:32px;display:block"><span class="material-symbols-outlined">arrow_back</span></button>
-    <h2 class="t-title" style="font-size:2rem;margin-bottom:8px">Reset Password.</h2>
-    <p class="t-body" style="font-style:italic;margin-bottom:40px">Enter your email for a recovery link</p>
-    <div style="margin-bottom:32px"><span class="t-meta" style="display:block;margin-bottom:8px">Email Address</span><input id="forgot-email" type="email" placeholder="you@email.com"/></div>
-    <button id="btn-forgot-submit" class="btn btn-primary" style="width:100%;padding:16px">Send Recovery Link</button>
-    <p id="forgot-msg" class="hidden t-body" style="text-align:center;margin-top:24px;color:var(--accent);font-style:italic">Recovery link sent! Check your inbox.</p>
+  <div style="width:100%; max-width:340px; padding:0 32px;">
+    <button id="btn-forgot-back" style="background:none; border:none; cursor:pointer; color:var(--text-dim); margin-bottom:32px; display:block;">
+      <span class="material-symbols-outlined">arrow_back</span>
+    </button>
+    <h2 class="t-title" style="font-size:2rem; margin-bottom:8px;">Reset Password.</h2>
+    <p class="t-body" style="font-style:italic; margin-bottom:40px;">Enter your email for a recovery link</p>
+
+    <div style="margin-bottom:32px;">
+      <span class="t-meta" style="display:block; margin-bottom:8px;">Email Address</span>
+      <input id="forgot-email" type="email" placeholder="you@email.com"/>
+    </div>
+
+    <button id="btn-forgot-submit" class="btn btn-blue" style="width:100%;">Send Recovery Link</button>
+    <p id="forgot-msg" class="hidden t-body" style="text-align:center; margin-top:24px; color:var(--blue); font-style:italic;">
+      Recovery link sent! Check your inbox.
+    </p>
   </div>
 </div>
 
-<!-- ========== TAB: EXPLORE ========== -->
+
+<!-- ==================== TAB: EXPLORE ==================== -->
 <section id="tab-explore" class="tab active">
-  <header class="glass float" style="position:fixed;top:0;width:100%;z-index:50;padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;border-radius:0 0 20px 20px">
-    <div style="display:flex;align-items:center;gap:12px">
-      <button style="background:none;border:none;cursor:pointer;color:var(--text-2)" onclick="openModal('modal-settings')"><span class="material-symbols-outlined">menu</span></button>
-      <span class="font-brand" style="font-size:1.4rem;color:var(--text-1)"><span style="color:var(--accent)">W</span>anderlost</span>
+
+  <!-- Header -->
+  <header class="glass" style="position:fixed; top:0; width:100%; z-index:50; padding:0 24px; height:60px; display:flex; align-items:center; justify-content:space-between; border-radius:0 0 20px 20px; box-shadow:var(--shadow);">
+    <div style="display:flex; align-items:center; gap:12px;">
+      <button onclick="openModal('modal-settings')" style="background:none; border:none; cursor:pointer; color:var(--text-dim);">
+        <span class="material-symbols-outlined">menu</span>
+      </button>
+      <span class="brand" style="font-size:1.4rem; color:var(--text);">
+        <span style="color:var(--blue)">W</span>anderlost
+      </span>
     </div>
-    <span id="credits" class="t-meta" style="color:var(--accent)">3 Credits</span>
+    <span id="credits" class="t-meta" style="color:var(--blue);">3 Credits</span>
   </header>
-  <main style="position:relative;width:100%;height:100vh;overflow:hidden">
-    <div id="map" style="position:absolute;inset:0;z-index:0;filter:blur(20px) brightness(.7)"></div>
-    <canvas id="neural-canvas" style="position:absolute;inset:0;z-index:1;pointer-events:none"></canvas>
-    <div style="position:absolute;top:72px;left:0;width:100%;z-index:40">
-      <div id="cats" class="no-scroll" style="display:flex;gap:4px;padding:0 24px;overflow-x:auto">
-        <button onclick="pickCat(this)" data-cat="" class="cat-pill active">All</button>
-        <button onclick="pickCat(this)" data-cat="restaurant" class="cat-pill">Restaurants</button>
-        <button onclick="pickCat(this)" data-cat="cafe" class="cat-pill">Cafes</button>
-        <button onclick="pickCat(this)" data-cat="bakery" class="cat-pill">Bakeries</button>
-        <button onclick="pickCat(this)" data-cat="bar" class="cat-pill">Bars</button>
-        <button onclick="pickCat(this)" data-cat="park" class="cat-pill">Parks</button>
-        <button onclick="pickCat(this)" data-cat="museum" class="cat-pill">Museums</button>
+
+  <!-- Map -->
+  <main style="position:relative; width:100%; height:100vh; overflow:hidden;">
+    <div id="map" style="position:absolute; inset:0; z-index:0; filter:blur(20px) brightness(0.7);"></div>
+    <canvas id="neural-canvas" style="position:absolute; inset:0; z-index:1; pointer-events:none;"></canvas>
+
+    <!-- Category Pills -->
+    <div style="position:absolute; top:72px; left:0; width:100%; z-index:40;">
+      <div id="cat-bar" class="no-scrollbar" style="display:flex; gap:4px; padding:0 24px; overflow-x:auto;">
+        <button onclick="pickCat(this)" data-cat="" class="pill active">All</button>
+        <button onclick="pickCat(this)" data-cat="restaurant" class="pill">Restaurants</button>
+        <button onclick="pickCat(this)" data-cat="cafe" class="pill">Cafes</button>
+        <button onclick="pickCat(this)" data-cat="bakery" class="pill">Bakeries</button>
+        <button onclick="pickCat(this)" data-cat="bar" class="pill">Bars</button>
+        <button onclick="pickCat(this)" data-cat="park" class="pill">Parks</button>
+        <button onclick="pickCat(this)" data-cat="museum" class="pill">Museums</button>
       </div>
     </div>
-    <div id="sonar" style="position:absolute;top:48%;left:42%;transform:translate(-50%,-50%);display:none">
-      <div style="position:relative;display:flex;align-items:center;justify-content:center">
-        <div style="position:absolute;width:96px;height:96px;border:1px solid rgba(56,182,255,.3);border-radius:50%;animation-delay:-1.5s" class="sonar-ring"></div>
-        <div style="position:absolute;width:48px;height:48px;border:1px solid rgba(56,182,255,.5);border-radius:50%" class="sonar-ring"></div>
-        <div style="width:16px;height:16px;background:var(--accent);border-radius:50%;border:2px solid #fff;box-shadow:0 0 15px var(--glow);z-index:10"></div>
+
+    <!-- Sonar Marker -->
+    <div id="sonar" style="position:absolute; top:48%; left:42%; transform:translate(-50%,-50%); display:none;">
+      <div style="position:relative; display:flex; align-items:center; justify-content:center;">
+        <div class="sonar-ring" style="position:absolute; width:96px; height:96px; border:1px solid rgba(56,182,255,0.3); border-radius:50%; animation-delay:-1.5s;"></div>
+        <div class="sonar-ring" style="position:absolute; width:48px; height:48px; border:1px solid rgba(56,182,255,0.5); border-radius:50%;"></div>
+        <div style="width:16px; height:16px; background:var(--blue); border-radius:50%; border:2px solid #fff; box-shadow:0 0 15px var(--glow); z-index:10;"></div>
       </div>
     </div>
-    <div style="position:fixed;bottom:100px;left:50%;transform:translateX(-50%);width:100%;max-width:300px;padding:0 24px;z-index:40">
-      <button id="btn-discover" class="btn btn-primary" style="width:100%;padding:18px 40px">
-        <span class="material-symbols-outlined" style="font-size:16px">explore</span> Discover Places
+
+    <!-- Discover Button -->
+    <div style="position:fixed; bottom:100px; left:50%; transform:translateX(-50%); width:100%; max-width:300px; padding:0 24px; z-index:40;">
+      <button id="btn-discover" class="btn btn-blue" style="width:100%; padding:18px 40px;">
+        <span class="material-symbols-outlined" style="font-size:16px;">explore</span>
+        Discover Places
       </button>
     </div>
   </main>
+
+  <!-- Discovery Sheet -->
   <div id="discovery-sheet">
-    <div class="discovery-card">
-      <div style="display:flex;justify-content:center;padding-bottom:20px"><div style="width:36px;height:4px;border-radius:2px;background:var(--border);cursor:pointer" onclick="closeSheet()"></div></div>
-      <p id="s-tag" class="t-meta" style="margin-bottom:8px">Discovery</p>
-      <h1 id="s-name" class="t-title" style="margin-bottom:24px">Loading...</h1>
-      <p id="s-addr" class="t-meta" style="margin-bottom:6px;color:var(--text-3)">...</p>
-      <p id="s-dist" class="t-label" style="margin-bottom:16px;color:var(--accent)">...</p>
-      <p id="s-desc" class="t-body" style="margin-bottom:28px">...</p>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-        <button id="btn-navigate" class="btn btn-primary" style="padding:14px 20px"><span class="material-symbols-outlined" style="font-size:14px">map</span> Navigate</button>
-        <button id="btn-save" class="btn btn-ghost" style="padding:14px 20px"><span class="material-symbols-outlined" style="font-size:14px">bookmark</span> Save</button>
+    <div class="sheet-card">
+      <div style="display:flex; justify-content:center; padding-bottom:20px;">
+        <div onclick="closeSheet()" style="width:36px; height:4px; border-radius:2px; background:var(--border); cursor:pointer;"></div>
+      </div>
+      <p id="s-tag" class="t-meta" style="margin-bottom:8px;">Discovery</p>
+      <h2 id="s-name" class="t-title" style="margin-bottom:24px;">Loading...</h2>
+      <p id="s-addr" class="t-meta" style="margin-bottom:6px; color:var(--text-faint);">...</p>
+      <p id="s-dist" class="t-label" style="margin-bottom:16px; color:var(--blue);">...</p>
+      <p id="s-desc" class="t-body" style="margin-bottom:28px;">...</p>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+        <button id="btn-navigate" class="btn btn-blue" style="padding:14px 20px;">
+          <span class="material-symbols-outlined" style="font-size:14px;">map</span> Navigate
+        </button>
+        <button id="btn-save" class="btn btn-outline" style="padding:14px 20px;">
+          <span class="material-symbols-outlined" style="font-size:14px;">bookmark</span> Save
+        </button>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ========== TAB: HISTORY ========== -->
+
+<!-- ==================== TAB: HISTORY ==================== -->
 <section id="tab-history" class="tab">
-  <header class="glass float" style="position:sticky;top:0;z-index:50;border-radius:0 0 20px 20px;padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between">
-    <div style="display:flex;align-items:center;gap:12px">
-      <button style="background:none;border:none;cursor:pointer;color:var(--text-2)" onclick="openModal('modal-settings')"><span class="material-symbols-outlined">menu</span></button>
-      <span class="font-brand" style="font-size:1.4rem;color:var(--text-1)"><span style="color:var(--accent)">W</span>anderlost</span>
+  <header class="glass" style="position:sticky; top:0; z-index:50; border-radius:0 0 20px 20px; padding:0 24px; height:60px; display:flex; align-items:center; justify-content:space-between; box-shadow:var(--shadow);">
+    <div style="display:flex; align-items:center; gap:12px;">
+      <button onclick="openModal('modal-settings')" style="background:none; border:none; cursor:pointer; color:var(--text-dim);"><span class="material-symbols-outlined">menu</span></button>
+      <span class="brand" style="font-size:1.4rem; color:var(--text);"><span style="color:var(--blue)">W</span>anderlost</span>
     </div>
-    <button style="background:none;border:none;cursor:pointer;color:var(--text-2)" onclick="toast('History search coming soon.')"><span class="material-symbols-outlined">search</span></button>
+    <button onclick="showToast('History search coming soon.')" style="background:none; border:none; cursor:pointer; color:var(--text-dim);"><span class="material-symbols-outlined">search</span></button>
   </header>
-  <main style="max-width:640px;margin:0 auto;padding:48px 24px 128px">
-    <p class="t-meta" style="margin-bottom:8px">Chronicle</p>
-    <h2 class="t-display" style="font-size:2.5rem;margin-bottom:12px">History</h2>
-    <div style="width:48px;height:2px;background:var(--accent);margin-bottom:16px"></div>
-    <p class="t-body" style="margin-bottom:48px">Your curated journey through discovery.</p>
-    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:24px"><p class="t-label">Recent Discoveries</p><p class="t-meta">Volume 01</p></div>
-    <div id="history-list"><p class="t-body" style="font-style:italic">No discoveries yet. Tap "Discover Places" to begin.</p></div>
-    <div class="glass" style="border-radius:24px;padding:32px;text-align:center;margin-top:48px">
-      <p class="t-meta" style="margin-bottom:12px">Premium Feature</p>
-      <h3 class="t-title" style="margin-bottom:16px">Unlock Full History</h3>
-      <div style="display:flex;gap:24px;justify-content:center;margin-bottom:24px">
-        <div style="display:flex;align-items:center;gap:6px"><span class="material-symbols-outlined" style="font-size:16px;color:var(--accent)">all_inclusive</span><span class="t-meta">Unlimited</span></div>
-        <div style="display:flex;align-items:center;gap:6px"><span class="material-symbols-outlined" style="font-size:16px;color:var(--accent)">book_5</span><span class="t-meta">Permanent</span></div>
+  <main style="max-width:640px; margin:0 auto; padding:48px 24px 128px;">
+    <p class="t-meta" style="margin-bottom:8px;">Chronicle</p>
+    <h2 class="t-display" style="font-size:2.5rem; margin-bottom:12px;">History</h2>
+    <div style="width:48px; height:2px; background:var(--blue); margin-bottom:16px;"></div>
+    <p class="t-body" style="margin-bottom:48px;">Your curated journey through discovery.</p>
+
+    <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:24px;">
+      <p class="t-label">Recent Discoveries</p>
+      <p class="t-meta">Volume 01</p>
+    </div>
+    <div id="history-list">
+      <p class="t-body" style="font-style:italic;">No discoveries yet. Tap "Discover Places" to begin.</p>
+    </div>
+
+    <!-- Premium Gate -->
+    <div class="glass" style="border-radius:24px; padding:32px; text-align:center; margin-top:48px;">
+      <p class="t-meta" style="margin-bottom:12px;">Premium Feature</p>
+      <h3 class="t-title" style="margin-bottom:16px;">Unlock Full History</h3>
+      <div style="display:flex; gap:24px; justify-content:center; margin-bottom:24px;">
+        <div style="display:flex; align-items:center; gap:6px;">
+          <span class="material-symbols-outlined" style="font-size:16px; color:var(--blue);">all_inclusive</span>
+          <span class="t-meta">Unlimited</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:6px;">
+          <span class="material-symbols-outlined" style="font-size:16px; color:var(--blue);">book_5</span>
+          <span class="t-meta">Permanent</span>
+        </div>
       </div>
-      <button onclick="openModal('modal-premium')" class="btn btn-primary" style="padding:14px 32px">Upgrade Now</button>
+      <button onclick="openModal('modal-premium')" class="btn btn-blue" style="padding:14px 32px;">Upgrade Now</button>
     </div>
   </main>
 </section>
 
-<!-- ========== TAB: PROFILE ========== -->
+
+<!-- ==================== TAB: PROFILE ==================== -->
 <section id="tab-profile" class="tab">
-  <header class="glass float" style="position:sticky;top:0;z-index:50;border-radius:0 0 20px 20px;padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between">
-    <div style="display:flex;align-items:center;gap:12px">
-      <button style="background:none;border:none;cursor:pointer;color:var(--text-2)" onclick="openModal('modal-settings')"><span class="material-symbols-outlined">menu</span></button>
-      <span class="font-brand" style="font-size:1.4rem;color:var(--text-1)"><span style="color:var(--accent)">W</span>anderlost</span>
+  <header class="glass" style="position:sticky; top:0; z-index:50; border-radius:0 0 20px 20px; padding:0 24px; height:60px; display:flex; align-items:center; justify-content:space-between; box-shadow:var(--shadow);">
+    <div style="display:flex; align-items:center; gap:12px;">
+      <button onclick="openModal('modal-settings')" style="background:none; border:none; cursor:pointer; color:var(--text-dim);"><span class="material-symbols-outlined">menu</span></button>
+      <span class="brand" style="font-size:1.4rem; color:var(--text);"><span style="color:var(--blue)">W</span>anderlost</span>
     </div>
-    <button style="background:none;border:none;cursor:pointer;color:var(--text-2)"><span class="material-symbols-outlined">notifications</span></button>
+    <button style="background:none; border:none; cursor:pointer; color:var(--text-dim);"><span class="material-symbols-outlined">notifications</span></button>
   </header>
-  <main style="padding:32px 24px 128px;max-width:480px;margin:0 auto">
-    <section style="display:flex;flex-direction:column;align-items:center;margin-bottom:40px">
-      <div style="width:100px;height:100px;border-radius:50%;overflow:hidden;border:2px solid var(--accent)">
-        <img alt="User" style="width:100%;height:100%;object-fit:cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbCapbZpiJc0BoOIFDF4-jr2t60HAk4MD7Y1P4UjJmtjBurdVbLboys9VXiT_G3m6O_naZH3o49c3Oohe1ZE7W_BWVW1jfgKNFy7857lW6LMPBogSgm373r9DfFNKffCSkge5ujAUrmfRa-12AG8mkeY7unycNVvWC6S9yPxB8ej_0_wFuKeGlMpw0rjto_7oA2iwPHPdaMaRE3adFCVllYMTmQywG7-78J-dg2sInYud1kqjGZx3hzWq5c7IqWh1lFJIBST_JtjY"/>
+  <main style="padding:32px 24px 128px; max-width:480px; margin:0 auto;">
+
+    <!-- Avatar -->
+    <section style="display:flex; flex-direction:column; align-items:center; margin-bottom:40px;">
+      <div style="width:100px; height:100px; border-radius:50%; overflow:hidden; border:2px solid var(--blue);">
+        <img alt="User" style="width:100%; height:100%; object-fit:cover;" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbCapbZpiJc0BoOIFDF4-jr2t60HAk4MD7Y1P4UjJmtjBurdVbLboys9VXiT_G3m6O_naZH3o49c3Oohe1ZE7W_BWVW1jfgKNFy7857lW6LMPBogSgm373r9DfFNKffCSkge5ujAUrmfRa-12AG8mkeY7unycNVvWC6S9yPxB8ej_0_wFuKeGlMpw0rjto_7oA2iwPHPdaMaRE3adFCVllYMTmQywG7-78J-dg2sInYud1kqjGZx3hzWq5c7IqWh1lFJIBST_JtjY"/>
       </div>
-      <h2 id="display-name" class="t-title" style="margin-top:16px">Explorer</h2>
-      <p class="t-meta" style="margin-top:4px">Nomad Explorer</p>
+      <h2 id="display-name" class="t-title" style="margin-top:16px;">Explorer</h2>
+      <p class="t-meta" style="margin-top:4px;">Nomad Explorer</p>
     </section>
-    <section class="glass" style="border-radius:20px;padding:24px;display:flex;justify-content:space-between;align-items:center;margin-bottom:32px">
-      <div><p class="t-meta" style="margin-bottom:4px">Account Tier</p><p class="t-label" style="color:var(--text-1)">Free Membership</p></div>
-      <button onclick="openModal('modal-premium')" class="btn btn-primary" style="padding:10px 24px;font-size:10px">Premium</button>
+
+    <!-- Membership Card -->
+    <section class="glass" style="border-radius:20px; padding:24px; display:flex; justify-content:space-between; align-items:center; margin-bottom:32px;">
+      <div>
+        <p class="t-meta" style="margin-bottom:4px;">Account Tier</p>
+        <p class="t-label" style="color:var(--text);">Free Membership</p>
+      </div>
+      <button onclick="openModal('modal-premium')" class="btn btn-blue" style="padding:10px 24px; font-size:10px;">Premium</button>
     </section>
-    <section style="margin-bottom:32px">
-      <div style="padding:16px 0;border-bottom:.5px solid var(--border)"><span class="t-meta" style="display:block;margin-bottom:6px">Full Name</span><input id="pf-name" type="text" value="Explorer"/></div>
-      <div style="padding:16px 0;border-bottom:.5px solid var(--border)"><span class="t-meta" style="display:block;margin-bottom:6px">Email</span><input type="email" placeholder="Add email"/></div>
-      <div style="padding:16px 0;border-bottom:.5px solid var(--border)"><span class="t-meta" style="display:block;margin-bottom:6px">Date of Birth</span><input type="date"/></div>
-      <div style="padding:16px 0;border-bottom:.5px solid var(--border)"><span class="t-meta" style="display:block;margin-bottom:6px">Password</span><input id="pf-pw" type="password" placeholder="New password"/></div>
-      <div style="padding:16px 0;border-bottom:.5px solid var(--border)"><span class="t-meta" style="display:block;margin-bottom:6px">Confirm Password</span><input id="pf-pw2" type="password" placeholder="Repeat password"/></div>
-      <button id="btn-save-profile" class="btn btn-primary" style="width:100%;padding:14px;margin-top:20px">Save Changes</button>
+
+    <!-- Fields -->
+    <section style="margin-bottom:32px;">
+      <div style="padding:16px 0; border-bottom:0.5px solid var(--border);">
+        <span class="t-meta" style="display:block; margin-bottom:6px;">Full Name</span>
+        <input id="pf-name" type="text" value="Explorer"/>
+      </div>
+      <div style="padding:16px 0; border-bottom:0.5px solid var(--border);">
+        <span class="t-meta" style="display:block; margin-bottom:6px;">Email</span>
+        <input type="email" placeholder="Add email"/>
+      </div>
+      <div style="padding:16px 0; border-bottom:0.5px solid var(--border);">
+        <span class="t-meta" style="display:block; margin-bottom:6px;">Date of Birth</span>
+        <input type="date"/>
+      </div>
+      <div style="padding:16px 0; border-bottom:0.5px solid var(--border);">
+        <span class="t-meta" style="display:block; margin-bottom:6px;">Password</span>
+        <input id="pf-pw" type="password" placeholder="New password"/>
+      </div>
+      <div style="padding:16px 0; border-bottom:0.5px solid var(--border);">
+        <span class="t-meta" style="display:block; margin-bottom:6px;">Confirm Password</span>
+        <input id="pf-pw2" type="password" placeholder="Repeat password"/>
+      </div>
+      <button id="btn-save-profile" class="btn btn-blue" style="width:100%; margin-top:20px;">Save Changes</button>
     </section>
-    <section style="text-align:center"><p class="t-body" style="margin-bottom:12px">Customize your data preferences at any time.</p><button onclick="openModal('modal-settings')" style="background:none;border:none;cursor:pointer;color:var(--accent);font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;text-decoration:underline">Privacy Settings</button></section>
+
+    <section style="text-align:center;">
+      <p class="t-body" style="margin-bottom:12px;">Customize your data preferences at any time.</p>
+      <button onclick="openModal('modal-settings')" style="background:none; border:none; cursor:pointer; color:var(--blue); font-size:10px; font-weight:700; letter-spacing:0.2em; text-transform:uppercase; text-decoration:underline;">Privacy Settings</button>
+    </section>
   </main>
 </section>
 
-<!-- ========== BOTTOM DOCK ========== -->
-<nav class="glass float" style="position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:150;display:flex;justify-content:space-around;align-items:center;height:56px;width:240px;border-radius:9999px">
-  <button onclick="switchTab('tab-explore')" data-tab="tab-explore" class="dock-btn active"><span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">explore</span></button>
-  <button onclick="switchTab('tab-history')" data-tab="tab-history" class="dock-btn"><span class="material-symbols-outlined">history</span></button>
-  <button onclick="switchTab('tab-profile')" data-tab="tab-profile" class="dock-btn"><span class="material-symbols-outlined">person</span></button>
+
+<!-- ==================== BOTTOM DOCK ==================== -->
+<nav class="glass" style="position:fixed; bottom:24px; left:50%; transform:translateX(-50%); z-index:150; display:flex; justify-content:space-around; align-items:center; height:56px; width:240px; border-radius:9999px; box-shadow:var(--shadow);">
+  <button onclick="switchTab('tab-explore')" data-tab="tab-explore" class="dock-btn active">
+    <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">explore</span>
+  </button>
+  <button onclick="switchTab('tab-history')" data-tab="tab-history" class="dock-btn">
+    <span class="material-symbols-outlined">history</span>
+  </button>
+  <button onclick="switchTab('tab-profile')" data-tab="tab-profile" class="dock-btn">
+    <span class="material-symbols-outlined">person</span>
+  </button>
 </nav>
 
-<!-- ========== MODAL: SETTINGS ========== -->
+
+<!-- ==================== MODAL: SETTINGS ==================== -->
 <div id="modal-settings" class="modal">
-  <header class="glass" style="position:fixed;top:0;width:100%;z-index:50;border-radius:0 0 20px 20px;padding:0 24px;height:60px;display:flex;align-items:center;gap:12px">
-    <button style="background:none;border:none;cursor:pointer;color:var(--text-2)" onclick="closeModal('modal-settings')"><span class="material-symbols-outlined">arrow_back</span></button>
-    <span class="t-title" style="font-size:1.3rem">Settings</span>
+  <header class="glass" style="position:fixed; top:0; width:100%; z-index:50; border-radius:0 0 20px 20px; padding:0 24px; height:60px; display:flex; align-items:center; gap:12px;">
+    <button onclick="closeModal('modal-settings')" style="background:none; border:none; cursor:pointer; color:var(--text-dim);"><span class="material-symbols-outlined">arrow_back</span></button>
+    <span class="t-title" style="font-size:1.3rem;">Settings</span>
   </header>
-  <main style="padding:80px 24px 128px;max-width:560px;margin:0 auto">
-    <section style="margin-bottom:40px"><p class="t-meta" style="margin-bottom:8px">User Profile</p><h2 class="t-display" style="font-size:2rem">Explorer</h2></section>
+  <main style="padding:80px 24px 128px; max-width:560px; margin:0 auto;">
+
+    <section style="margin-bottom:40px;">
+      <p class="t-meta" style="margin-bottom:8px;">User Profile</p>
+      <h2 class="t-display" style="font-size:2rem;">Explorer</h2>
+    </section>
+
     <!-- Membership -->
-    <section style="margin-bottom:32px">
-      <h3 class="t-title" style="font-size:1.3rem;padding-bottom:8px;border-bottom:.5px solid var(--border);margin-bottom:20px">Membership</h3>
-      <div style="display:flex;justify-content:space-between;margin-bottom:12px"><span class="t-meta">Status</span><span class="t-label" style="color:var(--accent)">Free</span></div>
-      <div style="display:flex;justify-content:space-between;margin-bottom:16px"><span class="t-meta">Next Bill</span><span class="t-body" style="font-size:13px">N/A</span></div>
-      <div style="display:flex;gap:12px">
-        <button onclick="openModal('modal-premium')" class="btn btn-primary" style="padding:10px 20px;font-size:10px">Manage</button>
-        <button onclick="toast('You are on the Free plan.')" class="btn btn-ghost" style="padding:10px 20px;font-size:10px">Cancel</button>
+    <section style="margin-bottom:32px;">
+      <h3 class="t-title" style="font-size:1.3rem; padding-bottom:8px; border-bottom:0.5px solid var(--border); margin-bottom:20px;">Membership</h3>
+      <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
+        <span class="t-meta">Status</span><span class="t-label" style="color:var(--blue);">Free</span>
+      </div>
+      <div style="display:flex; justify-content:space-between; margin-bottom:16px;">
+        <span class="t-meta">Next Bill</span><span class="t-body" style="font-size:13px;">N/A</span>
+      </div>
+      <div style="display:flex; gap:12px;">
+        <button onclick="openModal('modal-premium')" class="btn btn-blue" style="padding:10px 20px; font-size:10px;">Manage</button>
+        <button onclick="showToast('You are on the Free plan.')" class="btn btn-outline" style="padding:10px 20px; font-size:10px;">Cancel</button>
       </div>
     </section>
+
     <!-- Preferences -->
-    <section style="margin-bottom:32px">
-      <h3 class="t-title" style="font-size:1.3rem;padding-bottom:8px;border-bottom:.5px solid var(--border);margin-bottom:20px">App Preferences</h3>
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0">
-        <div><span class="t-label" style="display:block;color:var(--text-1);margin-bottom:2px">Distance Units</span><span class="t-meta">Affects map and navigation</span></div>
-        <div class="glass" style="display:flex;border-radius:9999px;overflow:hidden">
-          <button data-unit="meters" class="unit-btn" style="padding:8px 16px;font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;border:none;cursor:pointer;background:var(--accent);color:#fff">Meters</button>
-          <button data-unit="feet" class="unit-btn" style="padding:8px 16px;font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;border:none;cursor:pointer;background:transparent;color:var(--text-2)">Feet</button>
+    <section style="margin-bottom:32px;">
+      <h3 class="t-title" style="font-size:1.3rem; padding-bottom:8px; border-bottom:0.5px solid var(--border); margin-bottom:20px;">App Preferences</h3>
+
+      <!-- Distance -->
+      <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 0;">
+        <div>
+          <span class="t-label" style="display:block; color:var(--text); margin-bottom:2px;">Distance Units</span>
+          <span class="t-meta">Affects map and navigation</span>
+        </div>
+        <div class="glass" style="display:flex; border-radius:9999px; overflow:hidden;">
+          <button data-unit="meters" class="unit-btn" style="padding:8px 16px; font-size:10px; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; border:none; cursor:pointer; background:var(--blue); color:#fff;">Meters</button>
+          <button data-unit="feet" class="unit-btn" style="padding:8px 16px; font-size:10px; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; border:none; cursor:pointer; background:transparent; color:var(--text-dim);">Feet</button>
         </div>
       </div>
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-top:.5px solid var(--border)">
-        <div><span class="t-label" style="display:block;color:var(--text-1);margin-bottom:2px">Appearance</span><span class="t-meta">Silver or Midnight</span></div>
-        <div class="glass" style="display:flex;border-radius:9999px;overflow:hidden">
-          <button data-theme="light" class="theme-btn" style="padding:8px 16px;font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;border:none;cursor:pointer;background:transparent;color:var(--text-2)">Light</button>
-          <button data-theme="dark" class="theme-btn" style="padding:8px 16px;font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;border:none;cursor:pointer;background:var(--accent);color:#fff">Dark</button>
+
+      <!-- Theme -->
+      <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 0; border-top:0.5px solid var(--border);">
+        <div>
+          <span class="t-label" style="display:block; color:var(--text); margin-bottom:2px;">Appearance</span>
+          <span class="t-meta">Silver or Midnight</span>
+        </div>
+        <div class="glass" style="display:flex; border-radius:9999px; overflow:hidden;">
+          <button data-theme="light" class="theme-btn" style="padding:8px 16px; font-size:10px; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; border:none; cursor:pointer; background:transparent; color:var(--text-dim);">Light</button>
+          <button data-theme="dark" class="theme-btn" style="padding:8px 16px; font-size:10px; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; border:none; cursor:pointer; background:var(--blue); color:#fff;">Dark</button>
         </div>
       </div>
     </section>
+
     <!-- Legal -->
-    <section style="margin-bottom:32px">
-      <h3 class="t-title" style="font-size:1.3rem;padding-bottom:8px;border-bottom:.5px solid var(--border);margin-bottom:16px">Legal & Support</h3>
-      <div style="padding:12px 0;border-bottom:.5px solid var(--border);cursor:pointer" onclick="openModal('modal-help')"><span class="t-body" style="color:var(--text-1)">Help Center</span></div>
-      <div style="padding:12px 0;border-bottom:.5px solid var(--border);cursor:pointer" onclick="openModal('modal-terms')"><span class="t-body" style="color:var(--text-1)">Terms & Conditions</span></div>
-      <div style="padding:12px 0;border-bottom:.5px solid var(--border);cursor:pointer" onclick="openModal('modal-privacy')"><span class="t-body" style="color:var(--text-1)">Privacy Policy</span></div>
-      <div style="padding:12px 0;border-bottom:.5px solid var(--border);cursor:pointer" onclick="openModal('modal-safety')"><span class="t-body" style="color:var(--text-1)">Safety & Responsibility</span></div>
+    <section style="margin-bottom:32px;">
+      <h3 class="t-title" style="font-size:1.3rem; padding-bottom:8px; border-bottom:0.5px solid var(--border); margin-bottom:16px;">Legal &amp; Support</h3>
+      <div onclick="openModal('modal-help')" style="padding:12px 0; border-bottom:0.5px solid var(--border); cursor:pointer;"><span class="t-body" style="color:var(--text);">Help Center</span></div>
+      <div onclick="openModal('modal-terms')" style="padding:12px 0; border-bottom:0.5px solid var(--border); cursor:pointer;"><span class="t-body" style="color:var(--text);">Terms &amp; Conditions</span></div>
+      <div onclick="openModal('modal-privacy')" style="padding:12px 0; border-bottom:0.5px solid var(--border); cursor:pointer;"><span class="t-body" style="color:var(--text);">Privacy Policy</span></div>
+      <div onclick="openModal('modal-safety')" style="padding:12px 0; border-bottom:0.5px solid var(--border); cursor:pointer;"><span class="t-body" style="color:var(--text);">Safety &amp; Responsibility</span></div>
     </section>
-    <button onclick="location.reload()" style="background:none;border:none;cursor:pointer;color:var(--text-2);text-decoration:underline;font-size:13px;margin-bottom:32px;display:block">Log out</button>
-    <section class="glass" style="padding:24px;border-radius:16px;border-left:3px solid #FF4444">
-      <p class="t-label" style="color:#FF4444;margin-bottom:12px">Danger Zone</p>
-      <p class="t-body" style="margin-bottom:16px;font-size:12px">Actions here are irreversible.</p>
-      <button onclick="if(confirm('Delete account?')){toast('Account deletion initiated.');setTimeout(()=>location.reload(),2500)}" style="background:none;border:none;cursor:pointer;color:#FF4444;font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;display:block;margin-bottom:8px">Delete my account</button>
-      <button onclick="if(confirm('Clear all data?')){toast('Data purged.');S.history=[];S.saved=[];renderHistory()}" style="background:none;border:none;cursor:pointer;color:#FF4444;font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;display:block">Delete my data</button>
+
+    <button onclick="location.reload()" style="background:none; border:none; cursor:pointer; color:var(--text-dim); text-decoration:underline; font-size:13px; margin-bottom:32px; display:block;">Log out</button>
+
+    <!-- Danger Zone -->
+    <section class="glass" style="padding:24px; border-radius:16px; border-left:3px solid var(--red);">
+      <p class="t-label" style="color:var(--red); margin-bottom:12px;">Danger Zone</p>
+      <p class="t-body" style="margin-bottom:16px; font-size:12px;">Actions here are irreversible.</p>
+      <button onclick="if(confirm('Delete account? This cannot be undone.')){showToast('Account deletion initiated.');setTimeout(()=>location.reload(),2500);}" style="background:none; border:none; cursor:pointer; color:var(--red); font-size:10px; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; display:block; margin-bottom:8px;">Delete my account</button>
+      <button onclick="if(confirm('Clear all local data?')){showToast('Data purged.');APP.history=[];APP.saved=[];renderHistory();}" style="background:none; border:none; cursor:pointer; color:var(--red); font-size:10px; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; display:block;">Delete my data</button>
     </section>
   </main>
 </div>
 
-<!-- ========== MODAL: SAFETY ========== -->
+
+<!-- ==================== MODAL: SAFETY ==================== -->
 <div id="modal-safety" class="modal">
-  <header class="glass" style="position:sticky;top:0;z-index:50;border-radius:0 0 20px 20px;padding:0 24px;height:60px;display:flex;align-items:center;gap:12px">
-    <button style="background:none;border:none;cursor:pointer;color:var(--accent)" onclick="closeModal('modal-safety')"><span class="material-symbols-outlined">arrow_back</span></button>
-    <span class="t-label" style="color:var(--text-1)">Safety & Responsibility</span>
+  <header class="glass" style="position:sticky; top:0; z-index:50; border-radius:0 0 20px 20px; padding:0 24px; height:60px; display:flex; align-items:center; gap:12px;">
+    <button onclick="closeModal('modal-safety')" style="background:none; border:none; cursor:pointer; color:var(--blue);"><span class="material-symbols-outlined">arrow_back</span></button>
+    <span class="t-label" style="color:var(--text);">Safety &amp; Responsibility</span>
   </header>
-  <main style="padding:32px 10%;max-width:640px;margin:0 auto;padding-bottom:128px">
-    <p class="t-meta" style="margin-bottom:8px;color:var(--accent)">Protocol 01</p>
-    <h2 class="t-display" style="font-size:2.2rem;margin-bottom:12px">The Digital Curator's Liability.</h2>
-    <p class="t-meta" style="margin-bottom:24px">Last Updated: March 27, 2026</p>
-    <p class="t-body" style="font-size:15px;font-style:italic;margin-bottom:32px">Wanderlost is a discovery interface, not a travel guide. You are responsible for your own journey.</p>
-    <h3 class="t-title" style="font-size:1.3rem;margin-bottom:6px">Self-Preservation</h3><p class="t-meta" style="margin-bottom:16px;color:var(--accent)">Section 01</p>
-    <div style="margin-bottom:24px"><p class="t-label" style="color:var(--text-1);margin-bottom:4px">Environmental Intelligence</p><p class="t-body">Assess the environment upon arrival. If it feels wrong, leave.</p></div>
-    <div style="margin-bottom:32px"><p class="t-label" style="color:var(--text-1);margin-bottom:4px">Tactical Awareness</p><p class="t-body">Always identify your closest exit or transit point.</p></div>
-    <h3 class="t-title" style="font-size:1.3rem;margin-bottom:6px">Self-Responsibility</h3><p class="t-meta" style="margin-bottom:16px;color:var(--accent)">Section 02</p>
-    <div style="margin-bottom:24px"><p class="t-label" style="color:var(--text-1);margin-bottom:4px">No Agency</p><p class="t-body">Wanderlost does not act as an agent, guide, or insurer.</p></div>
-    <div style="margin-bottom:32px"><p class="t-label" style="color:var(--text-1);margin-bottom:4px">Private Property</p><p class="t-body">Never trespass. If a location is restricted, do not enter.</p></div>
-    <h3 class="t-title" style="font-size:1.3rem;margin-bottom:6px">Disclaimer</h3><p class="t-meta" style="margin-bottom:16px;color:var(--accent)">Section 03</p>
-    <div class="glass" style="padding:20px;border-radius:12px;border-left:2px solid #FF4444"><p class="t-body">By using Wanderlost, you acknowledge that all travel is undertaken at your own risk.</p></div>
+  <main style="padding:32px 10%; max-width:640px; margin:0 auto; padding-bottom:128px;">
+    <p class="t-meta" style="margin-bottom:8px; color:var(--blue);">Protocol 01</p>
+    <h2 class="t-display" style="font-size:2.2rem; margin-bottom:12px;">The Digital Curator's Liability.</h2>
+    <p class="t-meta" style="margin-bottom:24px;">Last Updated: March 27, 2026</p>
+    <p class="t-body" style="font-size:15px; font-style:italic; margin-bottom:32px;">Wanderlost is a discovery interface, not a travel guide. You are responsible for your own journey.</p>
+
+    <h3 class="t-title" style="font-size:1.3rem; margin-bottom:6px;">Self-Preservation</h3>
+    <p class="t-meta" style="margin-bottom:16px; color:var(--blue);">Section 01</p>
+    <div style="margin-bottom:24px;"><p class="t-label" style="color:var(--text); margin-bottom:4px;">Environmental Intelligence</p><p class="t-body">Assess the environment upon arrival. If it feels wrong, leave.</p></div>
+    <div style="margin-bottom:32px;"><p class="t-label" style="color:var(--text); margin-bottom:4px;">Tactical Awareness</p><p class="t-body">Always identify your closest exit or transit point.</p></div>
+
+    <h3 class="t-title" style="font-size:1.3rem; margin-bottom:6px;">Self-Responsibility</h3>
+    <p class="t-meta" style="margin-bottom:16px; color:var(--blue);">Section 02</p>
+    <div style="margin-bottom:24px;"><p class="t-label" style="color:var(--text); margin-bottom:4px;">No Agency</p><p class="t-body">Wanderlost does not act as an agent, guide, or insurer.</p></div>
+    <div style="margin-bottom:32px;"><p class="t-label" style="color:var(--text); margin-bottom:4px;">Private Property</p><p class="t-body">Never trespass. If a location is restricted, do not enter.</p></div>
+
+    <h3 class="t-title" style="font-size:1.3rem; margin-bottom:6px;">Disclaimer</h3>
+    <p class="t-meta" style="margin-bottom:16px; color:var(--blue);">Section 03</p>
+    <div class="glass" style="padding:20px; border-radius:12px; border-left:2px solid var(--red);"><p class="t-body">By using Wanderlost, you acknowledge that all travel is undertaken at your own risk.</p></div>
   </main>
 </div>
 
-<!-- ========== MODAL: PRIVACY ========== -->
+
+<!-- ==================== MODAL: PRIVACY ==================== -->
 <div id="modal-privacy" class="modal">
-  <header class="glass" style="position:sticky;top:0;z-index:50;border-radius:0 0 20px 20px;padding:0 24px;height:60px;display:flex;align-items:center;gap:12px">
-    <button style="background:none;border:none;cursor:pointer;color:var(--accent)" onclick="closeModal('modal-privacy')"><span class="material-symbols-outlined">arrow_back</span></button>
-    <span class="t-label" style="color:var(--text-1)">Privacy Policy</span>
+  <header class="glass" style="position:sticky; top:0; z-index:50; border-radius:0 0 20px 20px; padding:0 24px; height:60px; display:flex; align-items:center; gap:12px;">
+    <button onclick="closeModal('modal-privacy')" style="background:none; border:none; cursor:pointer; color:var(--blue);"><span class="material-symbols-outlined">arrow_back</span></button>
+    <span class="t-label" style="color:var(--text);">Privacy Policy</span>
   </header>
-  <main style="padding:32px 10%;max-width:640px;margin:0 auto;padding-bottom:128px">
-    <p class="t-meta" style="margin-bottom:8px;color:var(--accent)">Legal & Privacy</p>
-    <h2 class="t-display" style="font-size:2.2rem;margin-bottom:12px">Respecting the Digital Horizon.</h2>
-    <p class="t-meta" style="margin-bottom:24px">Last Updated: March 27, 2026</p>
-    <p class="t-body" style="font-size:15px;font-style:italic;margin-bottom:32px">Your privacy is the bedrock of our exploration.</p>
-    <h3 class="t-title" style="font-size:1.3rem;margin-bottom:6px">Data We Collect</h3><p class="t-meta" style="margin-bottom:16px;color:var(--accent)">Section 01</p>
-    <div style="margin-bottom:24px"><p class="t-label" style="color:var(--text-1);margin-bottom:4px">Location Data</p><p class="t-body">Required for navigation. Only tracked when the app is active.</p></div>
-    <div style="margin-bottom:24px"><p class="t-label" style="color:var(--text-1);margin-bottom:4px">Account Info</p><p class="t-body">Name and email to sync your Journal across devices.</p></div>
-    <div style="margin-bottom:32px"><p class="t-label" style="color:var(--text-1);margin-bottom:4px">Usage Data</p><p class="t-body">Anonymous identifiers and interaction logs to improve the interface.</p></div>
-    <h3 class="t-title" style="font-size:1.3rem;margin-bottom:6px">Third Parties</h3><p class="t-meta" style="margin-bottom:16px;color:var(--accent)">Section 02</p>
-    <div style="padding:12px 0;border-bottom:.5px solid var(--border);display:flex;justify-content:space-between"><span class="t-body" style="color:var(--text-1)">Maps</span><span class="t-body">Google Maps SDK</span></div>
-    <div style="padding:12px 0;border-bottom:.5px solid var(--border);display:flex;justify-content:space-between"><span class="t-body" style="color:var(--text-1)">Payments</span><span class="t-body">Stripe / Apple Pay</span></div>
-    <div style="padding:12px 0;border-bottom:.5px solid var(--border);display:flex;justify-content:space-between"><span class="t-body" style="color:var(--text-1)">Analytics</span><span class="t-body">In-house (Encrypted)</span></div>
+  <main style="padding:32px 10%; max-width:640px; margin:0 auto; padding-bottom:128px;">
+    <p class="t-meta" style="margin-bottom:8px; color:var(--blue);">Legal &amp; Privacy</p>
+    <h2 class="t-display" style="font-size:2.2rem; margin-bottom:12px;">Respecting the Digital Horizon.</h2>
+    <p class="t-meta" style="margin-bottom:24px;">Last Updated: March 27, 2026</p>
+    <p class="t-body" style="font-size:15px; font-style:italic; margin-bottom:32px;">Your privacy is the bedrock of our exploration.</p>
+
+    <h3 class="t-title" style="font-size:1.3rem; margin-bottom:6px;">Data We Collect</h3>
+    <p class="t-meta" style="margin-bottom:16px; color:var(--blue);">Section 01</p>
+    <div style="margin-bottom:24px;"><p class="t-label" style="color:var(--text); margin-bottom:4px;">Location Data</p><p class="t-body">Required for navigation. Only tracked when the app is active.</p></div>
+    <div style="margin-bottom:24px;"><p class="t-label" style="color:var(--text); margin-bottom:4px;">Account Info</p><p class="t-body">Name and email to sync your Journal across devices.</p></div>
+    <div style="margin-bottom:32px;"><p class="t-label" style="color:var(--text); margin-bottom:4px;">Usage Data</p><p class="t-body">Anonymous identifiers and interaction logs to improve the interface.</p></div>
+
+    <h3 class="t-title" style="font-size:1.3rem; margin-bottom:6px;">Third Parties</h3>
+    <p class="t-meta" style="margin-bottom:16px; color:var(--blue);">Section 02</p>
+    <div style="padding:12px 0; border-bottom:0.5px solid var(--border); display:flex; justify-content:space-between;"><span class="t-body" style="color:var(--text);">Maps</span><span class="t-body">Google Maps SDK</span></div>
+    <div style="padding:12px 0; border-bottom:0.5px solid var(--border); display:flex; justify-content:space-between;"><span class="t-body" style="color:var(--text);">Payments</span><span class="t-body">Stripe / Apple Pay</span></div>
+    <div style="padding:12px 0; border-bottom:0.5px solid var(--border); display:flex; justify-content:space-between;"><span class="t-body" style="color:var(--text);">Analytics</span><span class="t-body">In-house (Encrypted)</span></div>
   </main>
 </div>
 
-<!-- ========== MODAL: TERMS ========== -->
+
+<!-- ==================== MODAL: TERMS ==================== -->
 <div id="modal-terms" class="modal">
-  <header class="glass" style="position:sticky;top:0;z-index:50;border-radius:0 0 20px 20px;padding:0 24px;height:60px;display:flex;align-items:center;gap:12px">
-    <button style="background:none;border:none;cursor:pointer;color:var(--accent)" onclick="closeModal('modal-terms')"><span class="material-symbols-outlined">arrow_back</span></button>
-    <span class="t-label" style="color:var(--text-1)">Terms & Conditions</span>
+  <header class="glass" style="position:sticky; top:0; z-index:50; border-radius:0 0 20px 20px; padding:0 24px; height:60px; display:flex; align-items:center; gap:12px;">
+    <button onclick="closeModal('modal-terms')" style="background:none; border:none; cursor:pointer; color:var(--blue);"><span class="material-symbols-outlined">arrow_back</span></button>
+    <span class="t-label" style="color:var(--text);">Terms &amp; Conditions</span>
   </header>
-  <main style="padding:32px 10%;max-width:640px;margin:0 auto;padding-bottom:128px">
-    <p class="t-meta" style="margin-bottom:8px;color:var(--accent)">Legal Framework</p>
-    <h2 class="t-display" style="font-size:2.2rem;margin-bottom:12px">Terms of Engagement.</h2>
-    <p class="t-meta" style="margin-bottom:24px">Last Updated: March 27, 2026</p>
-    <p class="t-body" style="font-size:15px;font-style:italic;margin-bottom:32px">By accessing Wanderlost, you agree to these Terms.</p>
-    <h3 class="t-title" style="font-size:1.3rem;margin-bottom:6px">Acceptance</h3><p class="t-meta" style="margin-bottom:16px;color:var(--accent)">Section 01</p>
-    <p class="t-body" style="margin-bottom:32px">By using Wanderlost, you acknowledge that you have read, understood, and agree to these Terms.</p>
-    <h3 class="t-title" style="font-size:1.3rem;margin-bottom:6px">Use of Service</h3><p class="t-meta" style="margin-bottom:16px;color:var(--accent)">Section 02</p>
-    <div class="glass" style="padding:20px;border-radius:12px;border-left:2px solid var(--accent);margin-bottom:16px"><p class="t-label" style="color:var(--text-1);margin-bottom:4px">Eligibility</p><p class="t-body">You must be at least 18 years old.</p></div>
-    <div style="margin-bottom:24px"><p class="t-label" style="color:var(--text-1);margin-bottom:4px">Account Responsibility</p><p class="t-body">You are responsible for all activity under your account.</p></div>
-    <div style="margin-bottom:32px"><p class="t-label" style="color:var(--text-1);margin-bottom:4px">Prohibited Conduct</p><p class="t-body">No reverse engineering, scraping, or unlawful use.</p></div>
-    <h3 class="t-title" style="font-size:1.3rem;margin-bottom:6px">Billing</h3><p class="t-meta" style="margin-bottom:16px;color:var(--accent)">Section 03</p>
-    <div style="padding:12px 0;border-bottom:.5px solid var(--border);display:flex;justify-content:space-between"><span class="t-body" style="color:var(--text-1)">Free Tier</span><span class="t-body">3 discoveries/session</span></div>
-    <div style="padding:12px 0;border-bottom:.5px solid var(--border);display:flex;justify-content:space-between"><span class="t-body" style="color:var(--text-1)">Monthly</span><span class="t-body">20 CHF/month</span></div>
-    <div style="padding:12px 0;border-bottom:.5px solid var(--border);display:flex;justify-content:space-between;margin-bottom:32px"><span class="t-body" style="color:var(--text-1)">Annual</span><span class="t-body">200 CHF/year</span></div>
-    <h3 class="t-title" style="font-size:1.3rem;margin-bottom:6px">Liability</h3><p class="t-meta" style="margin-bottom:16px;color:var(--accent)">Section 04</p>
-    <div class="glass" style="padding:20px;border-radius:12px;border-left:2px solid #FF4444"><p class="t-body">Recommendations are "as is." All travel is at your own risk.</p></div>
+  <main style="padding:32px 10%; max-width:640px; margin:0 auto; padding-bottom:128px;">
+    <p class="t-meta" style="margin-bottom:8px; color:var(--blue);">Legal Framework</p>
+    <h2 class="t-display" style="font-size:2.2rem; margin-bottom:12px;">Terms of Engagement.</h2>
+    <p class="t-meta" style="margin-bottom:24px;">Last Updated: March 27, 2026</p>
+    <p class="t-body" style="font-size:15px; font-style:italic; margin-bottom:32px;">By accessing Wanderlost, you agree to these Terms.</p>
+
+    <h3 class="t-title" style="font-size:1.3rem; margin-bottom:6px;">Acceptance</h3>
+    <p class="t-meta" style="margin-bottom:16px; color:var(--blue);">Section 01</p>
+    <p class="t-body" style="margin-bottom:32px;">By using Wanderlost, you acknowledge that you have read, understood, and agree to these Terms.</p>
+
+    <h3 class="t-title" style="font-size:1.3rem; margin-bottom:6px;">Use of Service</h3>
+    <p class="t-meta" style="margin-bottom:16px; color:var(--blue);">Section 02</p>
+    <div class="glass" style="padding:20px; border-radius:12px; border-left:2px solid var(--blue); margin-bottom:16px;"><p class="t-label" style="color:var(--text); margin-bottom:4px;">Eligibility</p><p class="t-body">You must be at least 18 years old.</p></div>
+    <div style="margin-bottom:24px;"><p class="t-label" style="color:var(--text); margin-bottom:4px;">Account Responsibility</p><p class="t-body">You are responsible for all activity under your account.</p></div>
+    <div style="margin-bottom:32px;"><p class="t-label" style="color:var(--text); margin-bottom:4px;">Prohibited Conduct</p><p class="t-body">No reverse engineering, scraping, or unlawful use.</p></div>
+
+    <h3 class="t-title" style="font-size:1.3rem; margin-bottom:6px;">Billing</h3>
+    <p class="t-meta" style="margin-bottom:16px; color:var(--blue);">Section 03</p>
+    <div style="padding:12px 0; border-bottom:0.5px solid var(--border); display:flex; justify-content:space-between;"><span class="t-body" style="color:var(--text);">Free Tier</span><span class="t-body">3 discoveries/session</span></div>
+    <div style="padding:12px 0; border-bottom:0.5px solid var(--border); display:flex; justify-content:space-between;"><span class="t-body" style="color:var(--text);">Monthly</span><span class="t-body">20 CHF/month</span></div>
+    <div style="padding:12px 0; border-bottom:0.5px solid var(--border); display:flex; justify-content:space-between; margin-bottom:32px;"><span class="t-body" style="color:var(--text);">Annual</span><span class="t-body">200 CHF/year</span></div>
+
+    <h3 class="t-title" style="font-size:1.3rem; margin-bottom:6px;">Liability</h3>
+    <p class="t-meta" style="margin-bottom:16px; color:var(--blue);">Section 04</p>
+    <div class="glass" style="padding:20px; border-radius:12px; border-left:2px solid var(--red);"><p class="t-body">Recommendations are "as is." All travel is at your own risk.</p></div>
   </main>
 </div>
 
-<!-- ========== MODAL: HELP ========== -->
+
+<!-- ==================== MODAL: HELP ==================== -->
 <div id="modal-help" class="modal">
-  <header class="glass" style="position:sticky;top:0;z-index:50;border-radius:0 0 20px 20px;padding:0 24px;height:60px;display:flex;align-items:center;gap:12px">
-    <button style="background:none;border:none;cursor:pointer;color:var(--accent)" onclick="closeModal('modal-help')"><span class="material-symbols-outlined">arrow_back</span></button>
-    <span class="t-label" style="color:var(--text-1)">Help Center</span>
+  <header class="glass" style="position:sticky; top:0; z-index:50; border-radius:0 0 20px 20px; padding:0 24px; height:60px; display:flex; align-items:center; gap:12px;">
+    <button onclick="closeModal('modal-help')" style="background:none; border:none; cursor:pointer; color:var(--blue);"><span class="material-symbols-outlined">arrow_back</span></button>
+    <span class="t-label" style="color:var(--text);">Help Center</span>
   </header>
-  <main style="padding:32px 8%;max-width:640px;margin:0 auto;padding-bottom:128px">
-    <p class="t-meta" style="margin-bottom:8px;color:var(--accent)">Support</p>
-    <h2 class="t-display" style="font-size:2rem;margin-bottom:24px">How can we help?</h2>
-    <div id="faq">
-      <div class="faq-item"><button onclick="toggleFaq(this)" style="width:100%;display:flex;justify-content:space-between;align-items:center;padding:16px 0;background:none;border:none;border-bottom:.5px solid var(--border);cursor:pointer;text-align:left"><span class="t-body" style="color:var(--text-1)">How do discoveries work?</span><span class="material-symbols-outlined" style="color:var(--text-3);font-size:18px">chevron_right</span></button><div class="faq-a hidden" style="padding:12px 0 16px"><p class="t-body">"Discover Places" reveals one hidden gem near you rated 4.8+.</p></div></div>
-      <div class="faq-item"><button onclick="toggleFaq(this)" style="width:100%;display:flex;justify-content:space-between;align-items:center;padding:16px 0;background:none;border:none;border-bottom:.5px solid var(--border);cursor:pointer;text-align:left"><span class="t-body" style="color:var(--text-1)">Why only 3 free places?</span><span class="material-symbols-outlined" style="color:var(--text-3);font-size:18px">chevron_right</span></button><div class="faq-a hidden" style="padding:12px 0 16px"><p class="t-body">Join Premium for unlimited discoveries.</p></div></div>
-      <div class="faq-item"><button onclick="toggleFaq(this)" style="width:100%;display:flex;justify-content:space-between;align-items:center;padding:16px 0;background:none;border:none;border-bottom:.5px solid var(--border);cursor:pointer;text-align:left"><span class="t-body" style="color:var(--text-1)">How to cancel subscription?</span><span class="material-symbols-outlined" style="color:var(--text-3);font-size:18px">chevron_right</span></button><div class="faq-a hidden" style="padding:12px 0 16px"><p class="t-body">iOS: Settings > Apple ID > Subscriptions. Android: Google Play > Subscriptions.</p></div></div>
-      <div class="faq-item"><button onclick="toggleFaq(this)" style="width:100%;display:flex;justify-content:space-between;align-items:center;padding:16px 0;background:none;border:none;border-bottom:.5px solid var(--border);cursor:pointer;text-align:left"><span class="t-body" style="color:var(--text-1)">How to delete my account?</span><span class="material-symbols-outlined" style="color:var(--text-3);font-size:18px">chevron_right</span></button><div class="faq-a hidden" style="padding:12px 0 16px"><p class="t-body">Settings > Danger Zone > Delete my account.</p></div></div>
+  <main style="padding:32px 8%; max-width:640px; margin:0 auto; padding-bottom:128px;">
+    <p class="t-meta" style="margin-bottom:8px; color:var(--blue);">Support</p>
+    <h2 class="t-display" style="font-size:2rem; margin-bottom:24px;">How can we help?</h2>
+
+    <div class="faq-item" style="border-bottom:0.5px solid var(--border);">
+      <button onclick="toggleFaq(this)" style="width:100%; display:flex; justify-content:space-between; align-items:center; padding:16px 0; background:none; border:none; cursor:pointer; text-align:left;">
+        <span class="t-body" style="color:var(--text);">How do discoveries work?</span>
+        <span class="material-symbols-outlined" style="color:var(--text-faint); font-size:18px;">chevron_right</span>
+      </button>
+      <div class="faq-a hidden" style="padding:0 0 16px;"><p class="t-body">"Discover Places" reveals one hidden gem near you, rated 4.0+.</p></div>
     </div>
-    <div style="text-align:center;padding-top:24px;border-top:.5px solid var(--border);margin-top:16px">
-      <p class="t-body" style="margin-bottom:8px">Still need help?</p>
-      <button onclick="location.href='mailto:support@wanderlost.com'" style="background:none;border:none;cursor:pointer;color:var(--accent);font-size:15px;font-style:italic;border-bottom:1px solid var(--accent)">Contact the Curator</button>
+    <div class="faq-item" style="border-bottom:0.5px solid var(--border);">
+      <button onclick="toggleFaq(this)" style="width:100%; display:flex; justify-content:space-between; align-items:center; padding:16px 0; background:none; border:none; cursor:pointer; text-align:left;">
+        <span class="t-body" style="color:var(--text);">Why only 3 free places?</span>
+        <span class="material-symbols-outlined" style="color:var(--text-faint); font-size:18px;">chevron_right</span>
+      </button>
+      <div class="faq-a hidden" style="padding:0 0 16px;"><p class="t-body">We offer 3 free discovers per session. Join Premium for unlimited access.</p></div>
+    </div>
+    <div class="faq-item" style="border-bottom:0.5px solid var(--border);">
+      <button onclick="toggleFaq(this)" style="width:100%; display:flex; justify-content:space-between; align-items:center; padding:16px 0; background:none; border:none; cursor:pointer; text-align:left;">
+        <span class="t-body" style="color:var(--text);">How to cancel subscription?</span>
+        <span class="material-symbols-outlined" style="color:var(--text-faint); font-size:18px;">chevron_right</span>
+      </button>
+      <div class="faq-a hidden" style="padding:0 0 16px;"><p class="t-body">iOS: Settings &gt; Apple ID &gt; Subscriptions. Android: Google Play &gt; Subscriptions.</p></div>
+    </div>
+    <div class="faq-item" style="border-bottom:0.5px solid var(--border);">
+      <button onclick="toggleFaq(this)" style="width:100%; display:flex; justify-content:space-between; align-items:center; padding:16px 0; background:none; border:none; cursor:pointer; text-align:left;">
+        <span class="t-body" style="color:var(--text);">How to delete my account?</span>
+        <span class="material-symbols-outlined" style="color:var(--text-faint); font-size:18px;">chevron_right</span>
+      </button>
+      <div class="faq-a hidden" style="padding:0 0 16px;"><p class="t-body">Settings &gt; Danger Zone &gt; Delete my account.</p></div>
+    </div>
+
+    <div style="text-align:center; padding-top:24px; border-top:0.5px solid var(--border); margin-top:16px;">
+      <p class="t-body" style="margin-bottom:8px;">Still need help?</p>
+      <button onclick="location.href='mailto:support@wanderlost.com'" style="background:none; border:none; cursor:pointer; color:var(--blue); font-size:15px; font-style:italic; border-bottom:1px solid var(--blue);">Contact the Curator</button>
     </div>
   </main>
 </div>
 
-<!-- ========== MODAL: PREMIUM ========== -->
-<div id="modal-premium" class="modal" style="background:rgba(0,0,0,.6);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)">
-  <div style="display:flex;align-items:center;justify-content:center;min-height:100vh;padding:16px">
-    <div class="glass" style="position:relative;width:100%;max-width:440px;border-radius:28px;padding:40px 32px;max-height:90vh;overflow-y:auto">
-      <button style="position:absolute;top:20px;right:20px;background:none;border:none;cursor:pointer;color:var(--text-2)" onclick="closeModal('modal-premium')"><span class="material-symbols-outlined">close</span></button>
-      <p class="t-meta" style="margin-bottom:12px;color:var(--accent)">Membership</p>
-      <h2 class="t-display" style="font-size:2rem;margin-bottom:12px">Unlock everything.</h2>
-      <p class="t-body" style="margin-bottom:32px;font-size:15px">Join a curated world of modern explorers.</p>
-      <div style="margin-bottom:32px">
-        <div style="display:flex;align-items:start;gap:12px;margin-bottom:16px"><span class="material-symbols-outlined" style="color:var(--accent);font-size:18px;margin-top:2px;font-variation-settings:'FILL' 1">check_circle</span><div><span class="t-label" style="color:var(--text-1);display:block">Unlimited Discoveries</span><span class="t-body" style="font-size:12px">No limits.</span></div></div>
-        <div style="display:flex;align-items:start;gap:12px;margin-bottom:16px"><span class="material-symbols-outlined" style="color:var(--accent);font-size:18px;margin-top:2px;font-variation-settings:'FILL' 1">check_circle</span><div><span class="t-label" style="color:var(--text-1);display:block">Filter by Category</span><span class="t-body" style="font-size:12px">Target what you want.</span></div></div>
-        <div style="display:flex;align-items:start;gap:12px;margin-bottom:16px"><span class="material-symbols-outlined" style="color:var(--accent);font-size:18px;margin-top:2px;font-variation-settings:'FILL' 1">check_circle</span><div><span class="t-label" style="color:var(--text-1);display:block">Save Places</span><span class="t-body" style="font-size:12px">Build itineraries.</span></div></div>
-        <div style="display:flex;align-items:start;gap:12px"><span class="material-symbols-outlined" style="color:var(--accent);font-size:18px;margin-top:2px;font-variation-settings:'FILL' 1">check_circle</span><div><span class="t-label" style="color:var(--text-1);display:block">Full History</span><span class="t-body" style="font-size:12px">Permanent log.</span></div></div>
+
+<!-- ==================== MODAL: PREMIUM ==================== -->
+<div id="modal-premium" class="modal" style="background:rgba(0,0,0,0.6); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);">
+  <div style="display:flex; align-items:center; justify-content:center; min-height:100vh; padding:16px;">
+    <div class="glass" style="position:relative; width:100%; max-width:440px; border-radius:28px; padding:40px 32px; max-height:90vh; overflow-y:auto;">
+      <button onclick="closeModal('modal-premium')" style="position:absolute; top:20px; right:20px; background:none; border:none; cursor:pointer; color:var(--text-dim);"><span class="material-symbols-outlined">close</span></button>
+      <p class="t-meta" style="margin-bottom:12px; color:var(--blue);">Membership</p>
+      <h2 class="t-display" style="font-size:2rem; margin-bottom:12px;">Unlock everything.</h2>
+      <p class="t-body" style="margin-bottom:32px; font-size:15px;">Join a curated world of modern explorers.</p>
+
+      <div style="margin-bottom:32px;">
+        <div style="display:flex; align-items:start; gap:12px; margin-bottom:16px;"><span class="material-symbols-outlined" style="color:var(--blue); font-size:18px; margin-top:2px; font-variation-settings:'FILL' 1;">check_circle</span><div><span class="t-label" style="color:var(--text); display:block;">Unlimited Discoveries</span><span class="t-body" style="font-size:12px;">No limits. The network is yours.</span></div></div>
+        <div style="display:flex; align-items:start; gap:12px; margin-bottom:16px;"><span class="material-symbols-outlined" style="color:var(--blue); font-size:18px; margin-top:2px; font-variation-settings:'FILL' 1;">check_circle</span><div><span class="t-label" style="color:var(--text); display:block;">Filter by Category</span><span class="t-body" style="font-size:12px;">Target what you're looking for.</span></div></div>
+        <div style="display:flex; align-items:start; gap:12px; margin-bottom:16px;"><span class="material-symbols-outlined" style="color:var(--blue); font-size:18px; margin-top:2px; font-variation-settings:'FILL' 1;">check_circle</span><div><span class="t-label" style="color:var(--text); display:block;">Save Places</span><span class="t-body" style="font-size:12px;">Build custom itineraries.</span></div></div>
+        <div style="display:flex; align-items:start; gap:12px;"><span class="material-symbols-outlined" style="color:var(--blue); font-size:18px; margin-top:2px; font-variation-settings:'FILL' 1;">check_circle</span><div><span class="t-label" style="color:var(--text); display:block;">Full History</span><span class="t-body" style="font-size:12px;">Permanent log of every discovery.</span></div></div>
       </div>
-      <button onclick="openModal('modal-checkout');closeModal('modal-premium')" class="btn btn-primary" style="width:100%;padding:16px">Start Your Journey — 20 CHF/mo</button>
-      <p style="text-align:center;margin-top:16px"><button onclick="toast('No purchases found.')" style="background:none;border:none;cursor:pointer;color:var(--text-2);font-size:11px;text-decoration:underline">Restore Purchase</button></p>
+
+      <button onclick="openModal('modal-checkout');closeModal('modal-premium');" class="btn btn-blue" style="width:100%; padding:16px;">Start Your Journey — 20 CHF/mo</button>
+      <p style="text-align:center; margin-top:16px;"><button onclick="showToast('No previous purchases found.')" style="background:none; border:none; cursor:pointer; color:var(--text-dim); font-size:11px; text-decoration:underline;">Restore Purchase</button></p>
     </div>
   </div>
 </div>
 
-<!-- ========== MODAL: CHECKOUT ========== -->
+
+<!-- ==================== MODAL: CHECKOUT ==================== -->
 <div id="modal-checkout" class="modal">
-  <header class="glass" style="position:fixed;top:0;width:100%;z-index:50;border-radius:0 0 20px 20px;padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between">
-    <div style="display:flex;align-items:center;gap:12px">
-      <button style="background:none;border:none;cursor:pointer;color:var(--text-2)" onclick="closeModal('modal-checkout')"><span class="material-symbols-outlined">close</span></button>
-      <span class="t-label" style="color:var(--text-1)">Checkout</span>
+  <header class="glass" style="position:fixed; top:0; width:100%; z-index:50; border-radius:0 0 20px 20px; padding:0 24px; height:60px; display:flex; align-items:center; justify-content:space-between;">
+    <div style="display:flex; align-items:center; gap:12px;">
+      <button onclick="closeModal('modal-checkout')" style="background:none; border:none; cursor:pointer; color:var(--text-dim);"><span class="material-symbols-outlined">close</span></button>
+      <span class="t-label" style="color:var(--text);">Checkout</span>
     </div>
-    <span class="font-brand" style="color:var(--accent);font-size:1.2rem">Wanderlost</span>
+    <span class="brand" style="color:var(--blue); font-size:1.2rem;">Wanderlost</span>
   </header>
-  <main style="padding:80px 24px 128px;max-width:480px;margin:0 auto">
-    <section style="margin-bottom:32px">
-      <p class="t-meta" style="margin-bottom:16px">Select Your Journey</p>
-      <div class="glass" style="display:flex;border-radius:9999px;overflow:hidden;padding:4px">
-        <button data-plan="monthly" class="plan-btn" style="flex:1;padding:12px;text-align:center;font-size:12px;font-weight:600;border:none;cursor:pointer;border-radius:9999px;background:var(--accent);color:#fff">20 CHF Monthly</button>
-        <button data-plan="annual" class="plan-btn" style="flex:1;padding:12px;text-align:center;font-size:12px;font-weight:600;border:none;cursor:pointer;border-radius:9999px;background:transparent;color:var(--text-2)">200 CHF Annual</button>
+  <main style="padding:80px 24px 128px; max-width:480px; margin:0 auto;">
+
+    <!-- Plan Toggle -->
+    <section style="margin-bottom:32px;">
+      <p class="t-meta" style="margin-bottom:16px;">Select Your Journey</p>
+      <div class="glass" style="display:flex; border-radius:9999px; overflow:hidden; padding:4px;">
+        <button data-plan="monthly" class="plan-btn" style="flex:1; padding:12px; text-align:center; font-size:12px; font-weight:600; border:none; cursor:pointer; border-radius:9999px; background:var(--blue); color:#fff;">20 CHF Monthly</button>
+        <button data-plan="annual" class="plan-btn" style="flex:1; padding:12px; text-align:center; font-size:12px; font-weight:600; border:none; cursor:pointer; border-radius:9999px; background:transparent; color:var(--text-dim);">200 CHF Annual</button>
       </div>
     </section>
-    <section style="margin-bottom:32px">
-      <p class="t-meta" style="margin-bottom:16px">Express Checkout</p>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-        <button class="btn btn-ghost" style="padding:14px;font-size:14px;font-weight:700">Apple Pay</button>
-        <button class="btn btn-ghost" style="padding:14px;font-size:14px;font-weight:700;font-style:italic">G Pay</button>
+
+    <!-- Express -->
+    <section style="margin-bottom:32px;">
+      <p class="t-meta" style="margin-bottom:16px;">Express Checkout</p>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+        <button class="btn btn-outline" style="padding:14px; font-size:14px; font-weight:700;"> Apple Pay</button>
+        <button class="btn btn-outline" style="padding:14px; font-size:14px; font-weight:700; font-style:italic;">G Pay</button>
       </div>
     </section>
-    <div style="display:flex;align-items:center;gap:12px;margin-bottom:32px"><div style="flex:1;height:.5px;background:var(--border)"></div><span class="t-meta">Or pay manually</span><div style="flex:1;height:.5px;background:var(--border)"></div></div>
-    <form id="pay-form" style="margin-bottom:32px">
-      <div style="margin-bottom:24px"><span class="t-meta" style="display:block;margin-bottom:8px">Cardholder Name</span><input type="text" placeholder="Full Name" required/></div>
-      <div style="margin-bottom:24px"><span class="t-meta" style="display:block;margin-bottom:8px">Card Number</span><input type="text" placeholder="0000 0000 0000 0000" required/></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
-        <div><span class="t-meta" style="display:block;margin-bottom:8px">Expiry</span><input type="text" placeholder="MM/YY" required/></div>
-        <div><span class="t-meta" style="display:block;margin-bottom:8px">CVC</span><input type="text" placeholder="123" required/></div>
+
+    <div style="display:flex; align-items:center; gap:12px; margin-bottom:32px;">
+      <div style="flex:1; height:0.5px; background:var(--border);"></div>
+      <span class="t-meta">Or pay manually</span>
+      <div style="flex:1; height:0.5px; background:var(--border);"></div>
+    </div>
+
+    <!-- Card Form -->
+    <form id="pay-form" style="margin-bottom:32px;">
+      <div style="margin-bottom:24px;"><span class="t-meta" style="display:block; margin-bottom:8px;">Cardholder Name</span><input type="text" placeholder="Full Name" required/></div>
+      <div style="margin-bottom:24px;"><span class="t-meta" style="display:block; margin-bottom:8px;">Card Number</span><input type="text" placeholder="0000 0000 0000 0000" required/></div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px;">
+        <div><span class="t-meta" style="display:block; margin-bottom:8px;">Expiry</span><input type="text" placeholder="MM/YY" required/></div>
+        <div><span class="t-meta" style="display:block; margin-bottom:8px;">CVC</span><input type="text" placeholder="123" required/></div>
       </div>
     </form>
-    <section class="glass" style="padding:24px;border-radius:20px;margin-bottom:24px">
-      <div style="display:flex;justify-content:space-between;align-items:flex-end">
-        <div><span class="t-meta" style="display:block;margin-bottom:4px">Total Due Today</span><h3 id="pay-total" class="t-title" style="font-size:1.8rem">20.00 CHF</h3></div>
-        <div style="text-align:right"><span class="t-meta" style="display:block;margin-bottom:4px">Premium Access</span><span id="pay-cycle" class="t-label" style="color:var(--text-1)">Billed Monthly</span></div>
+
+    <!-- Total -->
+    <section class="glass" style="padding:24px; border-radius:20px; margin-bottom:24px;">
+      <div style="display:flex; justify-content:space-between; align-items:flex-end;">
+        <div><span class="t-meta" style="display:block; margin-bottom:4px;">Total Due Today</span><h3 id="pay-total" class="t-title" style="font-size:1.8rem;">20.00 CHF</h3></div>
+        <div style="text-align:right;"><span class="t-meta" style="display:block; margin-bottom:4px;">Premium Access</span><span id="pay-cycle" class="t-label" style="color:var(--text);">Billed Monthly</span></div>
       </div>
-      <div style="margin-top:20px;padding-top:16px;border-top:.5px solid var(--border)"><p class="t-body" style="font-size:11px">By confirming, you agree to our Terms and Privacy Policy.</p></div>
+      <div style="margin-top:20px; padding-top:16px; border-top:0.5px solid var(--border);"><p class="t-body" style="font-size:11px;">By confirming, you agree to our Terms and Privacy Policy.</p></div>
     </section>
-    <button id="btn-pay" class="btn btn-primary" style="width:100%;padding:16px">Confirm Payment</button>
-    <div style="text-align:center;margin-top:16px;display:flex;align-items:center;justify-content:center;gap:6px"><span class="material-symbols-outlined" style="font-size:14px;color:var(--accent)">verified_user</span><span class="t-meta">Encrypted & Secure</span></div>
+
+    <button id="btn-pay" class="btn btn-blue" style="width:100%; padding:16px;">Confirm Payment</button>
+    <div style="text-align:center; margin-top:16px; display:flex; align-items:center; justify-content:center; gap:6px;">
+      <span class="material-symbols-outlined" style="font-size:14px; color:var(--blue);">verified_user</span>
+      <span class="t-meta">Encrypted &amp; Secure</span>
+    </div>
   </main>
 </div>
 
+
+<!-- ==================== SCRIPTS ==================== -->
 <script src="./app.js"></script>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB1RVtX565j0NYmTtFebx1nmDCrh6X0rYM&libraries=places&callback=initMap"></script>
-<script>if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('./sw.js').then(r=>{r.addEventListener('updatefound',()=>{const n=r.installing;n.addEventListener('statechange',()=>{if(n.state==='activated')location.reload()})})})})}</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').then(reg => {
+      reg.addEventListener('updatefound', () => {
+        const nw = reg.installing;
+        nw.addEventListener('statechange', () => {
+          if (nw.state === 'activated') location.reload();
+        });
+      });
+    });
+  });
+}
+</script>
 </body>
 </html>
