@@ -1,42 +1,48 @@
 <!DOCTYPE html><html lang="en"><head>
 <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-<title>Wanderlost</title><meta name="theme-color" content="#0D1117"/>
+<title>Wanderlost</title><meta name="theme-color" content="#0A0E14"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-<link rel="manifest" href="./manifest.json"/><link rel="icon" href="./icon-192.png"/><link rel="apple-touch-icon" href="./icon-192.png"/>
-<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="manifest" href="./manifest.json"/><link rel="icon" href="./icon-192.png"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <style>
-:root{--bg:#0D1117;--sf:rgba(255,255,255,.05);--bd:rgba(255,255,255,.12);--tx:#F0F6FC;--t2:rgba(240,246,252,.5);--t3:rgba(240,246,252,.3);--ac:#38B6FF;--gl:rgba(56,182,255,.25);--sh:0 8px 32px rgba(0,0,0,.4);--bn:cubic-bezier(.34,1.56,.64,1)}
-html.light{--bg:#F0F2F5;--sf:rgba(255,255,255,.65);--bd:rgba(0,0,0,.06);--tx:#1A1C1C;--t2:rgba(26,28,28,.5);--t3:rgba(26,28,28,.25);--gl:rgba(56,182,255,.18);--sh:0 8px 32px rgba(0,0,0,.08)}
+:root{--ios:cubic-bezier(.32,0,.67,0);--bg:#0A0E14;--lens:rgba(255,255,255,.1);--bdr-light:rgba(255,255,255,.3);--bdr:rgba(255,255,255,.08);--tx:#fff;--t2:rgba(255,255,255,.6);--t3:rgba(255,255,255,.35);--ac:#38B6FF;--gl:rgba(56,182,255,.3);--depth:0 20px 50px rgba(0,0,0,.3)}
+html.light{--bg:#E8ECF2;--lens:rgba(255,255,255,.55);--bdr-light:rgba(255,255,255,.7);--bdr:rgba(0,0,0,.04);--tx:#111;--t2:rgba(0,0,0,.5);--t3:rgba(0,0,0,.25);--depth:0 20px 50px rgba(0,0,0,.1)}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--tx);font:14px/1.5 'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;transition:background .5s}
+body{background:var(--bg);color:var(--tx);font:14px/1.5 system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;transition:background .5s var(--ios)}
 .hidden{display:none!important} img{display:block;max-width:100%}
-.td{font-family:'Bodoni Moda',serif;font-size:clamp(2.5rem,8vw,4rem);font-weight:700;line-height:1;letter-spacing:-.02em}
-.tt{font-family:'Bodoni Moda',serif;font-size:1.75rem;font-weight:700;line-height:1.15}
-.tb{font-size:.875rem;color:var(--t2);line-height:1.6} .tl{font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--t2)}
-.tm{font-size:9px;font-weight:600;letter-spacing:.25em;text-transform:uppercase;color:var(--t3)}
-.br{font-family:'Bodoni Moda',serif;letter-spacing:.02em}
-.gl{background:var(--sf);backdrop-filter:blur(40px) saturate(180%);-webkit-backdrop-filter:blur(40px) saturate(180%);border:.5px solid var(--bd)}
-.bt{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 28px;border:none;border-radius:9999px;cursor:pointer;font:700 11px/1 'Inter',sans-serif;letter-spacing:.2em;text-transform:uppercase;transition:transform .15s}
-.bt:active{transform:scale(.96)} .bp{background:var(--ac);color:#fff;box-shadow:0 0 24px var(--gl),var(--sh)} .bo{background:var(--sf);color:var(--tx);border:.5px solid var(--bd);backdrop-filter:blur(20px)}
-input[type=text],input[type=email],input[type=password],input[type=date]{width:100%;padding:0 0 12px;background:0;border:0;border-bottom:.5px solid var(--bd);color:var(--tx);font:14px 'Inter',sans-serif;outline:0;transition:border-color .3s}
-input:focus{border-bottom-color:var(--ac)} input::placeholder{color:var(--t3)}
-#auth-gate{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:var(--bg);transition:opacity .8s,transform .8s}
+/* LENS = glass card */
+.lens{background:var(--lens);backdrop-filter:blur(32px) saturate(180%);-webkit-backdrop-filter:blur(32px) saturate(180%);border-top:1px solid var(--bdr-light);border-left:1px solid var(--bdr-light);border-right:.5px solid var(--bdr);border-bottom:.5px solid var(--bdr);box-shadow:var(--depth)}
+/* TYPE */
+.h1{font:700 clamp(2.2rem,7vw,3.5rem)/1 system-ui;letter-spacing:-.03em}
+.h2{font:600 1.5rem/1.2 system-ui;letter-spacing:-.02em}
+.place{font:600 1.5rem/1.2 system-ui;letter-spacing:-.02em} /* place names */
+.meta{font:600 10px/1 system-ui;letter-spacing:.2em;text-transform:uppercase;color:var(--t2)}
+.body{font-size:.875rem;color:var(--t2);line-height:1.6}
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 28px;border:0;border-radius:16px;cursor:pointer;font:600 12px/1 system-ui;letter-spacing:.12em;text-transform:uppercase;transition:transform .5s var(--ios),box-shadow .5s var(--ios)}
+.btn:active{transform:scale(.95)}
+.bp{background:var(--ac);color:#fff;box-shadow:0 0 30px var(--gl),var(--depth)} .bo{background:var(--lens);color:var(--tx);border-top:1px solid var(--bdr-light);border-left:1px solid var(--bdr-light);backdrop-filter:blur(20px)}
+input[type=text],input[type=email],input[type=password],input[type=date]{width:100%;padding:14px 16px;background:rgba(255,255,255,.06);border:1px solid var(--bdr);border-radius:12px;color:var(--tx);font:14px system-ui;outline:0;transition:border .5s var(--ios)} input:focus{border-color:var(--ac)} input::placeholder{color:var(--t3)}
+/* AUTH */
+#auth-gate{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:var(--bg);transition:opacity .8s var(--ios),transform .8s var(--ios)}
 #auth-gate.hidden{opacity:0;pointer-events:none;transform:scale(1.05)}
-.asl{position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center;background:var(--bg);transform:translateY(100%);transition:transform .5s var(--bn);pointer-events:none;overflow-y:auto}
+.asl{position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center;background:var(--bg);transform:translateY(100%);transition:transform .5s var(--ios);pointer-events:none;overflow-y:auto}
 .asl.open{transform:translateY(0);pointer-events:auto}
+/* TABS */
 .tab{display:none} .tab.active{display:block}
-.dk{width:48px;height:48px;display:flex;align-items:center;justify-content:center;border-radius:50%;border:0;background:0;color:var(--t3);cursor:pointer;transition:color .3s,background .3s}
-.dk.active{color:var(--ac);background:var(--gl)} .dk .material-symbols-outlined{font-size:22px}
-.pl{padding:8px 16px;background:0;border:0;border-radius:9999px;font:700 10px/1 'Inter',sans-serif;letter-spacing:.15em;text-transform:uppercase;color:var(--t3);cursor:pointer;white-space:nowrap;transition:color .3s,background .3s}
-.pl.active{color:var(--tx);background:rgba(56,182,255,.15)}
-#discovery-sheet{position:fixed;bottom:0;left:0;right:0;z-index:100;transform:translateY(100%);transition:transform .6s var(--bn);pointer-events:none}
+.dk{width:52px;height:52px;display:flex;align-items:center;justify-content:center;border-radius:16px;border:0;background:0;color:var(--t3);cursor:pointer;transition:all .5s var(--ios)} .dk.active{color:var(--ac);background:rgba(56,182,255,.15)} .dk .material-symbols-outlined{font-size:22px}
+.pl{padding:10px 18px;background:0;border:0;border-radius:12px;font:700 10px/1 system-ui;letter-spacing:.15em;text-transform:uppercase;color:var(--t3);cursor:pointer;white-space:nowrap;transition:all .5s var(--ios)} .pl.active{color:var(--tx);background:rgba(56,182,255,.15)}
+/* DISCOVERY SHEET */
+#discovery-sheet{position:fixed;bottom:0;left:0;right:0;z-index:100;transform:translateY(110%);transition:transform .5s var(--ios);pointer-events:none}
 #discovery-sheet.open{transform:translateY(0);pointer-events:auto}
-.sc{background:rgba(255,255,255,.08);backdrop-filter:blur(40px) saturate(180%);-webkit-backdrop-filter:blur(40px) saturate(180%);border-top:.5px solid var(--bd);border-radius:28px 28px 0 0;padding:32px 28px 100px;max-width:480px;margin:0 auto}
-.md{position:fixed;inset:0;z-index:200;background:var(--bg);transform:translateY(100%);transition:transform .5s var(--bn),visibility 0s .5s;overflow-y:auto;pointer-events:none;visibility:hidden}
-.md.open{transform:translateY(0);pointer-events:auto;visibility:visible;transition:transform .5s var(--bn),visibility 0s}
-#btn-discover.morphing{opacity:0;transform:scale(.8);pointer-events:none}
-@keyframes sonar{0%{transform:scale(1);opacity:.5}100%{transform:scale(4);opacity:0}} .sr{animation:sonar 3s cubic-bezier(0,0,.2,1) infinite}
+/* MORPH: button shrinks, sheet grows from its position */
+#btn-discover{transition:all .5s var(--ios)} #btn-discover.morphing{opacity:0;transform:scale(.6);pointer-events:none}
+/* MODAL */
+.md{position:fixed;inset:0;z-index:200;background:var(--bg);transform:translateY(100%);transition:transform .5s var(--ios),visibility 0s .5s;overflow-y:auto;pointer-events:none;visibility:hidden}
+.md.open{transform:translateY(0);pointer-events:auto;visibility:visible;transition:transform .5s var(--ios),visibility 0s}
+/* BREATHING GLOW */
+@keyframes breathe{0%,100%{transform:scale(1);opacity:.4}50%{transform:scale(1.8);opacity:.15}}
+@keyframes breathe-outer{0%,100%{transform:scale(1);opacity:.2}50%{transform:scale(2.5);opacity:0}}
 @keyframes spin{to{transform:rotate(360deg)}}
 .gm-err-container,.gm-style-cc,.gmnoprint,button[title="Toggle fullscreen view"],.gm-style-pbc{display:none!important}
 .material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 300}
@@ -44,155 +50,143 @@ input:focus{border-bottom-color:var(--ac)} input::placeholder{color:var(--t3)}
 </style></head><body>
 <!-- AUTH -->
 <div id="auth-gate"><div style="text-align:center;padding:0 32px;max-width:380px;width:100%">
-<p class="tm" style="margin-bottom:12px">The Secret City</p><h1 class="td" style="margin-bottom:8px"><span style="color:var(--ac)">W</span>anderlost</h1>
-<p class="tb" style="margin-top:16px;margin-bottom:48px;font-style:italic">AI-powered local discovery</p>
-<button id="btn-login-open" class="bt bp" style="width:100%;margin-bottom:16px">Log In</button>
-<button id="btn-try-free" class="bt bo" style="width:100%">Try for Free</button>
-<p class="tm" style="margin-top:32px">By continuing you agree to our <button onclick="el('auth-gate').classList.add('hidden');om('md-terms')" style="text-decoration:underline;color:var(--tx);background:0;border:0;cursor:pointer;font:inherit">Terms</button> & <button onclick="el('auth-gate').classList.add('hidden');om('md-privacy')" style="text-decoration:underline;color:var(--tx);background:0;border:0;cursor:pointer;font:inherit">Privacy</button></p>
+<p class="meta" style="margin-bottom:16px;color:var(--ac)">The Secret City</p>
+<h1 class="h1" style="margin-bottom:12px"><span style="color:var(--ac)">W</span>anderlost</h1>
+<p class="body" style="margin-top:16px;margin-bottom:48px;font-style:italic;color:var(--t3)">AI-powered local discovery</p>
+<button id="btn-login-open" class="btn bp" style="width:100%;margin-bottom:16px;border-radius:16px">Log In</button>
+<button id="btn-try-free" class="btn bo" style="width:100%;border-radius:16px">Try for Free</button>
+<p class="meta" style="margin-top:32px"><button onclick="el('auth-gate').classList.add('hidden');om('md-terms')" style="text-decoration:underline;color:var(--t2);background:0;border:0;cursor:pointer;font:inherit">Terms</button> & <button onclick="el('auth-gate').classList.add('hidden');om('md-privacy')" style="text-decoration:underline;color:var(--t2);background:0;border:0;cursor:pointer;font:inherit">Privacy</button></p>
 </div></div>
 <!-- LOGIN -->
 <div id="login-sl" class="asl"><div style="width:100%;max-width:340px;padding:0 32px">
 <button id="btn-lb" style="background:0;border:0;cursor:pointer;color:var(--t2);margin-bottom:32px;display:block"><span class="material-symbols-outlined">arrow_back</span></button>
-<h2 class="tt" style="font-size:2rem;margin-bottom:8px">Welcome back.</h2><p class="tb" style="font-style:italic;margin-bottom:40px">Sign in to continue your journey</p>
-<div style="margin-bottom:24px"><span class="tm" style="display:block;margin-bottom:8px">Email</span><input id="l-em" type="email" placeholder="you@email.com"/></div>
-<div style="margin-bottom:32px"><span class="tm" style="display:block;margin-bottom:8px">Password</span><input id="l-pw" type="password" placeholder="••••••••" style="letter-spacing:.15em"/></div>
-<button id="btn-ls" class="bt bp" style="width:100%;margin-bottom:24px">Sign In</button>
-<div style="text-align:center"><button id="btn-fo" style="background:0;border:0;cursor:pointer;color:var(--t2);font-size:12px;border-bottom:.5px solid var(--bd);padding-bottom:2px">Forgot password?</button></div>
+<h2 class="h2" style="font-size:2rem;margin-bottom:8px">Welcome back.</h2><p class="body" style="font-style:italic;margin-bottom:40px">Sign in to continue</p>
+<div style="margin-bottom:20px"><span class="meta" style="display:block;margin-bottom:8px">Email</span><input id="l-em" type="email" placeholder="you@email.com"/></div>
+<div style="margin-bottom:28px"><span class="meta" style="display:block;margin-bottom:8px">Password</span><input id="l-pw" type="password" placeholder="••••••••"/></div>
+<button id="btn-ls" class="btn bp" style="width:100%;margin-bottom:20px">Sign In</button>
+<div style="text-align:center"><button id="btn-fo" style="background:0;border:0;cursor:pointer;color:var(--t2);font-size:12px">Forgot password?</button></div>
 </div></div>
 <!-- FORGOT -->
 <div id="forgot-sl" class="asl"><div style="width:100%;max-width:340px;padding:0 32px">
 <button id="btn-fb" style="background:0;border:0;cursor:pointer;color:var(--t2);margin-bottom:32px;display:block"><span class="material-symbols-outlined">arrow_back</span></button>
-<h2 class="tt" style="font-size:2rem;margin-bottom:8px">Reset Password.</h2><p class="tb" style="font-style:italic;margin-bottom:40px">Enter your email for a recovery link</p>
-<div style="margin-bottom:32px"><span class="tm" style="display:block;margin-bottom:8px">Email</span><input id="f-em" type="email" placeholder="you@email.com"/></div>
-<button id="btn-fs" class="bt bp" style="width:100%">Send Recovery Link</button>
-<p id="f-msg" class="hidden tb" style="text-align:center;margin-top:24px;color:var(--ac);font-style:italic">Recovery link sent!</p>
+<h2 class="h2" style="font-size:2rem;margin-bottom:8px">Reset Password.</h2><p class="body" style="font-style:italic;margin-bottom:40px">We'll send a recovery link</p>
+<div style="margin-bottom:28px"><span class="meta" style="display:block;margin-bottom:8px">Email</span><input id="f-em" type="email" placeholder="you@email.com"/></div>
+<button id="btn-fs" class="btn bp" style="width:100%">Send Recovery Link</button>
+<p id="f-msg" class="hidden body" style="text-align:center;margin-top:20px;color:var(--ac)">Recovery link sent!</p>
 </div></div>
 <!-- EXPLORE -->
 <section id="tab-explore" class="tab active">
-<header class="gl" style="position:fixed;top:0;width:100%;z-index:50;padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;border-radius:0 0 20px 20px;box-shadow:var(--sh)">
-<div style="display:flex;align-items:center;gap:12px"><button onclick="om('md-settings')" style="background:0;border:0;cursor:pointer;color:var(--t2)"><span class="material-symbols-outlined">menu</span></button><span class="br" style="font-size:1.4rem"><span style="color:var(--ac)">W</span>anderlost</span></div>
-<span id="credits" class="tm" style="color:var(--ac)">3 Credits</span></header>
+<header class="lens" style="position:fixed;top:0;width:100%;z-index:50;padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;border-radius:0 0 20px 20px">
+<div style="display:flex;align-items:center;gap:12px"><button onclick="om('md-settings')" style="background:0;border:0;cursor:pointer;color:var(--t2)"><span class="material-symbols-outlined">menu</span></button><span style="font:600 1.3rem system-ui;letter-spacing:-.01em"><span style="color:var(--ac)">W</span>anderlost</span></div>
+<span id="credits" class="meta" style="color:var(--ac)">3 Credits</span></header>
 <main style="position:relative;width:100%;height:100vh;overflow:hidden">
 <div id="map" style="position:absolute;inset:0;z-index:0;filter:blur(20px) brightness(.7)"></div>
 <canvas id="cv" style="position:absolute;inset:0;z-index:1;pointer-events:none"></canvas>
-<div style="position:absolute;top:72px;left:0;width:100%;z-index:40"><div class="nsc" style="display:flex;gap:4px;padding:0 24px;overflow-x:auto">
+<div style="position:absolute;top:72px;left:0;width:100%;z-index:40"><div class="nsc" style="display:flex;gap:6px;padding:0 24px;overflow-x:auto">
 <button onclick="pickCat(this)" data-c="" class="pl active">All</button><button onclick="pickCat(this)" data-c="restaurant" class="pl">Restaurants</button><button onclick="pickCat(this)" data-c="cafe" class="pl">Cafes</button><button onclick="pickCat(this)" data-c="bakery" class="pl">Bakeries</button><button onclick="pickCat(this)" data-c="bar" class="pl">Bars</button><button onclick="pickCat(this)" data-c="park" class="pl">Parks</button><button onclick="pickCat(this)" data-c="museum" class="pl">Museums</button>
 </div></div>
-<div id="sonar" style="position:absolute;top:48%;left:42%;transform:translate(-50%,-50%);display:none"><div style="position:relative;display:flex;align-items:center;justify-content:center">
-<div class="sr" style="position:absolute;width:96px;height:96px;border:1px solid rgba(56,182,255,.3);border-radius:50%;animation-delay:-1.5s"></div>
-<div class="sr" style="position:absolute;width:48px;height:48px;border:1px solid rgba(56,182,255,.5);border-radius:50%"></div>
-<div style="width:16px;height:16px;background:var(--ac);border-radius:50%;border:2px solid #fff;box-shadow:0 0 15px var(--gl);z-index:10"></div>
+<!-- BREATHING GLOW SONAR -->
+<div id="sonar" style="position:absolute;top:48%;left:42%;transform:translate(-50%,-50%);display:none">
+<div style="position:relative;width:80px;height:80px;display:flex;align-items:center;justify-content:center">
+<div style="position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle,rgba(56,182,255,.25) 0%,transparent 70%);animation:breathe-outer 3s ease-in-out infinite"></div>
+<div style="position:absolute;width:40px;height:40px;border-radius:50%;background:radial-gradient(circle,rgba(56,182,255,.4) 0%,transparent 70%);animation:breathe 2s ease-in-out infinite;left:50%;top:50%;transform:translate(-50%,-50%)"></div>
+<div style="width:12px;height:12px;background:#fff;border-radius:50%;box-shadow:0 0 20px rgba(56,182,255,.8),0 0 40px rgba(56,182,255,.4);z-index:10"></div>
 </div></div>
 <div style="position:fixed;bottom:100px;left:50%;transform:translateX(-50%);width:100%;max-width:300px;padding:0 24px;z-index:40">
-<button id="btn-discover" class="bt bp" style="width:100%;padding:18px 40px"><span class="material-symbols-outlined" style="font-size:16px">explore</span> Discover Places</button></div>
+<button id="btn-discover" class="btn bp" style="width:100%;padding:18px 40px;border-radius:20px"><span class="material-symbols-outlined" style="font-size:16px">explore</span> Discover Places</button></div>
 </main>
-<div id="discovery-sheet"><div class="sc">
-<div style="display:flex;justify-content:center;padding-bottom:20px"><div onclick="cs()" style="width:36px;height:4px;border-radius:2px;background:var(--bd);cursor:pointer"></div></div>
-<p id="s-tag" class="tm" style="margin-bottom:8px">Discovery</p><h2 id="s-name" class="tt" style="margin-bottom:24px">Loading...</h2>
-<p id="s-addr" class="tm" style="margin-bottom:6px;color:var(--t3)">...</p><p id="s-dist" class="tl" style="margin-bottom:16px;color:var(--ac)">...</p><p id="s-desc" class="tb" style="margin-bottom:28px">...</p>
+<div id="discovery-sheet"><div class="lens" style="border-radius:28px 28px 0 0;padding:32px 28px 100px;max-width:480px;margin:0 auto">
+<div style="display:flex;justify-content:center;padding-bottom:20px"><div onclick="cs()" style="width:36px;height:4px;border-radius:2px;background:var(--bdr-light);cursor:pointer"></div></div>
+<p id="s-tag" class="meta" style="margin-bottom:10px">Discovery</p><h2 id="s-name" class="place" style="margin-bottom:24px">Loading...</h2>
+<p id="s-addr" class="meta" style="margin-bottom:6px;color:var(--t3)">...</p><p id="s-dist" class="meta" style="margin-bottom:16px;color:var(--ac)">...</p><p id="s-desc" class="body" style="margin-bottom:28px">...</p>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-<button id="btn-nav" class="bt bp" style="padding:14px 20px"><span class="material-symbols-outlined" style="font-size:14px">map</span> Navigate</button>
-<button id="btn-save" class="bt bo" style="padding:14px 20px"><span class="material-symbols-outlined" style="font-size:14px">bookmark</span> Save</button>
+<button id="btn-nav" class="btn bp" style="padding:14px 20px;border-radius:14px"><span class="material-symbols-outlined" style="font-size:14px">map</span> Navigate</button>
+<button id="btn-save" class="btn bo" style="padding:14px 20px;border-radius:14px"><span class="material-symbols-outlined" style="font-size:14px">bookmark</span> Save</button>
 </div></div></div>
 </section>
 <!-- HISTORY -->
 <section id="tab-history" class="tab">
-<header class="gl" style="position:sticky;top:0;z-index:50;border-radius:0 0 20px 20px;padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--sh)">
-<div style="display:flex;align-items:center;gap:12px"><button onclick="om('md-settings')" style="background:0;border:0;cursor:pointer;color:var(--t2)"><span class="material-symbols-outlined">menu</span></button><span class="br" style="font-size:1.4rem"><span style="color:var(--ac)">W</span>anderlost</span></div>
-<button onclick="toast('Search coming soon.')" style="background:0;border:0;cursor:pointer;color:var(--t2)"><span class="material-symbols-outlined">search</span></button></header>
-<main style="max-width:640px;margin:0 auto;padding:48px 24px 128px"><p class="tm" style="margin-bottom:8px">Chronicle</p><h2 class="td" style="font-size:2.5rem;margin-bottom:12px">History</h2>
-<div style="width:48px;height:2px;background:var(--ac);margin-bottom:16px"></div><p class="tb" style="margin-bottom:48px">Your curated journey through discovery.</p>
-<div id="hist"><p class="tb" style="font-style:italic">No discoveries yet.</p></div>
-<div class="gl" style="border-radius:24px;padding:32px;text-align:center;margin-top:48px"><p class="tm" style="margin-bottom:12px">Premium Feature</p><h3 class="tt" style="margin-bottom:16px">Unlock Full History</h3>
-<button onclick="om('md-premium')" class="bt bp" style="padding:14px 32px">Upgrade Now</button></div></main></section>
+<header class="lens" style="position:sticky;top:0;z-index:50;border-radius:0 0 20px 20px;padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between">
+<div style="display:flex;align-items:center;gap:12px"><button onclick="om('md-settings')" style="background:0;border:0;cursor:pointer;color:var(--t2)"><span class="material-symbols-outlined">menu</span></button><span style="font:600 1.3rem system-ui"><span style="color:var(--ac)">W</span>anderlost</span></div></header>
+<main style="max-width:640px;margin:0 auto;padding:48px 24px 128px"><p class="meta" style="margin-bottom:8px;color:var(--ac)">Chronicle</p><h2 class="h1" style="font-size:2.5rem;margin-bottom:16px">History</h2>
+<div style="width:48px;height:2px;background:var(--ac);margin-bottom:16px"></div><p class="body" style="margin-bottom:48px">Your journey through discovery.</p>
+<div id="hist"><p class="body" style="font-style:italic">No discoveries yet.</p></div>
+<div class="lens" style="border-radius:24px;padding:32px;text-align:center;margin-top:48px"><p class="meta" style="margin-bottom:12px;color:var(--ac)">Premium</p><h3 class="h2" style="margin-bottom:16px">Full History</h3>
+<button onclick="om('md-premium')" class="btn bp" style="padding:14px 32px;border-radius:16px">Upgrade</button></div></main></section>
 <!-- PROFILE -->
 <section id="tab-profile" class="tab">
-<header class="gl" style="position:sticky;top:0;z-index:50;border-radius:0 0 20px 20px;padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--sh)">
-<div style="display:flex;align-items:center;gap:12px"><button onclick="om('md-settings')" style="background:0;border:0;cursor:pointer;color:var(--t2)"><span class="material-symbols-outlined">menu</span></button><span class="br" style="font-size:1.4rem"><span style="color:var(--ac)">W</span>anderlost</span></div></header>
+<header class="lens" style="position:sticky;top:0;z-index:50;border-radius:0 0 20px 20px;padding:0 24px;height:60px;display:flex;align-items:center;gap:12px">
+<button onclick="om('md-settings')" style="background:0;border:0;cursor:pointer;color:var(--t2)"><span class="material-symbols-outlined">menu</span></button><span style="font:600 1.3rem system-ui"><span style="color:var(--ac)">W</span>anderlost</span></header>
 <main style="padding:32px 24px 128px;max-width:480px;margin:0 auto">
-<section style="display:flex;flex-direction:column;align-items:center;margin-bottom:40px"><div style="width:100px;height:100px;border-radius:50%;overflow:hidden;border:2px solid var(--ac)"><img alt="User" style="width:100%;height:100%;object-fit:cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbCapbZpiJc0BoOIFDF4-jr2t60HAk4MD7Y1P4UjJmtjBurdVbLboys9VXiT_G3m6O_naZH3o49c3Oohe1ZE7W_BWVW1jfgKNFy7857lW6LMPBogSgm373r9DfFNKffCSkge5ujAUrmfRa-12AG8mkeY7unycNVvWC6S9yPxB8ej_0_wFuKeGlMpw0rjto_7oA2iwPHPdaMaRE3adFCVllYMTmQywG7-78J-dg2sInYud1kqjGZx3hzWq5c7IqWh1lFJIBST_JtjY"/></div>
-<h2 id="dname" class="tt" style="margin-top:16px">Explorer</h2><p class="tm" style="margin-top:4px">Nomad Explorer</p></section>
-<section class="gl" style="border-radius:20px;padding:24px;display:flex;justify-content:space-between;align-items:center;margin-bottom:32px"><div><p class="tm" style="margin-bottom:4px">Account Tier</p><p class="tl" style="color:var(--tx)">Free</p></div><button onclick="om('md-premium')" class="bt bp" style="padding:10px 24px;font-size:10px">Premium</button></section>
+<section style="display:flex;flex-direction:column;align-items:center;margin-bottom:40px"><div style="width:100px;height:100px;border-radius:50%;overflow:hidden;border:2px solid var(--ac)"><img alt="" style="width:100%;height:100%;object-fit:cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbCapbZpiJc0BoOIFDF4-jr2t60HAk4MD7Y1P4UjJmtjBurdVbLboys9VXiT_G3m6O_naZH3o49c3Oohe1ZE7W_BWVW1jfgKNFy7857lW6LMPBogSgm373r9DfFNKffCSkge5ujAUrmfRa-12AG8mkeY7unycNVvWC6S9yPxB8ej_0_wFuKeGlMpw0rjto_7oA2iwPHPdaMaRE3adFCVllYMTmQywG7-78J-dg2sInYud1kqjGZx3hzWq5c7IqWh1lFJIBST_JtjY"/></div>
+<h2 id="dname" class="h2" style="margin-top:16px">Explorer</h2><p class="meta" style="margin-top:4px">Nomad</p></section>
+<section class="lens" style="border-radius:20px;padding:24px;display:flex;justify-content:space-between;align-items:center;margin-bottom:32px"><div><p class="meta" style="margin-bottom:4px">Tier</p><p style="font:600 13px system-ui;color:var(--tx)">Free</p></div><button onclick="om('md-premium')" class="btn bp" style="padding:10px 24px;font-size:10px;border-radius:12px">Premium</button></section>
 <section style="margin-bottom:32px">
-<div style="padding:16px 0;border-bottom:.5px solid var(--bd)"><span class="tm" style="display:block;margin-bottom:6px">Full Name</span><input id="pf-n" type="text" value="Explorer"/></div>
-<div style="padding:16px 0;border-bottom:.5px solid var(--bd)"><span class="tm" style="display:block;margin-bottom:6px">Email</span><input type="email" placeholder="Add email"/></div>
-<div style="padding:16px 0;border-bottom:.5px solid var(--bd)"><span class="tm" style="display:block;margin-bottom:6px">Password</span><input id="pf-p" type="password" placeholder="New password"/></div>
-<div style="padding:16px 0;border-bottom:.5px solid var(--bd)"><span class="tm" style="display:block;margin-bottom:6px">Confirm</span><input id="pf-p2" type="password" placeholder="Repeat password"/></div>
-<button id="btn-sp" class="bt bp" style="width:100%;margin-top:20px">Save Changes</button></section></main></section>
+<div style="margin-bottom:16px"><span class="meta" style="display:block;margin-bottom:6px">Name</span><input id="pf-n" type="text" value="Explorer"/></div>
+<div style="margin-bottom:16px"><span class="meta" style="display:block;margin-bottom:6px">Email</span><input type="email" placeholder="Add email"/></div>
+<div style="margin-bottom:16px"><span class="meta" style="display:block;margin-bottom:6px">Password</span><input id="pf-p" type="password" placeholder="New password"/></div>
+<div style="margin-bottom:16px"><span class="meta" style="display:block;margin-bottom:6px">Confirm</span><input id="pf-p2" type="password" placeholder="Repeat"/></div>
+<button id="btn-sp" class="btn bp" style="width:100%;border-radius:14px">Save Changes</button></section></main></section>
 <!-- DOCK -->
-<nav class="gl" style="position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:150;display:flex;justify-content:space-around;align-items:center;height:56px;width:240px;border-radius:9999px;box-shadow:var(--sh)">
+<nav class="lens" style="position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:150;display:flex;justify-content:space-around;align-items:center;height:60px;width:220px;border-radius:20px">
 <button onclick="stab('tab-explore')" data-t="tab-explore" class="dk active"><span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">explore</span></button>
 <button onclick="stab('tab-history')" data-t="tab-history" class="dk"><span class="material-symbols-outlined">history</span></button>
 <button onclick="stab('tab-profile')" data-t="tab-profile" class="dk"><span class="material-symbols-outlined">person</span></button></nav>
-<!-- SETTINGS -->
-<div id="md-settings" class="md"><header class="gl" style="position:fixed;top:0;width:100%;z-index:50;border-radius:0 0 20px 20px;padding:0 24px;height:60px;display:flex;align-items:center;gap:12px">
-<button onclick="cm('md-settings')" style="background:0;border:0;cursor:pointer;color:var(--t2)"><span class="material-symbols-outlined">arrow_back</span></button><span class="tt" style="font-size:1.3rem">Settings</span></header>
-<main style="padding:80px 24px 128px;max-width:560px;margin:0 auto"><section style="margin-bottom:40px"><p class="tm" style="margin-bottom:8px">User</p><h2 class="td" style="font-size:2rem">Explorer</h2></section>
-<section style="margin-bottom:32px"><h3 class="tt" style="font-size:1.3rem;padding-bottom:8px;border-bottom:.5px solid var(--bd);margin-bottom:20px">Membership</h3>
-<div style="display:flex;justify-content:space-between;margin-bottom:12px"><span class="tm">Status</span><span class="tl" style="color:var(--ac)">Free</span></div>
-<div style="display:flex;gap:12px"><button onclick="om('md-premium')" class="bt bp" style="padding:10px 20px;font-size:10px">Manage</button><button onclick="toast('You are on the Free plan.')" class="bt bo" style="padding:10px 20px;font-size:10px">Cancel</button></div></section>
-<section style="margin-bottom:32px"><h3 class="tt" style="font-size:1.3rem;padding-bottom:8px;border-bottom:.5px solid var(--bd);margin-bottom:20px">Preferences</h3>
-<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0"><div><span class="tl" style="display:block;color:var(--tx);margin-bottom:2px">Distance</span><span class="tm">Meters or Feet</span></div>
-<div class="gl" style="display:flex;border-radius:9999px;overflow:hidden"><button data-u="meters" class="ub" style="padding:8px 16px;font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;border:0;cursor:pointer;background:var(--ac);color:#fff">M</button><button data-u="feet" class="ub" style="padding:8px 16px;font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;border:0;cursor:pointer;background:0;color:var(--t2)">FT</button></div></div>
-<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-top:.5px solid var(--bd)"><div><span class="tl" style="display:block;color:var(--tx);margin-bottom:2px">Theme</span><span class="tm">Midnight or Silver</span></div>
-<div class="gl" style="display:flex;border-radius:9999px;overflow:hidden"><button data-th="light" class="thb" style="padding:8px 16px;font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;border:0;cursor:pointer;background:0;color:var(--t2)">☀</button><button data-th="dark" class="thb" style="padding:8px 16px;font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;border:0;cursor:pointer;background:var(--ac);color:#fff">🌙</button></div></div></section>
-<section style="margin-bottom:32px"><h3 class="tt" style="font-size:1.3rem;padding-bottom:8px;border-bottom:.5px solid var(--bd);margin-bottom:16px">Legal</h3>
-<div onclick="om('md-terms')" style="padding:12px 0;border-bottom:.5px solid var(--bd);cursor:pointer"><span class="tb" style="color:var(--tx)">Terms & Conditions</span></div>
-<div onclick="om('md-privacy')" style="padding:12px 0;border-bottom:.5px solid var(--bd);cursor:pointer"><span class="tb" style="color:var(--tx)">Privacy Policy</span></div>
-<div onclick="om('md-safety')" style="padding:12px 0;border-bottom:.5px solid var(--bd);cursor:pointer"><span class="tb" style="color:var(--tx)">Safety</span></div></section>
-<button onclick="location.reload()" style="background:0;border:0;cursor:pointer;color:var(--t2);text-decoration:underline;font-size:13px;margin-bottom:24px;display:block">Log out</button>
-<section class="gl" style="padding:24px;border-radius:16px;border-left:3px solid #F44"><p class="tl" style="color:#F44;margin-bottom:8px">Danger Zone</p>
-<button onclick="if(confirm('Delete account?')){toast('Deleting...');setTimeout(()=>location.reload(),2e3)}" style="background:0;border:0;cursor:pointer;color:#F44;font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;display:block;margin-bottom:8px">Delete Account</button>
-<button onclick="if(confirm('Clear data?')){toast('Purged.');A.h=[];A.sv=[];rh()}" style="background:0;border:0;cursor:pointer;color:#F44;font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;display:block">Delete Data</button></section></main></div>
-<!-- SAFETY --><div id="md-safety" class="md"><header class="gl" style="position:sticky;top:0;z-index:50;border-radius:0 0 20px 20px;padding:0 24px;height:60px;display:flex;align-items:center;gap:12px"><button onclick="cm('md-safety')" style="background:0;border:0;cursor:pointer;color:var(--ac)"><span class="material-symbols-outlined">arrow_back</span></button><span class="tl" style="color:var(--tx)">Safety</span></header>
-<main style="padding:32px 10%;max-width:640px;margin:0 auto;padding-bottom:128px"><h2 class="td" style="font-size:2.2rem;margin-bottom:12px">The Digital Curator's Liability.</h2><p class="tb" style="font-size:15px;font-style:italic;margin-bottom:32px">Wanderlost is a discovery interface, not a travel guide. You are responsible for your own journey.</p>
-<p class="tb" style="margin-bottom:16px"><strong style="color:var(--tx)">Environmental Intelligence:</strong> Assess the environment. If it feels wrong, leave.</p><p class="tb" style="margin-bottom:16px"><strong style="color:var(--tx)">Tactical Awareness:</strong> Always identify your closest exit.</p><p class="tb" style="margin-bottom:16px"><strong style="color:var(--tx)">No Agency:</strong> Wanderlost is not an agent, guide, or insurer.</p>
-<div class="gl" style="padding:20px;border-radius:12px;border-left:2px solid #F44;margin-top:24px"><p class="tb">By using Wanderlost, you acknowledge all travel is at your own risk.</p></div></main></div>
-<!-- PRIVACY --><div id="md-privacy" class="md"><header class="gl" style="position:sticky;top:0;z-index:50;border-radius:0 0 20px 20px;padding:0 24px;height:60px;display:flex;align-items:center;gap:12px"><button onclick="cm('md-privacy')" style="background:0;border:0;cursor:pointer;color:var(--ac)"><span class="material-symbols-outlined">arrow_back</span></button><span class="tl" style="color:var(--tx)">Privacy</span></header>
-<main style="padding:32px 10%;max-width:640px;margin:0 auto;padding-bottom:128px"><h2 class="td" style="font-size:2.2rem;margin-bottom:12px">Respecting the Digital Horizon.</h2><p class="tb" style="font-size:15px;font-style:italic;margin-bottom:32px">Your privacy is the bedrock of our exploration.</p>
-<p class="tb" style="margin-bottom:16px"><strong style="color:var(--tx)">Location:</strong> Required for navigation, active only when app is open.</p><p class="tb" style="margin-bottom:16px"><strong style="color:var(--tx)">Account:</strong> Name and email to sync your Journal.</p><p class="tb" style="margin-bottom:16px"><strong style="color:var(--tx)">Third Parties:</strong> Google Maps SDK, Stripe/Apple Pay, In-house Analytics.</p></main></div>
-<!-- TERMS --><div id="md-terms" class="md"><header class="gl" style="position:sticky;top:0;z-index:50;border-radius:0 0 20px 20px;padding:0 24px;height:60px;display:flex;align-items:center;gap:12px"><button onclick="cm('md-terms')" style="background:0;border:0;cursor:pointer;color:var(--ac)"><span class="material-symbols-outlined">arrow_back</span></button><span class="tl" style="color:var(--tx)">Terms</span></header>
-<main style="padding:32px 10%;max-width:640px;margin:0 auto;padding-bottom:128px"><h2 class="td" style="font-size:2.2rem;margin-bottom:12px">Terms of Engagement.</h2><p class="tb" style="font-size:15px;font-style:italic;margin-bottom:32px">By accessing Wanderlost, you agree to these Terms.</p>
-<p class="tb" style="margin-bottom:16px"><strong style="color:var(--tx)">Eligibility:</strong> You must be 18+.</p><p class="tb" style="margin-bottom:16px"><strong style="color:var(--tx)">Account:</strong> You're responsible for all activity.</p><p class="tb" style="margin-bottom:16px"><strong style="color:var(--tx)">Billing:</strong> Free: 3/session. Monthly: 20 CHF. Annual: 200 CHF.</p>
-<div class="gl" style="padding:20px;border-radius:12px;border-left:2px solid #F44;margin-top:24px"><p class="tb">Recommendations are "as is." All travel at your own risk.</p></div></main></div>
+<!-- SETTINGS --><div id="md-settings" class="md"><header class="lens" style="position:fixed;top:0;width:100%;z-index:50;border-radius:0 0 20px 20px;padding:0 24px;height:60px;display:flex;align-items:center;gap:12px"><button onclick="cm('md-settings')" style="background:0;border:0;cursor:pointer;color:var(--t2)"><span class="material-symbols-outlined">arrow_back</span></button><span class="h2" style="font-size:1.3rem">Settings</span></header>
+<main style="padding:80px 24px 128px;max-width:560px;margin:0 auto">
+<section style="margin-bottom:32px"><h3 class="h2" style="font-size:1.2rem;padding-bottom:8px;border-bottom:.5px solid var(--bdr);margin-bottom:20px">Membership</h3>
+<div style="display:flex;justify-content:space-between;margin-bottom:12px"><span class="meta">Status</span><span class="meta" style="color:var(--ac)">Free</span></div>
+<button onclick="om('md-premium')" class="btn bp" style="padding:10px 20px;font-size:10px;border-radius:12px">Manage</button></section>
+<section style="margin-bottom:32px"><h3 class="h2" style="font-size:1.2rem;padding-bottom:8px;border-bottom:.5px solid var(--bdr);margin-bottom:20px">Preferences</h3>
+<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0"><span class="meta">Distance</span>
+<div class="lens" style="display:flex;border-radius:12px;overflow:hidden"><button data-u="meters" class="ub" style="padding:8px 14px;font:700 10px system-ui;letter-spacing:.1em;text-transform:uppercase;border:0;cursor:pointer;background:var(--ac);color:#fff">M</button><button data-u="feet" class="ub" style="padding:8px 14px;font:700 10px system-ui;letter-spacing:.1em;text-transform:uppercase;border:0;cursor:pointer;background:0;color:var(--t2)">FT</button></div></div>
+<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-top:.5px solid var(--bdr)"><span class="meta">Theme</span>
+<div class="lens" style="display:flex;border-radius:12px;overflow:hidden"><button data-th="light" class="thb" style="padding:8px 14px;font:700 10px system-ui;border:0;cursor:pointer;background:0;color:var(--t2)">☀</button><button data-th="dark" class="thb" style="padding:8px 14px;font:700 10px system-ui;border:0;cursor:pointer;background:var(--ac);color:#fff">🌙</button></div></div></section>
+<section style="margin-bottom:32px"><h3 class="h2" style="font-size:1.2rem;padding-bottom:8px;border-bottom:.5px solid var(--bdr);margin-bottom:16px">Legal</h3>
+<div onclick="om('md-terms')" style="padding:12px 0;border-bottom:.5px solid var(--bdr);cursor:pointer"><span class="body" style="color:var(--tx)">Terms</span></div>
+<div onclick="om('md-privacy')" style="padding:12px 0;border-bottom:.5px solid var(--bdr);cursor:pointer"><span class="body" style="color:var(--tx)">Privacy</span></div>
+<div onclick="om('md-safety')" style="padding:12px 0;border-bottom:.5px solid var(--bdr);cursor:pointer"><span class="body" style="color:var(--tx)">Safety</span></div></section>
+<button onclick="location.reload()" style="background:0;border:0;cursor:pointer;color:var(--t2);text-decoration:underline;font-size:13px;display:block;margin-bottom:24px">Log out</button>
+<section class="lens" style="padding:20px;border-radius:16px;border-left:3px solid #F44"><p class="meta" style="color:#F44;margin-bottom:8px">Danger</p>
+<button onclick="if(confirm('Delete account?')){toast('Deleting...');setTimeout(()=>location.reload(),2e3)}" style="background:0;border:0;cursor:pointer;color:#F44;font:700 10px system-ui;letter-spacing:.15em;text-transform:uppercase;display:block">Delete Account</button></section></main></div>
+<!-- LEGAL MODALS -->
+<div id="md-safety" class="md"><header class="lens" style="position:sticky;top:0;z-index:50;border-radius:0 0 20px 20px;padding:0 24px;height:60px;display:flex;align-items:center;gap:12px"><button onclick="cm('md-safety')" style="background:0;border:0;cursor:pointer;color:var(--ac)"><span class="material-symbols-outlined">arrow_back</span></button><span class="meta" style="color:var(--tx)">Safety</span></header>
+<main style="padding:32px 10%;max-width:640px;margin:0 auto;padding-bottom:128px"><h2 class="h1" style="font-size:2rem;margin-bottom:16px">The Curator's Liability.</h2><p class="body" style="margin-bottom:16px"><strong style="color:var(--tx)">Environment:</strong> Assess on arrival. If wrong, leave.</p><p class="body" style="margin-bottom:16px"><strong style="color:var(--tx)">Awareness:</strong> Always know your nearest exit.</p><p class="body"><strong style="color:var(--tx)">Disclaimer:</strong> All travel at your own risk.</p></main></div>
+<div id="md-privacy" class="md"><header class="lens" style="position:sticky;top:0;z-index:50;border-radius:0 0 20px 20px;padding:0 24px;height:60px;display:flex;align-items:center;gap:12px"><button onclick="cm('md-privacy')" style="background:0;border:0;cursor:pointer;color:var(--ac)"><span class="material-symbols-outlined">arrow_back</span></button><span class="meta" style="color:var(--tx)">Privacy</span></header>
+<main style="padding:32px 10%;max-width:640px;margin:0 auto;padding-bottom:128px"><h2 class="h1" style="font-size:2rem;margin-bottom:16px">Digital Horizon.</h2><p class="body" style="margin-bottom:16px"><strong style="color:var(--tx)">Location:</strong> Active only when app is open.</p><p class="body" style="margin-bottom:16px"><strong style="color:var(--tx)">Account:</strong> Name & email to sync.</p><p class="body"><strong style="color:var(--tx)">Third Parties:</strong> Google Maps, Stripe, In-house Analytics.</p></main></div>
+<div id="md-terms" class="md"><header class="lens" style="position:sticky;top:0;z-index:50;border-radius:0 0 20px 20px;padding:0 24px;height:60px;display:flex;align-items:center;gap:12px"><button onclick="cm('md-terms')" style="background:0;border:0;cursor:pointer;color:var(--ac)"><span class="material-symbols-outlined">arrow_back</span></button><span class="meta" style="color:var(--tx)">Terms</span></header>
+<main style="padding:32px 10%;max-width:640px;margin:0 auto;padding-bottom:128px"><h2 class="h1" style="font-size:2rem;margin-bottom:16px">Terms of Engagement.</h2><p class="body" style="margin-bottom:16px"><strong style="color:var(--tx)">Eligibility:</strong> 18+.</p><p class="body" style="margin-bottom:16px"><strong style="color:var(--tx)">Billing:</strong> Free: 3/session. Monthly: 20 CHF. Annual: 200 CHF.</p><p class="body"><strong style="color:var(--tx)">Liability:</strong> Recommendations "as is." Travel at your own risk.</p></main></div>
 <!-- PREMIUM --><div id="md-premium" class="md" style="background:rgba(0,0,0,.6);backdrop-filter:blur(10px)"><div style="display:flex;align-items:center;justify-content:center;min-height:100vh;padding:16px">
-<div class="gl" style="position:relative;width:100%;max-width:440px;border-radius:28px;padding:40px 32px;max-height:90vh;overflow-y:auto"><button onclick="cm('md-premium')" style="position:absolute;top:20px;right:20px;background:0;border:0;cursor:pointer;color:var(--t2)"><span class="material-symbols-outlined">close</span></button>
-<p class="tm" style="margin-bottom:12px;color:var(--ac)">Membership</p><h2 class="td" style="font-size:2rem;margin-bottom:12px">Unlock everything.</h2><p class="tb" style="margin-bottom:32px">Join a curated world of explorers.</p>
-<div style="margin-bottom:32px"><div style="display:flex;align-items:start;gap:12px;margin-bottom:16px"><span class="material-symbols-outlined" style="color:var(--ac);font-size:18px;font-variation-settings:'FILL' 1">check_circle</span><div><span class="tl" style="color:var(--tx);display:block">Unlimited Discoveries</span><span class="tb" style="font-size:12px">No limits.</span></div></div>
-<div style="display:flex;align-items:start;gap:12px;margin-bottom:16px"><span class="material-symbols-outlined" style="color:var(--ac);font-size:18px;font-variation-settings:'FILL' 1">check_circle</span><div><span class="tl" style="color:var(--tx);display:block">Category Filters</span><span class="tb" style="font-size:12px">Target what you want.</span></div></div>
-<div style="display:flex;align-items:start;gap:12px"><span class="material-symbols-outlined" style="color:var(--ac);font-size:18px;font-variation-settings:'FILL' 1">check_circle</span><div><span class="tl" style="color:var(--tx);display:block">Full History & Saves</span><span class="tb" style="font-size:12px">Permanent log.</span></div></div></div>
-<button onclick="om('md-checkout');cm('md-premium')" class="bt bp" style="width:100%;padding:16px">Start — 20 CHF/mo</button></div></div></div>
-<!-- CHECKOUT --><div id="md-checkout" class="md"><header class="gl" style="position:fixed;top:0;width:100%;z-index:50;border-radius:0 0 20px 20px;padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between">
-<div style="display:flex;align-items:center;gap:12px"><button onclick="cm('md-checkout')" style="background:0;border:0;cursor:pointer;color:var(--t2)"><span class="material-symbols-outlined">close</span></button><span class="tl" style="color:var(--tx)">Checkout</span></div><span class="br" style="color:var(--ac);font-size:1.2rem">Wanderlost</span></header>
+<div class="lens" style="position:relative;width:100%;max-width:440px;border-radius:28px;padding:40px 32px"><button onclick="cm('md-premium')" style="position:absolute;top:20px;right:20px;background:0;border:0;cursor:pointer;color:var(--t2)"><span class="material-symbols-outlined">close</span></button>
+<p class="meta" style="margin-bottom:12px;color:var(--ac)">Membership</p><h2 class="h1" style="font-size:2rem;margin-bottom:12px">Unlock everything.</h2><p class="body" style="margin-bottom:32px">Join a world of explorers.</p>
+<div style="margin-bottom:32px"><div style="display:flex;align-items:center;gap:12px;margin-bottom:14px"><span class="material-symbols-outlined" style="color:var(--ac);font-size:18px;font-variation-settings:'FILL' 1">check_circle</span><span style="font:600 13px system-ui;color:var(--tx)">Unlimited Discoveries</span></div>
+<div style="display:flex;align-items:center;gap:12px;margin-bottom:14px"><span class="material-symbols-outlined" style="color:var(--ac);font-size:18px;font-variation-settings:'FILL' 1">check_circle</span><span style="font:600 13px system-ui;color:var(--tx)">Category Filters</span></div>
+<div style="display:flex;align-items:center;gap:12px"><span class="material-symbols-outlined" style="color:var(--ac);font-size:18px;font-variation-settings:'FILL' 1">check_circle</span><span style="font:600 13px system-ui;color:var(--tx)">Full History & Saves</span></div></div>
+<button onclick="om('md-checkout');cm('md-premium')" class="btn bp" style="width:100%;padding:16px;border-radius:16px">Start — 20 CHF/mo</button></div></div></div>
+<!-- CHECKOUT --><div id="md-checkout" class="md"><header class="lens" style="position:fixed;top:0;width:100%;z-index:50;border-radius:0 0 20px 20px;padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between">
+<div style="display:flex;align-items:center;gap:12px"><button onclick="cm('md-checkout')" style="background:0;border:0;cursor:pointer;color:var(--t2)"><span class="material-symbols-outlined">close</span></button><span class="meta" style="color:var(--tx)">Checkout</span></div><span style="color:var(--ac);font:600 1.1rem system-ui">Wanderlost</span></header>
 <main style="padding:80px 24px 128px;max-width:480px;margin:0 auto">
-<div class="gl" style="display:flex;border-radius:9999px;overflow:hidden;padding:4px;margin-bottom:32px"><button data-pl="monthly" class="plb" style="flex:1;padding:12px;text-align:center;font-size:12px;font-weight:600;border:0;cursor:pointer;border-radius:9999px;background:var(--ac);color:#fff">20 CHF/mo</button><button data-pl="annual" class="plb" style="flex:1;padding:12px;text-align:center;font-size:12px;font-weight:600;border:0;cursor:pointer;border-radius:9999px;background:0;color:var(--t2)">200 CHF/yr</button></div>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:32px"><button class="bt bo" style="padding:14px;font-size:14px;font-weight:700"> Apple Pay</button><button class="bt bo" style="padding:14px;font-size:14px;font-weight:700;font-style:italic">G Pay</button></div>
-<div style="display:flex;align-items:center;gap:12px;margin-bottom:32px"><div style="flex:1;height:.5px;background:var(--bd)"></div><span class="tm">Or manually</span><div style="flex:1;height:.5px;background:var(--bd)"></div></div>
-<form id="pf"><div style="margin-bottom:24px"><span class="tm" style="display:block;margin-bottom:8px">Name</span><input type="text" placeholder="Full Name" required/></div>
-<div style="margin-bottom:24px"><span class="tm" style="display:block;margin-bottom:8px">Card</span><input type="text" placeholder="0000 0000 0000 0000" required/></div>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:32px"><div><span class="tm" style="display:block;margin-bottom:8px">Exp</span><input type="text" placeholder="MM/YY" required/></div><div><span class="tm" style="display:block;margin-bottom:8px">CVC</span><input type="text" placeholder="123" required/></div></div></form>
-<section class="gl" style="padding:24px;border-radius:20px;margin-bottom:24px"><div style="display:flex;justify-content:space-between;align-items:flex-end"><div><span class="tm" style="display:block;margin-bottom:4px">Total</span><h3 id="ptot" class="tt" style="font-size:1.8rem">20.00 CHF</h3></div><div style="text-align:right"><span class="tm" style="display:block;margin-bottom:4px">Access</span><span id="pcyc" class="tl" style="color:var(--tx)">Monthly</span></div></div></section>
-<button id="btn-pay" class="bt bp" style="width:100%;padding:16px">Confirm Payment</button>
-<div style="text-align:center;margin-top:16px;display:flex;align-items:center;justify-content:center;gap:6px"><span class="material-symbols-outlined" style="font-size:14px;color:var(--ac)">verified_user</span><span class="tm">Encrypted & Secure</span></div></main></div>
-
+<div class="lens" style="display:flex;border-radius:14px;overflow:hidden;padding:4px;margin-bottom:32px"><button data-pl="monthly" class="plb" style="flex:1;padding:12px;text-align:center;font:600 12px system-ui;border:0;cursor:pointer;border-radius:12px;background:var(--ac);color:#fff">20 CHF/mo</button><button data-pl="annual" class="plb" style="flex:1;padding:12px;text-align:center;font:600 12px system-ui;border:0;cursor:pointer;border-radius:12px;background:0;color:var(--t2)">200 CHF/yr</button></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:32px"><button class="btn bo" style="padding:14px;font:700 14px system-ui;border-radius:14px"> Pay</button><button class="btn bo" style="padding:14px;font:700 14px system-ui;border-radius:14px;font-style:italic">G Pay</button></div>
+<div style="display:flex;align-items:center;gap:12px;margin-bottom:28px"><div style="flex:1;height:.5px;background:var(--bdr)"></div><span class="meta">Or manually</span><div style="flex:1;height:.5px;background:var(--bdr)"></div></div>
+<form id="pf"><div style="margin-bottom:20px"><span class="meta" style="display:block;margin-bottom:6px">Name</span><input type="text" placeholder="Full Name" required/></div>
+<div style="margin-bottom:20px"><span class="meta" style="display:block;margin-bottom:6px">Card</span><input type="text" placeholder="0000 0000 0000 0000" required/></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:28px"><div><span class="meta" style="display:block;margin-bottom:6px">Exp</span><input type="text" placeholder="MM/YY" required/></div><div><span class="meta" style="display:block;margin-bottom:6px">CVC</span><input type="text" placeholder="123" required/></div></div></form>
+<section class="lens" style="padding:24px;border-radius:20px;margin-bottom:24px"><div style="display:flex;justify-content:space-between;align-items:flex-end"><div><span class="meta" style="display:block;margin-bottom:4px">Total</span><h3 id="ptot" class="h2" style="font-size:1.8rem">20.00 CHF</h3></div><div style="text-align:right"><span class="meta" style="display:block;margin-bottom:4px">Access</span><span id="pcyc" class="meta" style="color:var(--tx)">Monthly</span></div></div></section>
+<button id="btn-pay" class="btn bp" style="width:100%;padding:16px;border-radius:16px">Confirm Payment</button>
+<div style="text-align:center;margin-top:16px;display:flex;align-items:center;justify-content:center;gap:6px"><span class="material-symbols-outlined" style="font-size:14px;color:var(--ac)">verified_user</span><span class="meta">Encrypted</span></div></main></div>
 <script>
 const el=id=>document.getElementById(id),A={cr:3,sub:false,p:null,h:[],sv:[],mk:[],cat:'',plan:'monthly',unit:'m',th:localStorage.getItem('wt')||'dark'};
-const MD=[{e:'geometry',s:[{color:'#1a1d23'}]},{e:'labels.icon',s:[{visibility:'off'}]},{e:'labels.text.fill',s:[{color:'#8B949E'}]},{e:'labels.text.stroke',s:[{color:'#0d1117'}]},{ft:'poi',e:'geometry',s:[{color:'#21262d'}]},{ft:'road',e:'geometry',s:[{color:'#30363d'}]},{ft:'water',e:'geometry',s:[{color:'#0d1926'}]}].map(x=>({...(x.ft?{featureType:x.ft}:{}),elementType:x.e,stylers:x.s}));
-const ML=[{e:'geometry',s:[{color:'#f8f8f8'}]},{e:'labels.icon',s:[{visibility:'off'}]},{e:'labels.text.fill',s:[{color:'#3A3A3A'}]},{ft:'poi',e:'geometry',s:[{color:'#f0f0f0'}]},{ft:'road',e:'geometry',s:[{color:'#fff'}]},{ft:'water',e:'geometry',s:[{color:'#D4E4F7'}]}].map(x=>({...(x.ft?{featureType:x.ft}:{}),elementType:x.e,stylers:x.s}));
+const MD=[{e:'geometry',s:[{color:'#0a0e14'}]},{e:'labels.icon',s:[{visibility:'off'}]},{e:'labels.text.fill',s:[{color:'#555'}]},{e:'labels.text.stroke',s:[{color:'#0a0e14'}]},{ft:'poi',e:'geometry',s:[{color:'#151a22'}]},{ft:'road',e:'geometry',s:[{color:'#1c2230'}]},{ft:'water',e:'geometry',s:[{color:'#0c1520'}]}].map(x=>({...(x.ft?{featureType:x.ft}:{}),elementType:x.e,stylers:x.s}));
+const ML=[{e:'geometry',s:[{color:'#e8ecf2'}]},{e:'labels.icon',s:[{visibility:'off'}]},{e:'labels.text.fill',s:[{color:'#444'}]},{ft:'poi',e:'geometry',s:[{color:'#dde2ea'}]},{ft:'road',e:'geometry',s:[{color:'#fff'}]},{ft:'water',e:'geometry',s:[{color:'#c8d8f0'}]}].map(x=>({...(x.ft?{featureType:x.ft}:{}),elementType:x.e,stylers:x.s}));
 const CC={restaurant:'#FFB5A7',cafe:'#D4C5F9',bakery:'#FFD6A5',bar:'#E8A0BF',park:'#B8E0D2',museum:'#A7D8FF'};
 let map,ps;
-function toast(m){const o=el('wt');if(o)o.remove();const t=document.createElement('div');t.id='wt';Object.assign(t.style,{position:'fixed',top:'80px',left:'50%',transform:'translateX(-50%) translateY(-10px)',zIndex:'9999',padding:'12px 24px',fontSize:'13px',textAlign:'center',maxWidth:'320px',borderRadius:'9999px',opacity:'0',background:'var(--sf)',backdropFilter:'blur(40px)',border:'.5px solid var(--bd)',color:'var(--tx)',boxShadow:'var(--sh)',transition:'all .5s',fontFamily:'Inter,sans-serif'});t.textContent=m;document.body.appendChild(t);requestAnimationFrame(()=>{t.style.opacity='1';t.style.transform='translateX(-50%) translateY(0)'});setTimeout(()=>{t.style.opacity='0';setTimeout(()=>t.remove(),500)},3500)}
+function toast(m){const o=el('wt');if(o)o.remove();const t=document.createElement('div');t.id='wt';Object.assign(t.style,{position:'fixed',top:'80px',left:'50%',transform:'translateX(-50%) translateY(-10px)',zIndex:'9999',padding:'12px 24px',fontSize:'13px',textAlign:'center',maxWidth:'320px',borderRadius:'16px',opacity:'0',background:'var(--lens)',backdropFilter:'blur(32px)',borderTop:'1px solid var(--bdr-light)',borderLeft:'1px solid var(--bdr-light)',color:'var(--tx)',boxShadow:'var(--depth)',transition:'all .5s',fontFamily:'system-ui'});t.textContent=m;document.body.appendChild(t);requestAnimationFrame(()=>{t.style.opacity='1';t.style.transform='translateX(-50%) translateY(0)'});setTimeout(()=>{t.style.opacity='0';setTimeout(()=>t.remove(),500)},3500)}
 window.toast=toast;
-function stab(id){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));el(id)?.classList.add('active');document.querySelectorAll('.dk').forEach(b=>{const i=b.querySelector('.material-symbols-outlined');if(b.dataset.t===id){b.classList.add('active');i.style.fontVariationSettings="'FILL' 1"}else{b.classList.remove('active');i.style.fontVariationSettings="'FILL' 0"}})}
-window.stab=stab;
-function om(id){el(id)?.classList.add('open');document.body.style.overflow='hidden'}
-function cm(id){el(id)?.classList.remove('open');if(!document.querySelector('.md.open'))document.body.style.overflow=''}
-window.om=om;window.cm=cm;
-function os(){el('discovery-sheet').classList.add('open');el('btn-discover')?.classList.add('morphing')}
-function cs(){el('discovery-sheet').classList.remove('open');el('btn-discover')?.classList.remove('morphing')}
-window.cs=cs;
-function pickCat(b){document.querySelectorAll('.pl').forEach(p=>p.classList.remove('active'));b.classList.add('active');b.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});A.cat=b.dataset.c||''}
-window.pickCat=pickCat;
+function stab(id){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));el(id)?.classList.add('active');document.querySelectorAll('.dk').forEach(b=>{const i=b.querySelector('.material-symbols-outlined');if(b.dataset.t===id){b.classList.add('active');i.style.fontVariationSettings="'FILL' 1"}else{b.classList.remove('active');i.style.fontVariationSettings="'FILL' 0"}})} window.stab=stab;
+function om(id){el(id)?.classList.add('open');document.body.style.overflow='hidden'} function cm(id){el(id)?.classList.remove('open');if(!document.querySelector('.md.open'))document.body.style.overflow=''} window.om=om;window.cm=cm;
+function os(){el('discovery-sheet').classList.add('open');el('btn-discover')?.classList.add('morphing')} function cs(){el('discovery-sheet').classList.remove('open');el('btn-discover')?.classList.remove('morphing')} window.cs=cs;
+function pickCat(b){document.querySelectorAll('.pl').forEach(p=>p.classList.remove('active'));b.classList.add('active');b.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});A.cat=b.dataset.c||''} window.pickCat=pickCat;
 function fd(km){if(A.unit==='ft'){const f=km*3280.84;return f<5280?Math.round(f)+' ft':((f/5280).toFixed(1)+' mi')}return km<1?Math.round(km*1000)+' m':(km.toFixed(1)+' km')}
 function hv(a,b,c,d){const R=6371,dL=(c-a)*Math.PI/180,dN=(d-b)*Math.PI/180,x=Math.sin(dL/2)**2+Math.cos(a*Math.PI/180)*Math.cos(c*Math.PI/180)*Math.sin(dN/2)**2;return R*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x))}
 window.initMap=function(){map=new google.maps.Map(el('map'),{center:{lat:47.3769,lng:8.5417},zoom:2,disableDefaultUI:true,styles:A.th==='light'?ML:MD})};
@@ -202,19 +196,15 @@ async function disc(){const b=el('btn-discover');if(!A.sub&&A.cr<=0){om('md-prem
 A.p={name:t.name||'Hidden Gem',type:t.types?.[0]||A.cat||'Discovery',address:t.vicinity||'Local favorite',distance:fd(di)+' away',distKm:di,description:t.rating?'Rating: '+t.rating+' — Highly rated':'A secret local spot.',lat:pL,lng:pN,at:new Date()};
 fs(A.p);const mk=new google.maps.Marker({position:{lat:pL,lng:pN},map,icon:{path:google.maps.SymbolPath.CIRCLE,scale:10,fillColor:CC[A.p.type]||'#38B6FF',fillOpacity:1,strokeColor:'#FFF',strokeWeight:3},animation:google.maps.Animation.DROP});mk.addListener('click',()=>{A.p&&(fs(A.p),os())});A.mk.push(mk);if(map)map.panTo({lat:pL,lng:pN});os();A.h.unshift(A.p);rh();if(!A.sub){A.cr--;el('credits').textContent=A.cr+' Credit'+(A.cr===1?'':'s')}}catch(e){console.error(e);toast('Check location permissions.')}rb()}
 function rb(){const b=el('btn-discover');b.innerHTML='<span class="material-symbols-outlined" style="font-size:16px">explore</span> Discover Places';b.disabled=false}
-function rh(){const l=el('hist');if(!l||!A.h.length)return;l.innerHTML=A.h.map(p=>`<div style="padding:20px 0;border-bottom:.5px solid var(--bd)"><p class="tm" style="margin-bottom:6px">${p.type} · ${p.at?new Date(p.at).toLocaleDateString('en-US',{month:'short',day:'numeric'}):'Today'}</p><h3 class="tt" style="font-size:1.3rem;margin-bottom:8px">${p.name}</h3><p class="tb">${p.description||''}</p></div>`).join('')}
-window.rh=rh;
-function thm(t){A.th=t;localStorage.setItem('wt',t);document.documentElement.classList.toggle('light',t==='light');document.querySelector('meta[name=theme-color]').content=t==='light'?'#F0F2F5':'#0D1117';if(map)map.setOptions({styles:t==='light'?ML:MD})}
+function rh(){const l=el('hist');if(!l||!A.h.length)return;l.innerHTML=A.h.map(p=>`<div style="padding:20px 0;border-bottom:.5px solid var(--bdr)"><p class="meta" style="margin-bottom:6px">${p.type} · ${p.at?new Date(p.at).toLocaleDateString('en-US',{month:'short',day:'numeric'}):'Today'}</p><h3 class="place" style="font-size:1.3rem;margin-bottom:8px">${p.name}</h3><p class="body">${p.description||''}</p></div>`).join('')} window.rh=rh;
+function thm(t){A.th=t;localStorage.setItem('wt',t);document.documentElement.classList.toggle('light',t==='light');document.querySelector('meta[name=theme-color]').content=t==='light'?'#E8ECF2':'#0A0E14';if(map)map.setOptions({styles:t==='light'?ML:MD})}
 function initCV(){const c=el('cv');if(!c)return;const x=c.getContext('2d');let N=[];const P=['#FFB5A7','#B8E0D2','#D4C5F9','#A7D8FF','#FFD6A5'];function rs(){c.width=c.parentElement.offsetWidth;c.height=c.parentElement.offsetHeight;N=[];const n=Math.floor(c.width*c.height/18e3);for(let i=0;i<n;i++)N.push({x:Math.random()*c.width,y:Math.random()*c.height,r:3+Math.random()*4,cl:P[Math.floor(Math.random()*P.length)],ph:Math.random()*Math.PI*2,sp:.003+Math.random()*.004})}
-function dr(t){x.clearRect(0,0,c.width,c.height);x.lineWidth=.5;for(let i=0;i<N.length;i++)for(let j=i+1;j<N.length;j++){const dx=N[i].x-N[j].x,dy=N[i].y-N[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<120){x.strokeStyle=`rgba(255,255,255,${(1-d/120)*.4})`;x.beginPath();x.moveTo(N[i].x,N[i].y);x.lineTo(N[j].x,N[j].y);x.stroke()}}
-for(const n of N){const s=1+.05*Math.sin(t*n.sp*2+n.ph),r=n.r*s;x.beginPath();x.arc(n.x,n.y,r+2,0,Math.PI*2);x.fillStyle='rgba(255,255,255,.12)';x.fill();const g=x.createRadialGradient(n.x,n.y,0,n.x,n.y,r);g.addColorStop(0,n.cl);g.addColorStop(1,'rgba(255,255,255,0)');x.beginPath();x.arc(n.x,n.y,r,0,Math.PI*2);x.fillStyle=g;x.fill()}requestAnimationFrame(dr)}
+function dr(t){x.clearRect(0,0,c.width,c.height);x.lineWidth=.5;for(let i=0;i<N.length;i++)for(let j=i+1;j<N.length;j++){const dx=N[i].x-N[j].x,dy=N[i].y-N[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<120){x.strokeStyle=`rgba(255,255,255,${(1-d/120)*.3})`;x.beginPath();x.moveTo(N[i].x,N[i].y);x.lineTo(N[j].x,N[j].y);x.stroke()}}
+for(const n of N){const s=1+.05*Math.sin(t*n.sp*2+n.ph),r=n.r*s;x.beginPath();x.arc(n.x,n.y,r+2,0,Math.PI*2);x.fillStyle='rgba(255,255,255,.1)';x.fill();const g=x.createRadialGradient(n.x,n.y,0,n.x,n.y,r);g.addColorStop(0,n.cl);g.addColorStop(1,'rgba(255,255,255,0)');x.beginPath();x.arc(n.x,n.y,r,0,Math.PI*2);x.fillStyle=g;x.fill()}requestAnimationFrame(dr)}
 window.addEventListener('resize',rs);rs();dr(0)}
-
 document.addEventListener('DOMContentLoaded',()=>{
 thm(A.th);
-// Watermarks
 const ws=document.createElement('style');ws.innerHTML='.dismissButton,.gm-err-container,.gm-style-mtc{display:none!important}';document.head.appendChild(ws);setInterval(()=>{document.querySelectorAll('.gm-style div').forEach(d=>{if(d.innerHTML?.includes('development purposes'))d.style.display='none'})},500);window.gm_authFailure=()=>{};
-// Bindings
 el('btn-discover')?.addEventListener('click',disc);
 el('btn-nav')?.addEventListener('click',()=>{if(!A.p)return;const{lat:a,lng:b,name:n,address:d}=A.p;window.open(/iPhone|iPad/i.test(navigator.userAgent)?`http://maps.apple.com/?q=${encodeURIComponent(n)}&ll=${a},${b}`:`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(n+' '+d)}`,'_blank');cs()});
 el('btn-save')?.addEventListener('click',()=>{if(!A.p)return;const b=el('btn-save');if(A.sv.find(x=>x.name===A.p.name)){b.innerHTML='<span class="material-symbols-outlined" style="font-size:14px">check</span> Saved';return}A.sv.push({...A.p});b.innerHTML='<span class="material-symbols-outlined" style="font-size:14px">bookmark_added</span> Saved!';setTimeout(()=>{b.innerHTML='<span class="material-symbols-outlined" style="font-size:14px">bookmark</span> Save'},2e3)});
@@ -224,7 +214,7 @@ el('btn-lb')?.addEventListener('click',()=>el('login-sl').classList.remove('open
 el('btn-ls')?.addEventListener('click',()=>{if(!el('l-em').value.trim()||!el('l-pw').value){toast('Fill in all fields.');return}const b=el('btn-ls');b.textContent='Signing in...';b.disabled=true;setTimeout(()=>{el('login-sl').classList.remove('open');el('auth-gate').classList.add('hidden');b.textContent='Sign In';b.disabled=false;toast('Welcome back!');setTimeout(pz,300)},1500)});
 el('btn-fo')?.addEventListener('click',()=>el('forgot-sl').classList.add('open'));
 el('btn-fb')?.addEventListener('click',()=>{el('forgot-sl').classList.remove('open');el('f-msg').classList.add('hidden')});
-el('btn-fs')?.addEventListener('click',()=>{if(!el('f-em').value.trim()){toast('Enter your email.');return}const b=el('btn-fs');b.textContent='Sending...';b.disabled=true;setTimeout(()=>{b.textContent='Send Recovery Link';b.disabled=false;el('f-msg').classList.remove('hidden')},1500)});
+el('btn-fs')?.addEventListener('click',()=>{if(!el('f-em').value.trim()){toast('Enter email.');return}const b=el('btn-fs');b.textContent='Sending...';b.disabled=true;setTimeout(()=>{b.textContent='Send Recovery Link';b.disabled=false;el('f-msg').classList.remove('hidden')},1500)});
 el('btn-sp')?.addEventListener('click',()=>{if(el('pf-p').value&&el('pf-p').value!==el('pf-p2').value){toast('Passwords mismatch.');return}const b=el('btn-sp');b.textContent='Saving...';b.disabled=true;setTimeout(()=>{const n=el('pf-n')?.value.trim();if(n)el('dname').textContent=n;b.textContent='Save Changes';b.disabled=false;toast('Profile updated.')},1200)});
 el('btn-pay')?.addEventListener('click',()=>{const f=el('pf');if(!f.checkValidity()){f.reportValidity();return}const b=el('btn-pay');b.textContent='Verifying...';b.disabled=true;setTimeout(()=>{b.textContent='Authorized ✓';A.sub=true;A.cr=999;setTimeout(()=>{cm('md-checkout');el('credits').textContent='Premium';b.textContent='Confirm Payment';b.disabled=false},1200)},2e3)});
 document.querySelectorAll('.plb').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.plb').forEach(x=>{x.style.background='transparent';x.style.color='var(--t2)'});b.style.background='var(--ac)';b.style.color='#fff';A.plan=b.dataset.pl;el('ptot').textContent=A.plan==='annual'?'200.00 CHF':'20.00 CHF';el('pcyc').textContent=A.plan==='annual'?'Annually':'Monthly'}));
@@ -232,8 +222,7 @@ document.querySelectorAll('.ub').forEach(b=>b.addEventListener('click',()=>{docu
 document.querySelectorAll('.thb').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.thb').forEach(x=>{x.style.background='transparent';x.style.color='var(--t2)'});b.style.background='var(--ac)';b.style.color='#fff';thm(b.dataset.th)}));
 document.querySelectorAll('.thb').forEach(b=>{if(b.dataset.th===A.th){b.style.background='var(--ac)';b.style.color='#fff'}});
 document.addEventListener('pointerdown',e=>{if(e.target.closest('button')&&navigator.vibrate)navigator.vibrate(8)});
-setTimeout(initCV,500);
-console.log('Wanderlost v63 ready')});
+setTimeout(initCV,500)});
 </script>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB1RVtX565j0NYmTtFebx1nmDCrh6X0rYM&libraries=places&callback=initMap"></script>
 </body></html>
