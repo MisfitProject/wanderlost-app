@@ -1,735 +1,376 @@
-// ============================================================
-// Wanderlost — Depth-First Engine
-// ============================================================
+// ================================================================
+// WANDERLOST — Engine v60 (from scratch)
+// ================================================================
 
-const BACKEND_URL = 'https://wanderlost-app.onrender.com';
-
-// Category Color Mapping
-const CATEGORY_COLORS = {
-  restaurant: '#FFB5A7',
-  cafe: '#D4C5F9',
-  bakery: '#FFD6A5',
-  bar: '#E8A0BF',
-  park: '#B8E0D2',
-  museum: '#A7D8FF',
-  default: '#38B6FF'
+// — State —
+const S = {
+  credits: 3, subscribed: false, place: null,
+  history: [], saved: [], markers: [],
+  tab: 'tab-explore', cat: '', plan: 'monthly',
+  unit: 'meters',
+  theme: localStorage.getItem('wl-theme') || 'dark'
 };
 
-// State
-const state = {
-  discoveriesRemaining: 3,
-  isSubscribed: false,
-  currentPlace: null,
-  history: [],
-  activeTab: 'tab-explore',
-  selectedCategory: '',
-  savedPlaces: [],
-  markers: [],
-  selectedPlan: 'monthly',
-  distanceUnit: 'meters',
-  theme: localStorage.getItem('wanderlost-theme') || 'dark',
-  sheetState: 'hidden'
-};
+// — Helpers —
+const $ = id => document.getElementById(id);
+const haptic = (ms = 10) => { if (navigator.vibrate) navigator.vibrate(ms); };
 
-// ============================================================
-// HAPTIC VIBRATION
-// ============================================================
-function haptic(duration = 10) {
-  if (navigator.vibrate) navigator.vibrate(duration);
-}
-
-function getCategoryColor(type) {
-  if (!type) return CATEGORY_COLORS.default;
-  const key = type.toLowerCase().replace(/[^a-z]/g, '');
-  return CATEGORY_COLORS[key] || CATEGORY_COLORS.default;
-}
-
-// ============================================================
-// TAB NAVIGATION
-// ============================================================
-function switchTab(tabId) {
-  document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
-  const target = document.getElementById(tabId);
-  if (target) target.classList.add('active');
-
-  document.querySelectorAll('.nav-btn').forEach(btn => {
-    if (btn.dataset.tab === tabId) {
-      btn.classList.add('active');
-      btn.querySelector('.material-symbols-outlined').style.fontVariationSettings = "'FILL' 1";
-    } else {
-      btn.classList.remove('active');
-      btn.querySelector('.material-symbols-outlined').style.fontVariationSettings = "'FILL' 0";
-    }
+// ================================================================
+// TOAST
+// ================================================================
+function toast(msg) {
+  const old = $('toast'); if (old) old.remove();
+  const el = document.createElement('div');
+  el.id = 'toast';
+  Object.assign(el.style, {
+    position:'fixed',top:'80px',left:'50%',transform:'translateX(-50%) translateY(-10px)',
+    zIndex:'999',padding:'12px 24px',fontSize:'13px',textAlign:'center',
+    maxWidth:'320px',borderRadius:'9999px',opacity:'0',
+    background:'var(--bg-glass-solid)',backdropFilter:'blur(40px)',
+    border:'.5px solid var(--border)',color:'var(--text-1)',
+    boxShadow:'var(--shadow)',transition:'all .5s var(--smooth)',
+    fontFamily:'Inter,sans-serif',letterSpacing:'.03em'
   });
-  state.activeTab = tabId;
+  el.textContent = msg;
+  document.body.appendChild(el);
+  requestAnimationFrame(() => { el.style.opacity = '1'; el.style.transform = 'translateX(-50%) translateY(0)'; });
+  setTimeout(() => { el.style.opacity = '0'; el.style.transform = 'translateX(-50%) translateY(-10px)'; setTimeout(() => el.remove(), 500); }, 4000);
 }
+window.toast = toast; // expose for inline onclick
 
-// ============================================================
-// MODAL SYSTEM
-// ============================================================
-function openModal(id) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  el.classList.add('open');
-  document.body.style.overflow = 'hidden';
+// ================================================================
+// TABS
+// ================================================================
+function switchTab(id) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  const t = $(id); if (t) t.classList.add('active');
+  document.querySelectorAll('.dock-btn').forEach(b => {
+    const icon = b.querySelector('.material-symbols-outlined');
+    if (b.dataset.tab === id) { b.classList.add('active'); icon.style.fontVariationSettings = "'FILL' 1"; }
+    else { b.classList.remove('active'); icon.style.fontVariationSettings = "'FILL' 0"; }
+  });
+  S.tab = id;
 }
+window.switchTab = switchTab;
 
-function closeModal(id) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  el.classList.remove('open');
-  const anyOpen = document.querySelector('.modal-slide.open');
-  if (!anyOpen) document.body.style.overflow = '';
-}
+// ================================================================
+// MODALS
+// ================================================================
+function openModal(id) { const el = $(id); if (el) { el.classList.add('open'); document.body.style.overflow = 'hidden'; } }
+function closeModal(id) { const el = $(id); if (el) { el.classList.remove('open'); if (!document.querySelector('.modal.open')) document.body.style.overflow = ''; } }
+window.openModal = openModal;
+window.closeModal = closeModal;
 
-// ============================================================
-// DISTANCE FORMATTING
-// ============================================================
-function formatDistance(distKm) {
-  if (state.distanceUnit === 'feet') {
-    const feet = distKm * 3280.84;
-    return feet < 5280
-      ? Math.round(feet) + ' ft away'
-      : (feet / 5280).toFixed(1) + ' mi away';
-  }
-  return distKm < 1
-    ? Math.round(distKm * 1000) + ' m away'
-    : distKm.toFixed(1) + ' km away';
-}
+// ================================================================
+// DISCOVERY SHEET
+// ================================================================
+function openSheet() { $('discovery-sheet').classList.add('open'); $('btn-discover')?.classList.add('morphing'); haptic(15); }
+function closeSheet() { $('discovery-sheet').classList.remove('open'); $('btn-discover')?.classList.remove('morphing'); }
+window.closeSheet = closeSheet;
 
-// ============================================================
-// DISCOVERY SHEET (CSS Morph)
-// ============================================================
-function openDiscoverySheet() {
-  const sheet = document.getElementById('discovery-sheet');
-  const btn = document.getElementById('btn-discover');
-  sheet.classList.add('open');
-  if (btn) btn.classList.add('morphing');
-  state.sheetState = 'expanded';
-  haptic(15);
-}
-
-function closeDiscoverySheet() {
-  const sheet = document.getElementById('discovery-sheet');
-  const btn = document.getElementById('btn-discover');
-  sheet.classList.remove('open');
-  if (btn) btn.classList.remove('morphing');
-  state.sheetState = 'hidden';
-}
-
-// ============================================================
-// CATEGORY SELECTION
-// ============================================================
-function selectCategory(btn) {
+// ================================================================
+// CATEGORIES
+// ================================================================
+function pickCat(btn) {
   haptic(10);
-  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.cat-pill').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-  state.selectedCategory = btn.dataset.category || '';
+  S.cat = btn.dataset.cat || '';
 }
+window.pickCat = pickCat;
 
-// ============================================================
-// HELP CENTER
-// ============================================================
-function toggleHelpItem(btn) {
-  const item = btn.closest('.help-item');
-  const answer = item.querySelector('.help-a');
-  const chevron = btn.querySelector('.material-symbols-outlined');
-  const category = item.closest('.help-category');
-  category.querySelectorAll('.help-item').forEach(other => {
-    if (other !== item) {
-      other.querySelector('.help-a').classList.add('hidden');
-      const otherChevron = other.querySelector('.help-q .material-symbols-outlined');
-      if (otherChevron) { otherChevron.style.transform = ''; otherChevron.textContent = 'chevron_right'; }
-    }
+// ================================================================
+// FAQ
+// ================================================================
+function toggleFaq(btn) {
+  const item = btn.closest('.faq-item');
+  const answer = item.querySelector('.faq-a');
+  const icon = btn.querySelector('.material-symbols-outlined');
+  // Close others
+  document.querySelectorAll('.faq-item').forEach(other => {
+    if (other !== item) { other.querySelector('.faq-a').classList.add('hidden'); const i = other.querySelector('button .material-symbols-outlined'); if (i) { i.style.transform = ''; i.textContent = 'chevron_right'; } }
   });
-  const isOpen = !answer.classList.contains('hidden');
+  const open = !answer.classList.contains('hidden');
   answer.classList.toggle('hidden');
-  if (isOpen) {
-    chevron.style.transform = ''; chevron.textContent = 'chevron_right';
-  } else {
-    chevron.style.transform = 'rotate(90deg)'; chevron.textContent = 'expand_more';
-  }
+  icon.style.transform = open ? '' : 'rotate(90deg)';
+  icon.textContent = open ? 'chevron_right' : 'expand_more';
 }
+window.toggleFaq = toggleFaq;
 
-function filterHelpItems(query) {
-  const q = query.toLowerCase().trim();
-  document.querySelectorAll('.help-item').forEach(item => {
-    const text = item.textContent.toLowerCase();
-    item.style.display = !q || text.includes(q) ? '' : 'none';
-  });
-  document.querySelectorAll('.help-category').forEach(cat => {
-    const hasVisible = Array.from(cat.querySelectorAll('.help-item')).some(i => i.style.display !== 'none');
-    cat.style.display = hasVisible ? '' : 'none';
-  });
+// ================================================================
+// DISTANCE
+// ================================================================
+function fmtDist(km) {
+  if (S.unit === 'feet') { const ft = km * 3280.84; return ft < 5280 ? Math.round(ft) + ' ft away' : (ft / 5280).toFixed(1) + ' mi away'; }
+  return km < 1 ? Math.round(km * 1000) + ' m away' : km.toFixed(1) + ' km away';
 }
-
-// ============================================================
-// GOOGLE MAPS
-// ============================================================
-let map;
-const MAP_MIDNIGHT = [
-  {elementType:'geometry',stylers:[{color:'#1a1d23'}]},
-  {elementType:'labels.icon',stylers:[{visibility:'off'}]},
-  {elementType:'labels.text.fill',stylers:[{color:'#8B949E'}]},
-  {elementType:'labels.text.stroke',stylers:[{color:'#0d1117'}]},
-  {featureType:'administrative.land_parcel',elementType:'labels.text.fill',stylers:[{color:'#484f58'}]},
-  {featureType:'poi',elementType:'geometry',stylers:[{color:'#21262d'}]},
-  {featureType:'poi',elementType:'labels.text.fill',stylers:[{color:'#6e7681'}]},
-  {featureType:'poi.park',elementType:'geometry',stylers:[{color:'#1a2617'}]},
-  {featureType:'road',elementType:'geometry',stylers:[{color:'#30363d'}]},
-  {featureType:'road.arterial',elementType:'labels.text.fill',stylers:[{color:'#6e7681'}]},
-  {featureType:'road.highway',elementType:'geometry',stylers:[{color:'#3a424d'}]},
-  {featureType:'road.local',elementType:'labels.text.fill',stylers:[{color:'#484f58'}]},
-  {featureType:'transit.line',elementType:'geometry',stylers:[{color:'#21262d'}]},
-  {featureType:'water',elementType:'geometry',stylers:[{color:'#0d1926'}]},
-  {featureType:'water',elementType:'labels.text.fill',stylers:[{color:'#2a4a6b'}]}
-];
-const MAP_SILVER = [
-  {elementType:'geometry',stylers:[{color:'#f8f8f8'}]},
-  {elementType:'labels.icon',stylers:[{visibility:'off'}]},
-  {elementType:'labels.text.fill',stylers:[{color:'#3A3A3A'}]},
-  {elementType:'labels.text.stroke',stylers:[{color:'#ffffff'}]},
-  {featureType:'administrative.land_parcel',elementType:'labels.text.fill',stylers:[{color:'#bdbdbd'}]},
-  {featureType:'poi',elementType:'geometry',stylers:[{color:'#f0f0f0'}]},
-  {featureType:'poi',elementType:'labels.text.fill',stylers:[{color:'#757575'}]},
-  {featureType:'poi.park',elementType:'geometry',stylers:[{color:'#E2EBD8'}]},
-  {featureType:'road',elementType:'geometry',stylers:[{color:'#ffffff'}]},
-  {featureType:'road.arterial',elementType:'labels.text.fill',stylers:[{color:'#757575'}]},
-  {featureType:'road.highway',elementType:'geometry',stylers:[{color:'#f0f0f0'}]},
-  {featureType:'road.local',elementType:'labels.text.fill',stylers:[{color:'#9e9e9e'}]},
-  {featureType:'transit.line',elementType:'geometry',stylers:[{color:'#e5e5e5'}]},
-  {featureType:'water',elementType:'geometry',stylers:[{color:'#D4E4F7'}]},
-  {featureType:'water',elementType:'labels.text.fill',stylers:[{color:'#7BADD4'}]}
-];
-
-window.initMap = function() {
-  map = new google.maps.Map(document.getElementById('map-bg'), {
-    center: { lat: 47.3769, lng: 8.5417 },
-    zoom: 2, // Start at world view for power zoom
-    disableDefaultUI: true,
-    styles: state.theme === 'light' ? MAP_SILVER : MAP_MIDNIGHT
-  });
-};
-
-// Power Zoom: zoom 2 → 15 over 3s with blur clearing
-function initPowerZoom() {
-  const mapEl = document.getElementById('map-bg');
-  if (!map || !mapEl) return;
-
-  // Blur is already set in HTML; animate zoom
-  const startZoom = 2;
-  const endZoom = 15;
-  const duration = 3000;
-  const startTime = performance.now();
-
-  function easeOutExpo(t) {
-    return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
-  }
-
-  function step(now) {
-    const elapsed = now - startTime;
-    const t = Math.min(elapsed / duration, 1);
-    const eased = easeOutExpo(t);
-
-    const currentZoom = startZoom + (endZoom - startZoom) * eased;
-    map.setZoom(currentZoom);
-
-    // Clear blur progressively
-    const blur = 20 * (1 - eased);
-    const brightness = 0.7 + 0.3 * eased;
-    mapEl.style.filter = `blur(${blur}px) brightness(${brightness})`;
-
-    if (t < 1) {
-      requestAnimationFrame(step);
-    } else {
-      mapEl.style.filter = 'none';
-      mapEl.classList.add('power-zoom-complete');
-    }
-  }
-  requestAnimationFrame(step);
-}
-
-function addMapMarker(place) {
-  if (!map || !place.lat || !place.lng) return;
-  const catColor = getCategoryColor(place.type);
-  const marker = new google.maps.Marker({
-    position: { lat: place.lat, lng: place.lng },
-    map,
-    title: place.name,
-    icon: {
-      path: google.maps.SymbolPath.CIRCLE,
-      scale: 10,
-      fillColor: catColor,
-      fillOpacity: 1,
-      strokeColor: '#FFFFFF',
-      strokeWeight: 3
-    },
-    animation: google.maps.Animation.DROP
-  });
-  marker.addListener('click', () => {
-    state.currentPlace = place;
-    document.getElementById('sheet-title').textContent = place.name;
-    document.getElementById('sheet-tag').textContent = place.type || 'Discovery';
-    document.getElementById('sheet-address').textContent = place.address || 'Nearby';
-    document.getElementById('sheet-distance').textContent = place.distance || 'Close by';
-    document.getElementById('sheet-desc').textContent = place.description || '';
-    openDiscoverySheet();
-  });
-  state.markers.push(marker);
-  return marker;
-}
-
-function hideGoogleWatermarks() {
-  const style = document.createElement('style');
-  style.innerHTML = `.dismissButton,.gm-err-container,.gm-style-mtc,.gm-style-bg,div[style*="background-image: url"]{display:none !important;}.gm-style div,.gm-style span{background-color:transparent !important;}`;
-  document.head.appendChild(style);
-  setInterval(() => {
-    document.querySelectorAll('.gm-style div').forEach(div => {
-      if (div.innerHTML.includes('development purposes only')) div.style.display = 'none';
-    });
-  }, 500);
-}
-window.gm_authFailure = hideGoogleWatermarks;
-
-// ============================================================
-// AI DISCOVERY (Client-side Places)
-// ============================================================
-let placesService = null;
-
-async function runDiscovery() {
-  const btn = document.getElementById('btn-discover');
-  const sonar = document.getElementById('sonar-marker');
-
-  if (!state.isSubscribed && state.discoveriesRemaining <= 0) {
-    openModal('modal-premium');
-    return;
-  }
-
-  btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:16px;animation:spin 1s linear infinite">progress_activity</span> Scanning...';
-  btn.disabled = true;
-
-  try {
-    const position = await new Promise((resolve, reject) => {
-      navigator.geolocation.getCurrentPosition(resolve, reject, {
-        enableHighAccuracy: true, timeout: 10000
-      });
-    });
-
-    const { latitude, longitude } = position.coords;
-    if (map) { map.panTo({ lat: latitude, lng: longitude }); map.setZoom(15); }
-
-    if (sonar) sonar.style.display = 'block';
-
-    btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:16px;animation:spin 1s linear infinite">progress_activity</span> Discovering...';
-
-    if (!placesService && map) placesService = new google.maps.places.PlacesService(map);
-    if (!placesService) throw new Error('Places service not available');
-
-    const typeMap = { restaurant: 'restaurant', cafe: 'cafe', bakery: 'bakery', bar: 'bar', park: 'park', museum: 'museum' };
-    const request = { location: new google.maps.LatLng(latitude, longitude), radius: 2000 };
-    if (state.selectedCategory && typeMap[state.selectedCategory]) {
-      request.type = typeMap[state.selectedCategory];
-    } else {
-      request.keyword = 'hidden gem local favorite';
-    }
-
-    const results = await new Promise((resolve, reject) => {
-      placesService.nearbySearch(request, (results, status) => {
-        if (status === google.maps.places.PlacesServiceStatus.OK) resolve(results);
-        else if (status === google.maps.places.PlacesServiceStatus.ZERO_RESULTS) resolve([]);
-        else reject(new Error('Places search: ' + status));
-      });
-    });
-
-    if (results.length === 0) {
-      showToast('No places found nearby. Try a different category!');
-      resetDiscoverBtn(btn); return;
-    }
-
-    let candidates = results.filter(p => (p.rating || 0) >= 4.0);
-    if (candidates.length === 0) candidates = results;
-    const target = candidates[Math.floor(Math.random() * candidates.length)];
-    const placeLat = target.geometry.location.lat();
-    const placeLng = target.geometry.location.lng();
-    const dist = getDistanceKm(latitude, longitude, placeLat, placeLng);
-
-    state.currentPlace = {
-      name: target.name || 'Hidden Gem',
-      type: (target.types && target.types[0]) || state.selectedCategory || 'Discovery',
-      address: target.vicinity || 'A local favorite',
-      distance: formatDistance(dist),
-      distKm: dist,
-      description: target.rating ? 'Rating: ' + target.rating + ' — Highly rated by locals' : 'A secret spot favored by locals.',
-      lat: placeLat, lng: placeLng,
-      discoveredAt: new Date()
-    };
-
-    document.getElementById('sheet-title').textContent = state.currentPlace.name;
-    document.getElementById('sheet-tag').textContent = state.currentPlace.type;
-    document.getElementById('sheet-address').textContent = state.currentPlace.address;
-    document.getElementById('sheet-distance').textContent = state.currentPlace.distance;
-    document.getElementById('sheet-desc').textContent = state.currentPlace.description;
-
-    addMapMarker(state.currentPlace);
-    if (map) map.panTo({ lat: placeLat, lng: placeLng });
-
-    openDiscoverySheet();
-    addToHistory(state.currentPlace);
-
-    if (!state.isSubscribed) {
-      state.discoveriesRemaining--;
-      document.getElementById('discovery-counter').textContent =
-        state.discoveriesRemaining + ' Credit' + (state.discoveriesRemaining === 1 ? '' : 's');
-    }
-  } catch (err) {
-    console.error('Discovery error:', err);
-    showToast('Could not discover places. Check your location permissions.');
-  }
-
-  resetDiscoverBtn(btn);
-}
-
-function resetDiscoverBtn(btn) {
-  btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:16px;">explore</span> Discover Places';
-  btn.disabled = false;
-}
-
-function getDistanceKm(lat1, lon1, lat2, lon2) {
-  const R = 6371;
-  const dLat = (lat2 - lat1) * Math.PI / 180;
-  const dLon = (lon2 - lon1) * Math.PI / 180;
-  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
+function haversine(lat1, lon1, lat2, lon2) {
+  const R = 6371, dLat = (lat2 - lat1) * Math.PI / 180, dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat / 2) ** 2 + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) ** 2;
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
-// ============================================================
-// HISTORY
-// ============================================================
-function addToHistory(place) {
-  state.history.unshift(place);
-  renderHistory();
+// ================================================================
+// GOOGLE MAPS
+// ================================================================
+let map, placesService;
+const CAT_COLORS = { restaurant:'#FFB5A7', cafe:'#D4C5F9', bakery:'#FFD6A5', bar:'#E8A0BF', park:'#B8E0D2', museum:'#A7D8FF' };
+const MAP_DARK = [
+  {elementType:'geometry',stylers:[{color:'#1a1d23'}]},{elementType:'labels.icon',stylers:[{visibility:'off'}]},
+  {elementType:'labels.text.fill',stylers:[{color:'#8B949E'}]},{elementType:'labels.text.stroke',stylers:[{color:'#0d1117'}]},
+  {featureType:'poi',elementType:'geometry',stylers:[{color:'#21262d'}]},{featureType:'poi.park',elementType:'geometry',stylers:[{color:'#1a2617'}]},
+  {featureType:'road',elementType:'geometry',stylers:[{color:'#30363d'}]},{featureType:'road.highway',elementType:'geometry',stylers:[{color:'#3a424d'}]},
+  {featureType:'water',elementType:'geometry',stylers:[{color:'#0d1926'}]}
+];
+const MAP_LIGHT = [
+  {elementType:'geometry',stylers:[{color:'#f8f8f8'}]},{elementType:'labels.icon',stylers:[{visibility:'off'}]},
+  {elementType:'labels.text.fill',stylers:[{color:'#3A3A3A'}]},{elementType:'labels.text.stroke',stylers:[{color:'#ffffff'}]},
+  {featureType:'poi',elementType:'geometry',stylers:[{color:'#f0f0f0'}]},{featureType:'poi.park',elementType:'geometry',stylers:[{color:'#E2EBD8'}]},
+  {featureType:'road',elementType:'geometry',stylers:[{color:'#ffffff'}]},{featureType:'water',elementType:'geometry',stylers:[{color:'#D4E4F7'}]}
+];
+
+window.initMap = function () {
+  map = new google.maps.Map($('map'), { center: { lat: 47.3769, lng: 8.5417 }, zoom: 2, disableDefaultUI: true, styles: S.theme === 'light' ? MAP_LIGHT : MAP_DARK });
+};
+
+function powerZoom() {
+  const el = $('map');
+  if (!map || !el) return;
+  const start = performance.now(), dur = 3000;
+  function ease(t) { return t === 1 ? 1 : 1 - Math.pow(2, -10 * t); }
+  (function step(now) {
+    const t = Math.min((now - start) / dur, 1), e = ease(t);
+    map.setZoom(2 + 13 * e);
+    el.style.filter = `blur(${20 * (1 - e)}px) brightness(${0.7 + 0.3 * e})`;
+    if (t < 1) requestAnimationFrame(step); else el.style.filter = 'none';
+  })(start);
 }
 
+function addMarker(p) {
+  if (!map || !p.lat || !p.lng) return;
+  const color = CAT_COLORS[p.type?.toLowerCase().replace(/[^a-z]/g, '')] || '#38B6FF';
+  const m = new google.maps.Marker({
+    position: { lat: p.lat, lng: p.lng }, map, title: p.name,
+    icon: { path: google.maps.SymbolPath.CIRCLE, scale: 10, fillColor: color, fillOpacity: 1, strokeColor: '#FFF', strokeWeight: 3 },
+    animation: google.maps.Animation.DROP
+  });
+  m.addListener('click', () => { S.place = p; fillSheet(p); openSheet(); });
+  S.markers.push(m);
+}
+
+function hideWatermarks() {
+  const s = document.createElement('style');
+  s.innerHTML = '.dismissButton,.gm-err-container,.gm-style-mtc,.gm-style-bg,div[style*="background-image: url"]{display:none!important}.gm-style div,.gm-style span{background-color:transparent!important}';
+  document.head.appendChild(s);
+  setInterval(() => { document.querySelectorAll('.gm-style div').forEach(d => { if (d.innerHTML.includes('development purposes only')) d.style.display = 'none'; }); }, 500);
+}
+window.gm_authFailure = hideWatermarks;
+
+// ================================================================
+// DISCOVERY
+// ================================================================
+function fillSheet(p) {
+  $('s-name').textContent = p.name;
+  $('s-tag').textContent = p.type || 'Discovery';
+  $('s-addr').textContent = p.address || 'Nearby';
+  $('s-dist').textContent = p.distance || 'Close by';
+  $('s-desc').textContent = p.description || '';
+}
+
+async function discover() {
+  const btn = $('btn-discover');
+  if (!S.subscribed && S.credits <= 0) { openModal('modal-premium'); return; }
+  btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:16px;animation:spin 1s linear infinite">progress_activity</span> Scanning...';
+  btn.disabled = true;
+  try {
+    const pos = await new Promise((res, rej) => navigator.geolocation.getCurrentPosition(res, rej, { enableHighAccuracy: true, timeout: 10000 }));
+    const { latitude: lat, longitude: lng } = pos.coords;
+    if (map) { map.panTo({ lat, lng }); map.setZoom(15); }
+    $('sonar').style.display = 'block';
+    btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:16px;animation:spin 1s linear infinite">progress_activity</span> Discovering...';
+    if (!placesService && map) placesService = new google.maps.places.PlacesService(map);
+    if (!placesService) throw new Error('No places service');
+    const req = { location: new google.maps.LatLng(lat, lng), radius: 2000 };
+    if (S.cat) req.type = S.cat; else req.keyword = 'hidden gem local favorite';
+    const results = await new Promise((res, rej) => {
+      placesService.nearbySearch(req, (r, s) => { if (s === google.maps.places.PlacesServiceStatus.OK) res(r); else if (s === google.maps.places.PlacesServiceStatus.ZERO_RESULTS) res([]); else rej(new Error(s)); });
+    });
+    if (!results.length) { toast('No places found. Try a different category!'); resetBtn(); return; }
+    let cands = results.filter(p => (p.rating || 0) >= 4.0); if (!cands.length) cands = results;
+    const t = cands[Math.floor(Math.random() * cands.length)];
+    const pLat = t.geometry.location.lat(), pLng = t.geometry.location.lng();
+    const dist = haversine(lat, lng, pLat, pLng);
+    S.place = {
+      name: t.name || 'Hidden Gem', type: t.types?.[0] || S.cat || 'Discovery',
+      address: t.vicinity || 'A local favorite', distance: fmtDist(dist), distKm: dist,
+      description: t.rating ? 'Rating: ' + t.rating + ' — Highly rated by locals' : 'A secret spot favored by locals.',
+      lat: pLat, lng: pLng, discoveredAt: new Date()
+    };
+    fillSheet(S.place); addMarker(S.place);
+    if (map) map.panTo({ lat: pLat, lng: pLng });
+    openSheet(); addHistory(S.place);
+    if (!S.subscribed) { S.credits--; $('credits').textContent = S.credits + ' Credit' + (S.credits === 1 ? '' : 's'); }
+  } catch (e) { console.error(e); toast('Could not discover places. Check location permissions.'); }
+  resetBtn();
+}
+function resetBtn() { const b = $('btn-discover'); b.innerHTML = '<span class="material-symbols-outlined" style="font-size:16px">explore</span> Discover Places'; b.disabled = false; }
+
+// ================================================================
+// HISTORY
+// ================================================================
+function addHistory(p) { S.history.unshift(p); renderHistory(); }
 function renderHistory() {
-  const list = document.getElementById('history-list');
-  if (!list || state.history.length === 0) return;
-  list.innerHTML = state.history.map(place => {
-    const date = place.discoveredAt ? new Date(place.discoveredAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Today';
-    return `
-      <div style="padding:20px 0; border-bottom:0.5px solid var(--border-glass);">
-        <p class="type-meta" style="margin-bottom:6px;">${place.type || 'Discovery'} · ${date}</p>
-        <h3 class="type-title" style="font-size:1.3rem; margin-bottom:8px;">${place.name}</h3>
-        <p class="type-body">${place.description || ''}</p>
-      </div>`;
+  const el = $('history-list'); if (!el || !S.history.length) return;
+  el.innerHTML = S.history.map(p => {
+    const d = p.discoveredAt ? new Date(p.discoveredAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Today';
+    return `<div style="padding:20px 0;border-bottom:.5px solid var(--border)"><p class="t-meta" style="margin-bottom:6px">${p.type || 'Discovery'} · ${d}</p><h3 class="t-title" style="font-size:1.3rem;margin-bottom:8px">${p.name}</h3><p class="t-body">${p.description || ''}</p></div>`;
   }).join('');
 }
+window.renderHistory = renderHistory;
 
-// ============================================================
-// NAVIGATION & PAYMENT
-// ============================================================
-function goToGoogleMaps() {
-  if (!state.currentPlace) return;
-  const { lat, lng, name, address } = state.currentPlace;
-  const encodedName = encodeURIComponent(name || 'Discovery');
-  const searchQuery = encodeURIComponent((name || '') + ' ' + (address || ''));
-  let mapUrl;
-  if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-    mapUrl = `http://maps.apple.com/?q=${encodedName}&ll=${lat},${lng}`;
-  } else {
-    mapUrl = `https://www.google.com/maps/search/?api=1&query=${searchQuery}`;
-  }
-  window.open(mapUrl, '_blank');
-  closeDiscoverySheet();
+// ================================================================
+// NAVIGATE / SAVE
+// ================================================================
+function goMaps() {
+  if (!S.place) return;
+  const { lat, lng, name, address } = S.place;
+  const q = encodeURIComponent((name || '') + ' ' + (address || ''));
+  const url = /iPhone|iPad|iPod/i.test(navigator.userAgent) ? `http://maps.apple.com/?q=${encodeURIComponent(name)}&ll=${lat},${lng}` : `https://www.google.com/maps/search/?api=1&query=${q}`;
+  window.open(url, '_blank'); closeSheet();
+}
+function savePlace() {
+  if (!S.place) return;
+  const btn = $('btn-save');
+  if (S.saved.find(p => p.name === S.place.name)) { btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:14px">check</span> Already Saved'; return; }
+  S.saved.push({ ...S.place });
+  btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:14px">bookmark_added</span> Saved!';
+  setTimeout(() => { btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:14px">bookmark</span> Save'; }, 2000);
 }
 
-function confirmPayment() {
-  const form = document.getElementById('checkout-form');
-  if (!form.checkValidity()) { form.reportValidity(); return; }
-  const btn = document.getElementById('btn-confirm-payment');
-  btn.textContent = 'Verifying...'; btn.disabled = true;
+// ================================================================
+// PAYMENT
+// ================================================================
+function confirmPay() {
+  const form = $('pay-form'); if (!form.checkValidity()) { form.reportValidity(); return; }
+  const btn = $('btn-pay'); btn.textContent = 'Verifying...'; btn.disabled = true;
   setTimeout(() => {
-    btn.textContent = 'Authorized ✓';
-    state.isSubscribed = true;
-    state.discoveriesRemaining = 999;
-    setTimeout(() => {
-      closeModal('modal-checkout');
-      document.getElementById('discovery-counter').textContent = 'Premium';
-      btn.textContent = 'Confirm Payment'; btn.disabled = false;
-    }, 1200);
+    btn.textContent = 'Authorized ✓'; S.subscribed = true; S.credits = 999;
+    setTimeout(() => { closeModal('modal-checkout'); $('credits').textContent = 'Premium'; btn.textContent = 'Confirm Payment'; btn.disabled = false; }, 1200);
   }, 2000);
 }
 
-function saveCurrentPlace() {
-  if (!state.currentPlace) return;
-  const btn = document.getElementById('btn-save-place');
-  if (state.savedPlaces.find(p => p.name === state.currentPlace.name)) {
-    btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:14px;">check</span> Already Saved';
-    return;
-  }
-  state.savedPlaces.push({ ...state.currentPlace });
-  btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:14px;">bookmark_added</span> Saved!';
-  setTimeout(() => {
-    btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:14px;">bookmark</span> Save';
-  }, 2000);
+// ================================================================
+// THEME
+// ================================================================
+function applyTheme(t) {
+  S.theme = t; localStorage.setItem('wl-theme', t);
+  document.documentElement.classList.toggle('light', t === 'light');
+  document.querySelector('meta[name="theme-color"]').content = t === 'light' ? '#F0F2F5' : '#0D1117';
+  if (map) map.setOptions({ styles: t === 'light' ? MAP_LIGHT : MAP_DARK });
 }
 
-// ============================================================
-// TOAST
-// ============================================================
-function showToast(message) {
-  const existing = document.getElementById('app-toast');
-  if (existing) existing.remove();
-  const toast = document.createElement('div');
-  toast.id = 'app-toast';
-  Object.assign(toast.style, {
-    position: 'fixed', top: '80px', left: '50%', transform: 'translateX(-50%) translateY(-10px)',
-    zIndex: '999', padding: '12px 24px', fontSize: '13px', textAlign: 'center',
-    maxWidth: '320px', borderRadius: '9999px', opacity: '0',
-    background: 'var(--bg-glass-strong)', backdropFilter: 'blur(40px)',
-    border: '0.5px solid var(--border-glass)', color: 'var(--text-primary)',
-    boxShadow: 'var(--depth-shadow)', transition: 'all 0.5s var(--ease-out)',
-    fontFamily: 'Inter, sans-serif', letterSpacing: '0.03em'
-  });
-  toast.textContent = message;
-  document.body.appendChild(toast);
-  requestAnimationFrame(() => {
-    toast.style.opacity = '1';
-    toast.style.transform = 'translateX(-50%) translateY(0)';
-  });
-  setTimeout(() => {
-    toast.style.opacity = '0';
-    toast.style.transform = 'translateX(-50%) translateY(-10px)';
-    setTimeout(() => toast.remove(), 500);
-  }, 4000);
-}
-
-// ============================================================
-// NEURAL NETWORK CANVAS
-// ============================================================
-function initNeuralCanvas() {
-  const canvas = document.getElementById('neural-canvas');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  let nodes = [];
-
-  function resize() {
-    canvas.width = canvas.parentElement.offsetWidth;
-    canvas.height = canvas.parentElement.offsetHeight;
-    generateNodes();
-  }
-
-  function generateNodes() {
-    nodes = [];
-    const count = Math.floor((canvas.width * canvas.height) / 18000);
-    const colors = ['#FFB5A7', '#B8E0D2', '#D4C5F9', '#A7D8FF', '#FFD6A5'];
-    for (let i = 0; i < count; i++) {
-      nodes.push({
-        x: Math.random() * canvas.width, y: Math.random() * canvas.height,
-        r: 3 + Math.random() * 4, color: colors[Math.floor(Math.random() * colors.length)],
-        phase: Math.random() * Math.PI * 2, speed: 0.003 + Math.random() * 0.004
-      });
-    }
-  }
-
+// ================================================================
+// NEURAL CANVAS
+// ================================================================
+function initCanvas() {
+  const c = $('neural-canvas'); if (!c) return;
+  const ctx = c.getContext('2d'); let nodes = [];
+  const colors = ['#FFB5A7','#B8E0D2','#D4C5F9','#A7D8FF','#FFD6A5'];
+  function resize() { c.width = c.parentElement.offsetWidth; c.height = c.parentElement.offsetHeight; gen(); }
+  function gen() { nodes = []; const n = Math.floor(c.width * c.height / 18000); for (let i = 0; i < n; i++) nodes.push({ x: Math.random() * c.width, y: Math.random() * c.height, r: 3 + Math.random() * 4, color: colors[Math.floor(Math.random() * colors.length)], phase: Math.random() * Math.PI * 2, speed: .003 + Math.random() * .004 }); }
   function draw(t) {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.lineWidth = 0.5;
-    for (let i = 0; i < nodes.length; i++) {
-      for (let j = i + 1; j < nodes.length; j++) {
-        const dx = nodes[i].x - nodes[j].x, dy = nodes[i].y - nodes[j].y;
-        const dist = Math.sqrt(dx*dx + dy*dy);
-        if (dist < 120) {
-          const alpha = (1 - dist / 120) * 0.4;
-          ctx.strokeStyle = `rgba(255,255,255,${alpha})`;
-          ctx.shadowColor = 'rgba(56,182,255,0.15)'; ctx.shadowBlur = 4;
-          ctx.beginPath(); ctx.moveTo(nodes[i].x, nodes[i].y); ctx.lineTo(nodes[j].x, nodes[j].y); ctx.stroke();
-        }
-      }
+    ctx.clearRect(0, 0, c.width, c.height); ctx.lineWidth = .5;
+    for (let i = 0; i < nodes.length; i++) for (let j = i + 1; j < nodes.length; j++) {
+      const dx = nodes[i].x - nodes[j].x, dy = nodes[i].y - nodes[j].y, d = Math.sqrt(dx * dx + dy * dy);
+      if (d < 120) { ctx.strokeStyle = `rgba(255,255,255,${(1 - d / 120) * .4})`; ctx.shadowColor = 'rgba(56,182,255,.15)'; ctx.shadowBlur = 4; ctx.beginPath(); ctx.moveTo(nodes[i].x, nodes[i].y); ctx.lineTo(nodes[j].x, nodes[j].y); ctx.stroke(); }
     }
     ctx.shadowBlur = 0;
-    for (const node of nodes) {
-      const scale = 1 + 0.05 * Math.sin(t * node.speed * 2 + node.phase);
-      const r = node.r * scale;
-      ctx.beginPath(); ctx.arc(node.x, node.y, r+2, 0, Math.PI*2);
-      ctx.fillStyle = 'rgba(255,255,255,0.15)'; ctx.fill();
-      const g = ctx.createRadialGradient(node.x, node.y, 0, node.x, node.y, r);
-      g.addColorStop(0, node.color); g.addColorStop(1, 'rgba(255,255,255,0)');
-      ctx.beginPath(); ctx.arc(node.x, node.y, r, 0, Math.PI*2); ctx.fillStyle = g; ctx.fill();
+    for (const n of nodes) {
+      const s = 1 + .05 * Math.sin(t * n.speed * 2 + n.phase), r = n.r * s;
+      ctx.beginPath(); ctx.arc(n.x, n.y, r + 2, 0, Math.PI * 2); ctx.fillStyle = 'rgba(255,255,255,.15)'; ctx.fill();
+      const g = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, r);
+      g.addColorStop(0, n.color); g.addColorStop(1, 'rgba(255,255,255,0)');
+      ctx.beginPath(); ctx.arc(n.x, n.y, r, 0, Math.PI * 2); ctx.fillStyle = g; ctx.fill();
     }
     requestAnimationFrame(draw);
   }
-
-  window.addEventListener('resize', resize);
-  resize(); draw(0);
+  window.addEventListener('resize', resize); resize(); draw(0);
 }
 
-// ============================================================
-// THEME
-// ============================================================
-function applyTheme(theme) {
-  state.theme = theme;
-  localStorage.setItem('wanderlost-theme', theme);
-  document.documentElement.classList.toggle('light', theme === 'light');
-  document.querySelector('meta[name="theme-color"]').content = theme === 'light' ? '#F0F2F5' : '#0D1117';
-  if (map) map.setOptions({ styles: theme === 'light' ? MAP_SILVER : MAP_MIDNIGHT });
-}
-
-// ============================================================
+// ================================================================
 // INIT
-// ============================================================
-window.addEventListener('DOMContentLoaded', () => {
-
-  // Apply theme
-  applyTheme(state.theme);
+// ================================================================
+document.addEventListener('DOMContentLoaded', () => {
+  applyTheme(S.theme);
+  hideWatermarks();
 
   // Discover
-  const btnDiscover = document.getElementById('btn-discover');
-  if (btnDiscover) btnDiscover.addEventListener('click', runDiscovery);
+  $('btn-discover')?.addEventListener('click', discover);
+  $('btn-navigate')?.addEventListener('click', goMaps);
+  $('btn-save')?.addEventListener('click', savePlace);
+  $('btn-pay')?.addEventListener('click', confirmPay);
 
-  // Maps nav
-  const btnGoMaps = document.getElementById('btn-go-maps');
-  if (btnGoMaps) btnGoMaps.addEventListener('click', goToGoogleMaps);
-
-  // Payment
-  const btnPayment = document.getElementById('btn-confirm-payment');
-  if (btnPayment) btnPayment.addEventListener('click', confirmPayment);
-
-  // Save
-  const btnSave = document.getElementById('btn-save-place');
-  if (btnSave) btnSave.addEventListener('click', saveCurrentPlace);
-
-  // Plan toggle
-  document.querySelectorAll('.plan-toggle-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.plan-toggle-btn').forEach(b => {
-        b.style.background = 'transparent'; b.style.color = 'var(--text-secondary)';
-      });
-      btn.style.background = 'var(--accent)'; btn.style.color = '#fff';
-      state.selectedPlan = btn.dataset.plan;
-      const totalEl = document.getElementById('checkout-total');
-      const billingEl = document.getElementById('checkout-billing');
-      if (state.selectedPlan === 'annual') {
-        if (totalEl) totalEl.textContent = '200.00 CHF';
-        if (billingEl) billingEl.textContent = 'Billed Annually';
-      } else {
-        if (totalEl) totalEl.textContent = '20.00 CHF';
-        if (billingEl) billingEl.textContent = 'Billed Monthly';
-      }
-    });
+  // Auth
+  $('btn-try-free')?.addEventListener('click', () => { $('auth-gate').classList.add('hidden'); setTimeout(powerZoom, 300); });
+  $('btn-login-open')?.addEventListener('click', () => $('login-slide').classList.add('open'));
+  $('btn-login-close')?.addEventListener('click', () => $('login-slide').classList.remove('open'));
+  $('btn-login-submit')?.addEventListener('click', () => {
+    if (!$('login-email').value.trim() || !$('login-password').value) { toast('Please fill in all fields'); return; }
+    const b = $('btn-login-submit'); b.textContent = 'Signing in...'; b.disabled = true;
+    setTimeout(() => { $('login-slide').classList.remove('open'); $('auth-gate').classList.add('hidden'); b.textContent = 'Sign In'; b.disabled = false; toast('Welcome back, Explorer!'); setTimeout(powerZoom, 300); }, 1500);
+  });
+  $('btn-forgot-open')?.addEventListener('click', () => $('forgot-slide').classList.add('open'));
+  $('btn-forgot-close')?.addEventListener('click', () => { $('forgot-slide').classList.remove('open'); $('forgot-msg').classList.add('hidden'); });
+  $('btn-forgot-submit')?.addEventListener('click', () => {
+    if (!$('forgot-email').value.trim()) { toast('Please enter your email'); return; }
+    const b = $('btn-forgot-submit'); b.textContent = 'Sending...'; b.disabled = true;
+    setTimeout(() => { b.textContent = 'Send Recovery Link'; b.disabled = false; $('forgot-msg').classList.remove('hidden'); }, 1500);
   });
 
-  // Distance unit toggle
-  document.querySelectorAll('.unit-toggle-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.unit-toggle-btn').forEach(b => {
-        b.style.background = 'transparent'; b.style.color = 'var(--text-secondary)';
-      });
-      btn.style.background = 'var(--accent)'; btn.style.color = '#fff';
-      state.distanceUnit = btn.dataset.unit || 'meters';
-      if (state.currentPlace && state.currentPlace.distKm !== undefined) {
-        const distEl = document.getElementById('sheet-distance');
-        if (distEl) distEl.textContent = formatDistance(state.currentPlace.distKm);
-      }
-    });
-  });
-
-  // Theme toggle
-  document.querySelectorAll('.theme-toggle-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      haptic(12);
-      document.querySelectorAll('.theme-toggle-btn').forEach(b => {
-        b.style.background = 'transparent'; b.style.color = 'var(--text-secondary)';
-      });
-      btn.style.background = 'var(--accent)'; btn.style.color = '#fff';
-      applyTheme(btn.dataset.theme);
-    });
-  });
-  // Set initial theme button state
-  document.querySelectorAll('.theme-toggle-btn').forEach(btn => {
-    if (btn.dataset.theme === state.theme) {
-      btn.style.background = 'var(--accent)'; btn.style.color = '#fff';
-    }
-  });
-
-  // Hide Google watermarks
-  hideGoogleWatermarks();
-
-  // Haptic on all buttons
-  document.addEventListener('pointerdown', (e) => {
-    if (e.target.closest('button') || e.target.closest('.cat-btn') || e.target.closest('.nav-btn')) haptic(8);
-  });
-
-  // ---- AUTH GATE ----
-  const authGate = document.getElementById('auth-gate');
-  const loginOverlay = document.getElementById('login-overlay');
-  const forgotOverlay = document.getElementById('forgot-overlay');
-
-  document.getElementById('btn-try-free')?.addEventListener('click', () => {
-    authGate.classList.add('hidden');
-    // Trigger power zoom after gate dismissal
-    setTimeout(initPowerZoom, 300);
-  });
-
-  document.getElementById('btn-open-login')?.addEventListener('click', () => loginOverlay.classList.add('open'));
-  document.getElementById('btn-close-login')?.addEventListener('click', () => loginOverlay.classList.remove('open'));
-
-  document.getElementById('btn-login-submit')?.addEventListener('click', () => {
-    const email = document.getElementById('login-email').value.trim();
-    const password = document.getElementById('login-password').value;
-    if (!email || !password) { showToast('Please fill in all fields'); return; }
-    const btn = document.getElementById('btn-login-submit');
-    btn.textContent = 'Signing in...'; btn.disabled = true;
+  // Profile
+  $('btn-save-profile')?.addEventListener('click', () => {
+    if ($('pf-pw').value && $('pf-pw').value !== $('pf-pw2').value) { toast('Passwords do not match'); return; }
+    const b = $('btn-save-profile'); b.textContent = 'Saving...'; b.disabled = true;
     setTimeout(() => {
-      loginOverlay.classList.remove('open');
-      authGate.classList.add('hidden');
-      btn.textContent = 'SIGN IN'; btn.disabled = false;
-      showToast('Welcome back, Explorer!');
-      setTimeout(initPowerZoom, 300);
-    }, 1500);
-  });
-
-  document.getElementById('btn-open-forgot')?.addEventListener('click', () => forgotOverlay.classList.add('open'));
-  document.getElementById('btn-close-forgot')?.addEventListener('click', () => {
-    forgotOverlay.classList.remove('open');
-    document.getElementById('forgot-confirm-msg').classList.add('hidden');
-  });
-  document.getElementById('btn-forgot-submit')?.addEventListener('click', () => {
-    const email = document.getElementById('forgot-email').value.trim();
-    if (!email) { showToast('Please enter your email address'); return; }
-    const btn = document.getElementById('btn-forgot-submit');
-    btn.textContent = 'Sending...'; btn.disabled = true;
-    setTimeout(() => {
-      btn.textContent = 'SEND RECOVERY LINK'; btn.disabled = false;
-      document.getElementById('forgot-confirm-msg').classList.remove('hidden');
-    }, 1500);
-  });
-
-  // ---- PROFILE SAVE ----
-  document.getElementById('btn-save-profile')?.addEventListener('click', () => {
-    const pw = document.getElementById('profile-password').value;
-    const pwConfirm = document.getElementById('profile-password-confirm').value;
-    if (pw && pw !== pwConfirm) { showToast('Passwords do not match'); return; }
-    const btn = document.getElementById('btn-save-profile');
-    btn.textContent = 'Saving...'; btn.disabled = true;
-    setTimeout(() => {
-      const nameInput = document.getElementById('profile-fullname');
-      const displayName = document.getElementById('profile-display-name');
-      if (nameInput && displayName && nameInput.value.trim()) displayName.textContent = nameInput.value.trim();
-      btn.textContent = 'SAVE CHANGES'; btn.disabled = false;
-      showToast('Profile updated successfully');
+      const name = $('pf-name')?.value.trim();
+      if (name) $('display-name').textContent = name;
+      b.textContent = 'Save Changes'; b.disabled = false;
+      toast('Profile updated successfully');
     }, 1200);
   });
 
-  console.log('Wanderlost Depth-First Engine — Initialized');
+  // Plan toggle
+  document.querySelectorAll('.plan-btn').forEach(b => b.addEventListener('click', () => {
+    document.querySelectorAll('.plan-btn').forEach(x => { x.style.background = 'transparent'; x.style.color = 'var(--text-2)'; });
+    b.style.background = 'var(--accent)'; b.style.color = '#fff';
+    S.plan = b.dataset.plan;
+    $('pay-total').textContent = S.plan === 'annual' ? '200.00 CHF' : '20.00 CHF';
+    $('pay-cycle').textContent = S.plan === 'annual' ? 'Billed Annually' : 'Billed Monthly';
+  }));
+
+  // Unit toggle
+  document.querySelectorAll('.unit-btn').forEach(b => b.addEventListener('click', () => {
+    document.querySelectorAll('.unit-btn').forEach(x => { x.style.background = 'transparent'; x.style.color = 'var(--text-2)'; });
+    b.style.background = 'var(--accent)'; b.style.color = '#fff';
+    S.unit = b.dataset.unit || 'meters';
+    if (S.place?.distKm !== undefined) $('s-dist').textContent = fmtDist(S.place.distKm);
+  }));
+
+  // Theme toggle
+  document.querySelectorAll('.theme-btn').forEach(b => b.addEventListener('click', () => {
+    haptic(12);
+    document.querySelectorAll('.theme-btn').forEach(x => { x.style.background = 'transparent'; x.style.color = 'var(--text-2)'; });
+    b.style.background = 'var(--accent)'; b.style.color = '#fff';
+    applyTheme(b.dataset.theme);
+  }));
+  document.querySelectorAll('.theme-btn').forEach(b => { if (b.dataset.theme === S.theme) { b.style.background = 'var(--accent)'; b.style.color = '#fff'; } });
+
+  // Haptic feedback
+  document.addEventListener('pointerdown', e => { if (e.target.closest('button')) haptic(8); });
+
+  // Neural canvas
+  setTimeout(initCanvas, 500);
+
+  console.log('Wanderlost v60 — Ready');
 });
-
-// Neural canvas init
-document.addEventListener('DOMContentLoaded', () => { setTimeout(initNeuralCanvas, 500); });
-
-// Spin keyframe for loading
-(function() {
-  const s = document.createElement('style');
-  s.textContent = '@keyframes spin { to { transform: rotate(360deg); } }';
-  document.head.appendChild(s);
-})();

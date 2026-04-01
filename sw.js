@@ -1,57 +1,16 @@
-const CACHE_NAME = 'wanderlost-cache-v60';
-const urlsToCache = [
-  './',
-  './index.html',
-  './app.js',
-  './motion.css',
-  './manifest.json'
-];
+const CACHE_NAME = 'wanderlost-v61';
+const FILES = ['./', './index.html', './app.js', './motion.css', './manifest.json'];
 
-self.addEventListener('install', event => {
+self.addEventListener('install', e => {
+  e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(FILES)));
   self.skipWaiting();
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => {
-        return cache.addAll(urlsToCache);
-      })
-  );
 });
 
-self.addEventListener('activate', event => {
-  clients.claim();
-  event.waitUntil(
-    caches.keys().then(cacheNames => {
-
-      return Promise.all(
-        cacheNames.map(cacheName => {
-          if (cacheName !== CACHE_NAME) {
-            console.log('Service Worker: Clearing Old Cache', cacheName);
-            return caches.delete(cacheName);
-          }
-        })
-      );
-    })
-  );
+self.addEventListener('activate', e => {
+  e.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))));
+  self.clients.claim();
 });
 
-self.addEventListener('fetch', event => {
-  // Network-first strategy: always try to get fresh content, fall back to cache
-  event.respondWith(
-    fetch(event.request)
-      .then(response => {
-        // Cache the fresh response for offline
-        const responseClone = response.clone();
-        caches.open(CACHE_NAME).then(cache => cache.put(event.request, responseClone));
-        return response;
-      })
-      .catch(() => {
-        // Network failed, serve from cache
-        return caches.match(event.request).then(cached => {
-          if (cached) return cached;
-          if (event.request.mode === 'navigate') {
-            return caches.match('/wanderlost-app/index.html');
-          }
-        });
-      })
-  );
+self.addEventListener('fetch', e => {
+  e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
 });
