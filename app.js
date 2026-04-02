@@ -33,10 +33,9 @@ window.initMap=function(){
     center:{lat:47.3769,lng:8.5417},
     zoom:13,
     mapTypeId:'roadmap',
-    disableDefaultUI:true,
-    styles:A.th==='light'?LIGHT:DARK
+    disableDefaultUI:true
   });
-  console.log('Map created:',map);
+  console.log('Map created');
   spawnZones();
   if(navigator.geolocation)navigator.geolocation.getCurrentPosition(
     p=>{map.panTo({lat:p.coords.latitude,lng:p.coords.longitude})},
@@ -44,7 +43,7 @@ window.initMap=function(){
     {enableHighAccuracy:false,timeout:5000}
   );
   google.maps.event.addListenerOnce(map,'tilesloaded',()=>console.log('TILES LOADED!'));
-  google.maps.event.addListenerOnce(map,'idle',()=>console.log('MAP IDLE'));
+  google.maps.event.addListenerOnce(map,'idle',()=>{console.log('MAP IDLE');setTimeout(()=>{if(map)map.setOptions({styles:A.th==='light'?LIGHT:DARK})},500);});
 };
 
 /* Power Zoom */
