@@ -4,8 +4,8 @@
   "description": "Discover something hidden from the masses.",
   "start_url": "/wanderlost-app/",
   "display": "standalone",
-  "background_color": "#1E1C1A",
-  "theme_color": "#1E1C1A",
+  "background_color": "#050810",
+  "theme_color": "#050810",
   "icons": [
     {
       "src": "icon-192.png",
