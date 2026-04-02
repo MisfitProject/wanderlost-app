@@ -26,8 +26,26 @@ function fd(km){if(A.unit==='ft'){const f=km*3280.84;return f<5280?Math.round(f)
 function hv(a,b,c,d){const R=6371,dL=(c-a)*Math.PI/180,dN=(d-b)*Math.PI/180,x=Math.sin(dL/2)**2+Math.cos(a*Math.PI/180)*Math.cos(c*Math.PI/180)*Math.sin(dN/2)**2;return R*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x))}
 
 /* Map */
-window.initMap=function(){map=new google.maps.Map(Q('map'),{center:{lat:47.3769,lng:8.5417},zoom:13,disableDefaultUI:true,styles:A.th==='light'?LIGHT:DARK});spawnZones();
-if(navigator.geolocation)navigator.geolocation.getCurrentPosition(p=>{map.panTo({lat:p.coords.latitude,lng:p.coords.longitude})},()=>{},{enableHighAccuracy:false,timeout:5000})};
+window.initMap=function(){
+  const mapEl=Q('map');
+  console.log('initMap firing, map el size:',mapEl.offsetWidth,'x',mapEl.offsetHeight);
+  map=new google.maps.Map(mapEl,{
+    center:{lat:47.3769,lng:8.5417},
+    zoom:13,
+    mapTypeId:'roadmap',
+    disableDefaultUI:true,
+    styles:A.th==='light'?LIGHT:DARK
+  });
+  console.log('Map created:',map);
+  spawnZones();
+  if(navigator.geolocation)navigator.geolocation.getCurrentPosition(
+    p=>{map.panTo({lat:p.coords.latitude,lng:p.coords.longitude})},
+    ()=>{},
+    {enableHighAccuracy:false,timeout:5000}
+  );
+  google.maps.event.addListenerOnce(map,'tilesloaded',()=>console.log('TILES LOADED!'));
+  google.maps.event.addListenerOnce(map,'idle',()=>console.log('MAP IDLE'));
+};
 
 /* Power Zoom */
 function pz(){if(!map)return;map.setZoom(15)}
