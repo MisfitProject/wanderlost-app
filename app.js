@@ -38,8 +38,10 @@ z.innerHTML=colors.map((v,i)=>`<div style="position:absolute;left:${v.x}%;top:${
 /* Sheet fill */
 function fs(p){Q('s-name').textContent=p.name;Q('s-tag').textContent=(p.type||'Discovery').toUpperCase();Q('s-addr').textContent=p.address||'Nearby';Q('s-dist').textContent=p.distance||'';Q('s-desc').textContent=p.description||''}
 
-/* Discovery */
-async function disc(){console.log('Discovery clicked');const b=Q('btn-disc');if(!b){console.error('btn-disc not found');return}
+/* Discovery — tiered fallback search */
+const CATS=['restaurant','cafe','bar','bakery','park','museum','tourist_attraction','art_gallery','night_club','spa','gym','shopping_mall','book_store','clothing_store','movie_theater'];
+async function nearby(loc,rq){return new Promise((r,j)=>{ps.nearbySearch(rq,(x,s)=>{console.log('Search:',JSON.stringify(rq).slice(0,80),'→',s);if(s==='OK')r(x);else if(s==='ZERO_RESULTS')r([]);else j(s)})})}
+async function disc(){console.log('Discovery clicked');const b=Q('btn-disc');if(!b)return;
 if(!A.sub&&A.cr<=0){om('md-prem');return}
 const icon=b.querySelector('.material-symbols-outlined');if(icon){icon.textContent='progress_activity';icon.style.animation='spin 1s linear infinite'}b.style.animation='none';
 if(!navigator.geolocation){toast('Geolocation not supported.');rb();return}
@@ -47,10 +49,22 @@ try{const pos=await new Promise((r,j)=>navigator.geolocation.getCurrentPosition(
 if(map){map.panTo({lat:la,lng:ln});map.setZoom(15)}
 if(!ps){if(map)ps=new google.maps.places.PlacesService(map);else if(typeof google!=='undefined'&&google.maps){const d=document.createElement('div');ps=new google.maps.places.PlacesService(d)}}
 if(!ps){toast('Maps loading... try again.');rb();return}
-const rq={location:new google.maps.LatLng(la,ln),radius:2000};if(A.cat)rq.type=A.cat;else rq.keyword='hidden gem local favorite';
-const res=await new Promise((r,j)=>{ps.nearbySearch(rq,(x,s)=>{console.log('Places status:',s);if(s==='OK')r(x);else if(s==='ZERO_RESULTS')r([]);else j(s)})});
-if(!res.length){toast('No places found. Try another category.');rb();return}
-let c=res.filter(p=>(p.rating||0)>=4);if(!c.length)c=res;const t=c[Math.floor(Math.random()*c.length)],pL=t.geometry.location.lat(),pN=t.geometry.location.lng(),di=hv(la,ln,pL,pN);
+const loc=new google.maps.LatLng(la,ln);let res=[];
+/* Try 1: specific category or general types */
+if(A.cat){res=await nearby(loc,{location:loc,radius:5000,type:A.cat})}
+else{const t=CATS[Math.floor(Math.random()*CATS.length)];res=await nearby(loc,{location:loc,radius:5000,type:t})}
+/* Try 2: broader — point_of_interest */
+if(!res.length){res=await nearby(loc,{location:loc,radius:5000,type:'point_of_interest'})}
+/* Try 3: even broader — establishment */
+if(!res.length){res=await nearby(loc,{location:loc,radius:5000,type:'establishment'})}
+/* Try 4: keyword */
+if(!res.length){res=await nearby(loc,{location:loc,radius:5000,keyword:'restaurant cafe bar'})}
+if(!res.length){toast('No places nearby. Try moving to a populated area.');rb();return}
+/* Pick a random high-rated one */
+let c=res.filter(p=>(p.rating||0)>=3.5);if(!c.length)c=res;
+/* Avoid repeats */
+const prev=new Set(A.h.map(x=>x.name));const fresh=c.filter(p=>!prev.has(p.name));const pool=fresh.length?fresh:c;
+const t=pool[Math.floor(Math.random()*pool.length)],pL=t.geometry.location.lat(),pN=t.geometry.location.lng(),di=hv(la,ln,pL,pN);
 A.p={name:t.name||'Hidden Gem',type:t.types?.[0]||A.cat||'Discovery',address:t.vicinity||'Local favorite',distance:fd(di)+' away',distKm:di,description:t.rating?`★ ${t.rating} — Rated by locals`:'A secret local spot.',lat:pL,lng:pN,at:new Date()};
 fs(A.p);
 if(map){const mk=new google.maps.Marker({position:{lat:pL,lng:pN},map,icon:{path:google.maps.SymbolPath.CIRCLE,scale:8,fillColor:COL[A.p.type]||'#3AAFFF',fillOpacity:1,strokeColor:'#FFF',strokeWeight:2},animation:google.maps.Animation.DROP});mk.addListener('click',()=>{A.p&&(fs(A.p),os())});A.mk.push(mk);map.panTo({lat:pL,lng:pN})}
