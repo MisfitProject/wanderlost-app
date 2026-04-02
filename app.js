@@ -26,10 +26,11 @@ function fd(km){if(A.unit==='ft'){const f=km*3280.84;return f<5280?Math.round(f)
 function hv(a,b,c,d){const R=6371,dL=(c-a)*Math.PI/180,dN=(d-b)*Math.PI/180,x=Math.sin(dL/2)**2+Math.cos(a*Math.PI/180)*Math.cos(c*Math.PI/180)*Math.sin(dN/2)**2;return R*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x))}
 
 /* Map */
-window.initMap=function(){map=new google.maps.Map(Q('map'),{center:{lat:47.3769,lng:8.5417},zoom:2,disableDefaultUI:true,styles:A.th==='light'?LIGHT:DARK});spawnZones()};
+window.initMap=function(){map=new google.maps.Map(Q('map'),{center:{lat:47.3769,lng:8.5417},zoom:13,disableDefaultUI:true,styles:A.th==='light'?LIGHT:DARK});spawnZones();
+if(navigator.geolocation)navigator.geolocation.getCurrentPosition(p=>{map.panTo({lat:p.coords.latitude,lng:p.coords.longitude})},()=>{},{enableHighAccuracy:false,timeout:5000})};
 
 /* Power Zoom */
-function pz(){if(!map||!Q('map'))return;const s=performance.now();(function f(n){const t=Math.min((n-s)/3e3,1),e=t===1?1:1-Math.pow(2,-10*t);map.setZoom(2+13*e);Q('map').style.filter=`blur(${14*(1-e)}px) brightness(${.5+.5*e})`;t<1?requestAnimationFrame(f):Q('map').style.filter='none'})(s)}
+function pz(){if(!map)return;map.setZoom(15)}
 
 /* Heatmap Zones — colored radial gradients floating on the map */
 function spawnZones(){const z=Q('zones');if(!z)return;const colors=[{c:'164,255,0',x:20,y:35},{c:'58,175,255',x:70,y:25},{c:'255,215,0',x:45,y:60},{c:'139,92,246',x:80,y:70},{c:'255,155,142',x:15,y:75}];
