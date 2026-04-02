@@ -33,9 +33,11 @@ window.initMap=function(){
     center:{lat:47.3769,lng:8.5417},
     zoom:13,
     mapTypeId:'roadmap',
-    disableDefaultUI:true
+    disableDefaultUI:true,
+    renderingType:google.maps.RenderingType&&google.maps.RenderingType.RASTER,
+    styles:A.th==='light'?LIGHT:DARK
   });
-  console.log('Map created');
+  console.log('Map created, rendering type: RASTER');
   spawnZones();
   if(navigator.geolocation)navigator.geolocation.getCurrentPosition(
     p=>{map.panTo({lat:p.coords.latitude,lng:p.coords.longitude})},
@@ -43,7 +45,7 @@ window.initMap=function(){
     {enableHighAccuracy:false,timeout:5000}
   );
   google.maps.event.addListenerOnce(map,'tilesloaded',()=>console.log('TILES LOADED!'));
-  google.maps.event.addListenerOnce(map,'idle',()=>{console.log('MAP IDLE');setTimeout(()=>{if(map)map.setOptions({styles:A.th==='light'?LIGHT:DARK})},500);});
+  google.maps.event.addListenerOnce(map,'idle',()=>console.log('MAP IDLE'));
 };
 
 /* Power Zoom */
