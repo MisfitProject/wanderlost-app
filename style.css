@@ -1,0 +1,73 @@
+/* ═══════════════════════════════════════════════════════
+   WANDERLOST · Premium Design System
+   ═══════════════════════════════════════════════════════ */
+:root {
+  --bg1:#080B12; --bg2:#0E1420; --bg3:#141C2E;
+  --glass:rgba(255,255,255,.07); --glass2:rgba(255,255,255,.12);
+  --edge:rgba(255,255,255,.2); --edge2:rgba(255,255,255,.06);
+  --tx:#F4F4F5; --tx2:rgba(255,255,255,.55); --tx3:rgba(255,255,255,.3);
+  --ac:#3AAFFF; --ac2:#7DD3FC; --glow:rgba(58,175,255,.35);
+  --warn:#FF5E5B;
+  --depth:0 24px 64px -12px rgba(0,0,0,.6),0 8px 20px -4px rgba(0,0,0,.4);
+  --ios:cubic-bezier(.2,.9,.3,1); --spring:cubic-bezier(.34,1.56,.64,1);
+}
+html.light {
+  --bg1:#EEF1F5; --bg2:#F5F7FA; --bg3:#FAFBFC;
+  --glass:rgba(255,255,255,.7); --glass2:rgba(255,255,255,.85);
+  --edge:rgba(255,255,255,.9); --edge2:rgba(0,0,0,.04);
+  --tx:#111318; --tx2:rgba(0,0,0,.5); --tx3:rgba(0,0,0,.22);
+  --glow:rgba(58,175,255,.2); --depth:0 24px 64px -12px rgba(0,0,0,.08);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:linear-gradient(170deg,var(--bg1),var(--bg2) 40%,var(--bg3));color:var(--tx);font:400 15px/1.55 'SF Pro Display',system-ui,-apple-system,sans-serif;min-height:100vh;-webkit-font-smoothing:antialiased;overflow-x:hidden;transition:background .6s var(--ios),color .6s var(--ios)}
+img{display:block;max-width:100%} .hidden{display:none!important}
+.nsc::-webkit-scrollbar{display:none} .nsc{scrollbar-width:none}
+
+/* ─── Glass Lens ─── */
+.lens{background:var(--glass);backdrop-filter:blur(40px) saturate(190%);-webkit-backdrop-filter:blur(40px) saturate(190%);border:1px solid var(--edge);border-right-color:var(--edge2);border-bottom-color:var(--edge2);box-shadow:var(--depth),inset 0 1px 0 rgba(255,255,255,.08)}
+.lens-solid{background:var(--glass2);backdrop-filter:blur(60px) saturate(200%);-webkit-backdrop-filter:blur(60px) saturate(200%);border:1px solid var(--edge);border-right-color:var(--edge2);border-bottom-color:var(--edge2);box-shadow:var(--depth)}
+
+/* ─── Typography ─── */
+.h1{font:700 clamp(2.8rem,8vw,4.5rem)/1 system-ui;letter-spacing:-.04em}
+.h2{font:600 1.6rem/1.15 system-ui;letter-spacing:-.025em}
+.place{font:600 1.6rem/1.15 system-ui;letter-spacing:-.02em}
+.label{font:700 10px/1 system-ui;letter-spacing:.22em;text-transform:uppercase;color:var(--tx2)}
+.meta{font:600 9px/1 system-ui;letter-spacing:.28em;text-transform:uppercase;color:var(--tx3)}
+.body{font-size:.9rem;color:var(--tx2);line-height:1.65}
+
+/* ─── Buttons ─── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:16px 32px;border:0;border-radius:16px;cursor:pointer;font:600 11px/1 system-ui;letter-spacing:.18em;text-transform:uppercase;transition:all .5s var(--ios);position:relative;overflow:hidden}
+.btn::after{content:'';position:absolute;inset:0;border-radius:inherit;opacity:0;background:radial-gradient(circle at center,rgba(255,255,255,.2),transparent 70%);transition:opacity .3s} .btn:hover::after{opacity:1}
+.btn:active{transform:scale(.96)}
+.bp{background:linear-gradient(135deg,var(--ac),#5B8DEF);color:#fff;box-shadow:0 0 32px var(--glow),0 12px 32px -8px rgba(58,175,255,.4)}
+.bo{background:var(--glass);color:var(--tx);border:1px solid var(--edge);border-right-color:var(--edge2);border-bottom-color:var(--edge2);backdrop-filter:blur(24px)}
+
+/* ─── Inputs ─── */
+input[type=text],input[type=email],input[type=password],input[type=date]{width:100%;padding:14px 18px;background:rgba(255,255,255,.04);border:1px solid var(--edge2);border-radius:14px;color:var(--tx);font:400 14px system-ui;outline:0;transition:all .5s var(--ios)}
+input:focus{border-color:var(--ac);box-shadow:0 0 0 3px var(--glow)} input::placeholder{color:var(--tx3)}
+
+/* ─── Auth ─── */
+#auth-gate{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:linear-gradient(170deg,var(--bg1),var(--bg2) 40%,var(--bg3));transition:opacity 1s var(--ios),transform 1s var(--ios)} #auth-gate.hidden{opacity:0;pointer-events:none;transform:scale(1.1)}
+.slide{position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center;background:linear-gradient(170deg,var(--bg1),var(--bg2));transform:translateY(100%);transition:transform .6s var(--spring);pointer-events:none;overflow-y:auto} .slide.open{transform:translateY(0);pointer-events:auto}
+
+/* ─── Layout ─── */
+.tab{display:none} .tab.active{display:block}
+.dock{width:56px;height:56px;display:flex;align-items:center;justify-content:center;border-radius:18px;border:0;background:0;color:var(--tx3);cursor:pointer;transition:all .5s var(--ios)} .dock.active{color:var(--ac);background:rgba(58,175,255,.12)} .dock .material-symbols-outlined{font-size:24px}
+.pill{padding:10px 20px;background:0;border:0;border-radius:14px;font:700 10px/1 system-ui;letter-spacing:.15em;text-transform:uppercase;color:var(--tx3);cursor:pointer;white-space:nowrap;transition:all .4s var(--ios)} .pill.active{color:var(--tx);background:linear-gradient(135deg,rgba(58,175,255,.18),rgba(91,141,239,.12))}
+
+/* ─── Sheet ─── */
+#sheet{position:fixed;bottom:0;left:0;right:0;z-index:100;transform:translateY(110%);transition:transform .6s var(--spring);pointer-events:none} #sheet.open{transform:translateY(0);pointer-events:auto}
+#btn-discover{transition:all .6s var(--ios)} #btn-discover.morphing{opacity:0;transform:scale(.5) translateY(20px);pointer-events:none}
+
+/* ─── Modal ─── */
+.modal{position:fixed;inset:0;z-index:200;background:linear-gradient(170deg,var(--bg1),var(--bg2));transform:translateY(100%);transition:transform .6s var(--spring),visibility 0s .6s;overflow-y:auto;pointer-events:none;visibility:hidden} .modal.open{transform:translateY(0);pointer-events:auto;visibility:visible;transition:transform .6s var(--spring),visibility 0s}
+
+/* ─── Breathing Sonar ─── */
+@keyframes breathe{0%,100%{transform:scale(1);opacity:.5}50%{transform:scale(2);opacity:.1}}
+@keyframes glow-pulse{0%,100%{box-shadow:0 0 20px var(--glow),0 0 40px rgba(58,175,255,.15)}50%{box-shadow:0 0 30px var(--glow),0 0 60px rgba(58,175,255,.25)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+
+.gm-err-container,.gm-style-cc,.gmnoprint,button[title="Toggle fullscreen view"],.gm-style-pbc{display:none!important}
+.material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 300}
