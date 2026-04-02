@@ -54,14 +54,16 @@
   </header>
   <!-- Category pills -->
   <div style="position:fixed;top:56px;left:0;width:100%;z-index:40"><div class="nsc" style="display:flex;gap:6px;padding:0 20px;overflow-x:auto">
-    <button onclick="pickCat(this)" data-c="" class="pill on">All</button><button onclick="pickCat(this)" data-c="restaurant" class="pill">Food</button><button onclick="pickCat(this)" data-c="cafe" class="pill">Café</button><button onclick="pickCat(this)" data-c="bar" class="pill">Bar</button><button onclick="pickCat(this)" data-c="park" class="pill">Park</button><button onclick="pickCat(this)" data-c="museum" class="pill">Museum</button>
+    <button onclick="pickCat(this)" data-c="" class="pill on">All</button><button onclick="pickCat(this)" data-c="restaurant" class="pill">Food</button><button onclick="pickCat(this)" data-c="cafe" class="pill">Café</button><button onclick="pickCat(this)" data-c="bar" class="pill">Bar</button><button onclick="pickCat(this)" data-c="park" class="pill">Park</button><button onclick="pickCat(this)" data-c="museum" class="pill">Museum</button><button onclick="pickCat(this)" data-c="bakery" class="pill">Bakery</button><button onclick="pickCat(this)" data-c="art_gallery" class="pill">Art</button><button onclick="pickCat(this)" data-c="night_club" class="pill">Nightlife</button><button onclick="pickCat(this)" data-c="lodging" class="pill">Hotel</button><button onclick="pickCat(this)" data-c="spa" class="pill">Spa</button><button onclick="pickCat(this)" data-c="gym" class="pill">Gym</button><button onclick="pickCat(this)" data-c="library" class="pill">Library</button><button onclick="pickCat(this)" data-c="supermarket" class="pill">Market</button>
   </div></div>
   <!-- Energy Orb (Discover) -->
   <div style="position:fixed;bottom:96px;left:50%;transform:translateX(-50%);z-index:40">
-    <button id="btn-disc" style="position:relative;width:64px;height:64px;border-radius:50%;border:0;cursor:pointer;background:radial-gradient(circle at 40% 40%,var(--cyan),#5B8DEF 70%,#2D3B87);box-shadow:0 0 40px var(--glow),0 0 80px rgba(58,175,255,.15);animation:orb-breath 3s var(--ease) infinite;display:flex;align-items:center;justify-content:center">
-      <div style="position:absolute;inset:-12px;border-radius:50%;border:1px solid rgba(58,175,255,.15);animation:orb-ring 3s var(--ease) infinite;pointer-events:none"></div>
-      <span class="material-symbols-outlined" style="font-size:24px;color:#fff;font-variation-settings:'FILL' 1,'wght' 300;position:relative;z-index:2">explore</span>
-    </button>
+<div id="discover-wrapper" style="position:relative;display:inline-block;">
+  <button id="btn-disc" style="position:relative;width:64px;height:64px;border-radius:50%;border:0;cursor:pointer;background:radial-gradient(circle at 40% 40%,var(--cyan),#5B8DEF 70%,#2D3B87);box-shadow:0 0 40px var(--glow),0 0 80px rgba(58,175,255,.15);animation:orb-breath 3s var(--ease) infinite;display:flex;align-items:center;justify-content:center">
+    <div style="position:absolute;inset:-12px;border-radius:50%;border:1px solid rgba(58,175,255,.15);animation:orb-ring 3s var(--ease) infinite;pointer-events:none"></div>
+    <span class="material-symbols-outlined" style="font-size:24px;color:#fff;font-variation-settings:'FILL' 1,'wght' 300;position:relative;z-index:2">explore</span>
+  </button>
+</div>
   </div>
   <!-- Bottom dock -->
   <nav class="g" style="position:fixed;bottom:16px;left:50%;transform:translateX(-50%);z-index:150;display:flex;justify-content:space-around;align-items:center;height:56px;width:200px;border-radius:20px">

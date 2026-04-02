@@ -87,7 +87,7 @@ const ws=document.createElement('style');ws.innerHTML='.dismissButton,.gm-err-co
 setInterval(()=>{document.querySelectorAll('.gm-style div,.gm-style span,.gm-style a').forEach(d=>{const t=d.textContent||'';if(t.includes('development purposes')||t.includes('For development')||t.includes('This page'))d.style.cssText='display:none!important';const s=d.getAttribute('style')||'';if(s.includes('background-color: rgb(255, 255, 0)')||s.includes('background-color: yellow'))d.style.cssText='display:none!important'})},500);
 window.gm_authFailure=()=>{console.warn('Maps API auth failed')};
 
-Q('btn-disc')?.addEventListener('click',disc);
+Q('btn-disc')?.addEventListener('click',()=>{const wrapper=document.getElementById('discover-wrapper');if(wrapper){wrapper.classList.add('morph');setTimeout(()=>{wrapper.classList.remove('morph');disc();},400);}else{disc();}});
 Q('btn-nav')?.addEventListener('click',()=>{if(!A.p)return;window.open(/iPhone|iPad/i.test(navigator.userAgent)?`http://maps.apple.com/?q=${encodeURIComponent(A.p.name)}&ll=${A.p.lat},${A.p.lng}`:`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(A.p.name+' '+A.p.address)}`,'_blank');cs()});
 Q('btn-save')?.addEventListener('click',()=>{if(!A.p)return;const b=Q('btn-save');if(A.sv.find(x=>x.name===A.p.name)){b.innerHTML='<span class="material-symbols-outlined" style="font-size:14px">check</span> Saved';return}A.sv.push({...A.p});b.innerHTML='<span class="material-symbols-outlined" style="font-size:14px">bookmark_added</span> Saved!';setTimeout(()=>{b.innerHTML='<span class="material-symbols-outlined" style="font-size:14px">bookmark</span> Save'},2e3)});
 
