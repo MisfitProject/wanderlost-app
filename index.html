@@ -1,227 +1,186 @@
 <!DOCTYPE html><html lang="en"><head>
 <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-<title>Wanderlost — Discover Hidden Gems</title><meta name="theme-color" content="#080B12"/>
+<title>Wanderlost</title><meta name="theme-color" content="#050810"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <link rel="manifest" href="./manifest.json"/><link rel="icon" href="./icon-192.png"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="./style.css"/>
 </head><body>
 
-<!-- ═══ AUTH GATE ═══ -->
-<div id="auth-gate">
-  <div style="text-align:center;padding:0 36px;max-width:400px;width:100%">
-    <div style="width:64px;height:64px;margin:0 auto 24px;border-radius:20px;background:linear-gradient(135deg,var(--ac),#5B8DEF);display:flex;align-items:center;justify-content:center;box-shadow:0 0 40px var(--glow)">
-      <span class="material-symbols-outlined" style="font-size:32px;color:#fff;font-variation-settings:'FILL' 1">explore</span></div>
-    <p class="meta" style="margin-bottom:20px;color:var(--ac)">The Secret City</p>
-    <h1 class="h1">Wander<span style="color:var(--ac)">lost</span></h1>
-    <p class="body" style="margin-top:20px;margin-bottom:56px;font-style:italic;color:var(--tx3)">AI-powered local discovery</p>
-    <button id="btn-login-open" class="btn bp" style="width:100%;margin-bottom:16px">Log In</button>
-    <button id="btn-try" class="btn bo" style="width:100%">Try for Free</button>
-    <p class="meta" style="margin-top:36px"><button onclick="el('auth-gate').classList.add('hidden');om('m-terms')" style="text-decoration:underline;color:var(--tx3);background:0;border:0;cursor:pointer;font:inherit">Terms</button>  ·  <button onclick="el('auth-gate').classList.add('hidden');om('m-privacy')" style="text-decoration:underline;color:var(--tx3);background:0;border:0;cursor:pointer;font:inherit">Privacy</button></p>
+<!-- AUTH GATE -->
+<div id="auth">
+  <div style="text-align:center;padding:0 40px;max-width:380px;width:100%">
+    <!-- Orb Icon -->
+    <div style="width:72px;height:72px;margin:0 auto 28px;border-radius:50%;background:radial-gradient(circle at 40% 40%,var(--cyan),#5B8DEF 60%,transparent 100%);display:flex;align-items:center;justify-content:center;box-shadow:0 0 50px var(--glow),0 0 100px rgba(58,175,255,.15);animation:orb-breath 4s var(--ease) infinite">
+      <span class="material-symbols-outlined" style="font-size:28px;color:#fff;font-variation-settings:'FILL' 1,'wght' 200">explore</span></div>
+    <p class="meta" style="margin-bottom:20px;color:var(--cyan)">The Secret City</p>
+    <h1 class="t1">Wander<span style="color:var(--cyan)">lost</span></h1>
+    <p class="body" style="margin-top:16px;margin-bottom:56px;font-style:italic;color:var(--t3)">AI-powered local discovery</p>
+    <button id="btn-login" class="btn bp" style="width:100%;margin-bottom:14px;border-radius:14px">Log In</button>
+    <button id="btn-try" class="btn bo" style="width:100%;border-radius:14px">Try for Free</button>
+    <p class="meta" style="margin-top:36px"><button onclick="Q('auth').classList.add('out');om('md-terms')" style="text-decoration:underline;color:var(--t3);background:0;border:0;cursor:pointer;font:inherit">Terms</button>  ·  <button onclick="Q('auth').classList.add('out');om('md-priv')" style="text-decoration:underline;color:var(--t3);background:0;border:0;cursor:pointer;font:inherit">Privacy</button></p>
   </div>
 </div>
 
-<!-- ═══ LOGIN SLIDE ═══ -->
-<div id="login-sl" class="slide"><div style="width:100%;max-width:360px;padding:0 36px">
-  <button id="btn-lb" style="background:0;border:0;cursor:pointer;color:var(--tx2);margin-bottom:40px;display:block"><span class="material-symbols-outlined" style="font-size:28px">arrow_back</span></button>
-  <h2 class="h2" style="font-size:2.2rem;margin-bottom:10px">Welcome<br/>back.</h2>
-  <p class="body" style="font-style:italic;margin-bottom:48px;color:var(--tx3)">Sign in to continue your journey</p>
-  <div style="margin-bottom:20px"><span class="meta" style="display:block;margin-bottom:10px">Email Address</span><input id="l-em" type="email" placeholder="you@email.com"/></div>
-  <div style="margin-bottom:36px"><span class="meta" style="display:block;margin-bottom:10px">Password</span><input id="l-pw" type="password" placeholder="••••••••"/></div>
-  <button id="btn-ls" class="btn bp" style="width:100%;margin-bottom:24px">Sign In</button>
-  <p style="text-align:center"><button id="btn-fo" style="background:0;border:0;cursor:pointer;color:var(--tx3);font-size:13px">Forgot password?</button></p>
+<!-- LOGIN -->
+<div id="sl-login" class="sl"><div style="width:100%;max-width:340px;padding:0 36px">
+  <button onclick="Q('sl-login').classList.remove('open')" style="background:0;border:0;cursor:pointer;color:var(--t2);margin-bottom:36px;display:block"><span class="material-symbols-outlined" style="font-size:24px">arrow_back</span></button>
+  <h2 class="t2" style="font-size:2rem;margin-bottom:8px">Welcome<br/>back.</h2><p class="body" style="font-style:italic;margin-bottom:44px;color:var(--t3)">Sign in to continue</p>
+  <div style="margin-bottom:18px"><span class="meta" style="display:block;margin-bottom:8px">Email</span><input id="l-em" type="email" placeholder="you@email.com"/></div>
+  <div style="margin-bottom:32px"><span class="meta" style="display:block;margin-bottom:8px">Password</span><input id="l-pw" type="password" placeholder="••••••••"/></div>
+  <button id="btn-sign" class="btn bp" style="width:100%;margin-bottom:20px;border-radius:14px">Sign In</button>
+  <p style="text-align:center"><button id="btn-forgot-open" style="background:0;border:0;cursor:pointer;color:var(--t3);font-size:12px">Forgot password?</button></p>
+</div></div>
+<!-- FORGOT -->
+<div id="sl-forgot" class="sl"><div style="width:100%;max-width:340px;padding:0 36px">
+  <button onclick="Q('sl-forgot').classList.remove('open');Q('f-msg').classList.add('hidden')" style="background:0;border:0;cursor:pointer;color:var(--t2);margin-bottom:36px;display:block"><span class="material-symbols-outlined" style="font-size:24px">arrow_back</span></button>
+  <h2 class="t2" style="font-size:2rem;margin-bottom:8px">Reset<br/>password.</h2><p class="body" style="font-style:italic;margin-bottom:44px;color:var(--t3)">We'll send a recovery link</p>
+  <div style="margin-bottom:32px"><span class="meta" style="display:block;margin-bottom:8px">Email</span><input id="f-em" type="email" placeholder="you@email.com"/></div>
+  <button id="btn-reset" class="btn bp" style="width:100%;border-radius:14px">Send Recovery Link</button>
+  <p id="f-msg" class="hidden body" style="text-align:center;margin-top:20px;color:var(--cyan)">✓ Recovery link sent</p>
 </div></div>
 
-<!-- ═══ FORGOT SLIDE ═══ -->
-<div id="forgot-sl" class="slide"><div style="width:100%;max-width:360px;padding:0 36px">
-  <button id="btn-fb" style="background:0;border:0;cursor:pointer;color:var(--tx2);margin-bottom:40px;display:block"><span class="material-symbols-outlined" style="font-size:28px">arrow_back</span></button>
-  <h2 class="h2" style="font-size:2.2rem;margin-bottom:10px">Reset<br/>password.</h2>
-  <p class="body" style="font-style:italic;margin-bottom:48px;color:var(--tx3)">We'll send a recovery link</p>
-  <div style="margin-bottom:36px"><span class="meta" style="display:block;margin-bottom:10px">Email Address</span><input id="f-em" type="email" placeholder="you@email.com"/></div>
-  <button id="btn-fs" class="btn bp" style="width:100%">Send Recovery Link</button>
-  <p id="f-msg" class="hidden body" style="text-align:center;margin-top:24px;color:var(--ac)">✓ Recovery link sent!</p>
-</div></div>
-
-<!-- ═══ EXPLORE TAB ═══ -->
-<section id="tab-explore" class="tab active">
-  <header class="lens" style="position:fixed;top:0;width:100%;z-index:50;padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between;border-radius:0 0 24px 24px">
-    <div style="display:flex;align-items:center;gap:14px">
-      <button onclick="om('m-settings')" style="background:0;border:0;cursor:pointer;color:var(--tx2)"><span class="material-symbols-outlined">menu</span></button>
-      <span style="font:700 1.3rem system-ui;letter-spacing:-.01em">Wander<span style="color:var(--ac)">lost</span></span></div>
-    <div class="lens" style="padding:6px 14px;border-radius:10px"><span id="credits" class="meta" style="color:var(--ac)">3 Credits</span></div>
+<!-- ═══ EXPLORE ═══ -->
+<section id="tab-explore" class="tab on">
+  <!-- Map fills entire viewport -->
+  <div id="map" style="position:fixed;inset:0;z-index:0;filter:blur(14px) brightness(.5)"></div>
+  <!-- Heatmap overlay zones -->
+  <div id="zones" style="position:fixed;inset:0;z-index:1;pointer-events:none;overflow:hidden"></div>
+  <!-- Minimal top bar — almost invisible -->
+  <header style="position:fixed;top:0;width:100%;z-index:50;padding:16px 20px;display:flex;align-items:center;justify-content:space-between">
+    <button onclick="om('md-set')" style="background:0;border:0;cursor:pointer;color:var(--t2)"><span class="material-symbols-outlined" style="font-size:20px;font-variation-settings:'wght' 200">tune</span></button>
+    <span style="font:600 .85rem system-ui;color:var(--t2);letter-spacing:.08em">WANDERLOST</span>
+    <div class="g" style="padding:5px 12px;border-radius:8px"><span id="credits" class="meta" style="color:var(--cyan);font-size:8px">3 LEFT</span></div>
   </header>
-  <main style="position:relative;width:100%;height:100vh;overflow:hidden">
-    <div id="map" style="position:absolute;inset:0;z-index:0;filter:blur(16px) brightness(.6)"></div>
-    <canvas id="cv" style="position:absolute;inset:0;z-index:1;pointer-events:none"></canvas>
-    <!-- Categories -->
-    <div style="position:absolute;top:80px;left:0;width:100%;z-index:40"><div class="nsc" style="display:flex;gap:8px;padding:0 24px;overflow-x:auto">
-      <button onclick="pickCat(this)" data-c="" class="pill active">All</button><button onclick="pickCat(this)" data-c="restaurant" class="pill">Restaurants</button><button onclick="pickCat(this)" data-c="cafe" class="pill">Cafés</button><button onclick="pickCat(this)" data-c="bakery" class="pill">Bakeries</button><button onclick="pickCat(this)" data-c="bar" class="pill">Bars</button><button onclick="pickCat(this)" data-c="park" class="pill">Parks</button><button onclick="pickCat(this)" data-c="museum" class="pill">Museums</button>
-    </div></div>
-    <!-- Breathing Sonar -->
-    <div id="sonar" style="position:absolute;top:46%;left:44%;transform:translate(-50%,-50%);display:none">
-      <div style="position:relative;width:80px;height:80px;display:flex;align-items:center;justify-content:center">
-        <div style="position:absolute;inset:-10px;border-radius:50%;background:radial-gradient(circle,rgba(58,175,255,.2),transparent 65%);animation:breathe 3s ease-in-out infinite"></div>
-        <div style="width:12px;height:12px;background:#fff;border-radius:50%;animation:glow-pulse 2s ease-in-out infinite;z-index:2"></div>
-      </div></div>
-    <!-- Discover CTA -->
-    <div style="position:fixed;bottom:108px;left:50%;transform:translateX(-50%);width:100%;max-width:320px;padding:0 24px;z-index:40">
-      <button id="btn-discover" class="btn bp" style="width:100%;padding:18px 40px;border-radius:20px;font-size:12px">
-        <span class="material-symbols-outlined" style="font-size:18px">explore</span> Discover Places</button></div>
-  </main>
+  <!-- Category pills -->
+  <div style="position:fixed;top:56px;left:0;width:100%;z-index:40"><div class="nsc" style="display:flex;gap:6px;padding:0 20px;overflow-x:auto">
+    <button onclick="pickCat(this)" data-c="" class="pill on">All</button><button onclick="pickCat(this)" data-c="restaurant" class="pill">Food</button><button onclick="pickCat(this)" data-c="cafe" class="pill">Café</button><button onclick="pickCat(this)" data-c="bar" class="pill">Bar</button><button onclick="pickCat(this)" data-c="park" class="pill">Park</button><button onclick="pickCat(this)" data-c="museum" class="pill">Museum</button>
+  </div></div>
+  <!-- Energy Orb (Discover) -->
+  <div style="position:fixed;bottom:96px;left:50%;transform:translateX(-50%);z-index:40">
+    <button id="btn-disc" style="position:relative;width:64px;height:64px;border-radius:50%;border:0;cursor:pointer;background:radial-gradient(circle at 40% 40%,var(--cyan),#5B8DEF 70%,#2D3B87);box-shadow:0 0 40px var(--glow),0 0 80px rgba(58,175,255,.15);animation:orb-breath 3s var(--ease) infinite;display:flex;align-items:center;justify-content:center">
+      <div style="position:absolute;inset:-12px;border-radius:50%;border:1px solid rgba(58,175,255,.15);animation:orb-ring 3s var(--ease) infinite"></div>
+      <span class="material-symbols-outlined" style="font-size:24px;color:#fff;font-variation-settings:'FILL' 1,'wght' 300;position:relative;z-index:2">explore</span>
+    </button>
+  </div>
+  <!-- Bottom dock -->
+  <nav class="g" style="position:fixed;bottom:16px;left:50%;transform:translateX(-50%);z-index:150;display:flex;justify-content:space-around;align-items:center;height:56px;width:200px;border-radius:20px">
+    <button onclick="stab('tab-explore')" data-t="tab-explore" class="dk on"><span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1,'wght' 300">explore</span></button>
+    <button onclick="stab('tab-hist')" data-t="tab-hist" class="dk"><span class="material-symbols-outlined">schedule</span></button>
+    <button onclick="stab('tab-prof')" data-t="tab-prof" class="dk"><span class="material-symbols-outlined">person</span></button>
+  </nav>
   <!-- Discovery Sheet -->
-  <div id="sheet"><div class="lens-solid" style="border-radius:32px 32px 0 0;padding:28px 28px 108px;max-width:480px;margin:0 auto">
-    <div style="display:flex;justify-content:center;padding-bottom:20px"><div onclick="cs()" style="width:40px;height:5px;border-radius:3px;background:var(--edge);cursor:pointer"></div></div>
-    <p id="s-tag" class="meta" style="margin-bottom:10px;color:var(--ac)">Discovery</p>
-    <h2 id="s-name" class="place" style="margin-bottom:20px">Loading...</h2>
-    <div style="display:flex;gap:16px;margin-bottom:20px">
-      <div style="display:flex;align-items:center;gap:6px"><span class="material-symbols-outlined" style="font-size:14px;color:var(--ac)">location_on</span><span id="s-addr" class="meta">...</span></div>
-      <div style="display:flex;align-items:center;gap:6px"><span class="material-symbols-outlined" style="font-size:14px;color:var(--ac)">straighten</span><span id="s-dist" class="meta" style="color:var(--ac)">...</span></div>
-    </div>
-    <p id="s-desc" class="body" style="margin-bottom:28px">...</p>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-      <button id="btn-nav" class="btn bp" style="padding:14px;border-radius:14px"><span class="material-symbols-outlined" style="font-size:16px">navigation</span> Navigate</button>
-      <button id="btn-save" class="btn bo" style="padding:14px;border-radius:14px"><span class="material-symbols-outlined" style="font-size:16px">bookmark</span> Save</button>
+  <div id="sheet"><div class="g2" style="border-radius:28px 28px 0 0;padding:24px 24px 96px;max-width:440px;margin:0 auto">
+    <div style="display:flex;justify-content:center;padding-bottom:16px"><div onclick="cs()" style="width:36px;height:4px;border-radius:2px;background:var(--edge);cursor:pointer"></div></div>
+    <p id="s-tag" class="meta" style="margin-bottom:8px;color:var(--neon)">Discovery</p>
+    <h2 id="s-name" class="place" style="margin-bottom:16px">Loading...</h2>
+    <div style="display:flex;gap:16px;margin-bottom:16px">
+      <span id="s-addr" class="meta" style="color:var(--t3)">...</span>
+      <span id="s-dist" class="meta" style="color:var(--cyan)">...</span></div>
+    <p id="s-desc" class="body" style="margin-bottom:24px">...</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <button id="btn-nav" class="btn bp" style="padding:12px;border-radius:12px"><span class="material-symbols-outlined" style="font-size:14px">navigation</span> Navigate</button>
+      <button id="btn-save" class="btn bo" style="padding:12px;border-radius:12px"><span class="material-symbols-outlined" style="font-size:14px">bookmark</span> Save</button>
     </div>
   </div></div>
 </section>
 
-<!-- ═══ HISTORY TAB ═══ -->
-<section id="tab-history" class="tab">
-  <header class="lens" style="position:sticky;top:0;z-index:50;border-radius:0 0 24px 24px;padding:0 24px;height:64px;display:flex;align-items:center;gap:14px">
-    <button onclick="om('m-settings')" style="background:0;border:0;cursor:pointer;color:var(--tx2)"><span class="material-symbols-outlined">menu</span></button>
-    <span style="font:700 1.3rem system-ui">Wander<span style="color:var(--ac)">lost</span></span></header>
-  <main style="max-width:640px;margin:0 auto;padding:48px 24px 140px">
-    <p class="meta" style="margin-bottom:12px;color:var(--ac)">Chronicle</p>
-    <h2 class="h1" style="font-size:2.8rem;margin-bottom:20px">Your<br/>History</h2>
-    <div style="width:48px;height:3px;background:linear-gradient(90deg,var(--ac),#5B8DEF);border-radius:2px;margin-bottom:20px"></div>
-    <p class="body" style="margin-bottom:48px">A curated record of every discovery.</p>
-    <div id="hist"><p class="body" style="font-style:italic;color:var(--tx3)">No discoveries yet. Start exploring.</p></div>
-    <div class="lens" style="border-radius:24px;padding:36px;text-align:center;margin-top:56px">
-      <div style="width:48px;height:48px;margin:0 auto 16px;border-radius:14px;background:linear-gradient(135deg,var(--ac),#5B8DEF);display:flex;align-items:center;justify-content:center"><span class="material-symbols-outlined" style="color:#fff;font-size:20px;font-variation-settings:'FILL' 1">all_inclusive</span></div>
-      <h3 class="h2" style="font-size:1.3rem;margin-bottom:8px">Unlock Full History</h3>
-      <p class="body" style="font-size:13px;margin-bottom:24px">Permanent record of every gem.</p>
-      <button onclick="om('m-premium')" class="btn bp" style="padding:14px 36px;border-radius:14px">Upgrade</button></div>
+<!-- ═══ HISTORY ═══ -->
+<section id="tab-hist" class="tab">
+  <header style="position:sticky;top:0;z-index:50;padding:16px 20px;display:flex;align-items:center;gap:14px;background:var(--void)">
+    <button onclick="om('md-set')" style="background:0;border:0;cursor:pointer;color:var(--t2)"><span class="material-symbols-outlined" style="font-size:20px;font-variation-settings:'wght' 200">tune</span></button>
+    <span style="font:600 .85rem system-ui;color:var(--t2);letter-spacing:.08em">WANDERLOST</span></header>
+  <main style="max-width:560px;margin:0 auto;padding:24px 20px 128px">
+    <p class="meta" style="margin-bottom:10px;color:var(--cyan)">Chronicle</p>
+    <h2 class="t1" style="font-size:2.4rem;margin-bottom:16px">Your<br/>History</h2>
+    <div style="width:40px;height:2px;background:var(--cyan);margin-bottom:14px;border-radius:1px"></div>
+    <p class="body" style="margin-bottom:40px">A record of every discovery.</p>
+    <div id="hist"><p class="body" style="font-style:italic;color:var(--t3)">No discoveries yet.</p></div>
+    <div class="g" style="border-radius:20px;padding:28px;text-align:center;margin-top:40px">
+      <p class="meta" style="margin-bottom:10px;color:var(--cyan)">Premium</p><h3 class="t2" style="font-size:1.1rem;margin-bottom:6px">Unlock Full History</h3>
+      <p class="body" style="font-size:12px;margin-bottom:20px">Permanent record of every gem.</p>
+      <button onclick="om('md-prem')" class="btn bp" style="padding:12px 28px;border-radius:12px">Upgrade</button></div>
   </main>
 </section>
 
-<!-- ═══ PROFILE TAB ═══ -->
-<section id="tab-profile" class="tab">
-  <header class="lens" style="position:sticky;top:0;z-index:50;border-radius:0 0 24px 24px;padding:0 24px;height:64px;display:flex;align-items:center;gap:14px">
-    <button onclick="om('m-settings')" style="background:0;border:0;cursor:pointer;color:var(--tx2)"><span class="material-symbols-outlined">menu</span></button>
-    <span style="font:700 1.3rem system-ui">Wander<span style="color:var(--ac)">lost</span></span></header>
-  <main style="padding:40px 24px 140px;max-width:480px;margin:0 auto">
-    <section style="display:flex;flex-direction:column;align-items:center;margin-bottom:44px">
-      <div style="position:relative"><div style="width:110px;height:110px;border-radius:50%;overflow:hidden;border:3px solid var(--ac);box-shadow:0 0 32px var(--glow)"><img alt="Avatar" style="width:100%;height:100%;object-fit:cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbCapbZpiJc0BoOIFDF4-jr2t60HAk4MD7Y1P4UjJmtjBurdVbLboys9VXiT_G3m6O_naZH3o49c3Oohe1ZE7W_BWVW1jfgKNFy7857lW6LMPBogSgm373r9DfFNKffCSkge5ujAUrmfRa-12AG8mkeY7unycNVvWC6S9yPxB8ej_0_wFuKeGlMpw0rjto_7oA2iwPHPdaMaRE3adFCVllYMTmQywG7-78J-dg2sInYud1kqjGZx3hzWq5c7IqWh1lFJIBST_JtjY"/></div></div>
-      <h2 id="dname" class="h2" style="margin-top:18px">Explorer</h2>
-      <p class="meta" style="margin-top:6px;color:var(--ac)">Nomad</p>
-    </section>
-    <section class="lens" style="border-radius:22px;padding:24px;display:flex;justify-content:space-between;align-items:center;margin-bottom:36px">
-      <div><p class="meta" style="margin-bottom:6px">Account Tier</p><p style="font:600 14px system-ui;color:var(--tx)">Free Membership</p></div>
-      <button onclick="om('m-premium')" class="btn bp" style="padding:10px 22px;font-size:10px;border-radius:12px">Upgrade</button></section>
-    <section>
-      <div style="margin-bottom:20px"><span class="meta" style="display:block;margin-bottom:8px">Full Name</span><input id="pf-n" type="text" value="Explorer"/></div>
-      <div style="margin-bottom:20px"><span class="meta" style="display:block;margin-bottom:8px">Email</span><input type="email" placeholder="Add email"/></div>
-      <div style="margin-bottom:20px"><span class="meta" style="display:block;margin-bottom:8px">Password</span><input id="pf-p" type="password" placeholder="New password"/></div>
-      <div style="margin-bottom:24px"><span class="meta" style="display:block;margin-bottom:8px">Confirm</span><input id="pf-p2" type="password" placeholder="Repeat"/></div>
-      <button id="btn-sp" class="btn bp" style="width:100%;border-radius:14px">Save Changes</button>
-    </section>
+<!-- ═══ PROFILE ═══ -->
+<section id="tab-prof" class="tab">
+  <header style="position:sticky;top:0;z-index:50;padding:16px 20px;display:flex;align-items:center;gap:14px;background:var(--void)">
+    <button onclick="om('md-set')" style="background:0;border:0;cursor:pointer;color:var(--t2)"><span class="material-symbols-outlined" style="font-size:20px;font-variation-settings:'wght' 200">tune</span></button>
+    <span style="font:600 .85rem system-ui;color:var(--t2);letter-spacing:.08em">WANDERLOST</span></header>
+  <main style="padding:32px 20px 128px;max-width:420px;margin:0 auto">
+    <section style="display:flex;flex-direction:column;align-items:center;margin-bottom:36px">
+      <div style="width:96px;height:96px;border-radius:50%;overflow:hidden;border:2px solid var(--cyan);box-shadow:0 0 30px var(--glow)"><img alt="" style="width:100%;height:100%;object-fit:cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbCapbZpiJc0BoOIFDF4-jr2t60HAk4MD7Y1P4UjJmtjBurdVbLboys9VXiT_G3m6O_naZH3o49c3Oohe1ZE7W_BWVW1jfgKNFy7857lW6LMPBogSgm373r9DfFNKffCSkge5ujAUrmfRa-12AG8mkeY7unycNVvWC6S9yPxB8ej_0_wFuKeGlMpw0rjto_7oA2iwPHPdaMaRE3adFCVllYMTmQywG7-78J-dg2sInYud1kqjGZx3hzWq5c7IqWh1lFJIBST_JtjY"/></div>
+      <h2 id="dname" class="t2" style="margin-top:14px">Explorer</h2><p class="meta" style="margin-top:4px;color:var(--cyan)">Nomad</p></section>
+    <section class="g" style="border-radius:18px;padding:20px;display:flex;justify-content:space-between;align-items:center;margin-bottom:28px"><div><p class="meta" style="margin-bottom:4px">Tier</p><p style="font:600 13px system-ui">Free</p></div><button onclick="om('md-prem')" class="btn bp" style="padding:8px 20px;font-size:9px;border-radius:10px">Upgrade</button></section>
+    <div style="margin-bottom:16px"><span class="meta" style="display:block;margin-bottom:6px">Name</span><input id="pf-n" type="text" value="Explorer"/></div>
+    <div style="margin-bottom:16px"><span class="meta" style="display:block;margin-bottom:6px">Email</span><input type="email" placeholder="Add email"/></div>
+    <div style="margin-bottom:16px"><span class="meta" style="display:block;margin-bottom:6px">Password</span><input id="pf-p" type="password" placeholder="New password"/></div>
+    <div style="margin-bottom:20px"><span class="meta" style="display:block;margin-bottom:6px">Confirm</span><input id="pf-p2" type="password" placeholder="Repeat"/></div>
+    <button id="btn-save-prof" class="btn bp" style="width:100%;border-radius:12px">Save Changes</button>
   </main>
 </section>
-
-<!-- ═══ BOTTOM DOCK ═══ -->
-<nav class="lens" style="position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:150;display:flex;justify-content:space-around;align-items:center;height:64px;width:240px;border-radius:22px">
-  <button onclick="stab('tab-explore')" data-t="tab-explore" class="dock active"><span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">explore</span></button>
-  <button onclick="stab('tab-history')" data-t="tab-history" class="dock"><span class="material-symbols-outlined">schedule</span></button>
-  <button onclick="stab('tab-profile')" data-t="tab-profile" class="dock"><span class="material-symbols-outlined">person</span></button>
-</nav>
 
 <!-- ═══ SETTINGS MODAL ═══ -->
-<div id="m-settings" class="modal">
-  <header class="lens" style="position:fixed;top:0;width:100%;z-index:50;border-radius:0 0 24px 24px;padding:0 24px;height:64px;display:flex;align-items:center;gap:14px">
-    <button onclick="cm('m-settings')" style="background:0;border:0;cursor:pointer;color:var(--tx2)"><span class="material-symbols-outlined" style="font-size:28px">arrow_back</span></button>
-    <span class="h2" style="font-size:1.3rem">Settings</span></header>
-  <main style="padding:88px 24px 128px;max-width:560px;margin:0 auto">
-    <!-- Membership -->
-    <section style="margin-bottom:40px"><h3 class="h2" style="font-size:1.2rem;padding-bottom:12px;border-bottom:1px solid var(--edge2);margin-bottom:24px">Membership</h3>
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><span class="label">Status</span><span class="label" style="color:var(--ac)">Free</span></div>
-      <button onclick="om('m-premium')" class="btn bp" style="padding:12px 24px;font-size:10px;border-radius:12px">Manage Plan</button></section>
-    <!-- Preferences -->
-    <section style="margin-bottom:40px"><h3 class="h2" style="font-size:1.2rem;padding-bottom:12px;border-bottom:1px solid var(--edge2);margin-bottom:24px">Preferences</h3>
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 0"><div><span class="label" style="display:block;color:var(--tx);margin-bottom:4px">Distance Units</span><span class="meta">Map & navigation</span></div>
-        <div class="lens" style="display:flex;border-radius:12px;overflow:hidden"><button data-u="meters" class="ub" style="padding:10px 16px;font:700 10px system-ui;letter-spacing:.12em;text-transform:uppercase;border:0;cursor:pointer;background:linear-gradient(135deg,var(--ac),#5B8DEF);color:#fff">M</button><button data-u="feet" class="ub" style="padding:10px 16px;font:700 10px system-ui;letter-spacing:.12em;text-transform:uppercase;border:0;cursor:pointer;background:0;color:var(--tx3)">FT</button></div></div>
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-top:1px solid var(--edge2)"><div><span class="label" style="display:block;color:var(--tx);margin-bottom:4px">Appearance</span><span class="meta">Midnight or Silver</span></div>
-        <div class="lens" style="display:flex;border-radius:12px;overflow:hidden"><button data-th="light" class="thb" style="padding:10px 16px;font:700 11px system-ui;border:0;cursor:pointer;background:0;color:var(--tx3)">☀</button><button data-th="dark" class="thb" style="padding:10px 16px;font:700 11px system-ui;border:0;cursor:pointer;background:linear-gradient(135deg,var(--ac),#5B8DEF);color:#fff">🌙</button></div></div></section>
-    <!-- Legal -->
-    <section style="margin-bottom:40px"><h3 class="h2" style="font-size:1.2rem;padding-bottom:12px;border-bottom:1px solid var(--edge2);margin-bottom:16px">Legal & Support</h3>
-      <div onclick="om('m-terms')" style="padding:14px 0;border-bottom:1px solid var(--edge2);cursor:pointer;display:flex;justify-content:space-between;align-items:center"><span class="body" style="color:var(--tx)">Terms & Conditions</span><span class="material-symbols-outlined" style="font-size:16px;color:var(--tx3)">chevron_right</span></div>
-      <div onclick="om('m-privacy')" style="padding:14px 0;border-bottom:1px solid var(--edge2);cursor:pointer;display:flex;justify-content:space-between;align-items:center"><span class="body" style="color:var(--tx)">Privacy Policy</span><span class="material-symbols-outlined" style="font-size:16px;color:var(--tx3)">chevron_right</span></div>
-      <div onclick="om('m-safety')" style="padding:14px 0;border-bottom:1px solid var(--edge2);cursor:pointer;display:flex;justify-content:space-between;align-items:center"><span class="body" style="color:var(--tx)">Safety</span><span class="material-symbols-outlined" style="font-size:16px;color:var(--tx3)">chevron_right</span></div></section>
-    <button onclick="location.reload()" style="background:0;border:0;cursor:pointer;color:var(--tx3);font:500 14px system-ui;display:block;margin-bottom:32px">Log out →</button>
-    <section class="lens" style="padding:24px;border-radius:18px;border-left:3px solid var(--warn)"><p class="label" style="color:var(--warn);margin-bottom:12px">Danger Zone</p>
-      <button onclick="if(confirm('Delete account? This is irreversible.')){toast('Account deletion initiated.');setTimeout(()=>location.reload(),2e3)}" style="background:0;border:0;cursor:pointer;color:var(--warn);font:700 10px system-ui;letter-spacing:.15em;text-transform:uppercase;display:block;margin-bottom:10px">Delete Account</button>
-      <button onclick="if(confirm('Clear all data?')){toast('Data cleared.');A.h=[];A.sv=[];rh()}" style="background:0;border:0;cursor:pointer;color:var(--warn);font:700 10px system-ui;letter-spacing:.15em;text-transform:uppercase;display:block">Delete Data</button></section>
+<div id="md-set" class="md">
+  <header style="position:fixed;top:0;width:100%;z-index:50;padding:16px 20px;display:flex;align-items:center;gap:14px;background:var(--void)">
+    <button onclick="cm('md-set')" style="background:0;border:0;cursor:pointer;color:var(--t2)"><span class="material-symbols-outlined" style="font-size:24px">arrow_back</span></button>
+    <span class="t2" style="font-size:1.1rem">Settings</span></header>
+  <main style="padding:72px 20px 128px;max-width:480px;margin:0 auto">
+    <section style="margin-bottom:32px"><h3 class="t2" style="font-size:1rem;padding-bottom:10px;border-bottom:1px solid var(--edge2);margin-bottom:20px">Membership</h3>
+      <div style="display:flex;justify-content:space-between;margin-bottom:12px"><span class="label">Status</span><span class="label" style="color:var(--cyan)">Free</span></div>
+      <button onclick="om('md-prem')" class="btn bp" style="padding:10px 20px;font-size:9px;border-radius:10px">Manage</button></section>
+    <section style="margin-bottom:32px"><h3 class="t2" style="font-size:1rem;padding-bottom:10px;border-bottom:1px solid var(--edge2);margin-bottom:20px">Preferences</h3>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0"><span class="label">Distance</span>
+        <div class="g" style="display:flex;border-radius:10px;overflow:hidden"><button data-u="meters" class="ub" style="padding:8px 14px;font:700 9px system-ui;letter-spacing:.12em;text-transform:uppercase;border:0;cursor:pointer;background:var(--cyan);color:#fff">M</button><button data-u="feet" class="ub" style="padding:8px 14px;font:700 9px system-ui;letter-spacing:.12em;text-transform:uppercase;border:0;cursor:pointer;background:0;color:var(--t3)">FT</button></div></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-top:1px solid var(--edge2)"><span class="label">Theme</span>
+        <div class="g" style="display:flex;border-radius:10px;overflow:hidden"><button data-th="light" class="thb" style="padding:8px 14px;font:700 10px system-ui;border:0;cursor:pointer;background:0;color:var(--t3)">☀</button><button data-th="dark" class="thb" style="padding:8px 14px;font:700 10px system-ui;border:0;cursor:pointer;background:var(--cyan);color:#fff">🌙</button></div></div></section>
+    <section style="margin-bottom:32px"><h3 class="t2" style="font-size:1rem;padding-bottom:10px;border-bottom:1px solid var(--edge2);margin-bottom:14px">Legal</h3>
+      <div onclick="om('md-terms')" style="padding:12px 0;border-bottom:1px solid var(--edge2);cursor:pointer;display:flex;justify-content:space-between"><span class="body" style="color:var(--tx)">Terms</span><span class="material-symbols-outlined" style="font-size:14px;color:var(--t3)">chevron_right</span></div>
+      <div onclick="om('md-priv')" style="padding:12px 0;border-bottom:1px solid var(--edge2);cursor:pointer;display:flex;justify-content:space-between"><span class="body" style="color:var(--tx)">Privacy</span><span class="material-symbols-outlined" style="font-size:14px;color:var(--t3)">chevron_right</span></div>
+      <div onclick="om('md-safe')" style="padding:12px 0;border-bottom:1px solid var(--edge2);cursor:pointer;display:flex;justify-content:space-between"><span class="body" style="color:var(--tx)">Safety</span><span class="material-symbols-outlined" style="font-size:14px;color:var(--t3)">chevron_right</span></div></section>
+    <button onclick="location.reload()" style="background:0;border:0;cursor:pointer;color:var(--t3);font:500 13px system-ui;display:block;margin-bottom:24px">Log out →</button>
+    <section class="g" style="padding:18px;border-radius:14px;border-left:3px solid var(--warn)"><p class="label" style="color:var(--warn);margin-bottom:8px">Danger Zone</p>
+      <button onclick="if(confirm('Delete account?')){toast('Deleting...');setTimeout(()=>location.reload(),2e3)}" style="background:0;border:0;cursor:pointer;color:var(--warn);font:700 9px system-ui;letter-spacing:.15em;text-transform:uppercase">Delete Account</button></section>
   </main>
 </div>
 
-<!-- ═══ LEGAL MODALS ═══ -->
-<div id="m-safety" class="modal"><header class="lens" style="position:sticky;top:0;z-index:50;border-radius:0 0 24px 24px;padding:0 24px;height:64px;display:flex;align-items:center;gap:14px"><button onclick="cm('m-safety')" style="background:0;border:0;cursor:pointer;color:var(--ac)"><span class="material-symbols-outlined">arrow_back</span></button><span class="label" style="color:var(--tx)">Safety & Responsibility</span></header>
-<main style="padding:40px 10%;max-width:640px;margin:0 auto;padding-bottom:128px"><h2 class="h1" style="font-size:2.2rem;margin-bottom:20px">The Curator's<br/>Liability.</h2><p class="body" style="font-size:15px;font-style:italic;margin-bottom:36px;color:var(--tx3)">Wanderlost is a discovery interface, not a travel guide.</p>
-<div style="margin-bottom:24px"><p class="label" style="color:var(--tx);margin-bottom:6px">Environmental Intelligence</p><p class="body">Assess the environment upon arrival. If it feels wrong, leave.</p></div>
-<div style="margin-bottom:24px"><p class="label" style="color:var(--tx);margin-bottom:6px">Tactical Awareness</p><p class="body">Always identify your closest exit or transit point.</p></div>
-<div style="margin-bottom:24px"><p class="label" style="color:var(--tx);margin-bottom:6px">No Agency</p><p class="body">Wanderlost does not act as an agent, guide, or insurer.</p></div>
-<div class="lens" style="padding:20px;border-radius:16px;border-left:3px solid var(--warn);margin-top:12px"><p class="body">By using Wanderlost, you acknowledge all travel is at your own risk.</p></div></main></div>
+<!-- LEGAL -->
+<div id="md-safe" class="md"><header style="position:sticky;top:0;z-index:50;padding:16px 20px;display:flex;align-items:center;gap:14px;background:var(--void)"><button onclick="cm('md-safe')" style="background:0;border:0;cursor:pointer;color:var(--cyan)"><span class="material-symbols-outlined">arrow_back</span></button><span class="label" style="color:var(--tx)">Safety</span></header>
+<main style="padding:24px 10%;max-width:560px;margin:0 auto;padding-bottom:128px"><h2 class="t1" style="font-size:2rem;margin-bottom:16px">The Curator's<br/>Liability.</h2><p class="body" style="font-style:italic;margin-bottom:28px;color:var(--t3)">Wanderlost is a discovery interface.</p><div style="margin-bottom:20px"><p class="label" style="color:var(--tx);margin-bottom:4px">Environment</p><p class="body">Assess on arrival. If wrong, leave.</p></div><div style="margin-bottom:20px"><p class="label" style="color:var(--tx);margin-bottom:4px">Awareness</p><p class="body">Always know your nearest exit.</p></div><div class="g" style="padding:16px;border-radius:12px;border-left:3px solid var(--warn)"><p class="body">All travel at your own risk.</p></div></main></div>
 
-<div id="m-privacy" class="modal"><header class="lens" style="position:sticky;top:0;z-index:50;border-radius:0 0 24px 24px;padding:0 24px;height:64px;display:flex;align-items:center;gap:14px"><button onclick="cm('m-privacy')" style="background:0;border:0;cursor:pointer;color:var(--ac)"><span class="material-symbols-outlined">arrow_back</span></button><span class="label" style="color:var(--tx)">Privacy Policy</span></header>
-<main style="padding:40px 10%;max-width:640px;margin:0 auto;padding-bottom:128px"><h2 class="h1" style="font-size:2.2rem;margin-bottom:20px">Respecting the<br/>Digital Horizon.</h2><p class="body" style="font-size:15px;font-style:italic;margin-bottom:36px;color:var(--tx3)">Your privacy is the bedrock of our exploration.</p>
-<div style="margin-bottom:24px"><p class="label" style="color:var(--tx);margin-bottom:6px">Location Data</p><p class="body">Required for navigation. Only tracked when the app is active.</p></div>
-<div style="margin-bottom:24px"><p class="label" style="color:var(--tx);margin-bottom:6px">Account Info</p><p class="body">Name and email to sync your Journal across devices.</p></div>
-<div style="margin-bottom:24px"><p class="label" style="color:var(--tx);margin-bottom:6px">Third Parties</p><p class="body">Google Maps SDK · Stripe / Apple Pay · In-house Analytics (encrypted).</p></div></main></div>
+<div id="md-priv" class="md"><header style="position:sticky;top:0;z-index:50;padding:16px 20px;display:flex;align-items:center;gap:14px;background:var(--void)"><button onclick="cm('md-priv')" style="background:0;border:0;cursor:pointer;color:var(--cyan)"><span class="material-symbols-outlined">arrow_back</span></button><span class="label" style="color:var(--tx)">Privacy</span></header>
+<main style="padding:24px 10%;max-width:560px;margin:0 auto;padding-bottom:128px"><h2 class="t1" style="font-size:2rem;margin-bottom:16px">Digital<br/>Horizon.</h2><p class="body" style="font-style:italic;margin-bottom:28px;color:var(--t3)">Your privacy is sacred.</p><div style="margin-bottom:20px"><p class="label" style="color:var(--tx);margin-bottom:4px">Location</p><p class="body">Active only when app is open.</p></div><div style="margin-bottom:20px"><p class="label" style="color:var(--tx);margin-bottom:4px">Account</p><p class="body">Name & email to sync.</p></div><div style="margin-bottom:20px"><p class="label" style="color:var(--tx);margin-bottom:4px">Third Parties</p><p class="body">Google Maps · Stripe · In-house Analytics.</p></div></main></div>
 
-<div id="m-terms" class="modal"><header class="lens" style="position:sticky;top:0;z-index:50;border-radius:0 0 24px 24px;padding:0 24px;height:64px;display:flex;align-items:center;gap:14px"><button onclick="cm('m-terms')" style="background:0;border:0;cursor:pointer;color:var(--ac)"><span class="material-symbols-outlined">arrow_back</span></button><span class="label" style="color:var(--tx)">Terms & Conditions</span></header>
-<main style="padding:40px 10%;max-width:640px;margin:0 auto;padding-bottom:128px"><h2 class="h1" style="font-size:2.2rem;margin-bottom:20px">Terms of<br/>Engagement.</h2><p class="body" style="font-size:15px;font-style:italic;margin-bottom:36px;color:var(--tx3)">By accessing Wanderlost, you agree to these Terms.</p>
-<div style="margin-bottom:24px"><p class="label" style="color:var(--tx);margin-bottom:6px">Eligibility</p><p class="body">You must be at least 18 years old to use Wanderlost.</p></div>
-<div style="margin-bottom:24px"><p class="label" style="color:var(--tx);margin-bottom:6px">Account</p><p class="body">You are responsible for all activity under your account.</p></div>
-<div style="margin-bottom:24px"><p class="label" style="color:var(--tx);margin-bottom:6px">Billing</p><p class="body">Free: 3 discoveries/session · Monthly: 20 CHF · Annual: 200 CHF.</p></div>
-<div class="lens" style="padding:20px;border-radius:16px;border-left:3px solid var(--warn);margin-top:12px"><p class="body">Recommendations are "as is." All travel at your own risk.</p></div></main></div>
+<div id="md-terms" class="md"><header style="position:sticky;top:0;z-index:50;padding:16px 20px;display:flex;align-items:center;gap:14px;background:var(--void)"><button onclick="cm('md-terms')" style="background:0;border:0;cursor:pointer;color:var(--cyan)"><span class="material-symbols-outlined">arrow_back</span></button><span class="label" style="color:var(--tx)">Terms</span></header>
+<main style="padding:24px 10%;max-width:560px;margin:0 auto;padding-bottom:128px"><h2 class="t1" style="font-size:2rem;margin-bottom:16px">Terms of<br/>Engagement.</h2><p class="body" style="font-style:italic;margin-bottom:28px;color:var(--t3)">By using Wanderlost you agree.</p><div style="margin-bottom:20px"><p class="label" style="color:var(--tx);margin-bottom:4px">Eligibility</p><p class="body">18+ only.</p></div><div style="margin-bottom:20px"><p class="label" style="color:var(--tx);margin-bottom:4px">Billing</p><p class="body">Free: 3/session · Monthly: 20 CHF · Annual: 200 CHF.</p></div><div class="g" style="padding:16px;border-radius:12px;border-left:3px solid var(--warn)"><p class="body">Recommendations "as is." Travel at your own risk.</p></div></main></div>
 
-<!-- ═══ PREMIUM MODAL ═══ -->
-<div id="m-premium" class="modal" style="background:rgba(0,0,0,.7);backdrop-filter:blur(16px)"><div style="display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px">
-<div class="lens-solid" style="position:relative;width:100%;max-width:420px;border-radius:32px;padding:44px 36px">
-  <button onclick="cm('m-premium')" style="position:absolute;top:24px;right:24px;background:0;border:0;cursor:pointer;color:var(--tx3)"><span class="material-symbols-outlined">close</span></button>
-  <div style="width:48px;height:48px;margin-bottom:20px;border-radius:14px;background:linear-gradient(135deg,var(--ac),#5B8DEF);display:flex;align-items:center;justify-content:center"><span class="material-symbols-outlined" style="color:#fff;font-size:22px;font-variation-settings:'FILL' 1">workspace_premium</span></div>
-  <h2 class="h1" style="font-size:2.2rem;margin-bottom:12px">Go<br/>Premium.</h2>
-  <p class="body" style="margin-bottom:36px;font-size:15px">Join a curated world of explorers.</p>
-  <div style="margin-bottom:36px">
-    <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px"><span class="material-symbols-outlined" style="color:var(--ac);font-size:20px;font-variation-settings:'FILL' 1">check_circle</span><span style="font:500 14px system-ui;color:var(--tx)">Unlimited Discoveries</span></div>
-    <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px"><span class="material-symbols-outlined" style="color:var(--ac);font-size:20px;font-variation-settings:'FILL' 1">check_circle</span><span style="font:500 14px system-ui;color:var(--tx)">Category Filters</span></div>
-    <div style="display:flex;align-items:center;gap:14px"><span class="material-symbols-outlined" style="color:var(--ac);font-size:20px;font-variation-settings:'FILL' 1">check_circle</span><span style="font:500 14px system-ui;color:var(--tx)">Full History & Saves</span></div>
-  </div>
-  <button onclick="om('m-checkout');cm('m-premium')" class="btn bp" style="width:100%;padding:18px;border-radius:16px">Start Your Journey — 20 CHF/mo</button>
+<!-- PREMIUM -->
+<div id="md-prem" class="md" style="background:rgba(0,0,0,.75);backdrop-filter:blur(12px)"><div style="display:flex;align-items:center;justify-content:center;min-height:100dvh;padding:16px">
+<div class="g2" style="width:100%;max-width:400px;border-radius:28px;padding:36px 28px;position:relative">
+  <button onclick="cm('md-prem')" style="position:absolute;top:16px;right:16px;background:0;border:0;cursor:pointer;color:var(--t3)"><span class="material-symbols-outlined">close</span></button>
+  <div style="width:44px;height:44px;margin-bottom:16px;border-radius:50%;background:radial-gradient(circle,var(--cyan),#5B8DEF);display:flex;align-items:center;justify-content:center;box-shadow:0 0 30px var(--glow)"><span class="material-symbols-outlined" style="color:#fff;font-size:20px;font-variation-settings:'FILL' 1">workspace_premium</span></div>
+  <h2 class="t1" style="font-size:2rem;margin-bottom:10px">Go<br/>Premium.</h2><p class="body" style="margin-bottom:28px">Unlimited exploration.</p>
+  <div style="margin-bottom:28px">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px"><span class="material-symbols-outlined" style="color:var(--neon);font-size:16px;font-variation-settings:'FILL' 1">check_circle</span><span style="font:500 13px system-ui">Unlimited Discoveries</span></div>
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px"><span class="material-symbols-outlined" style="color:var(--neon);font-size:16px;font-variation-settings:'FILL' 1">check_circle</span><span style="font:500 13px system-ui">Category Filters</span></div>
+    <div style="display:flex;align-items:center;gap:12px"><span class="material-symbols-outlined" style="color:var(--neon);font-size:16px;font-variation-settings:'FILL' 1">check_circle</span><span style="font:500 13px system-ui">Full History & Saves</span></div></div>
+  <button onclick="om('md-pay');cm('md-prem')" class="btn bp" style="width:100%;padding:16px;border-radius:14px">Start — 20 CHF/mo</button>
 </div></div></div>
 
-<!-- ═══ CHECKOUT MODAL ═══ -->
-<div id="m-checkout" class="modal">
-  <header class="lens" style="position:fixed;top:0;width:100%;z-index:50;border-radius:0 0 24px 24px;padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between">
-    <div style="display:flex;align-items:center;gap:14px"><button onclick="cm('m-checkout')" style="background:0;border:0;cursor:pointer;color:var(--tx2)"><span class="material-symbols-outlined">close</span></button><span class="label" style="color:var(--tx)">Checkout</span></div>
-    <span style="color:var(--ac);font:600 1.1rem system-ui">Wander<span style="font-weight:700">lost</span></span></header>
-  <main style="padding:88px 24px 128px;max-width:480px;margin:0 auto">
-    <div class="lens" style="display:flex;border-radius:16px;overflow:hidden;padding:4px;margin-bottom:36px">
-      <button data-pl="monthly" class="plb" style="flex:1;padding:14px;text-align:center;font:600 12px system-ui;border:0;cursor:pointer;border-radius:14px;background:linear-gradient(135deg,var(--ac),#5B8DEF);color:#fff">20 CHF / month</button>
-      <button data-pl="annual" class="plb" style="flex:1;padding:14px;text-align:center;font:600 12px system-ui;border:0;cursor:pointer;border-radius:14px;background:0;color:var(--tx3)">200 CHF / year</button></div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:36px">
-      <button class="btn bo" style="padding:16px;font:700 14px system-ui;border-radius:16px"> Pay</button>
-      <button class="btn bo" style="padding:16px;font:700 14px system-ui;border-radius:16px;font-style:italic">G Pay</button></div>
-    <div style="display:flex;align-items:center;gap:16px;margin-bottom:32px"><div style="flex:1;height:1px;background:var(--edge2)"></div><span class="meta">Or pay with card</span><div style="flex:1;height:1px;background:var(--edge2)"></div></div>
-    <form id="pf">
-      <div style="margin-bottom:20px"><span class="meta" style="display:block;margin-bottom:8px">Cardholder</span><input type="text" placeholder="Full Name" required/></div>
-      <div style="margin-bottom:20px"><span class="meta" style="display:block;margin-bottom:8px">Card Number</span><input type="text" placeholder="0000 0000 0000 0000" required/></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:32px"><div><span class="meta" style="display:block;margin-bottom:8px">Expiry</span><input type="text" placeholder="MM/YY" required/></div><div><span class="meta" style="display:block;margin-bottom:8px">CVC</span><input type="text" placeholder="123" required/></div></div>
-    </form>
-    <section class="lens" style="padding:28px;border-radius:22px;margin-bottom:28px"><div style="display:flex;justify-content:space-between;align-items:flex-end"><div><span class="meta" style="display:block;margin-bottom:6px">Total Due Today</span><h3 id="ptot" class="h2" style="font-size:2rem">20.00 CHF</h3></div><div style="text-align:right"><span class="meta" style="display:block;margin-bottom:6px">Access</span><span id="pcyc" class="label" style="color:var(--tx)">Monthly</span></div></div></section>
-    <button id="btn-pay" class="btn bp" style="width:100%;padding:18px;border-radius:16px">Confirm Payment</button>
-    <div style="text-align:center;margin-top:20px;display:flex;align-items:center;justify-content:center;gap:8px"><span class="material-symbols-outlined" style="font-size:14px;color:var(--ac)">verified_user</span><span class="meta">Encrypted & Secure</span></div>
-  </main>
-</div>
+<!-- CHECKOUT -->
+<div id="md-pay" class="md"><header style="position:fixed;top:0;width:100%;z-index:50;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;background:var(--void)"><div style="display:flex;align-items:center;gap:14px"><button onclick="cm('md-pay')" style="background:0;border:0;cursor:pointer;color:var(--t2)"><span class="material-symbols-outlined">close</span></button><span class="label" style="color:var(--tx)">Checkout</span></div><span style="color:var(--cyan);font:600 .9rem system-ui">Wanderlost</span></header>
+<main style="padding:72px 20px 128px;max-width:420px;margin:0 auto">
+  <div class="g" style="display:flex;border-radius:14px;overflow:hidden;padding:3px;margin-bottom:28px"><button data-pl="monthly" class="plb" style="flex:1;padding:12px;text-align:center;font:600 11px system-ui;border:0;cursor:pointer;border-radius:12px;background:var(--cyan);color:#fff">20 CHF/mo</button><button data-pl="annual" class="plb" style="flex:1;padding:12px;text-align:center;font:600 11px system-ui;border:0;cursor:pointer;border-radius:12px;background:0;color:var(--t3)">200 CHF/yr</button></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:28px"><button class="btn bo" style="padding:14px;font:700 13px system-ui;border-radius:14px"> Pay</button><button class="btn bo" style="padding:14px;font:700 13px system-ui;border-radius:14px;font-style:italic">G Pay</button></div>
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px"><div style="flex:1;height:1px;background:var(--edge2)"></div><span class="meta">Or card</span><div style="flex:1;height:1px;background:var(--edge2)"></div></div>
+  <form id="pf"><div style="margin-bottom:16px"><span class="meta" style="display:block;margin-bottom:6px">Name</span><input type="text" placeholder="Full Name" required/></div>
+  <div style="margin-bottom:16px"><span class="meta" style="display:block;margin-bottom:6px">Card</span><input type="text" placeholder="0000 0000 0000 0000" required/></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px"><div><span class="meta" style="display:block;margin-bottom:6px">Exp</span><input type="text" placeholder="MM/YY" required/></div><div><span class="meta" style="display:block;margin-bottom:6px">CVC</span><input type="text" placeholder="123" required/></div></div></form>
+  <section class="g" style="padding:24px;border-radius:18px;margin-bottom:24px"><div style="display:flex;justify-content:space-between;align-items:flex-end"><div><span class="meta" style="display:block;margin-bottom:4px">Total</span><h3 id="ptot" class="t2" style="font-size:1.6rem">20.00 CHF</h3></div><div style="text-align:right"><span class="meta" style="display:block;margin-bottom:4px">Cycle</span><span id="pcyc" class="label" style="color:var(--tx)">Monthly</span></div></div></section>
+  <button id="btn-pay" class="btn bp" style="width:100%;padding:16px;border-radius:14px">Confirm Payment</button>
+  <div style="text-align:center;margin-top:14px;display:flex;align-items:center;justify-content:center;gap:6px"><span class="material-symbols-outlined" style="font-size:12px;color:var(--cyan)">verified_user</span><span class="meta">Encrypted</span></div>
+</main></div>
 
 <script src="./app.js"></script>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB1RVtX565j0NYmTtFebx1nmDCrh6X0rYM&libraries=places&callback=initMap"></script>
