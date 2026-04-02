@@ -39,16 +39,25 @@ z.innerHTML=colors.map((v,i)=>`<div style="position:absolute;left:${v.x}%;top:${
 function fs(p){Q('s-name').textContent=p.name;Q('s-tag').textContent=(p.type||'Discovery').toUpperCase();Q('s-addr').textContent=p.address||'Nearby';Q('s-dist').textContent=p.distance||'';Q('s-desc').textContent=p.description||''}
 
 /* Discovery */
-async function disc(){const b=Q('btn-disc');if(!A.sub&&A.cr<=0){om('md-prem');return}const icon=b.querySelector('.material-symbols-outlined');icon.textContent='progress_activity';icon.style.animation='spin 1s linear infinite';b.style.animation='none';
-try{const pos=await new Promise((r,j)=>navigator.geolocation.getCurrentPosition(r,j,{enableHighAccuracy:true,timeout:1e4}));const{latitude:la,longitude:ln}=pos.coords;if(map){map.panTo({lat:la,lng:ln});map.setZoom(15)}
-if(!ps&&map)ps=new google.maps.places.PlacesService(map);if(!ps)throw 0;const rq={location:new google.maps.LatLng(la,ln),radius:2e3};if(A.cat)rq.type=A.cat;else rq.keyword='hidden gem local favorite';
-const res=await new Promise((r,j)=>{ps.nearbySearch(rq,(x,s)=>{if(s==='OK')r(x);else if(s==='ZERO_RESULTS')r([]);else j(s)})});if(!res.length){toast('No places found.');rb();return}
+async function disc(){console.log('Discovery clicked');const b=Q('btn-disc');if(!b){console.error('btn-disc not found');return}
+if(!A.sub&&A.cr<=0){om('md-prem');return}
+const icon=b.querySelector('.material-symbols-outlined');if(icon){icon.textContent='progress_activity';icon.style.animation='spin 1s linear infinite'}b.style.animation='none';
+if(!navigator.geolocation){toast('Geolocation not supported.');rb();return}
+try{const pos=await new Promise((r,j)=>navigator.geolocation.getCurrentPosition(r,j,{enableHighAccuracy:true,timeout:15000}));const{latitude:la,longitude:ln}=pos.coords;console.log('Location:',la,ln);
+if(map){map.panTo({lat:la,lng:ln});map.setZoom(15)}
+if(!ps){if(map)ps=new google.maps.places.PlacesService(map);else if(typeof google!=='undefined'&&google.maps){const d=document.createElement('div');ps=new google.maps.places.PlacesService(d)}}
+if(!ps){toast('Maps loading... try again.');rb();return}
+const rq={location:new google.maps.LatLng(la,ln),radius:2000};if(A.cat)rq.type=A.cat;else rq.keyword='hidden gem local favorite';
+const res=await new Promise((r,j)=>{ps.nearbySearch(rq,(x,s)=>{console.log('Places status:',s);if(s==='OK')r(x);else if(s==='ZERO_RESULTS')r([]);else j(s)})});
+if(!res.length){toast('No places found. Try another category.');rb();return}
 let c=res.filter(p=>(p.rating||0)>=4);if(!c.length)c=res;const t=c[Math.floor(Math.random()*c.length)],pL=t.geometry.location.lat(),pN=t.geometry.location.lng(),di=hv(la,ln,pL,pN);
 A.p={name:t.name||'Hidden Gem',type:t.types?.[0]||A.cat||'Discovery',address:t.vicinity||'Local favorite',distance:fd(di)+' away',distKm:di,description:t.rating?`★ ${t.rating} — Rated by locals`:'A secret local spot.',lat:pL,lng:pN,at:new Date()};
-fs(A.p);const mk=new google.maps.Marker({position:{lat:pL,lng:pN},map,icon:{path:google.maps.SymbolPath.CIRCLE,scale:8,fillColor:COL[A.p.type]||'#3AAFFF',fillOpacity:1,strokeColor:'#FFF',strokeWeight:2},animation:google.maps.Animation.DROP});mk.addListener('click',()=>{A.p&&(fs(A.p),os())});A.mk.push(mk);
-if(map)map.panTo({lat:pL,lng:pN});os();A.h.unshift(A.p);rh();if(!A.sub){A.cr--;Q('credits').textContent=A.cr+' LEFT'}
-if(navigator.vibrate)navigator.vibrate([10,50,10])}catch(e){console.error(e);toast('Enable location.')}rb()}
-function rb(){const b=Q('btn-disc');const icon=b.querySelector('.material-symbols-outlined');icon.textContent='explore';icon.style.animation='';b.style.animation='orb-breath 3s var(--ease) infinite'}
+fs(A.p);
+if(map){const mk=new google.maps.Marker({position:{lat:pL,lng:pN},map,icon:{path:google.maps.SymbolPath.CIRCLE,scale:8,fillColor:COL[A.p.type]||'#3AAFFF',fillOpacity:1,strokeColor:'#FFF',strokeWeight:2},animation:google.maps.Animation.DROP});mk.addListener('click',()=>{A.p&&(fs(A.p),os())});A.mk.push(mk);map.panTo({lat:pL,lng:pN})}
+os();A.h.unshift(A.p);rh();if(!A.sub){A.cr--;Q('credits').textContent=A.cr+' LEFT'}
+if(navigator.vibrate)navigator.vibrate([10,50,10])
+}catch(e){console.error('Discovery error:',e);if(e&&e.code===1)toast('Location denied. Allow in browser settings.');else if(e&&e.code===2)toast('Location unavailable.');else if(e&&e.code===3)toast('Location timed out. Try again.');else toast('Discovery failed. Check permissions.')}rb()}
+function rb(){const b=Q('btn-disc');if(!b)return;const icon=b.querySelector('.material-symbols-outlined');if(icon){icon.textContent='explore';icon.style.animation=''}b.style.animation='orb-breath 3s var(--ease) infinite'}
 
 /* History */
 function rh(){const l=Q('hist');if(!l||!A.h.length)return;l.innerHTML=A.h.map(p=>`<div class="g" style="border-radius:16px;padding:20px;margin-bottom:12px"><p class="meta" style="margin-bottom:6px;color:var(--neon)">${(p.type||'Discovery').toUpperCase()} · ${p.at?new Date(p.at).toLocaleDateString('en-US',{month:'short',day:'numeric'}):'Today'}</p><h3 class="place" style="font-size:1.2rem;margin-bottom:6px">${p.name}</h3><p class="body" style="font-size:12px">${p.description||''}</p></div>`).join('')} window.rh=rh;
