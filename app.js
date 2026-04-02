@@ -82,9 +82,9 @@ function thm(t){A.th=t;localStorage.setItem('wt',t);document.documentElement.cla
 /* Init */
 document.addEventListener('DOMContentLoaded',()=>{
 thm(A.th);
-const ws=document.createElement('style');ws.innerHTML='.dismissButton,.gm-err-container,.gm-style-mtc,.gm-bundled-control,.gm-svpc,.gm-control-active,.gm-fullscreen-control{display:none!important}.gm-style>div:last-child{display:none!important}.gm-style iframe+div{display:none!important}div[style*="background-color: rgb(229, 227, 223)"]{display:none!important}';document.head.appendChild(ws);
-setInterval(()=>{document.querySelectorAll('.gm-style div,.gm-style span,.gm-style a').forEach(d=>{const t=d.textContent||d.innerText||'';const s=d.getAttribute('style')||'';if(t.includes('development purposes')||t.includes('For development')||t.includes('This page')||s.includes('background-color: rgb(255, 255, 0)')||s.includes('background-color: yellow'))d.style.cssText='display:none!important'})},300);
-window.gm_authFailure=()=>{};
+const ws=document.createElement('style');ws.innerHTML='.dismissButton,.gm-err-container,.gm-style-mtc,.gm-bundled-control,.gm-svpc,.gm-control-active,.gm-fullscreen-control{display:none!important}';document.head.appendChild(ws);
+setInterval(()=>{document.querySelectorAll('.gm-style div,.gm-style span,.gm-style a').forEach(d=>{const t=d.textContent||'';if(t.includes('development purposes')||t.includes('For development')||t.includes('This page'))d.style.cssText='display:none!important';const s=d.getAttribute('style')||'';if(s.includes('background-color: rgb(255, 255, 0)')||s.includes('background-color: yellow'))d.style.cssText='display:none!important'})},500);
+window.gm_authFailure=()=>{console.warn('Maps API auth failed')};
 
 Q('btn-disc')?.addEventListener('click',disc);
 Q('btn-nav')?.addEventListener('click',()=>{if(!A.p)return;window.open(/iPhone|iPad/i.test(navigator.userAgent)?`http://maps.apple.com/?q=${encodeURIComponent(A.p.name)}&ll=${A.p.lat},${A.p.lng}`:`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(A.p.name+' '+A.p.address)}`,'_blank');cs()});

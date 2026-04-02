@@ -67,7 +67,5 @@ input[type=text],input[type=email],input[type=password]{width:100%;padding:14px 
 /* ─── Heatmap Zones ─── */
 @keyframes zone-pulse{0%,100%{opacity:.35;transform:scale(1)}50%{opacity:.5;transform:scale(1.05)}}
 
-.gm-err-container,.gm-style-cc,.gmnoprint,button[title="Toggle fullscreen view"],.gm-style-pbc,.gm-bundled-control,.gm-svpc,.gm-control-active,.gm-fullscreen-control{display:none!important}
-.gm-style>div:last-child,.gm-style-iw,.dismissButton{display:none!important}
-.gm-style iframe+div{display:none!important}
+.gm-err-container,.gm-style-cc,.gmnoprint,button[title="Toggle fullscreen view"],.gm-style-pbc,.gm-bundled-control,.gm-svpc,.gm-control-active,.gm-fullscreen-control,.dismissButton,.gm-style-iw{display:none!important}
 .material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 200}
