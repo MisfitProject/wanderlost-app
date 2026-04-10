@@ -96,30 +96,52 @@ function onMapsReady() {
 function initMap() {
   const container = document.getElementById('gmap');
   if (!container) return;
-  const center = state.userLocation || { lat: 48.8566, lng: 2.3522 };
-  if (!state.userLocation) state.userLocation = center;
+  const fallbackCenter = { lat: 48.8566, lng: 2.3522 };
+  const center = state.userLocation || fallbackCenter;
   gmap = new google.maps.Map(container, {
-    center, zoom: 15, mapId: MAP_ID,
+    center, zoom: state.userLocation ? 15 : 3, mapId: MAP_ID,
     disableDefaultUI: true, gestureHandling: 'greedy',
     styles: MAP_STYLE_LIGHT,
   });
   placesService = new google.maps.places.PlacesService(gmap);
   if (!state._geoResolved) {
     state._geoResolved = true;
-    gmap.setZoom(3);
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        p => { state.userLocation = { lat: p.coords.latitude, lng: p.coords.longitude }; flyIn(); },
-        () => flyIn()
-      );
-    } else { flyIn(); }
-  } else {
+    requestUserLocation();
+  } else if (state.userLocation) {
     gmap.panTo(state.userLocation);
     gmap.setZoom(15);
     createUserMarker();
     // Re-add discovered markers
     state.discoveredMarkers.forEach(m => { if (m.position) addPoiMarkerDirect(m.position.lat, m.position.lng); });
   }
+}
+function requestUserLocation() {
+  if (!navigator.geolocation) {
+    showToast('Geolocation is not supported by your browser.');
+    return;
+  }
+  navigator.geolocation.getCurrentPosition(
+    p => {
+      state.userLocation = { lat: p.coords.latitude, lng: p.coords.longitude };
+      flyIn();
+    },
+    err => {
+      if (err.code === err.PERMISSION_DENIED) {
+        showToast('Location access denied. Please enable location in your browser settings.');
+      } else if (err.code === err.TIMEOUT) {
+        showToast('Location request timed out. Trying again…');
+        // Retry once with lower accuracy
+        navigator.geolocation.getCurrentPosition(
+          p => { state.userLocation = { lat: p.coords.latitude, lng: p.coords.longitude }; flyIn(); },
+          () => showToast('Could not get your location. Allow location access and refresh.'),
+          { enableHighAccuracy: false, timeout: 15000, maximumAge: 300000 }
+        );
+      } else {
+        showToast('Could not get your location. Allow location access and refresh.');
+      }
+    },
+    { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
+  );
 }
 function flyIn() {
   gmap.panTo(state.userLocation);
@@ -152,7 +174,12 @@ function addPoiMarkerDirect(lat, lng) {
 // ── Discovery Engine ──
 function triggerDiscovery() {
   if (!state.isPremium && state.credits <= 0) { showPremiumGate(); return; }
-  if (!gmap || !state.userLocation) { showToast('Waiting for your location…'); return; }
+  if (!gmap) { showToast('Map is loading…'); return; }
+  if (!state.userLocation) {
+    showToast('Getting your location…');
+    requestUserLocation();
+    return;
+  }
   if (!placesService) {
     placesService = new google.maps.places.PlacesService(gmap);
   }
