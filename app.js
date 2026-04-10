@@ -287,16 +287,23 @@ function triggerDiscovery() {
       showToast('No discoveries nearby. Try a different category!');
       return;
     }
-    // Filter for quality
-    const good = results.filter(r => (r.rating || 0) >= 4.5 && (r.user_ratings_total || 0) >= 10);
-    const decent = results.filter(r => (r.rating || 0) >= 4.0);
-    const pool = good.length > 0 ? good : decent.length > 0 ? decent : results;
-    // Remove already-discovered places
+    // First, filter out places the user has already discovered
     const discoveredIds = new Set(state.history.map(h => h.id));
-    const fresh = pool.filter(p => !discoveredIds.has(p.place_id));
-    // If all discovered in this pool, try the full results minus discovered
-    const allFresh = fresh.length > 0 ? fresh : results.filter(p => !discoveredIds.has(p.place_id));
-    const candidates = allFresh.length > 0 ? allFresh : pool;
+    const fresh = results.filter(p => !discoveredIds.has(p.place_id));
+    
+    // Categorize remaining fresh places by quality tiers
+    const exceptional = fresh.filter(r => (r.rating || 0) >= 4.8 && (r.user_ratings_total || 0) >= 5);
+    const good = fresh.filter(r => (r.rating || 0) >= 4.5 && (r.user_ratings_total || 0) >= 10);
+    const decent = fresh.filter(r => (r.rating || 0) >= 4.0);
+    
+    // Pick the highest available tier of undiscovered places
+    let candidates = exceptional.length > 0 ? exceptional 
+      : good.length > 0 ? good 
+      : decent.length > 0 ? decent 
+      : fresh;
+      
+    // If we have literally seen everything in this radius, recycle the pool
+    if (candidates.length === 0) candidates = results;
     // Shuffle the entire candidate list (Fisher-Yates) for true randomness
     for (let i = candidates.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
