@@ -464,7 +464,7 @@ function renderSettings(c) {
     <!-- Support -->
     <h2 class="text-xs uppercase tracking-widest text-on-surface-variant font-bold mb-4 ml-1">Support & Legal</h2>
     <div class="bg-surface-container-lowest rounded-lg overflow-hidden mb-8 shadow-xl shadow-black/5">
-      <button onclick="window.open('mailto:support@wanderlost.app','_blank')" class="w-full flex items-center gap-3 p-5 hover:bg-surface-container-low transition-colors text-left"><span class="material-symbols-outlined text-primary">help_center</span><span class="flex-1 font-bold text-sm">Help Center & Support</span><span class="material-symbols-outlined text-outline-variant text-lg">open_in_new</span></button>
+      <button onclick="openHelpCenter()" class="w-full flex items-center gap-3 p-5 hover:bg-surface-container-low transition-colors text-left"><span class="material-symbols-outlined text-primary">help_center</span><span class="flex-1 font-bold text-sm">Help Center & Support</span><span class="material-symbols-outlined text-outline-variant text-lg">open_in_new</span></button>
       <button onclick="showLegal('terms')" class="w-full flex items-center gap-3 p-5 hover:bg-surface-container-low transition-colors text-left"><span class="material-symbols-outlined text-primary">gavel</span><span class="flex-1 font-bold text-sm">Terms & Conditions</span><span class="material-symbols-outlined text-outline-variant text-lg">chevron_right</span></button>
       <button onclick="showLegal('privacy')" class="w-full flex items-center gap-3 p-5 hover:bg-surface-container-low transition-colors text-left"><span class="material-symbols-outlined text-primary">shield_person</span><span class="flex-1 font-bold text-sm">Privacy & Policy</span><span class="material-symbols-outlined text-outline-variant text-lg">chevron_right</span></button>
       <button onclick="showLegal('safety')" class="w-full flex items-center gap-3 p-5 hover:bg-surface-container-low transition-colors text-left"><span class="material-symbols-outlined text-primary">health_and_safety</span><span class="flex-1 font-bold text-sm">Safety Measures</span><span class="material-symbols-outlined text-outline-variant text-lg">chevron_right</span></button>
@@ -511,8 +511,8 @@ function renderCheckout(c) {
       <!-- Express Checkout -->
       <label class="text-[10px] uppercase tracking-widest font-bold text-stone-500 px-1 mb-3 block">Express Checkout</label>
       <div class="grid grid-cols-2 gap-3 mb-6">
-        <button class="h-12 bg-black text-white rounded-full font-semibold text-sm active:scale-95 transition-transform"> Apple Pay</button>
-        <button class="h-12 bg-surface-container-highest border border-outline-variant/20 rounded-full font-semibold text-sm active:scale-95 transition-transform">Google Pay</button>
+        <button onclick="showToast('Apple Pay is not available in this demo.')" class="h-12 bg-black text-white rounded-full font-semibold text-sm active:scale-95 transition-transform"> Apple Pay</button>
+        <button onclick="showToast('Google Pay is not available in this demo.')" class="h-12 bg-surface-container-highest border border-outline-variant/20 rounded-full font-semibold text-sm active:scale-95 transition-transform">Google Pay</button>
       </div>
       <!-- Card Form -->
       <div class="flex items-center gap-3 mb-6"><div class="h-px flex-1 bg-surface-container-highest"></div><span class="text-[10px] uppercase tracking-widest font-bold text-stone-400">Or Pay by card</span><div class="h-px flex-1 bg-surface-container-highest"></div></div>
@@ -542,7 +542,7 @@ function completePurchase() {
   state.isPremium = true;
   state.credits = Infinity;
   updateCredits();
-  // Show success overlay instead of alert
+  // Show success overlay
   const overlay = document.getElementById('checkout-overlay');
   document.getElementById('checkout-content').innerHTML = `
     <div class="page-enter flex flex-col items-center justify-center min-h-screen text-center px-6">
@@ -551,8 +551,10 @@ function completePurchase() {
       </div>
       <h1 class="text-3xl font-extrabold tracking-tighter text-on-surface mb-3">Welcome to Premium</h1>
       <p class="text-on-surface-variant text-sm leading-relaxed mb-8 max-w-xs">You now have unlimited access to curated discoveries, saved places, and travel history.</p>
-      <button onclick="navigateTo('map')" class="py-4 px-12 rounded-full bg-primary text-on-primary font-label tracking-widest text-xs font-bold shadow-xl active:scale-95 transition-transform">START EXPLORING</button>
+      <button onclick="closeCheckoutOverlay(); navigateTo('map')" class="py-4 px-12 rounded-full bg-primary text-on-primary font-label tracking-widest text-xs font-bold shadow-xl active:scale-95 transition-transform">START EXPLORING</button>
     </div>`;
+  overlay.style.opacity = '1';
+  overlay.style.pointerEvents = 'auto';
 }
 
 function showHistory() {
@@ -834,6 +836,17 @@ function closeLegalModal() {
   modal.style.pointerEvents = 'none';
 }
 
+function closeCheckoutOverlay() {
+  const overlay = document.getElementById('checkout-overlay');
+  overlay.style.opacity = '0';
+  overlay.style.pointerEvents = 'none';
+}
+
+function openHelpCenter() {
+  window.open('mailto:support@wanderlost.app', '_blank');
+  showToast('Opening email client for support@wanderlost.app');
+}
+
 // ── Globals ──
 window.onMapsReady = onMapsReady;
 window.navigateTo = navigateTo;
@@ -858,6 +871,8 @@ window.cancelMembership = cancelMembership;
 window.deleteMyData = deleteMyData;
 window.deleteMyAccount = deleteMyAccount;
 window.removeSavedPlace = removeSavedPlace;
+window.closeCheckoutOverlay = closeCheckoutOverlay;
+window.openHelpCenter = openHelpCenter;
 
 // ── Init ──
 navigateTo('map');
