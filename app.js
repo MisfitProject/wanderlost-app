@@ -407,18 +407,18 @@ function renderAccount(c) {
       <button onclick="state.authTab='register'; navigateTo('account')" class="font-headline text-xl ${!isLogin ? 'font-light border-b-2 border-surface-tint' : 'font-extralight text-on-surface-variant'} tracking-tighter pb-1">Register</button>
     </div>
     ${isLogin ? `
-    <form onsubmit="event.preventDefault(); alert('Login simulation — connected!')" class="flex flex-col gap-5">
-      <div><label class="font-label text-[10px] tracking-widest text-on-surface-variant px-3 mb-1 block">IDENTITY</label><input class="w-full bg-surface-container-low border-none rounded-full py-4 px-6 text-on-surface placeholder:text-stone-400 focus:bg-surface-container-high transition-colors" placeholder="Username" type="text"/></div>
-      <div><label class="font-label text-[10px] tracking-widest text-on-surface-variant px-3 mb-1 block">ACCESS KEY</label><input class="w-full bg-surface-container-low border-none rounded-full py-4 px-6 text-on-surface placeholder:text-stone-400 focus:bg-surface-container-high transition-colors" placeholder="Password" type="password"/></div>
+    <form onsubmit="event.preventDefault(); handleLogin(this)" class="flex flex-col gap-5">
+      <div><label class="font-label text-[10px] tracking-widest text-on-surface-variant px-3 mb-1 block">IDENTITY</label><input id="login-user" class="w-full bg-surface-container-low border-none rounded-full py-4 px-6 text-on-surface placeholder:text-stone-400 focus:bg-surface-container-high transition-colors" placeholder="Username" type="text" required/></div>
+      <div><label class="font-label text-[10px] tracking-widest text-on-surface-variant px-3 mb-1 block">ACCESS KEY</label><input id="login-pass" class="w-full bg-surface-container-low border-none rounded-full py-4 px-6 text-on-surface placeholder:text-stone-400 focus:bg-surface-container-high transition-colors" placeholder="Password" type="password" required/></div>
       <button type="submit" class="mt-2 py-4 rounded-full bg-surface-tint text-on-primary font-label tracking-widest text-xs shadow-xl active:scale-[0.98] transition-transform">ENTER SANCTUARY</button>
-      <a href="#" class="text-center font-label text-[10px] tracking-widest text-on-surface-variant">FORGOT CREDENTIALS?</a>
+      <a href="#" onclick="event.preventDefault(); showToast('Check your email for reset instructions.')" class="text-center font-label text-[10px] tracking-widest text-on-surface-variant">FORGOT CREDENTIALS?</a>
     </form>` : `
-    <form onsubmit="event.preventDefault(); alert('Account created — welcome!')" class="flex flex-col gap-5">
-      <div><label class="font-label text-[10px] tracking-widest text-on-surface-variant px-3 mb-1 block">FULL NAME</label><input class="w-full bg-surface-container-low border-none rounded-full py-4 px-6 placeholder:text-stone-400 focus:bg-surface-container-high transition-colors" placeholder="Your name" type="text"/></div>
-      <div><label class="font-label text-[10px] tracking-widest text-on-surface-variant px-3 mb-1 block">EMAIL</label><input class="w-full bg-surface-container-low border-none rounded-full py-4 px-6 placeholder:text-stone-400 focus:bg-surface-container-high transition-colors" placeholder="Email address" type="email"/></div>
-      <div><label class="font-label text-[10px] tracking-widest text-on-surface-variant px-3 mb-1 block">DATE OF BIRTH</label><input class="w-full bg-surface-container-low border-none rounded-full py-4 px-6 placeholder:text-stone-400 focus:bg-surface-container-high transition-colors" placeholder="DD/MM/YYYY" type="text"/></div>
-      <div><label class="font-label text-[10px] tracking-widest text-on-surface-variant px-3 mb-1 block">PASSWORD</label><input class="w-full bg-surface-container-low border-none rounded-full py-4 px-6 placeholder:text-stone-400 focus:bg-surface-container-high transition-colors" placeholder="Password" type="password"/></div>
-      <div><label class="font-label text-[10px] tracking-widest text-on-surface-variant px-3 mb-1 block">CONFIRM PASSWORD</label><input class="w-full bg-surface-container-low border-none rounded-full py-4 px-6 placeholder:text-stone-400 focus:bg-surface-container-high transition-colors" placeholder="Confirm password" type="password"/></div>
+    <form onsubmit="event.preventDefault(); handleRegister(this)" class="flex flex-col gap-5">
+      <div><label class="font-label text-[10px] tracking-widest text-on-surface-variant px-3 mb-1 block">FULL NAME</label><input id="reg-name" class="w-full bg-surface-container-low border-none rounded-full py-4 px-6 placeholder:text-stone-400 focus:bg-surface-container-high transition-colors" placeholder="Your name" type="text" required/></div>
+      <div><label class="font-label text-[10px] tracking-widest text-on-surface-variant px-3 mb-1 block">EMAIL</label><input id="reg-email" class="w-full bg-surface-container-low border-none rounded-full py-4 px-6 placeholder:text-stone-400 focus:bg-surface-container-high transition-colors" placeholder="Email address" type="email" required/></div>
+      <div><label class="font-label text-[10px] tracking-widest text-on-surface-variant px-3 mb-1 block">DATE OF BIRTH</label><input id="reg-dob" class="w-full bg-surface-container-low border-none rounded-full py-4 px-6 placeholder:text-stone-400 focus:bg-surface-container-high transition-colors" placeholder="DD/MM/YYYY" type="text"/></div>
+      <div><label class="font-label text-[10px] tracking-widest text-on-surface-variant px-3 mb-1 block">PASSWORD</label><input id="reg-pass" class="w-full bg-surface-container-low border-none rounded-full py-4 px-6 placeholder:text-stone-400 focus:bg-surface-container-high transition-colors" placeholder="Password" type="password" required/></div>
+      <div><label class="font-label text-[10px] tracking-widest text-on-surface-variant px-3 mb-1 block">CONFIRM PASSWORD</label><input id="reg-pass2" class="w-full bg-surface-container-low border-none rounded-full py-4 px-6 placeholder:text-stone-400 focus:bg-surface-container-high transition-colors" placeholder="Confirm password" type="password" required/></div>
       <button type="submit" class="mt-2 py-4 rounded-full bg-surface-tint text-on-primary font-label tracking-widest text-xs shadow-xl active:scale-[0.98] transition-transform">CREATE VOYAGE</button>
     </form>`}
   </div>`;
@@ -439,8 +439,8 @@ function renderSettings(c) {
       </div>
       ${state.isPremium ? `
       <div class="pt-3 border-t border-surface-container space-y-2">
-        <button class="w-full flex justify-between items-center py-2"><span class="font-medium text-sm">Manage Membership</span><span class="material-symbols-outlined text-outline-variant text-lg">chevron_right</span></button>
-        <button class="w-full flex justify-between items-center py-2"><span class="font-medium text-sm">Cancel Membership</span><span class="material-symbols-outlined text-outline-variant text-lg">chevron_right</span></button>
+        <button onclick="showToast('Manage your subscription in your App Store settings.')" class="w-full flex justify-between items-center py-2 hover:bg-surface-container-low rounded-lg px-2 transition-colors"><span class="font-medium text-sm">Manage Membership</span><span class="material-symbols-outlined text-outline-variant text-lg">chevron_right</span></button>
+        <button onclick="showConfirm('Cancel Membership?','Your premium access will remain active until the end of your billing period.',cancelMembership)" class="w-full flex justify-between items-center py-2 hover:bg-surface-container-low rounded-lg px-2 transition-colors"><span class="font-medium text-sm text-error">Cancel Membership</span><span class="material-symbols-outlined text-outline-variant text-lg">chevron_right</span></button>
       </div>` : `<button onclick="showPremiumGate()" class="w-full py-3 rounded-full bg-surface-tint text-on-primary font-label tracking-widest text-xs mt-2 active:scale-95 transition-transform">JOIN PREMIUM</button>`}
     </div>
     <!-- Preferences -->
@@ -472,9 +472,9 @@ function renderSettings(c) {
     <!-- Account Actions -->
     <h2 class="text-xs uppercase tracking-widest text-on-surface-variant font-bold mb-4 ml-1">Account Actions</h2>
     <div class="bg-surface-container-lowest rounded-lg overflow-hidden mb-8 shadow-xl shadow-black/5">
-      <button class="w-full flex items-center gap-3 p-5 hover:bg-surface-container-low transition-colors text-left"><span class="material-symbols-outlined text-on-surface">logout</span><span class="flex-1 font-bold text-sm">Log out</span></button>
-      <button class="w-full flex items-center gap-3 p-5 hover:bg-error/5 transition-colors text-left"><span class="material-symbols-outlined text-error">delete_sweep</span><span class="flex-1 font-bold text-sm text-error">Delete My Data</span></button>
-      <button class="w-full flex items-center gap-3 p-5 hover:bg-error/5 transition-colors text-left border-t border-surface-container"><span class="material-symbols-outlined text-error">person_remove</span><span class="flex-1 font-bold text-sm text-error">Delete My Account</span></button>
+      <button onclick="logOut()" class="w-full flex items-center gap-3 p-5 hover:bg-surface-container-low transition-colors text-left"><span class="material-symbols-outlined text-on-surface">logout</span><span class="flex-1 font-bold text-sm">Log out</span></button>
+      <button onclick="showConfirm('Delete All Data?','This will permanently erase your discovery history, saved places, and itinerary. This cannot be undone.',deleteMyData)" class="w-full flex items-center gap-3 p-5 hover:bg-error/5 transition-colors text-left"><span class="material-symbols-outlined text-error">delete_sweep</span><span class="flex-1 font-bold text-sm text-error">Delete My Data</span></button>
+      <button onclick="showConfirm('Delete Account?','This will permanently remove your account and all associated data. This action is irreversible.',deleteMyAccount)" class="w-full flex items-center gap-3 p-5 hover:bg-error/5 transition-colors text-left border-t border-surface-container"><span class="material-symbols-outlined text-error">person_remove</span><span class="flex-1 font-bold text-sm text-error">Delete My Account</span></button>
     </div>
     <div class="text-center pt-4 pb-8"><p class="text-[10px] uppercase tracking-widest text-on-surface-variant/60 font-medium">Wanderlost v2.4.0</p><p class="text-[10px] uppercase tracking-widest text-on-surface-variant/30 mt-0.5">Digital Sanctuary Project</p></div>
   </div>`;
@@ -542,18 +542,185 @@ function completePurchase() {
   state.isPremium = true;
   state.credits = Infinity;
   updateCredits();
-  alert('Welcome to Premium! 🎉 You now have unlimited discoveries.');
-  navigateTo('map');
+  // Show success overlay instead of alert
+  const overlay = document.getElementById('checkout-overlay');
+  document.getElementById('checkout-content').innerHTML = `
+    <div class="page-enter flex flex-col items-center justify-center min-h-screen text-center px-6">
+      <div class="w-20 h-20 rounded-full bg-emerald-500/10 flex items-center justify-center mb-6">
+        <span class="material-symbols-outlined text-4xl text-emerald-500" style="font-variation-settings:'FILL' 1">check_circle</span>
+      </div>
+      <h1 class="text-3xl font-extrabold tracking-tighter text-on-surface mb-3">Welcome to Premium</h1>
+      <p class="text-on-surface-variant text-sm leading-relaxed mb-8 max-w-xs">You now have unlimited access to curated discoveries, saved places, and travel history.</p>
+      <button onclick="navigateTo('map')" class="py-4 px-12 rounded-full bg-primary text-on-primary font-label tracking-widest text-xs font-bold shadow-xl active:scale-95 transition-transform">START EXPLORING</button>
+    </div>`;
 }
 
 function showHistory() {
-  if (!state.isPremium && state.history.length > 3) { showPremiumGate(); return; }
-  const items = state.history.length ? state.history.map(h => `<div class="p-4 bg-surface-container-low rounded-lg mb-2"><p class="font-bold text-sm">${h.name}</p><p class="text-[10px] text-on-surface-variant uppercase tracking-wider">${h.category} · ${h.distance}</p></div>`).join('') : '<p class="text-on-surface-variant text-sm">No discoveries yet. Start exploring!</p>';
-  alert('History:\n' + state.history.map(h => `${h.name} (${h.category})`).join('\n') || 'No discoveries yet.');
+  const modal = document.getElementById('legal-modal');
+  const content = document.getElementById('legal-content');
+  const items = state.history;
+  content.innerHTML = `
+    <div class="mb-6">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center">
+          <span class="material-symbols-outlined text-primary">history</span>
+        </div>
+        <span class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant font-bold">Your Journeys</span>
+      </div>
+      <h1 class="text-3xl font-extrabold tracking-tighter text-on-surface mb-2">Discovery History</h1>
+      <p class="text-on-surface-variant text-xs">${items.length} ${items.length === 1 ? 'discovery' : 'discoveries'} made</p>
+    </div>
+    ${items.length === 0 ? `
+      <div class="flex flex-col items-center py-12 text-center">
+        <span class="material-symbols-outlined text-5xl text-on-surface-variant/30 mb-4">explore_off</span>
+        <p class="text-on-surface-variant text-sm">No discoveries yet.</p>
+        <p class="text-on-surface-variant/60 text-xs mt-1">Tap Discover on the map to find hidden gems.</p>
+      </div>
+    ` : items.map((h, i) => `
+      <div class="flex gap-4 mb-4 p-4 bg-surface-container-low rounded-xl">
+        <div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center flex-shrink-0">
+          <span class="text-sm font-extrabold text-on-surface-variant">${items.length - i}</span>
+        </div>
+        <div class="flex-1 min-w-0">
+          <h3 class="font-bold text-sm text-on-surface truncate">${h.name}</h3>
+          <p class="text-[10px] text-on-surface-variant uppercase tracking-wider mt-0.5">${h.category} · ${h.distance} away</p>
+          ${h.rating ? `<div class="flex items-center gap-1 mt-1"><span class="text-amber-500 text-xs font-bold">${h.rating.toFixed(1)} ★</span><span class="text-[10px] text-on-surface-variant">${h.reviews ? h.reviews + ' reviews' : ''}</span></div>` : ''}
+          ${h.address ? `<p class="text-xs text-on-surface-variant/60 mt-1 truncate">${h.address}</p>` : ''}
+        </div>
+        <a href="https://www.google.com/maps/place/?q=place_id:${h.id}" target="_blank" rel="noopener" class="flex-shrink-0 w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
+          <span class="material-symbols-outlined text-primary text-sm">open_in_new</span>
+        </a>
+      </div>
+    `).join('')}
+  `;
+  modal.style.opacity = '1';
+  modal.style.pointerEvents = 'auto';
+  modal.scrollTop = 0;
 }
+
 function showItinerary() {
   if (!state.isPremium) { showPremiumGate(); return; }
-  alert('Itinerary:\n' + (state.savedPlaces.map(p => p.name).join('\n') || 'No saved places yet.'));
+  const modal = document.getElementById('legal-modal');
+  const content = document.getElementById('legal-content');
+  const items = state.savedPlaces;
+  content.innerHTML = `
+    <div class="mb-6">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center">
+          <span class="material-symbols-outlined text-primary">event_note</span>
+        </div>
+        <span class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant font-bold">Your Collection</span>
+      </div>
+      <h1 class="text-3xl font-extrabold tracking-tighter text-on-surface mb-2">Saved Itinerary</h1>
+      <p class="text-on-surface-variant text-xs">${items.length} ${items.length === 1 ? 'place' : 'places'} saved</p>
+    </div>
+    ${items.length === 0 ? `
+      <div class="flex flex-col items-center py-12 text-center">
+        <span class="material-symbols-outlined text-5xl text-on-surface-variant/30 mb-4">bookmark_border</span>
+        <p class="text-on-surface-variant text-sm">No saved places yet.</p>
+        <p class="text-on-surface-variant/60 text-xs mt-1">Save discoveries to build your itinerary.</p>
+      </div>
+    ` : items.map((p, i) => `
+      <div class="flex gap-4 mb-4 p-4 bg-surface-container-low rounded-xl">
+        <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+          <span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings:'FILL' 1">favorite</span>
+        </div>
+        <div class="flex-1 min-w-0">
+          <h3 class="font-bold text-sm text-on-surface truncate">${p.name}</h3>
+          <p class="text-[10px] text-on-surface-variant uppercase tracking-wider mt-0.5">${p.category} · ${p.distance} away</p>
+          ${p.rating ? `<div class="flex items-center gap-1 mt-1"><span class="text-amber-500 text-xs font-bold">${p.rating.toFixed(1)} ★</span></div>` : ''}
+          ${p.address ? `<p class="text-xs text-on-surface-variant/60 mt-1 truncate">${p.address}</p>` : ''}
+        </div>
+        <div class="flex flex-col gap-1 flex-shrink-0">
+          <a href="https://www.google.com/maps/place/?q=place_id:${p.id}" target="_blank" rel="noopener" class="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
+            <span class="material-symbols-outlined text-primary text-sm">open_in_new</span>
+          </a>
+          <button onclick="removeSavedPlace('${p.id}')" class="w-9 h-9 rounded-full bg-error/10 flex items-center justify-center">
+            <span class="material-symbols-outlined text-error text-sm">close</span>
+          </button>
+        </div>
+      </div>
+    `).join('')}
+  `;
+  modal.style.opacity = '1';
+  modal.style.pointerEvents = 'auto';
+  modal.scrollTop = 0;
+}
+
+function removeSavedPlace(id) {
+  state.savedPlaces = state.savedPlaces.filter(p => p.id !== id);
+  showItinerary(); // re-render
+}
+
+// ── Auth Handlers ──
+function handleLogin(form) {
+  const user = document.getElementById('login-user').value.trim();
+  const pass = document.getElementById('login-pass').value;
+  if (!user || !pass) { showToast('Please fill in all fields.'); return; }
+  state.user = { name: user, email: user + '@wanderlost.app' };
+  showToast('Welcome back, ' + user + '!');
+  navigateTo('account');
+}
+function handleRegister(form) {
+  const name = document.getElementById('reg-name').value.trim();
+  const email = document.getElementById('reg-email').value.trim();
+  const pass = document.getElementById('reg-pass').value;
+  const pass2 = document.getElementById('reg-pass2').value;
+  if (!name || !email || !pass) { showToast('Please fill in all required fields.'); return; }
+  if (pass !== pass2) { showToast('Passwords do not match.'); return; }
+  state.user = { name, email };
+  showToast('Welcome aboard, ' + name + '!');
+  navigateTo('account');
+}
+function logOut() {
+  state.user = null;
+  showToast('You have been logged out.');
+  navigateTo('map');
+}
+
+// ── Confirmation Dialog ──
+function showConfirm(title, message, onConfirm) {
+  const gate = document.getElementById('premium-gate');
+  const card = document.getElementById('premium-card');
+  card.innerHTML = `
+    <div class="mb-4 p-3 rounded-full bg-error/10 inline-flex"><span class="material-symbols-outlined text-2xl text-error">warning</span></div>
+    <h2 class="font-headline text-2xl font-extrabold tracking-tighter text-on-surface mb-3">${title}</h2>
+    <p class="text-on-surface-variant text-sm leading-relaxed mb-8">${message}</p>
+    <button id="confirm-action-btn" class="w-full py-3.5 rounded-full bg-error text-white font-label text-xs tracking-widest font-bold shadow-xl active:scale-95 transition-transform mb-3">Confirm</button>
+    <button onclick="closePremiumGate()" class="text-on-surface-variant text-xs hover:text-on-surface transition-colors">Cancel</button>
+  `;
+  document.getElementById('confirm-action-btn').onclick = () => { closePremiumGate(); onConfirm(); };
+  gate.style.opacity = '1'; gate.style.pointerEvents = 'auto';
+  card.classList.remove('scale-95'); card.classList.add('scale-100');
+}
+
+function cancelMembership() {
+  state.isPremium = false;
+  state.credits = 0;
+  updateCredits();
+  showToast('Your premium membership has been cancelled.');
+  navigateTo('settings');
+}
+function deleteMyData() {
+  state.history = [];
+  state.savedPlaces = [];
+  state.discoveredMarkers = [];
+  poiMarkers.forEach(m => { m.map = null; });
+  poiMarkers = [];
+  showToast('All your data has been deleted.');
+  navigateTo('settings');
+}
+function deleteMyAccount() {
+  state.user = null;
+  state.isPremium = false;
+  state.credits = 3;
+  state.history = [];
+  state.savedPlaces = [];
+  state.discoveredMarkers = [];
+  poiMarkers.forEach(m => { m.map = null; });
+  poiMarkers = [];
+  showToast('Your account has been deleted.');
+  navigateTo('map');
 }
 
 function setTheme(t) {
@@ -683,6 +850,14 @@ window.showItinerary = showItinerary;
 window.setTheme = setTheme;
 window.showLegal = showLegal;
 window.closeLegalModal = closeLegalModal;
+window.handleLogin = handleLogin;
+window.handleRegister = handleRegister;
+window.logOut = logOut;
+window.showConfirm = showConfirm;
+window.cancelMembership = cancelMembership;
+window.deleteMyData = deleteMyData;
+window.deleteMyAccount = deleteMyAccount;
+window.removeSavedPlace = removeSavedPlace;
 
 // ── Init ──
 navigateTo('map');
