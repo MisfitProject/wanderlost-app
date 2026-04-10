@@ -237,7 +237,7 @@ function showToast(msg) {
 function showDiscoverySheet() {
   const p = state.currentPlace; if (!p) return;
   const isSaved = state.savedPlaces.some(s => s.id === p.id);
-  const mapUrl = `https://www.google.com/maps/place/?q=place_id:${p.id}`;
+  const mapUrl = `https://www.google.com/maps/search/?api=1&query=${p.lat},${p.lng}&query_place_id=${p.id}`;
   const openStatus = p.isOpen === true
     ? '<span class="text-emerald-500 font-bold">● Open Now</span>'
     : p.isOpen === false
@@ -589,7 +589,7 @@ function showHistory() {
           ${h.rating ? `<div class="flex items-center gap-1 mt-1"><span class="text-amber-500 text-xs font-bold">${h.rating.toFixed(1)} ★</span><span class="text-[10px] text-on-surface-variant">${h.reviews ? h.reviews + ' reviews' : ''}</span></div>` : ''}
           ${h.address ? `<p class="text-xs text-on-surface-variant/60 mt-1 truncate">${h.address}</p>` : ''}
         </div>
-        <a href="https://www.google.com/maps/place/?q=place_id:${h.id}" target="_blank" rel="noopener" class="flex-shrink-0 w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
+        <a href="https://www.google.com/maps/search/?api=1&query=${h.lat},${h.lng}&query_place_id=${h.id}" target="_blank" rel="noopener" class="flex-shrink-0 w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
           <span class="material-symbols-outlined text-primary text-sm">open_in_new</span>
         </a>
       </div>
@@ -634,7 +634,7 @@ function showItinerary() {
           ${p.address ? `<p class="text-xs text-on-surface-variant/60 mt-1 truncate">${p.address}</p>` : ''}
         </div>
         <div class="flex flex-col gap-1 flex-shrink-0">
-          <a href="https://www.google.com/maps/place/?q=place_id:${p.id}" target="_blank" rel="noopener" class="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
+          <a href="https://www.google.com/maps/search/?api=1&query=${p.lat},${p.lng}&query_place_id=${p.id}" target="_blank" rel="noopener" class="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
             <span class="material-symbols-outlined text-primary text-sm">open_in_new</span>
           </a>
           <button onclick="removeSavedPlace('${p.id}')" class="w-9 h-9 rounded-full bg-error/10 flex items-center justify-center">
