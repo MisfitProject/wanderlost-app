@@ -110,8 +110,31 @@ function updateCredits() {
 }
 
 // ── Map Init ──
+let _mapsReadyFlag = false;
+let _windowLoadedFlag = false;
+
+function checkAppReady() {
+  if (_mapsReadyFlag && _windowLoadedFlag) {
+    // Slight delay to ensure Tailwind JIT has fully applied styles
+    setTimeout(() => {
+      const splash = document.getElementById('splash');
+      const app = document.getElementById('app');
+      if (splash) splash.classList.add('hidden');
+      if (app) app.classList.add('ready');
+      setTimeout(() => { if (splash) splash.remove(); }, 500);
+    }, 150);
+  }
+}
+
+window.addEventListener('load', () => {
+  _windowLoadedFlag = true;
+  checkAppReady();
+});
+
 function onMapsReady() {
   if (state.page === 'map') initMap();
+  _mapsReadyFlag = true;
+  checkAppReady();
 }
 function initMap() {
   const container = document.getElementById('gmap');
