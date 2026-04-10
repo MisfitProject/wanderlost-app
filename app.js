@@ -156,6 +156,24 @@ function initMap() {
   });
 
   placesService = new google.maps.places.PlacesService(gmap);
+
+  const searchInput = document.getElementById('search-input');
+  if (searchInput) {
+    const autocomplete = new google.maps.places.Autocomplete(searchInput, { types: ['(cities)'] });
+    autocomplete.addListener('place_changed', () => {
+      const place = autocomplete.getPlace();
+      if (place.geometry && place.geometry.location) {
+        state.userLocation = { lat: place.geometry.location.lat(), lng: place.geometry.location.lng() };
+        gmap.panTo(state.userLocation);
+        gmap.setZoom(13);
+        createUserMarker();
+        // Clear old discovered markers
+        state.discoveredMarkers.forEach(m => { if (m.marker) m.marker.map = null; });
+        state.discoveredMarkers = [];
+        closeSearch();
+      }
+    });
+  }
   if (!state._geoResolved) {
     state._geoResolved = true;
     requestUserLocation();
@@ -996,7 +1014,25 @@ function openHelpCenter() {
   showToast('Opening email client for support@wanderlost.app');
 }
 
+function openSearch() {
+  const ov = document.getElementById('search-overlay');
+  if (ov) {
+    ov.style.opacity = '1';
+    ov.style.pointerEvents = 'auto';
+    setTimeout(() => document.getElementById('search-input')?.focus(), 100);
+  }
+}
+function closeSearch() {
+  const ov = document.getElementById('search-overlay');
+  if (ov) {
+    ov.style.opacity = '0';
+    ov.style.pointerEvents = 'none';
+  }
+}
+
 // ── Globals ──
+window.openSearch = openSearch;
+window.closeSearch = closeSearch;
 window.onMapsReady = onMapsReady;
 window.navigateTo = navigateTo;
 window.triggerDiscovery = triggerDiscovery;

@@ -249,6 +249,36 @@ html.dark .toggle-active {
   box-shadow: 0 1px 3px rgba(0,0,0,0.4);
 }
 
+/* --- Google Places Autocomplete --- */
+.pac-container {
+  background-color: var(--c-surface-container-lowest) !important;
+  border: none !important;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.15) !important;
+  border-radius: 0 0 1rem 1rem !important;
+  font-family: 'Manrope', system-ui, sans-serif !important;
+  padding: 8px 0 !important;
+  z-index: 150 !important;
+  margin-top: 5px !important;
+}
+html.dark .pac-container {
+  box-shadow: 0 12px 40px rgba(0,0,0,0.4) !important;
+}
+.pac-item {
+  color: var(--c-on-surface) !important;
+  border-top: none !important;
+  padding: 10px 16px !important;
+  cursor: pointer !important;
+}
+.pac-item:hover {
+  background-color: var(--c-surface-container-high) !important;
+}
+.pac-item-query {
+  color: var(--c-on-surface) !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+}
+.pac-icon { display: none !important; }
+
 /* --- Map container --- */
 #gmap { position: absolute; inset: 0; z-index: 0; }
 html.dark #gmap {

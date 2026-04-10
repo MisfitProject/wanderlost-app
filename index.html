@@ -107,40 +107,49 @@ html.dark #splash .splash-bar-fill { background: #acb3b4; }
 <!-- ═══════════ APP SHELL ═══════════ -->
 <div id="app" class="relative w-full h-[100dvh] flex flex-col">
 
-  <!-- TOP BAR -->
   <header id="topbar" class="fixed top-0 w-full z-50 flex justify-between items-center px-5 h-14 bg-white/10 backdrop-blur-[40px] border-b border-white/10 shadow-2xl shadow-black/5">
     <div class="flex items-center gap-2">
       <span class="material-symbols-outlined text-on-surface" style="font-variation-settings:'FILL' 1">explore</span>
       <h1 class="text-lg font-bold tracking-tighter text-on-surface">Wanderlost</h1>
     </div>
-    <div class="flex items-center gap-3">
-      <div id="credits-badge" onclick="if(!state.isPremium){showPremiumGate()}else{showToast('You have unlimited discoveries!')}" class="bg-white/40 backdrop-blur-md px-3.5 py-1 rounded-full border-t border-l border-white/40 shadow-sm cursor-pointer">
-        <span id="credits-text" class="font-label tracking-tight font-light uppercase text-[10px] text-neutral-600">3 Free Discoveries</span>
+    <div class="flex items-center gap-2">
+      <div id="credits-badge" onclick="if(!state.isPremium){showPremiumGate()}else{showToast('You have unlimited discoveries!')}" class="bg-white/40 backdrop-blur-md px-3 py-1 rounded-full border-t border-l border-white/40 shadow-sm cursor-pointer mr-1">
+        <span id="credits-text" class="font-label tracking-tight font-light uppercase text-[10px] text-neutral-600">3 Free</span>
       </div>
+      <button onclick="openSearch()" class="material-symbols-outlined text-neutral-500 p-1.5 rounded-full hover:bg-white/20 transition-all text-xl">search</button>
       <button onclick="navigateTo('settings')" class="material-symbols-outlined text-neutral-500 p-1.5 rounded-full hover:bg-white/20 transition-all text-xl">menu</button>
     </div>
   </header>
 
   <!-- PAGE CONTAINER -->
-  <main id="page-container" class="flex-1 pt-14 pb-20 overflow-hidden"></main>
+  <main id="page-container" class="flex-1 pt-14 pb-16 overflow-hidden"></main>
 
   <!-- BOTTOM NAV -->
-  <nav id="bottomnav" class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-6 pb-6 pt-3 bg-white/10 backdrop-blur-[40px] border-t border-white/20 shadow-2xl shadow-black/10 rounded-t-[1.5rem]">
+  <nav id="bottomnav" class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-6 pb-3 pt-2 bg-white/10 backdrop-blur-[40px] border-t border-white/20 shadow-2xl shadow-black/10 rounded-t-[1.5rem]">
     <button onclick="navigateTo('map')" data-nav="map" class="nav-btn flex flex-col items-center justify-center p-2 rounded-full transition-all">
       <span class="material-symbols-outlined text-xl">map</span>
-      <span class="font-label text-[9px] uppercase tracking-widest font-medium mt-0.5">Map</span>
+      <span class="font-label text-[8px] uppercase tracking-widest font-medium mt-0.5">Map</span>
     </button>
-    <div class="relative -top-5">
-      <button onclick="triggerDiscovery()" id="discover-fab" class="flex flex-col items-center justify-center bg-surface-tint text-on-primary rounded-full p-5 shadow-xl shadow-black/20 hover:scale-105 active:scale-95 transition-transform">
+    <div class="relative -top-4">
+      <button onclick="triggerDiscovery()" id="discover-fab" class="flex flex-col items-center justify-center bg-surface-tint text-on-primary rounded-full p-4 shadow-xl shadow-black/20 hover:scale-105 active:scale-95 transition-transform">
         <span class="material-symbols-outlined text-2xl" style="font-variation-settings:'FILL' 1">explore</span>
       </button>
-      <span class="font-label text-[9px] uppercase tracking-widest font-bold mt-1 block text-center text-on-surface">Discover</span>
+      <span class="font-label text-[8px] uppercase tracking-widest font-bold mt-1 block text-center text-on-surface">Discover</span>
     </div>
     <button onclick="navigateTo('account')" data-nav="account" class="nav-btn flex flex-col items-center justify-center p-2 rounded-full transition-all">
       <span class="material-symbols-outlined text-xl">person</span>
-      <span class="font-label text-[9px] uppercase tracking-widest font-medium mt-0.5">Account</span>
+      <span class="font-label text-[8px] uppercase tracking-widest font-medium mt-0.5">Account</span>
     </button>
   </nav>
+</div>
+
+<!-- ═══════════ SEARCH OVERLAY ═══════════ -->
+<div id="search-overlay" class="fixed inset-0 z-[100] bg-surface/90 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300 flex flex-col">
+  <div class="flex items-center gap-3 px-4 py-4 bg-surface shadow-sm">
+    <button onclick="closeSearch()" class="material-symbols-outlined p-2 -ml-2 rounded-full text-on-surface-variant hover:bg-surface-variant transition-colors">arrow_back</button>
+    <input id="search-input" type="text" placeholder="Search destination..." class="flex-1 bg-transparent border-none p-0 text-on-surface text-lg font-medium focus:ring-0 placeholder:text-on-surface-variant/50" autocomplete="off" />
+    <button onclick="document.getElementById('search-input').value=''" class="material-symbols-outlined p-2 -mr-2 rounded-full text-on-surface-variant hover:bg-surface-variant transition-colors">close</button>
+  </div>
 </div>
 
 <!-- ═══════════ OVERLAYS ═══════════ -->
