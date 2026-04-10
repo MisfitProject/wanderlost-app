@@ -415,7 +415,12 @@ function showDiscoverySheet() {
           <span class="text-[10px] text-on-surface-variant mt-0.5">${p.reviews ? p.reviews.toLocaleString() + ' reviews' : ''}</span>
         </div>
       </div>` : ''}
-      ${p.address ? `<p class="text-on-surface-variant text-sm leading-relaxed mb-5">${p.address}</p>` : ''}
+      ${p.address ? `<p class="text-on-surface-variant text-sm leading-relaxed mb-4">${p.address}</p>` : ''}
+      ${(p.phone || p.website) ? `
+      <div class="flex flex-wrap gap-2 mb-5">
+        ${p.phone ? `<a href="tel:${p.phone.replace(/[^\d+]/g,'')}" class="flex items-center gap-1.5 px-3 py-1.5 bg-surface-container-high rounded-xl text-xs font-medium text-on-surface active:scale-95 transition-all"><span class="material-symbols-outlined text-sm">call</span>${p.phone}</a>` : ''}
+        ${p.website ? `<a href="${p.website}" target="_blank" rel="noopener" class="flex items-center gap-1.5 px-3 py-1.5 bg-surface-container-high rounded-xl text-xs font-medium text-on-surface active:scale-95 transition-all"><span class="material-symbols-outlined text-sm">language</span>Website</a>` : ''}
+      </div>` : '<div class="mb-5"></div>'}
       <div class="flex gap-3">
         <a href="${mapUrl}" target="_blank" rel="noopener" class="flex-1 py-3.5 bg-primary text-on-primary font-label text-xs uppercase tracking-widest font-bold rounded-full text-center shadow-lg shadow-primary/20 active:scale-95 transition-transform">Open in Maps</a>
         <button onclick="toggleSave()" class="px-5 py-3.5 bg-surface-container-high text-on-surface font-label text-xs uppercase tracking-widest font-bold rounded-full active:scale-95 transition-transform ${isSaved ? '!bg-primary !text-on-primary' : ''}"><span class="material-symbols-outlined text-sm align-middle mr-1" style="font-variation-settings:'FILL' ${isSaved ? 1 : 0}">favorite</span>${isSaved ? 'Saved' : 'Save'}</button>
