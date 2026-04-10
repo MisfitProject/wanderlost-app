@@ -149,6 +149,8 @@ function onMapsReady() {
     _mapsReadyFlag = true;
     checkAppReady();
   }
+  renderPage();
+  updateNav();
 }
 function initMap() {
   const container = document.getElementById('gmap');
@@ -228,9 +230,20 @@ function requestUserLocation() {
 }
 function flyIn() {
   gmap.panTo(state.searchCenter);
-  let z = gmap.getZoom(), target = 15;
+  let target = 15;
+  let z = gmap.getZoom();
+  if (typeof z !== 'number' || isNaN(z)) z = 3;
+  if (z >= target) {
+    createUserMarker();
+    return;
+  }
   const iv = setInterval(() => {
-    if (z >= target) { clearInterval(iv); createUserMarker(); return; }
+    if (z >= target - 0.1) {
+      clearInterval(iv);
+      gmap.setZoom(target);
+      createUserMarker();
+      return;
+    }
     z += (target - z) * 0.12;
     gmap.setZoom(z);
   }, 25);
@@ -918,55 +931,55 @@ function renderItinerary(c) {
   const daysHtml = allDays.map(day => {
     const placesHtml = daysMap[day].map(p => {
       const catObj = CATEGORIES.find(c => c.name === p.category) || CATEGORIES[0];
-      const gMapsUrl = p.googleUrl || \`https://www.google.com/maps/search/?api=1&query=\${p.lat},\${p.lng}&query_place_id=\${p.id}\`;
-      return \`
+      const gMapsUrl = p.googleUrl || `https://www.google.com/maps/search/?api=1&query=${p.lat},${p.lng}&query_place_id=${p.id}`;
+      return `
       <div class="relative pl-6 mb-5">
         <div class="absolute left-0 top-0 bottom-0 w-px bg-outline-variant/30"></div>
         <div class="absolute left-[-4px] top-6 w-2 h-2 rounded-full bg-primary ring-4 ring-surface"></div>
         
         <div class="bg-surface-container-lowest p-4 rounded-xl shadow-lg shadow-black/5 border border-outline-variant/10 group/card">
           <div class="flex justify-between items-start mb-1">
-            <span class="inline-flex items-center gap-1 text-[9px] uppercase tracking-widest font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-sm"><span class="material-symbols-outlined text-[10px]">\${catObj.icon}</span> \${p.category}</span>
+            <span class="inline-flex items-center gap-1 text-[9px] uppercase tracking-widest font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-sm"><span class="material-symbols-outlined text-[10px]">${catObj.icon}</span> ${p.category}</span>
             <div class="flex relative group">
               <button class="material-symbols-outlined text-outline-variant hover:text-on-surface text-lg">more_vert</button>
               <div class="absolute right-0 top-full mt-1 bg-surface-container-high rounded-lg shadow-xl opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity z-10 overflow-hidden w-28">
-                \${['Day 1','Day 2','Day 3','Day 4','Unscheduled'].filter(d => d !== day).map(d => \`
-                  <button onclick="assignDay('\${p.id}', '\${d}')" class="w-full text-left px-3 py-2 text-xs hover:bg-surface-variant transition-colors">\${d}</button>
-                \`).join('')}
+                ${['Day 1','Day 2','Day 3','Day 4','Unscheduled'].filter(d => d !== day).map(d => `
+                  <button onclick="assignDay('${p.id}', '${d}')" class="w-full text-left px-3 py-2 text-xs hover:bg-surface-variant transition-colors">${d}</button>
+                `).join('')}
               </div>
             </div>
           </div>
-          <h4 class="font-headline font-extrabold text-base tracking-tight text-on-surface mb-0.5 leading-tight">\${p.name}</h4>
-          <p class="text-xs text-on-surface-variant font-medium">\${p.rating ? p.rating.toFixed(1) + ' ★ • ' : ''}\${p.isOpen === true ? 'Open' : p.isOpen === false ? 'Closed' : 'Check hours'} • \${p.distance}</p>
+          <h4 class="font-headline font-extrabold text-base tracking-tight text-on-surface mb-0.5 leading-tight">${p.name}</h4>
+          <p class="text-xs text-on-surface-variant font-medium">${p.rating ? p.rating.toFixed(1) + ' ★ • ' : ''}${p.isOpen === true ? 'Open' : p.isOpen === false ? 'Closed' : 'Check hours'} • ${p.distance}</p>
           <div class="mt-3 flex gap-2">
-            <a href="\${gMapsUrl}" target="_blank" rel="noopener" class="flex-1 py-2 bg-surface-container-high rounded-lg text-center text-[10px] font-bold tracking-widest uppercase active:scale-95 transition-transform hover:bg-surface-variant">Navigate</a>
-            <button onclick="removeSavedPlace('\${p.id}')" class="py-2 px-3 bg-error/10 text-error rounded-lg text-center text-[10px] font-bold tracking-widest uppercase active:scale-95 transition-transform hover:bg-error/20 material-symbols-outlined !text-sm">delete</button>
+            <a href="${gMapsUrl}" target="_blank" rel="noopener" class="flex-1 py-2 bg-surface-container-high rounded-lg text-center text-[10px] font-bold tracking-widest uppercase active:scale-95 transition-transform hover:bg-surface-variant">Navigate</a>
+            <button onclick="removeSavedPlace('${p.id}')" class="py-2 px-3 bg-error/10 text-error rounded-lg text-center text-[10px] font-bold tracking-widest uppercase active:scale-95 transition-transform hover:bg-error/20 material-symbols-outlined !text-sm">delete</button>
           </div>
         </div>
-      </div>\`;
+      </div>`;
     }).join('');
     
-    return \`
+    return `
       <div class="mb-8">
-        <h3 class="font-label text-xs uppercase tracking-widest font-bold text-on-surface-variant mb-4 flex items-center gap-2"><span class="material-symbols-outlined text-sm">calendar_today</span> \${day}</h3>
-        <div>\${placesHtml}</div>
+        <h3 class="font-label text-xs uppercase tracking-widest font-bold text-on-surface-variant mb-4 flex items-center gap-2"><span class="material-symbols-outlined text-sm">calendar_today</span> ${day}</h3>
+        <div>${placesHtml}</div>
       </div>
-    \`;
+    `;
   }).join('');
   
-  c.innerHTML = \`<div class="page-enter px-6 pt-6 pb-12 max-w-lg mx-auto">
+  c.innerHTML = `<div class="page-enter px-6 pt-6 pb-12 max-w-lg mx-auto">
     <button onclick="navigateTo('account')" class="mb-4 flex items-center gap-1 text-on-surface-variant text-sm"><span class="material-symbols-outlined text-lg">arrow_back</span> Back</button>
     <span class="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mb-1 block">Your Master Plan</span>
     <h1 class="text-4xl font-extrabold tracking-tighter text-on-surface mb-6">Itinerary</h1>
     
     <div class="flex overflow-x-auto hide-scrollbar gap-2 mb-8 pb-1 -mx-6 px-6">
-      \${cityPills}
+      ${cityPills}
     </div>
     
     <div class="itinerary-timeline">
-      \${daysHtml}
+      ${daysHtml}
     </div>
-  </div>\`;
+  </div>`;
 }
 
 // ── Auth Handlers ──
