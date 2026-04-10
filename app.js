@@ -152,36 +152,85 @@ function addPoiMarkerDirect(lat, lng) {
 // ── Discovery Engine ──
 function triggerDiscovery() {
   if (!state.isPremium && state.credits <= 0) { showPremiumGate(); return; }
-  if (!placesService || !state.userLocation) { navigateTo('map'); return; }
+  if (!gmap || !state.userLocation) { showToast('Waiting for your location…'); return; }
+  if (!placesService) {
+    placesService = new google.maps.places.PlacesService(gmap);
+  }
+  // Loading state on FAB
   const fab = document.getElementById('discover-fab');
-  if (fab) fab.style.pointerEvents = 'none';
-  const type = state.activeCategory || 'tourist_attraction';
-  placesService.nearbySearch(
-    { location: state.userLocation, radius: 2500, type: [type] },
-    (results, status) => {
-      if (fab) fab.style.pointerEvents = '';
-      if (status !== google.maps.places.PlacesServiceStatus.OK || !results?.length) return;
-      // Filter for high-rated places (simulating >4.8 local-loved)
-      const good = results.filter(r => (r.rating || 0) >= 4.5);
-      const pool = good.length > 0 ? good : results;
-      const pick = pool[Math.floor(Math.random() * Math.min(pool.length, 8))];
-      const lat = pick.geometry.location.lat(), lng = pick.geometry.location.lng();
-      const dist = haversine(state.userLocation.lat, state.userLocation.lng, lat, lng);
-      state.currentPlace = {
-        id: pick.place_id, name: pick.name,
-        category: CATEGORIES.find(c => c.id === type)?.name || 'Hidden Gem',
-        distance: formatDist(dist), address: pick.vicinity,
-        rating: pick.rating, isOpen: pick.opening_hours?.isOpen?.() ?? null,
-        lat, lng,
-      };
-      if (!state.isPremium) { state.credits--; updateCredits(); }
-      state.history.unshift({ ...state.currentPlace, discoveredAt: new Date().toISOString() });
-      gmap.panTo({ lat, lng }); gmap.setZoom(16.5);
-      addPoiMarker(lat, lng);
-      showDiscoverySheet();
-      if (state.page !== 'map') navigateTo('map');
+  if (fab) {
+    fab.style.pointerEvents = 'none';
+    fab.querySelector('.material-symbols-outlined').textContent = 'progress_activity';
+    fab.classList.add('animate-pulse');
+  }
+  const type = state.activeCategory || 'restaurant';
+  const request = {
+    location: new google.maps.LatLng(state.userLocation.lat, state.userLocation.lng),
+    radius: 3000,
+    type: type,
+  };
+  // Only high-rated
+  if (type === 'restaurant' || type === 'cafe' || type === 'bakery') {
+    request.minPriceLevel = 0;
+  }
+  placesService.nearbySearch(request, (results, status) => {
+    // Reset FAB
+    if (fab) {
+      fab.style.pointerEvents = '';
+      fab.querySelector('.material-symbols-outlined').textContent = 'explore';
+      fab.classList.remove('animate-pulse');
     }
-  );
+    if (status !== google.maps.places.PlacesServiceStatus.OK || !results || results.length === 0) {
+      showToast('No discoveries nearby. Try a different category!');
+      return;
+    }
+    // Filter for high-rated places (simulating >4.8 local-loved)
+    const good = results.filter(r => (r.rating || 0) >= 4.5 && (r.user_ratings_total || 0) >= 10);
+    const decent = results.filter(r => (r.rating || 0) >= 4.0);
+    const pool = good.length > 0 ? good : decent.length > 0 ? decent : results;
+    // Pick a random place from top candidates, avoid repeats
+    const discoveredIds = state.history.map(h => h.id);
+    const fresh = pool.filter(p => !discoveredIds.includes(p.place_id));
+    const candidates = fresh.length > 0 ? fresh : pool;
+    const pick = candidates[Math.floor(Math.random() * Math.min(candidates.length, 10))];
+    const lat = pick.geometry.location.lat();
+    const lng = pick.geometry.location.lng();
+    const dist = haversine(state.userLocation.lat, state.userLocation.lng, lat, lng);
+    state.currentPlace = {
+      id: pick.place_id, name: pick.name,
+      category: CATEGORIES.find(c => c.id === type)?.name || 'Hidden Gem',
+      distance: formatDist(dist), address: pick.vicinity,
+      rating: pick.rating, reviews: pick.user_ratings_total || 0,
+      isOpen: pick.opening_hours?.isOpen?.() ?? null,
+      lat, lng,
+    };
+    if (!state.isPremium) { state.credits--; updateCredits(); }
+    state.history.unshift({ ...state.currentPlace, discoveredAt: new Date().toISOString() });
+    gmap.panTo({ lat, lng });
+    gmap.setZoom(16.5);
+    addPoiMarker(lat, lng);
+    showDiscoverySheet();
+    if (state.page !== 'map') navigateTo('map');
+  });
+}
+
+// ── Toast Notification ──
+function showToast(msg) {
+  let toast = document.getElementById('app-toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'app-toast';
+    toast.style.cssText = 'position:fixed;top:80px;left:50%;transform:translateX(-50%);z-index:999;padding:12px 24px;border-radius:999px;font-size:13px;font-weight:600;letter-spacing:0.02em;pointer-events:none;opacity:0;transition:opacity 0.3s;backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);';
+    document.body.appendChild(toast);
+  }
+  const isDark = state.theme === 'dark';
+  toast.style.background = isDark ? 'rgba(51,58,60,0.92)' : 'rgba(255,255,255,0.92)';
+  toast.style.color = isDark ? '#dde4e5' : '#2d3435';
+  toast.style.boxShadow = '0 8px 32px rgba(0,0,0,0.15)';
+  toast.textContent = msg;
+  toast.style.opacity = '1';
+  clearTimeout(toast._timer);
+  toast._timer = setTimeout(() => { toast.style.opacity = '0'; }, 3000);
 }
 
 // ── Discovery Sheet ──
@@ -189,7 +238,16 @@ function showDiscoverySheet() {
   const p = state.currentPlace; if (!p) return;
   const isSaved = state.savedPlaces.some(s => s.id === p.id);
   const mapUrl = `https://www.google.com/maps/place/?q=place_id:${p.id}`;
-  const openStatus = p.isOpen === true ? '<span class="text-emerald-500 font-bold">● Open Now</span>' : p.isOpen === false ? '<span class="text-red-400 font-bold">● Closed</span>' : '<span class="text-stone-400">Hours unknown</span>';
+  const openStatus = p.isOpen === true
+    ? '<span class="text-emerald-500 font-bold">● Open Now</span>'
+    : p.isOpen === false
+    ? '<span class="text-red-400 font-bold">● Closed</span>'
+    : '<span class="text-on-surface-variant/50">Hours unknown</span>';
+  // Star rating display
+  const stars = p.rating ? Array.from({length: 5}, (_, i) => {
+    const fill = p.rating >= i + 1 ? 1 : p.rating >= i + 0.5 ? 0.5 : 0;
+    return `<span class="material-symbols-outlined text-sm" style="font-variation-settings:'FILL' ${fill >= 0.5 ? 1 : 0};color:${fill > 0 ? '#f59e0b' : 'var(--c-outline-variant)'}">star</span>`;
+  }).join('') : '';
   document.getElementById('discovery-content').innerHTML = `
     <div class="flex flex-col items-center pt-3 pb-2 px-6">
       <div class="w-12 h-1 bg-on-surface-variant/20 rounded-full mb-4"></div>
@@ -201,23 +259,29 @@ function showDiscoverySheet() {
     <div class="px-7 pb-8">
       <span class="font-label text-[10px] uppercase tracking-widest font-bold text-on-surface-variant opacity-70">${p.category}</span>
       <h2 class="text-3xl font-headline font-extrabold tracking-tighter text-on-surface mt-1 mb-3">${p.name}</h2>
-      <div class="flex items-center gap-5 mb-4">
+      <div class="flex flex-wrap items-center gap-4 mb-4">
         <div class="flex items-center gap-1.5"><span class="material-symbols-outlined text-primary text-sm">near_me</span><span class="font-label text-xs uppercase tracking-wider font-medium">${p.distance} away</span></div>
-        <div class="flex items-center gap-1.5 text-xs uppercase tracking-wider">${openStatus}</div>
+        <div class="flex items-center gap-1.5 text-xs tracking-wider">${openStatus}</div>
       </div>
-      ${p.address ? `<p class="text-on-surface-variant text-sm leading-relaxed mb-6">${p.address}</p>` : ''}
+      ${p.rating ? `
+      <div class="flex items-center gap-2.5 mb-4 p-3 bg-surface-container-low rounded-xl">
+        <span class="text-xl font-extrabold text-on-surface">${p.rating.toFixed(1)}</span>
+        <div class="flex flex-col">
+          <div class="flex items-center gap-0.5">${stars}</div>
+          <span class="text-[10px] text-on-surface-variant mt-0.5">${p.reviews ? p.reviews.toLocaleString() + ' reviews' : ''}</span>
+        </div>
+      </div>` : ''}
+      ${p.address ? `<p class="text-on-surface-variant text-sm leading-relaxed mb-5">${p.address}</p>` : ''}
       <div class="flex gap-3">
-        <a href="${mapUrl}" target="_blank" rel="noopener" class="flex-1 py-3.5 bg-primary text-on-primary font-label text-xs uppercase tracking-widest font-bold rounded-full text-center shadow-lg shadow-primary/20 active:scale-95 transition-transform">Open in Google Maps</a>
-        <button onclick="toggleSave()" class="px-5 py-3.5 bg-surface-container-high text-on-surface font-label text-xs uppercase tracking-widest font-bold rounded-full active:scale-95 transition-transform ${isSaved ? 'bg-primary text-on-primary' : ''}">${isSaved ? 'Saved ♥' : 'Save'}</button>
+        <a href="${mapUrl}" target="_blank" rel="noopener" class="flex-1 py-3.5 bg-primary text-on-primary font-label text-xs uppercase tracking-widest font-bold rounded-full text-center shadow-lg shadow-primary/20 active:scale-95 transition-transform">Open in Maps</a>
+        <button onclick="toggleSave()" class="px-5 py-3.5 bg-surface-container-high text-on-surface font-label text-xs uppercase tracking-widest font-bold rounded-full active:scale-95 transition-transform ${isSaved ? '!bg-primary !text-on-primary' : ''}"><span class="material-symbols-outlined text-sm align-middle mr-1" style="font-variation-settings:'FILL' ${isSaved ? 1 : 0}">favorite</span>${isSaved ? 'Saved' : 'Save'}</button>
       </div>
     </div>`;
   const sheet = document.getElementById('discovery-sheet');
-  sheet.classList.remove('translate-y-full');
-  sheet.classList.add('translate-y-0');
+  sheet.style.transform = 'translateY(0)';
 }
 function collapseSheet() {
-  document.getElementById('discovery-sheet').classList.add('translate-y-full');
-  document.getElementById('discovery-sheet').classList.remove('translate-y-0');
+  document.getElementById('discovery-sheet').style.transform = 'translateY(100%)';
 }
 function dismissSheet() {
   collapseSheet();
