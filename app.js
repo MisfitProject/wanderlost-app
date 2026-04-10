@@ -45,6 +45,7 @@ let state = {
   userLocation: null,
   searchCenter: null,
   _geoResolved: false,
+  itineraryCityTab: null,
   distanceUnit: 'meters',
   theme: 'light',
   selectedPlan: 'annual',
@@ -335,6 +336,8 @@ function triggerDiscovery() {
       rating: pick.rating, reviews: pick.user_ratings_total || 0,
       isOpen: basicOpen,
       lat, lng,
+      city: pick.vicinity ? pick.vicinity.split(',').pop().trim() : 'Unknown City',
+      day: 'Unscheduled'
     };
     if (!state.isPremium) { state.credits--; updateCredits(); }
     state.history.unshift({ ...state.currentPlace, discoveredAt: new Date().toISOString() });
@@ -345,9 +348,9 @@ function triggerDiscovery() {
     if (state.page !== 'map') navigateTo('map');
     // Fetch detailed info (opening hours, phone, website) in background
     const _pickId = pick.place_id;
-    try {
+  try {
       placesService.getDetails(
-        { placeId: _pickId, fields: ['opening_hours', 'current_opening_hours', 'business_status', 'formatted_phone_number', 'website', 'url'] },
+        { placeId: _pickId, fields: ['opening_hours', 'current_opening_hours', 'business_status', 'formatted_phone_number', 'website', 'url', 'address_components'] },
         (detail, detailStatus) => {
           if (!state.currentPlace || state.currentPlace.id !== _pickId) return;
           state.currentPlace._detailsFetched = true;
@@ -376,9 +379,16 @@ function triggerDiscovery() {
           if (detail.formatted_phone_number) state.currentPlace.phone = detail.formatted_phone_number;
           if (detail.website) state.currentPlace.website = detail.website;
           if (detail.url) state.currentPlace.googleUrl = detail.url;
+          if (detail.address_components) {
+            const cityComp = detail.address_components.find(c => c.types.includes('locality') || c.types.includes('postal_town'));
+            if (cityComp) state.currentPlace.city = cityComp.long_name;
+          }
           // Update history entry too
           const histEntry = state.history.find(h => h.id === _pickId);
-          if (histEntry) histEntry.isOpen = state.currentPlace.isOpen;
+          if (histEntry) {
+            histEntry.isOpen = state.currentPlace.isOpen;
+            histEntry.city = state.currentPlace.city;
+          }
           // Re-render sheet with updated info
           showDiscoverySheet();
         }
@@ -461,7 +471,7 @@ function showDiscoverySheet() {
       </div>` : '<div class="mb-5"></div>'}
       <div class="flex gap-3">
         <a href="${mapUrl}" target="_blank" rel="noopener" class="flex-1 py-3.5 bg-primary text-on-primary font-label text-xs uppercase tracking-widest font-bold rounded-full text-center shadow-lg shadow-primary/20 active:scale-95 transition-transform">Open in Maps</a>
-        <button onclick="toggleSave()" class="px-5 py-3.5 bg-surface-container-high text-on-surface font-label text-xs uppercase tracking-widest font-bold rounded-full active:scale-95 transition-transform ${isSaved ? '!bg-primary !text-on-primary' : ''}"><span class="material-symbols-outlined text-sm align-middle mr-1" style="font-variation-settings:'FILL' ${isSaved ? 1 : 0}">favorite</span>${isSaved ? 'Saved' : 'Save'}</button>
+        <button onclick="toggleSave()" class="px-5 py-3.5 bg-surface-container-high text-on-surface font-label text-xs uppercase tracking-widest font-bold rounded-full active:scale-95 transition-transform ${isSaved ? '!bg-primary !text-on-primary' : ''}"><span class="material-symbols-outlined text-sm align-middle mr-1" style="font-variation-settings:'FILL' ${isSaved ? 1 : 0}">${isSaved ? 'check' : 'add'}</span>${isSaved ? 'Itinerary' : 'Add'}</button>
       </div>
     </div>`;
   const sheet = document.getElementById('discovery-sheet');
@@ -478,8 +488,15 @@ function dismissSheet() {
 function toggleSave() {
   const p = state.currentPlace; if (!p) return;
   const idx = state.savedPlaces.findIndex(s => s.id === p.id);
-  if (idx >= 0) state.savedPlaces.splice(idx, 1);
-  else state.savedPlaces.push({ ...p });
+  if (idx >= 0) {
+    state.savedPlaces.splice(idx, 1);
+  } else {
+    state.savedPlaces.push({ 
+      ...p, 
+      city: p.city || 'Unknown City', 
+      day: p.day || 'Unscheduled' 
+    });
+  }
   showDiscoverySheet();
 }
 
@@ -525,6 +542,7 @@ function renderPage() {
       case 'account': renderAccount(c); break;
       case 'settings': renderSettings(c); break;
       case 'checkout': renderCheckout(c); break;
+      case 'itinerary': renderItinerary(c); break;
     }
   }
 }
@@ -843,6 +861,116 @@ function removeSavedPlace(id) {
   showItinerary(); // re-render
 }
 
+}
+
+// ── Itinerary Page ──
+function showItinerary() {
+  state.page = 'itinerary';
+  renderPage();
+}
+function setItineraryCity(city) {
+  state.itineraryCityTab = city;
+  renderPage();
+}
+function assignDay(placeId, day) {
+  const p = state.savedPlaces.find(x => x.id === placeId);
+  if (p) { p.day = day; renderPage(); }
+}
+function renderItinerary(c) {
+  c.className = 'flex-1 pt-14 pb-8 overflow-y-auto bg-surface';
+  if (state.savedPlaces.length === 0) {
+    c.innerHTML = `
+      <div class="px-6 pt-6 pb-12 max-w-lg mx-auto page-enter text-center">
+        <button onclick="navigateTo('account')" class="mb-8 flex items-center gap-1 text-on-surface-variant text-sm"><span class="material-symbols-outlined text-lg">arrow_back</span> Back</button>
+        <span class="material-symbols-outlined text-6xl text-outline-variant mb-4 flex justify-center w-full">event_busy</span>
+        <h2 class="text-2xl font-headline font-extrabold tracking-tighter mb-2">No Itinerary Yet</h2>
+        <p class="text-sm text-on-surface-variant mb-8 leading-relaxed">Save places while discovering cities to automatically build your itinerary.</p>
+        <button onclick="navigateTo('map')" class="py-3 px-8 rounded-full bg-surface-tint text-on-primary font-label tracking-widest text-xs shadow-xl active:scale-95 transition-transform inline-flex">GO DISCOVER</button>
+      </div>`;
+    return;
+  }
+  
+  // 1. Top Level: City Selectors
+  const cities = [...new Set(state.savedPlaces.map(p => p.city || 'Unknown City'))].sort();
+  if (!state.itineraryCityTab || !cities.includes(state.itineraryCityTab)) {
+    state.itineraryCityTab = cities[0];
+  }
+  
+  const cityPills = cities.map(city => `
+    <button onclick="setItineraryCity('${city.replace(/'/g, "\\'")}')" class="flex-shrink-0 px-5 py-2 rounded-full font-label text-[10px] tracking-widest uppercase font-bold transition-colors shadow-sm ${state.itineraryCityTab === city ? 'bg-surface-tint text-on-primary' : 'bg-surface-container-high text-on-surface hover:bg-surface-container-highest'}">${city}</button>
+  `).join('');
+  
+  // 2. Filter by selected City
+  const cityPlaces = state.savedPlaces.filter(p => (p.city || 'Unknown City') === state.itineraryCityTab);
+  
+  // 3. Group by Day
+  const daysMap = {};
+  cityPlaces.forEach(p => {
+    const d = p.day || 'Unscheduled';
+    if (!daysMap[d]) daysMap[d] = [];
+    daysMap[d].push(p);
+  });
+  
+  const allDays = Object.keys(daysMap).sort((a,b) => {
+    if (a === 'Unscheduled') return 1;
+    if (b === 'Unscheduled') return -1;
+    return a.localeCompare(b);
+  });
+  
+  const daysHtml = allDays.map(day => {
+    const placesHtml = daysMap[day].map(p => {
+      const catObj = CATEGORIES.find(c => c.name === p.category) || CATEGORIES[0];
+      const gMapsUrl = p.googleUrl || \`https://www.google.com/maps/search/?api=1&query=\${p.lat},\${p.lng}&query_place_id=\${p.id}\`;
+      return \`
+      <div class="relative pl-6 mb-5">
+        <div class="absolute left-0 top-0 bottom-0 w-px bg-outline-variant/30"></div>
+        <div class="absolute left-[-4px] top-6 w-2 h-2 rounded-full bg-primary ring-4 ring-surface"></div>
+        
+        <div class="bg-surface-container-lowest p-4 rounded-xl shadow-lg shadow-black/5 border border-outline-variant/10 group/card">
+          <div class="flex justify-between items-start mb-1">
+            <span class="inline-flex items-center gap-1 text-[9px] uppercase tracking-widest font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-sm"><span class="material-symbols-outlined text-[10px]">\${catObj.icon}</span> \${p.category}</span>
+            <div class="flex relative group">
+              <button class="material-symbols-outlined text-outline-variant hover:text-on-surface text-lg">more_vert</button>
+              <div class="absolute right-0 top-full mt-1 bg-surface-container-high rounded-lg shadow-xl opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity z-10 overflow-hidden w-28">
+                \${['Day 1','Day 2','Day 3','Day 4','Unscheduled'].filter(d => d !== day).map(d => \`
+                  <button onclick="assignDay('\${p.id}', '\${d}')" class="w-full text-left px-3 py-2 text-xs hover:bg-surface-variant transition-colors">\${d}</button>
+                \`).join('')}
+              </div>
+            </div>
+          </div>
+          <h4 class="font-headline font-extrabold text-base tracking-tight text-on-surface mb-0.5 leading-tight">\${p.name}</h4>
+          <p class="text-xs text-on-surface-variant font-medium">\${p.rating ? p.rating.toFixed(1) + ' ★ • ' : ''}\${p.isOpen === true ? 'Open' : p.isOpen === false ? 'Closed' : 'Check hours'} • \${p.distance}</p>
+          <div class="mt-3 flex gap-2">
+            <a href="\${gMapsUrl}" target="_blank" rel="noopener" class="flex-1 py-2 bg-surface-container-high rounded-lg text-center text-[10px] font-bold tracking-widest uppercase active:scale-95 transition-transform hover:bg-surface-variant">Navigate</a>
+            <button onclick="removeSavedPlace('\${p.id}')" class="py-2 px-3 bg-error/10 text-error rounded-lg text-center text-[10px] font-bold tracking-widest uppercase active:scale-95 transition-transform hover:bg-error/20 material-symbols-outlined !text-sm">delete</button>
+          </div>
+        </div>
+      </div>\`;
+    }).join('');
+    
+    return \`
+      <div class="mb-8">
+        <h3 class="font-label text-xs uppercase tracking-widest font-bold text-on-surface-variant mb-4 flex items-center gap-2"><span class="material-symbols-outlined text-sm">calendar_today</span> \${day}</h3>
+        <div>\${placesHtml}</div>
+      </div>
+    \`;
+  }).join('');
+  
+  c.innerHTML = \`<div class="page-enter px-6 pt-6 pb-12 max-w-lg mx-auto">
+    <button onclick="navigateTo('account')" class="mb-4 flex items-center gap-1 text-on-surface-variant text-sm"><span class="material-symbols-outlined text-lg">arrow_back</span> Back</button>
+    <span class="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mb-1 block">Your Master Plan</span>
+    <h1 class="text-4xl font-extrabold tracking-tighter text-on-surface mb-6">Itinerary</h1>
+    
+    <div class="flex overflow-x-auto hide-scrollbar gap-2 mb-8 pb-1 -mx-6 px-6">
+      \${cityPills}
+    </div>
+    
+    <div class="itinerary-timeline">
+      \${daysHtml}
+    </div>
+  </div>\`;
+}
+
 // ── Auth Handlers ──
 function handleLogin(form) {
   const user = document.getElementById('login-user').value.trim();
@@ -1067,6 +1195,8 @@ window.dismissSheet = dismissSheet;
 window.completePurchase = completePurchase;
 window.showHistory = showHistory;
 window.showItinerary = showItinerary;
+window.setItineraryCity = setItineraryCity;
+window.assignDay = assignDay;
 window.setTheme = setTheme;
 window.showLegal = showLegal;
 window.closeLegalModal = closeLegalModal;
