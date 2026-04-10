@@ -172,6 +172,7 @@ function addPoiMarkerDirect(lat, lng) {
 }
 
 // ── Discovery Engine ──
+let _lastDiscoveryCategory = null;
 function triggerDiscovery() {
   if (!state.isPremium && state.credits <= 0) { showPremiumGate(); return; }
   if (!gmap) { showToast('Map is loading…'); return; }
@@ -190,16 +191,21 @@ function triggerDiscovery() {
     fab.querySelector('.material-symbols-outlined').textContent = 'progress_activity';
     fab.classList.add('animate-pulse');
   }
-  const type = state.activeCategory || 'restaurant';
+  // If no category selected, rotate through random categories (avoiding last used)
+  let type = state.activeCategory;
+  if (!type) {
+    const available = CATEGORIES.filter(c => c.id !== _lastDiscoveryCategory);
+    type = available[Math.floor(Math.random() * available.length)].id;
+  }
+  _lastDiscoveryCategory = type;
+  // Vary search radius to get different results each time
+  const radiusOptions = [1500, 2000, 2500, 3000, 3500, 4000, 5000];
+  const radius = radiusOptions[Math.floor(Math.random() * radiusOptions.length)];
   const request = {
     location: new google.maps.LatLng(state.userLocation.lat, state.userLocation.lng),
-    radius: 3000,
+    radius: radius,
     type: type,
   };
-  // Only high-rated
-  if (type === 'restaurant' || type === 'cafe' || type === 'bakery') {
-    request.minPriceLevel = 0;
-  }
   placesService.nearbySearch(request, (results, status) => {
     // Reset FAB
     if (fab) {
@@ -211,21 +217,29 @@ function triggerDiscovery() {
       showToast('No discoveries nearby. Try a different category!');
       return;
     }
-    // Filter for high-rated places (simulating >4.8 local-loved)
+    // Filter for quality
     const good = results.filter(r => (r.rating || 0) >= 4.5 && (r.user_ratings_total || 0) >= 10);
     const decent = results.filter(r => (r.rating || 0) >= 4.0);
     const pool = good.length > 0 ? good : decent.length > 0 ? decent : results;
-    // Pick a random place from top candidates, avoid repeats
-    const discoveredIds = state.history.map(h => h.id);
-    const fresh = pool.filter(p => !discoveredIds.includes(p.place_id));
-    const candidates = fresh.length > 0 ? fresh : pool;
-    const pick = candidates[Math.floor(Math.random() * Math.min(candidates.length, 10))];
+    // Remove already-discovered places
+    const discoveredIds = new Set(state.history.map(h => h.id));
+    const fresh = pool.filter(p => !discoveredIds.has(p.place_id));
+    // If all discovered in this pool, try the full results minus discovered
+    const allFresh = fresh.length > 0 ? fresh : results.filter(p => !discoveredIds.has(p.place_id));
+    const candidates = allFresh.length > 0 ? allFresh : pool;
+    // Shuffle the entire candidate list (Fisher-Yates) for true randomness
+    for (let i = candidates.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [candidates[i], candidates[j]] = [candidates[j], candidates[i]];
+    }
+    const pick = candidates[0];
     const lat = pick.geometry.location.lat();
     const lng = pick.geometry.location.lng();
     const dist = haversine(state.userLocation.lat, state.userLocation.lng, lat, lng);
+    const categoryName = CATEGORIES.find(c => c.id === type)?.name || 'Hidden Gem';
     state.currentPlace = {
       id: pick.place_id, name: pick.name,
-      category: CATEGORIES.find(c => c.id === type)?.name || 'Hidden Gem',
+      category: categoryName,
       distance: formatDist(dist), address: pick.vicinity,
       rating: pick.rating, reviews: pick.user_ratings_total || 0,
       isOpen: pick.opening_hours?.isOpen?.() ?? null,
