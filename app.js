@@ -65,6 +65,26 @@ function formatDist(km) {
   }
   return km < 1 ? Math.round(km * 1000) + 'm' : km.toFixed(1) + 'km';
 }
+// Manual check if place is open from periods array (fallback when isOpen() throws)
+function checkOpenFromPeriods(periods) {
+  if (!periods || periods.length === 0) return null;
+  // If only one period with no close → open 24/7
+  if (periods.length === 1 && periods[0].open && !periods[0].close) return true;
+  const now = new Date();
+  const day = now.getDay(); // 0=Sun
+  const time = now.getHours() * 100 + now.getMinutes();
+  for (const period of periods) {
+    if (!period.open || !period.close) continue;
+    if (period.open.day === day) {
+      const openTime = (period.open.hours || 0) * 100 + (period.open.minutes || 0);
+      const closeDay = period.close.day;
+      const closeTime = (period.close.hours || 0) * 100 + (period.close.minutes || 0);
+      if (closeDay === day && time >= openTime && time < closeTime) return true;
+      if (closeDay !== day && time >= openTime) return true; // closes next day
+    }
+  }
+  return false;
+}
 
 // ── Navigation ──
 function navigateTo(page) {
@@ -254,33 +274,49 @@ function triggerDiscovery() {
     showDiscoverySheet();
     if (state.page !== 'map') navigateTo('map');
     // Fetch detailed info (opening hours, phone, website) in background
-    placesService.getDetails(
-      { placeId: pick.place_id, fields: ['opening_hours', 'formatted_phone_number', 'website', 'url'] },
-      (detail, detailStatus) => {
-        if (detailStatus === google.maps.places.PlacesServiceStatus.OK && detail && state.currentPlace?.id === pick.place_id) {
+    const _pickId = pick.place_id;
+    try {
+      placesService.getDetails(
+        { placeId: _pickId, fields: ['opening_hours', 'business_status', 'formatted_phone_number', 'website', 'url'] },
+        (detail, detailStatus) => {
+          if (!state.currentPlace || state.currentPlace.id !== _pickId) return;
+          state.currentPlace._detailsFetched = true;
+          if (detailStatus !== google.maps.places.PlacesServiceStatus.OK || !detail) {
+            console.warn('Place details fetch failed:', detailStatus);
+            showDiscoverySheet();
+            return;
+          }
           // Update open status from detailed data
           if (detail.opening_hours) {
-            state.currentPlace.isOpen = detail.opening_hours.isOpen() ? true : false;
+            try {
+              state.currentPlace.isOpen = detail.opening_hours.isOpen() ? true : false;
+            } catch (e) {
+              // isOpen() can throw if hours data is incomplete
+              if (detail.opening_hours.periods) {
+                state.currentPlace.isOpen = checkOpenFromPeriods(detail.opening_hours.periods);
+              }
+            }
           }
-          if (detail.formatted_phone_number) {
-            state.currentPlace.phone = detail.formatted_phone_number;
+          if (detail.business_status) {
+            state.currentPlace.businessStatus = detail.business_status;
+            if (detail.business_status === 'CLOSED_TEMPORARILY' || detail.business_status === 'CLOSED_PERMANENTLY') {
+              state.currentPlace.isOpen = false;
+            }
           }
-          if (detail.website) {
-            state.currentPlace.website = detail.website;
-          }
-          if (detail.url) {
-            state.currentPlace.googleUrl = detail.url;
-          }
+          if (detail.formatted_phone_number) state.currentPlace.phone = detail.formatted_phone_number;
+          if (detail.website) state.currentPlace.website = detail.website;
+          if (detail.url) state.currentPlace.googleUrl = detail.url;
           // Update history entry too
-          const histEntry = state.history.find(h => h.id === pick.place_id);
-          if (histEntry) {
-            histEntry.isOpen = state.currentPlace.isOpen;
-          }
+          const histEntry = state.history.find(h => h.id === _pickId);
+          if (histEntry) histEntry.isOpen = state.currentPlace.isOpen;
           // Re-render sheet with updated info
           showDiscoverySheet();
         }
-      }
-    );
+      );
+    } catch (e) {
+      console.warn('getDetails call error:', e);
+      if (state.currentPlace) state.currentPlace._detailsFetched = true;
+    }
   });
 }
 
@@ -308,11 +344,17 @@ function showDiscoverySheet() {
   const p = state.currentPlace; if (!p) return;
   const isSaved = state.savedPlaces.some(s => s.id === p.id);
   const mapUrl = `https://www.google.com/maps/search/?api=1&query=${p.lat},${p.lng}&query_place_id=${p.id}`;
-  const openStatus = p.isOpen === true
-    ? '<span style="color:#10b981;font-weight:700;font-size:12px;display:inline-flex;align-items:center;gap:4px;background:rgba(16,185,129,0.1);padding:4px 10px;border-radius:999px"><span style="font-size:8px">●</span> Open Now</span>'
-    : p.isOpen === false
-    ? '<span style="color:#ef4444;font-weight:700;font-size:12px;display:inline-flex;align-items:center;gap:4px;background:rgba(239,68,68,0.1);padding:4px 10px;border-radius:999px"><span style="font-size:8px">●</span> Closed</span>'
-    : '<span style="color:var(--c-on-surface-variant);opacity:0.5;font-size:11px">Hours unknown</span>';
+  let openStatus;
+  if (p.isOpen === true) {
+    openStatus = '<span style="color:#10b981;font-weight:700;font-size:12px;display:inline-flex;align-items:center;gap:4px;background:rgba(16,185,129,0.1);padding:4px 10px;border-radius:999px"><span style="font-size:8px">●</span> Open Now</span>';
+  } else if (p.isOpen === false) {
+    const closedLabel = p.businessStatus === 'CLOSED_PERMANENTLY' ? 'Permanently Closed' : p.businessStatus === 'CLOSED_TEMPORARILY' ? 'Temporarily Closed' : 'Closed';
+    openStatus = `<span style="color:#ef4444;font-weight:700;font-size:12px;display:inline-flex;align-items:center;gap:4px;background:rgba(239,68,68,0.1);padding:4px 10px;border-radius:999px"><span style="font-size:8px">●</span> ${closedLabel}</span>`;
+  } else if (p._detailsFetched) {
+    openStatus = `<a href="${mapUrl}" target="_blank" rel="noopener" style="color:var(--c-primary);font-weight:600;font-size:11px;text-decoration:none;display:inline-flex;align-items:center;gap:3px">Check hours <span class="material-symbols-outlined" style="font-size:14px">open_in_new</span></a>`;
+  } else {
+    openStatus = '<span style="color:var(--c-on-surface-variant);opacity:0.5;font-size:11px;display:inline-flex;align-items:center;gap:4px"><span class="material-symbols-outlined" style="font-size:14px;animation:spin 1s linear infinite">progress_activity</span> Checking hours…</span>';
+  }
   // Star rating display
   const stars = p.rating ? Array.from({length: 5}, (_, i) => {
     const fill = p.rating >= i + 1 ? 1 : p.rating >= i + 0.5 ? 0.5 : 0;
