@@ -861,8 +861,6 @@ function removeSavedPlace(id) {
   showItinerary(); // re-render
 }
 
-}
-
 // ── Itinerary Page ──
 function showItinerary() {
   state.page = 'itinerary';
