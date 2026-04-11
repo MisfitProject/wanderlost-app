@@ -2,13 +2,13 @@
 <html class="light" lang="en">
 <head>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
 <title>Wanderlost — The Digital Sanctuary</title>
 <meta name="description" content="Discover hidden gems loved by locals. Premium travel discovery app."/>
 
 <!-- PWA / Installable App -->
 <link rel="manifest" href="manifest.json"/>
-<meta name="theme-color" content="#1a1a2e"/>
+<meta name="theme-color" content="transparent"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
@@ -99,7 +99,7 @@ tailwind.config = {
   <main id="page-container" class="flex-1 pt-14 pb-16 overflow-y-auto relative z-10 w-full"></main>
 
   <!-- BOTTOM NAV -->
-  <nav id="bottomnav" class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-6 pb-3 pt-2 bg-white/10 backdrop-blur-[40px] border-t border-white/20 shadow-2xl shadow-black/10 rounded-t-[1.5rem]">
+  <nav id="bottomnav" class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-6 pt-2" style="padding-bottom: calc(env(safe-area-inset-bottom) + 12px); background: linear-gradient(to top, var(--c-surface) 0%, rgba(249,249,249,0.85) 50%, transparent 100%);">
     <button onclick="navigateTo('map')" data-nav="map" class="nav-btn flex flex-col items-center justify-center p-2 rounded-full transition-all text-primary">
       <span class="material-symbols-outlined text-xl" style="font-variation-settings:'FILL' 1">map</span>
       <span class="font-label text-[8px] uppercase tracking-widest font-medium mt-0.5">Map</span>

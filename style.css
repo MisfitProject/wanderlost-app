@@ -207,8 +207,8 @@ html.dark #credits-badge {
 
 /* --- BottomNav --- */
 html.dark #bottomnav {
-  background: rgba(12,15,15,0.8);
-  border-color: rgba(255,255,255,0.04);
+  background: linear-gradient(to top, #0c0f0f 0%, rgba(12,15,15,0.85) 50%, transparent 100%) !important;
+  border: none;
 }
 html.dark #discover-fab { background: var(--c-surface-tint); color: var(--c-on-primary); }
 
