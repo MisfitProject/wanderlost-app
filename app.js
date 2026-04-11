@@ -430,8 +430,11 @@ function showDiscoverySheet() {
     return `<span class="material-symbols-outlined text-sm" style="font-variation-settings:'FILL' ${fill >= 0.5 ? 1 : 0};color:${fill > 0 ? '#f59e0b' : 'var(--c-outline-variant)'}">star</span>`;
   }).join('') : '';
   document.getElementById('discovery-content').innerHTML = `
-    <div class="flex justify-end items-center pt-4 pb-1 px-5">
-      <button onclick="dismissSheet()" class="text-on-surface-variant hover:text-on-surface transition-colors"><span class="material-symbols-outlined text-xl">close</span></button>
+    <div class="flex flex-col items-center pt-3 px-5 pb-1">
+      <button onclick="dismissSheet()" class="w-14 h-1.5 bg-on-surface-variant/25 hover:bg-on-surface-variant/50 rounded-full mb-3 transition-colors" aria-label="Close"></button>
+      <div class="w-full flex justify-end">
+        <button onclick="dismissSheet()" class="text-on-surface-variant hover:text-on-surface transition-colors -mt-1"><span class="material-symbols-outlined text-xl">close</span></button>
+      </div>
     </div>
     <div class="px-7 pb-8">
       <span class="font-label text-[10px] uppercase tracking-widest font-bold text-on-surface-variant opacity-70">${p.category}</span>
@@ -465,7 +468,7 @@ function showDiscoverySheet() {
 }
 function collapseSheet() {
   const sheet = document.getElementById('discovery-sheet');
-  sheet.style.transform = 'translateY(-120%)';
+  sheet.style.transform = 'translateY(100%)';
   sheet.style.opacity = '0';
 }
 function dismissSheet() {
