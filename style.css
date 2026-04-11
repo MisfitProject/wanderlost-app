@@ -2,11 +2,11 @@
 
 /* ── COLOR TOKENS (Light) ── */
 :root {
-  --c-primary: #5f5e5e;
-  --c-primary-dim: #535252;
-  --c-on-primary: #faf7f6;
-  --c-primary-container: #e5e2e1;
-  --c-on-primary-container: #525151;
+  --c-primary: #2CD7D7;
+  --c-primary-dim: #22b8b8;
+  --c-on-primary: #0d3333;
+  --c-primary-container: #d0f6f6;
+  --c-on-primary-container: #0d3333;
   --c-surface: #f9f9f9;
   --c-surface-bright: #f9f9f9;
   --c-surface-dim: #d3dbdd;
@@ -15,7 +15,7 @@
   --c-surface-container: #ebeeef;
   --c-surface-container-high: #e4e9ea;
   --c-surface-container-highest: #dde4e5;
-  --c-surface-tint: #5f5e5e;
+  --c-surface-tint: #2CD7D7;
   --c-on-surface: #2d3435;
   --c-on-surface-variant: #596061;
   --c-on-background: #2d3435;
@@ -124,25 +124,25 @@ body { background: var(--c-surface); color: var(--c-on-surface); }
 }
 .sonar-glow {
   position: absolute; width: 60px; height: 60px; border-radius: 50%;
-  background: radial-gradient(circle, rgba(95,94,94,0.5) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(44,215,215,0.45) 0%, transparent 70%);
   animation: sonarBreathe 3s ease-in-out infinite;
 }
 .sonar-ping {
   position: absolute; width: 60px; height: 60px; border-radius: 50%;
-  border: 2px solid rgba(95,94,94,0.5);
+  border: 2px solid rgba(44,215,215,0.5);
   animation: sonarPing 2s cubic-bezier(0, 0, 0.2, 1) infinite;
 }
 .sonar-core {
   width: 14px; height: 14px; border-radius: 50%;
   background: var(--c-primary); border: 3px solid var(--c-surface-container-lowest);
-  box-shadow: 0 0 12px rgba(95,94,94,0.6);
+  box-shadow: 0 0 12px rgba(44,215,215,0.7);
   position: relative; z-index: 2;
 }
 html.dark .sonar-glow {
-  background: radial-gradient(circle, rgba(221,228,229,0.5) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(44,215,215,0.4) 0%, transparent 70%);
 }
-html.dark .sonar-ping { border-color: rgba(221,228,229,0.5); }
-html.dark .sonar-core { box-shadow: 0 0 16px rgba(221,228,229,0.6); }
+html.dark .sonar-ping { border-color: rgba(44,215,215,0.45); }
+html.dark .sonar-core { box-shadow: 0 0 16px rgba(44,215,215,0.7); }
 
 /* --- POI Marker (game vibe) --- */
 @keyframes poiPulse {
@@ -157,10 +157,10 @@ html.dark .sonar-core { box-shadow: 0 0 16px rgba(221,228,229,0.6); }
 }
 .poi-pulse {
   position: absolute; width: 40px; height: 40px; border-radius: 50%;
-  background: rgba(95,94,94,0.25);
+  background: rgba(44,215,215,0.25);
   animation: poiPulse 2s ease-in-out infinite;
 }
-html.dark .poi-pulse { background: rgba(221,228,229,0.2); }
+html.dark .poi-pulse { background: rgba(44,215,215,0.2); }
 
 /* --- Animations --- */
 @keyframes slideUp {
@@ -230,13 +230,14 @@ html.dark .cat-chip.active {
 
 /* --- Golden Shimmer CTA --- */
 .golden-shimmer {
-  background: linear-gradient(135deg, #5f5e5e 0%, #b3b1b1 50%, #5f5e5e 100%);
+  background: linear-gradient(135deg, #22b8b8 0%, #5ef0f0 50%, #22b8b8 100%);
   background-size: 200% auto;
+  color: #0d3333;
 }
 html.dark .golden-shimmer {
-  background: linear-gradient(135deg, #8a9293 0%, #dde4e5 50%, #8a9293 100%);
+  background: linear-gradient(135deg, #22b8b8 0%, #5ef0f0 50%, #22b8b8 100%);
   background-size: 200% auto;
-  color: #0c0f0f;
+  color: #0d3333;
 }
 
 /* --- Toggle pill active state --- */
