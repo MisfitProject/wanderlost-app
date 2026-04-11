@@ -213,7 +213,18 @@ html.dark #bottomnav {
 html.dark #discover-fab { background: var(--c-surface-tint); color: var(--c-on-primary); }
 
 /* --- Discovery Sheet --- */
-#discovery-content { background: var(--c-surface-container-lowest); }
+#discovery-content {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(32px);
+  -webkit-backdrop-filter: blur(32px);
+  border-top: 1px solid rgba(255, 255, 255, 0.5);
+}
+html.dark #discovery-content {
+  background: rgba(12, 15, 15, 0.75);
+  backdrop-filter: blur(32px);
+  -webkit-backdrop-filter: blur(32px);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
 
 /* --- Category chip --- */
 .cat-chip { transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
