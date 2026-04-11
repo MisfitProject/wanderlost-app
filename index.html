@@ -66,67 +66,10 @@ tailwind.config = {
   },
 };
 </script>
-<style>
-/* Critical inline styles to prevent FOUC */
-#splash {
-  position: fixed; inset: 0; z-index: 9999;
-  background: #f9f9f9;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  transition: opacity 0.4s ease, visibility 0.4s ease;
-}
-html.dark #splash { background: #0c0f0f; }
-#splash .splash-logo {
-  display: flex; flex-direction: column; align-items: center; gap: 12px;
-  margin-bottom: 8px;
-}
-#splash .splash-logo img {
-  width: 96px; height: 96px; object-fit: contain;
-  border-radius: 20px;
-  filter: drop-shadow(0 8px 24px rgba(0,0,0,0.15));
-}
-#splash .splash-logo span {
-  font-family: 'Manrope', system-ui, sans-serif;
-  font-size: 28px; font-weight: 700; letter-spacing: -0.04em;
-  color: #2d3435;
-}
-html.dark #splash .splash-logo span { color: #dde4e5; }
-#splash .splash-sub {
-  font-family: 'Manrope', system-ui, sans-serif;
-  font-size: 10px; font-weight: 500; letter-spacing: 0.18em;
-  text-transform: uppercase; color: #8c8c8c;
-}
-#splash .splash-bar {
-  margin-top: 32px; width: 120px; height: 3px;
-  border-radius: 999px; background: #e4e9ea; overflow: hidden;
-}
-html.dark #splash .splash-bar { background: #252b2c; }
-#splash .splash-bar-fill {
-  height: 100%; width: 30%; border-radius: 999px;
-  background: #5f5e5e;
-  animation: splashLoad 1.2s ease-in-out infinite;
-}
-html.dark #splash .splash-bar-fill { background: #acb3b4; }
-@keyframes splashLoad {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(400%); }
-}
-#splash.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-#app { opacity: 0; transition: opacity 0.3s ease; }
-#app.ready { opacity: 1; }
-</style>
+
 </head>
 <body class="bg-surface font-body text-on-surface antialiased overflow-hidden select-none">
 
-<!-- ═══════════ SPLASH SCREEN ═══════════ -->
-<div id="splash">
-  <div class="splash-logo">
-    <img src="icons/logo.png" alt="Wanderlost logo"/>
-    <span>Wanderlost</span>
-  </div>
-  <div class="splash-sub">Discovering your surroundings</div>
-  <div class="splash-bar"><div class="splash-bar-fill"></div></div>
-</div>
 
 <!-- ═══════════ APP SHELL ═══════════ -->
 <div id="app" class="relative w-full h-[100dvh] flex flex-col">
