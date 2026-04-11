@@ -431,7 +431,7 @@ function showDiscoverySheet() {
   }).join('') : '';
   document.getElementById('discovery-content').innerHTML = `
     <div class="flex flex-col items-center pt-3 px-5 pb-1">
-      <button onclick="dismissSheet()" class="w-14 h-1.5 bg-on-surface-variant/25 hover:bg-on-surface-variant/50 rounded-full mb-3 transition-colors" aria-label="Close"></button>
+      <div id="sheet-drag-handle" class="w-14 h-1.5 bg-on-surface-variant/30 rounded-full mb-3 cursor-grab active:cursor-grabbing touch-none" aria-label="Drag to close"></div>
       <div class="w-full flex justify-end">
         <button onclick="dismissSheet()" class="text-on-surface-variant hover:text-on-surface transition-colors -mt-1"><span class="material-symbols-outlined text-xl">close</span></button>
       </div>
@@ -465,6 +465,7 @@ function showDiscoverySheet() {
   const sheet = document.getElementById('discovery-sheet');
   sheet.style.transform = 'translateY(0)';
   sheet.style.opacity = '1';
+  initSheetDrag();
 }
 function collapseSheet() {
   const sheet = document.getElementById('discovery-sheet');
@@ -475,6 +476,54 @@ function dismissSheet() {
   collapseSheet();
   state.currentPlace = null;
   if (state.searchCenter && gmap) { gmap.panTo(state.searchCenter); gmap.setZoom(15); }
+}
+
+// ── Sheet Drag Gesture ──
+function initSheetDrag() {
+  const sheet  = document.getElementById('discovery-sheet');
+  const handle = document.getElementById('sheet-drag-handle');
+  if (!sheet || !handle) return;
+
+  let startY = 0, lastY = 0, lastTime = 0, dragging = false;
+
+  function onStart(clientY) {
+    startY   = clientY;
+    lastY    = clientY;
+    lastTime = Date.now();
+    dragging = true;
+    sheet.style.transition = 'none';
+  }
+  function onMove(clientY) {
+    if (!dragging) return;
+    const delta = Math.max(0, clientY - startY); // only downward
+    sheet.style.transform = `translateY(${delta}px)`;
+    lastY = clientY;
+    lastTime = Date.now();
+  }
+  function onEnd(clientY) {
+    if (!dragging) return;
+    dragging = false;
+    sheet.style.transition = 'transform 0.4s cubic-bezier(0.22,1,0.36,1)';
+    const delta    = clientY - startY;
+    const elapsed  = Date.now() - lastTime + 1;
+    const velocity = (clientY - lastY) / elapsed; // px/ms
+    if (delta > 120 || velocity > 0.5) {
+      dismissSheet();
+    } else {
+      // Snap back
+      sheet.style.transform = 'translateY(0)';
+    }
+  }
+
+  // Touch
+  handle.addEventListener('touchstart', e => onStart(e.touches[0].clientY), { passive: true });
+  handle.addEventListener('touchmove',  e => { e.preventDefault(); onMove(e.touches[0].clientY); }, { passive: false });
+  handle.addEventListener('touchend',   e => onEnd(e.changedTouches[0].clientY), { passive: true });
+
+  // Mouse (desktop fallback)
+  handle.addEventListener('mousedown', e => { onStart(e.clientY); });
+  document.addEventListener('mousemove', e => { if (dragging) onMove(e.clientY); });
+  document.addEventListener('mouseup',   e => { if (dragging) onEnd(e.clientY); });
 }
 function toggleSave() {
   const p = state.currentPlace; if (!p) return;

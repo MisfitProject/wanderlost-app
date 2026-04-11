@@ -225,6 +225,12 @@ html.dark #discovery-content {
   -webkit-backdrop-filter: blur(32px);
   border-top: 1px solid rgba(255, 255, 255, 0.07);
 }
+#sheet-drag-handle {
+  position: relative;
+  padding: 12px 0; /* large tap/drag target */
+  margin: -12px 0 -4px;
+  touch-action: none;
+}
 
 /* --- Category chip --- */
 .cat-chip { transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
