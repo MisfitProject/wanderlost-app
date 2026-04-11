@@ -177,6 +177,7 @@ html.dark .poi-pulse { background: rgba(44,215,215,0.2); }
 .anim-scale { animation: scaleIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
 .page-enter { animation: slideUp 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
 @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@keyframes shimmerBtn { 0% { background-position: 200% center; } 100% { background-position: -200% center; } }
 
 /* --- Nav States --- */
 .nav-btn { color: var(--c-outline); }

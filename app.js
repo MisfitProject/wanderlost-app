@@ -559,20 +559,49 @@ function toggleSave() {
 }
 
 // ── Premium Gate ──
+const PREMIUM_FEATURES = [
+  { icon: 'all_inclusive',  label: 'Unlimited discoveries' },
+  { icon: 'tune',           label: 'Filter by category'    },
+  { icon: 'schedule',       label: 'Live availability'     },
+  { icon: 'history',        label: 'Discovery history'     },
+  { icon: 'bookmark_added', label: 'Save places'           },
+  { icon: 'map',            label: 'Build itineraries'     },
+];
 function showPremiumGate() {
   const gate = document.getElementById('premium-gate');
   const card = document.getElementById('premium-card');
   card.innerHTML = `
-    <div class="mb-6 p-4 rounded-full bg-white/20 backdrop-blur-md shadow-lg inline-flex"><span class="material-symbols-outlined text-3xl text-primary" style="font-variation-settings:'FILL' 1">auto_awesome</span></div>
-    <h1 class="font-headline text-3xl font-extrabold tracking-tighter text-on-surface leading-tight mb-3">Unlock the possibilities.</h1>
-    <p class="text-on-surface-variant text-sm font-light leading-relaxed max-w-sm mx-auto mb-8">Join a curated world of modern explorers and archive your journeys with precision.</p>
-    <div class="grid grid-cols-2 gap-3 mb-8 text-left">
-      ${['Unlimited discoveries','Filter by category','Availability','Show History','Save Places','Create Itinerary'].map(f => `
-        <div class="bg-white/10 p-3 rounded-lg flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-surface-container-lowest flex items-center justify-center"><span class="material-symbols-outlined text-primary text-base">check</span></div><span class="font-label text-[10px] tracking-wider font-bold">${f}</span></div>
+    <!-- Teal gradient header -->
+    <div style="margin:-32px -32px 24px;padding:32px 32px 28px;background:linear-gradient(135deg,#1aafa8 0%,#2CD7D7 60%,#5ef0ea 100%);border-radius:1.5rem 1.5rem 0 0;position:relative;overflow:hidden;">
+      <div style="position:absolute;inset:0;background:url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 200%22><circle cx=%22160%22 cy=%2230%22 r=%2280%22 fill=%22white%22 opacity=%220.06%22/><circle cx=%2230%22 cy=%22150%22 r=%2260%22 fill=%22white%22 opacity=%220.04%22/></svg>');pointer-events:none;"></div>
+      <img src="icons/splash-logo.png" alt="" style="width:72px;height:72px;object-fit:contain;filter:drop-shadow(0 8px 20px rgba(0,0,0,0.2));margin-bottom:16px;display:block;margin-left:auto;margin-right:auto;"/>
+      <h1 style="font-family:'Manrope',sans-serif;font-size:26px;font-weight:800;letter-spacing:-0.04em;color:#fff;line-height:1.2;margin-bottom:6px;">Unlock the<br>possibilities.</h1>
+      <p style="font-family:'Manrope',sans-serif;font-size:12px;color:rgba(255,255,255,0.8);line-height:1.5;">Join a curated world of modern explorers.</p>
+    </div>
+
+    <!-- Feature grid -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;">
+      ${PREMIUM_FEATURES.map(f => `
+        <div style="display:flex;align-items:center;gap:10px;padding:12px;background:rgba(44,215,215,0.08);border:1px solid rgba(44,215,215,0.2);border-radius:14px;">
+          <div style="width:32px;height:32px;border-radius:50%;background:rgba(44,215,215,0.15);border:1.5px solid rgba(44,215,215,0.5);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <span class="material-symbols-outlined" style="font-size:16px;color:#2CD7D7;font-variation-settings:'FILL' 1">${f.icon}</span>
+          </div>
+          <span style="font-family:'Manrope',sans-serif;font-size:11px;font-weight:700;color:var(--c-on-surface);line-height:1.3;">${f.label}</span>
+        </div>
       `).join('')}
     </div>
-    <button onclick="navigateTo('checkout'); closePremiumGate();" class="w-full py-4 rounded-full golden-shimmer text-on-primary font-label text-sm tracking-widest font-bold shadow-xl active:scale-95 transition-transform mb-4">Unlock Premium</button>
-    <button onclick="closePremiumGate()" class="text-on-surface-variant text-xs hover:text-on-surface transition-colors">Maybe Later</button>`;
+
+    <!-- CTA -->
+    <button onclick="navigateTo('checkout'); closePremiumGate();"
+      style="width:100%;padding:16px;border-radius:999px;border:none;cursor:pointer;font-family:'Manrope',sans-serif;font-size:13px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:#0d3333;background:linear-gradient(90deg,#22b8b8,#2CD7D7,#5ef0f0,#2CD7D7,#22b8b8);background-size:200% auto;animation:shimmerBtn 2.5s linear infinite;box-shadow:0 8px 24px rgba(44,215,215,0.4);margin-bottom:14px;transition:transform 0.15s,box-shadow 0.15s;"
+      onmousedown="this.style.transform='scale(0.97)'" onmouseup="this.style.transform=''" ontouchstart="this.style.transform='scale(0.97)'" ontouchend="this.style.transform=''">
+      ✦ &nbsp;Unlock Premium
+    </button>
+    <button onclick="closePremiumGate()"
+      style="background:none;border:none;cursor:pointer;font-family:'Manrope',sans-serif;font-size:12px;font-weight:500;color:var(--c-on-surface-variant);letter-spacing:0.05em;padding:4px 12px;border-radius:999px;transition:color 0.2s;"
+      onmouseover="this.style.color='var(--c-on-surface)'" onmouseout="this.style.color='var(--c-on-surface-variant)'">
+      Maybe Later
+    </button>`;
   gate.style.opacity = '1'; gate.style.pointerEvents = 'auto';
   card.classList.remove('scale-95'); card.classList.add('scale-100');
 }
