@@ -111,12 +111,12 @@ html.dark #splash-name { color: #e0fafa; }
   100% { transform: translateX(350%); }
 }
 #splash.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-#app { opacity: 0; transition: opacity 0.4s ease; }
-#app.ready { opacity: 1; }
+#app { opacity: 0; visibility: hidden; transition: opacity 0.4s ease; }
+#app.ready { opacity: 1; visibility: visible; }
 </style>
 
 </head>
-<body class="bg-surface font-body text-on-surface antialiased overflow-hidden select-none">
+<body class="bg-surface font-body text-on-surface antialiased overflow-hidden select-none" style="background:#f5fffe">
 
 
 <!-- ═══════════ SPLASH SCREEN ═══════════ -->
@@ -130,12 +130,12 @@ html.dark #splash-name { color: #e0fafa; }
 <!-- ═══════════ APP SHELL ═══════════ -->
 <div id="app" class="relative w-full h-[100dvh] flex flex-col">
 
-  <header id="topbar" class="fixed top-0 w-full z-50 flex justify-between items-center px-5 h-14 bg-white/10 backdrop-blur-[40px] border-b border-white/10 shadow-2xl shadow-black/5">
-    <div class="flex items-center gap-2">
-      <img src="icons/logo.png" alt="Wanderlost" style="width:28px;height:28px;object-fit:contain;border-radius:7px;" />
-      <h1 class="text-lg font-bold tracking-tighter text-on-surface">Wanderlost</h1>
+  <header id="topbar" class="fixed top-0 w-full z-50 flex justify-between items-center px-4 h-14 bg-white/10 backdrop-blur-[40px] border-b border-white/10 shadow-2xl shadow-black/5">
+    <div class="flex items-center gap-2 min-w-0 flex-1 mr-2">
+      <img src="icons/logo.png" alt="Wanderlost" style="width:26px;height:26px;object-fit:contain;border-radius:7px;flex-shrink:0;" />
+      <h1 class="text-base font-bold tracking-tighter text-on-surface truncate">Wanderlost</h1>
     </div>
-    <div class="flex items-center gap-2">
+    <div class="flex items-center gap-1.5 flex-shrink-0">
       <div id="credits-badge" onclick="if(!state.isPremium){showPremiumGate()}else{showToast('You have unlimited discoveries!')}" class="bg-white/40 backdrop-blur-md px-3 py-1 rounded-full border-t border-l border-white/40 shadow-sm cursor-pointer mr-1">
         <span id="credits-text" class="font-label tracking-tight font-light uppercase text-[10px] text-neutral-600">3 Free</span>
       </div>

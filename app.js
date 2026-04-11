@@ -127,8 +127,8 @@ function updateNav() {
 function updateCredits() {
   const el = document.getElementById('credits-text');
   if (!el) return;
-  if (state.isPremium) { el.textContent = 'Premium Active'; return; }
-  el.textContent = `${state.credits} Free ${state.credits === 1 ? 'Discovery' : 'Discoveries'}`;
+  if (state.isPremium) { el.textContent = 'Premium ✦'; return; }
+  el.textContent = `${state.credits} Free`;
   if (state.credits <= 0) el.style.color = '#9f403d';
 }
 
@@ -140,10 +140,15 @@ function checkAppReady() {
   setTimeout(() => {
     const splash = document.getElementById('splash');
     const app    = document.getElementById('app');
+    // 1. Fade the splash OUT first
     if (splash) splash.classList.add('hidden');
-    if (app)    app.classList.add('ready');
-    setTimeout(() => { if (splash) splash.remove(); }, 550);
-  }, 400); // let the map tiles settle
+    // 2. Only after splash fully fades (500ms) reveal the app
+    setTimeout(() => {
+      if (app) app.classList.add('ready');
+      // 3. Remove splash from DOM after it's fully invisible
+      setTimeout(() => { if (splash) splash.remove(); }, 450);
+    }, 500);
+  }, 300); // small delay to let map settle
 }
 
 window.addEventListener('load', () => { _winReady = true; checkAppReady(); });

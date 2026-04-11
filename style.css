@@ -1,5 +1,9 @@
 /* ═══════════ WANDERLOST DESIGN SYSTEM ═══════════ */
 
+/* Prevent flash-of-background on load */
+body { background-color: #f5fffe; }
+html.dark body { background-color: #050d0d !important; }
+
 /* ── COLOR TOKENS (Light) ── */
 :root {
   --c-primary: #2CD7D7;
