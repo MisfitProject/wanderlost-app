@@ -689,6 +689,16 @@ function renderAccount(c) {
         <div><label class="font-label text-[10px] tracking-widest text-on-surface-variant px-3 mb-1 block">DATE OF BIRTH</label><input id="reg-dob" class="w-full bg-surface-container-low border-none rounded-full py-4 px-6 placeholder:text-stone-400 focus:bg-surface-container-high transition-colors" placeholder="DD/MM/YYYY" type="text"/></div>
         <div><label class="font-label text-[10px] tracking-widest text-on-surface-variant px-3 mb-1 block">PASSWORD</label><input id="reg-pass" class="w-full bg-surface-container-low border-none rounded-full py-4 px-6 placeholder:text-stone-400 focus:bg-surface-container-high transition-colors" placeholder="Password" type="password" required/></div>
         <div><label class="font-label text-[10px] tracking-widest text-on-surface-variant px-3 mb-1 block">CONFIRM PASSWORD</label><input id="reg-pass2" class="w-full bg-surface-container-low border-none rounded-full py-4 px-6 placeholder:text-stone-400 focus:bg-surface-container-high transition-colors" placeholder="Confirm password" type="password" required/></div>
+        <label class="flex items-start gap-3 px-1 cursor-pointer group">
+          <input id="reg-terms" type="checkbox" required
+            class="mt-0.5 w-4 h-4 rounded accent-primary flex-shrink-0 cursor-pointer"/>
+          <span class="text-xs text-on-surface-variant leading-relaxed">
+            By registering you agree to our
+            <a href="terms.html" target="_blank" rel="noopener noreferrer"
+              class="text-primary font-semibold underline underline-offset-2 hover:opacity-80 transition-opacity">
+              Terms and Conditions</a>.
+          </span>
+        </label>
         <button type="submit" class="mt-2 py-4 rounded-full bg-surface-tint text-on-primary font-label tracking-widest text-xs shadow-xl active:scale-[0.98] transition-transform">REGISTER ACCOUNT</button>
       </form>`}
     </div>
