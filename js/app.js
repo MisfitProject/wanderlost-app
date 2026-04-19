@@ -990,9 +990,91 @@ function showResult(result) {
   // Fix 3: update BOTH the FAB badge and the sheet counter
   updateFabBadge();
 
+  // Mark the corresponding strip card as used after discovery
+  markStripCardUsed(result.placeId);
+
   $('#btn-save')?.addEventListener('click', saveCurrentPlace);
   // Fix 10: share button
   $('#btn-share')?.addEventListener('click', () => shareDiscovery(_lastDiscovery));
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   HOME DISCOVERY STRIP — 3 pre-loaded place teaser cards
+   ══════════════════════════════════════════════════════════════════════════ */
+
+async function loadHomeStrip(userLocation) {
+  const track = $('#strip-track');
+  if (!track) return;
+  // Skip if already populated with real cards
+  if (track.querySelector('.strip-card:not(.strip-card--skeleton)')) return;
+
+  const places = await Discovery.prefetchStrip(userLocation);
+  if (!places.length) return;
+
+  track.innerHTML = ''; // replace skeletons with real cards
+  places.slice(0, 3).forEach((place, i) => {
+    const card = renderStripCard(place, i);
+    track.appendChild(card);
+    card.addEventListener('click', () => {
+      if (card.classList.contains('strip-card--used')) return;
+      triggerDiscoveryFromStrip();
+    });
+    card.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.click(); }
+    });
+  });
+}
+
+function renderStripCard(place, index) {
+  const card = document.createElement('div');
+  card.className = 'strip-card';
+  card.dataset.placeId = place.placeId;
+  card.dataset.category = (place.category || '').toLowerCase();
+  card.setAttribute('role', 'button');
+  card.setAttribute('tabindex', '0');
+  card.setAttribute('aria-label', `Discover ${place.name}`);
+
+  const openDot = place.isOpen === true
+    ? '<span class="sc-open-dot open"></span>'
+    : place.isOpen === false ? '<span class="sc-open-dot closed"></span>' : '';
+
+  const rating = place.rating
+    ? `<span class="sc-rating"><span class="material-symbols-outlined filled">star</span>${place.rating}</span>`
+    : '';
+
+  card.innerHTML = `
+    <div class="sc-photo"${place.photoUrl ? ` style="background-image:url('${place.photoUrl}')"` : ''}></div>
+    <div class="sc-slot">${index + 1}</div>
+    ${index === 0 ? '<span class="sc-tap-hint">Tap</span>' : ''}
+    <div class="sc-info">
+      <span class="sc-name">${place.name}</span>
+      <div class="sc-meta">
+        ${openDot}${rating}
+        <span>${place.distanceText}</span>
+        ${place.priceLevel ? `<span>· ${place.priceLevel}</span>` : ''}
+      </div>
+    </div>`;
+  return card;
+}
+
+function markStripCardUsed(placeId) {
+  const card = document.querySelector(`[data-place-id="${placeId}"]`);
+  if (card) card.classList.add('strip-card--used');
+}
+
+// Tap a strip card → run the normal discover() flow (serves from pre-seeded batch)
+async function triggerDiscoveryFromStrip() {
+  if (!navigator.onLine) { showToast('You\'re offline.', 'error'); return; }
+  if (Discovery.getFreeRemaining() <= 0 && !Auth.isPremium()) {
+    openPremiumGate(); return;
+  }
+  const body = $('#sheet-body');
+  if (body) body.innerHTML = renderSheetLoading();
+  Gesture.open();
+  const loc = Map.getUserLocation();
+  const result = await Discovery.discover(loc, 'all', {});
+  if (!result || result._needsPremium) { Gesture.dismiss(); openPremiumGate(); return; }
+  showResult(result);
 }
 
 async function saveCurrentPlace() {
@@ -1233,7 +1315,10 @@ function init() {
   const surface = $('#sheet-surface');
   const handle  = $('#sheet-handle-pill');
   if (sheet && surface && handle) {
-    Gesture.init({ sheet, surface, handle, onDismiss: () => {} });
+    Gesture.init({ sheet, surface, handle, onDismiss: () => {
+      // Reveal the strip again when the sheet closes
+      $('#home-strip')?.classList.remove('strip--hidden');
+    }});
   }
 
   bindGlobalEvents();
@@ -1244,11 +1329,23 @@ function init() {
 
   updateFabBadge();
 
+  // Home strip: load cards once GPS is ready (hook set before Map.init())
+  window.__onLocationReady = (loc) => {
+    loadHomeStrip(loc);
+  };
+
+  // Hide strip when bottom sheet opens
+  sheet?.addEventListener('transitionend', () => {
+    if (sheet.classList.contains('sheet--open')) {
+      $('#home-strip')?.classList.add('strip--hidden');
+    }
+  });
+
   // Fix 14: online/offline toasts
   window.addEventListener('online',  () => showToast('Back online!', 'success'));
   window.addEventListener('offline', () => showToast('You\'re offline.', 'error'));
 
-  console.log('[App] Wanderlost v4.1 initialised ✓');
+  console.log('[App] Wanderlost v4.2 initialised ✓');
 }
 
 if (document.readyState === 'loading') {

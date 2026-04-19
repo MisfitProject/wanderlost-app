@@ -356,9 +356,100 @@ function discoverMock(userLocation, category, opts) {
   return result;
 }
 
+/* ── prefetchStrip — loads 3 places without consuming the free tier ─── */
+// Called by the home strip on startup. Seeds _batch so that subsequent
+// discover() calls serve from cache instead of making a second API call.
+
+async function prefetchStrip(userLocation) {
+  if (!userLocation?.lat || !userLocation?.lng) return [];
+
+  // If batch already populated (e.g. user already discovered), return it
+  if (_batch.length >= 3) return _batch.slice(0, 3);
+
+  // Mock fallback when Places API isn't loaded yet
+  if (!window.google?.maps?.places?.Place) {
+    return mockStrip(userLocation);
+  }
+
+  try {
+    const localLang = await detectLocalLanguage(userLocation.lat, userLocation.lng);
+    const request = {
+      fields: [
+        'displayName','formattedAddress','location',
+        'rating','userRatingCount','priceLevel',
+        'editorialSummary','primaryTypeDisplayName','primaryType',
+        'regularOpeningHours','id','reviews','photos',
+      ],
+      locationRestriction: {
+        center: { lat: userLocation.lat, lng: userLocation.lng },
+        radius: DEFAULT_RADIUS,
+      },
+      maxResultCount: 20,
+    };
+
+    const { places } = await google.maps.places.Place.searchNearby(request);
+    if (!places?.length) return mockStrip(userLocation);
+
+    // Apply the secret recipe (same gates as discover())
+    let filtered = places.filter(p =>
+      (p.rating || 0) >= MIN_RATING &&
+      (p.userRatingCount || 0) >= MIN_REVIEW_COUNT &&
+      isLocallyLoved(p, localLang)
+    );
+    if (filtered.length < 3) filtered = places.filter(p => (p.rating || 0) >= MIN_RATING && (p.userRatingCount || 0) >= MIN_REVIEW_COUNT);
+    if (filtered.length < 3) filtered = places.filter(p => (p.rating || 0) >= 4.5);
+    if (!filtered.length)   return mockStrip(userLocation);
+
+    // Shuffle
+    for (let i = filtered.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [filtered[i], filtered[j]] = [filtered[j], filtered[i]];
+    }
+
+    // Seed the main batch so discover() uses these same results
+    _batch = filtered.map(p => buildResult(p, userLocation));
+    _bIdx  = 0;
+
+    return _batch.slice(0, 3); // return first 3 as strip previews
+  } catch (err) {
+    console.warn('[Discovery] prefetchStrip error:', err.message);
+    return mockStrip(userLocation);
+  }
+}
+
+function mockStrip(userLocation) {
+  const mocks = [
+    { name: "Caru' cu Bere",        description: 'Stunning Neo-Gothic beer hall with traditional Romanian cuisine, beloved by Bucharest locals since 1879.', category: 'Restaurant', address: 'Strada Stavropoleos 5, București',    rating: 4.9, priceLevel: '$$',   isOpen: true  },
+    { name: 'Origo Coffee',         description: 'Third-wave specialty coffee roasted in-house. Minimalist interior, locals-only vibe.',                   category: 'Café',       address: 'Str. Lipscani 9, București',       rating: 4.8, priceLevel: '$',    isOpen: true  },
+    { name: 'Cărturești Carusel',   description: 'Six floors of books in a restored 19th-century building. The most beautiful bookstore in Bucharest.',    category: 'Bookstore',  address: 'Strada Lipscani 55, București',    rating: 4.8, priceLevel: '$',    isOpen: true  },
+    { name: 'Parcul Natural Văcărești', description: 'Urban delta — wetlands, wildlife, and walking trails where Bucharest meets nature.',               category: 'Park',       address: 'Splaiul Unirii, București',        rating: 4.9, priceLevel: 'Free', isOpen: true  },
+    { name: 'Energiea',             description: 'Plant-based café with raw desserts and cold-pressed juices. Quiet courtyard seating.',                  category: 'Café',       address: 'Str. Brezoianu 10, București',     rating: 4.8, priceLevel: '$',    isOpen: true  },
+  ];
+  // Shuffle and pick 3
+  const shuffled = [...mocks].sort(() => Math.random() - 0.5).slice(0, 3);
+  const results = shuffled.map(mock => {
+    const lat  = userLocation.lat + (Math.random() - 0.5) * 0.018;
+    const lng  = userLocation.lng + (Math.random() - 0.5) * 0.018;
+    const dist = haversine(userLocation.lat, userLocation.lng, lat, lng);
+    return {
+      placeId: 'mock_strip_' + Math.random().toString(36).slice(2),
+      name: mock.name, description: mock.description,
+      category: mock.category, location: { lat, lng },
+      distance: Math.round(dist), distanceText: formatDistance(dist),
+      isOpen: mock.isOpen, address: mock.address,
+      rating: mock.rating, ratingCount: null, priceLevel: mock.priceLevel,
+      photoUrl: null,
+    };
+  });
+  // Seed batch from mock results too
+  if (_batch.length === 0) { _batch = results; _bIdx = 0; }
+  return results;
+}
+
 const Discovery = {
   discover, discoverNext, resetBatch,
   getFreeRemaining, getCount,
+  prefetchStrip,
   CATEGORIES, FREE_DISCOVERIES,
   formatDistance,
 };

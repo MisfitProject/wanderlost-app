@@ -1640,3 +1640,212 @@
 }
 .trip-picker-item:hover { background: var(--surface-3); }
 .trip-picker-item > span:last-child { margin-left: auto; color: var(--text-3); font-size: var(--text-sm); }
+
+/* ════════════════════════════════════════════════════════════════════════════
+   HOME DISCOVERY STRIP  — 3 free discovery teaser cards
+   ════════════════════════════════════════════════════════════════════════════ */
+
+.strip-header {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0 max(var(--inset-left), var(--sp-5));
+}
+
+.strip-title {
+  font-size: var(--text-md);
+  font-weight: var(--weight-bold);
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+
+.strip-sub {
+  font-size: var(--text-xs);
+  color: var(--text-3);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* Horizontal scroll track */
+.strip-track {
+  display: flex;
+  gap: var(--sp-3);
+  overflow-x: auto;
+  padding: var(--sp-1) max(var(--inset-left), var(--sp-5)) var(--sp-1);
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  pointer-events: auto;
+}
+
+/* Individual strip card */
+.strip-card {
+  flex: 0 0 clamp(160px, 42vw, 200px);
+  height: 120px;
+  border-radius: var(--r-xl);
+  overflow: hidden;
+  position: relative;
+  scroll-snap-align: start;
+  cursor: pointer;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  transform: translateY(0);
+  transition: transform var(--dur-fast) var(--ease-spring),
+              box-shadow var(--dur-fast);
+}
+
+.strip-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.35);
+}
+
+.strip-card:active {
+  transform: scale(0.97);
+}
+
+/* Photo layer */
+.sc-photo {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-color: var(--surface-3);
+  z-index: 0;
+}
+
+/* Glass info overlay at bottom of each card */
+.sc-info {
+  position: absolute;
+  inset: auto 0 0;
+  padding: var(--sp-3) var(--sp-3) var(--sp-2);
+  background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 100%);
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sc-name {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  color: #fff;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sc-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-size: var(--text-xs);
+  color: rgba(255,255,255,0.75);
+}
+
+.sc-rating {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  color: #f4c842;
+  font-weight: var(--weight-semibold);
+}
+
+.sc-rating .material-symbols-outlined {
+  font-size: 11px;
+}
+
+/* Slot number badge — top-left corner */
+.sc-slot {
+  position: absolute;
+  top: var(--sp-2);
+  left: var(--sp-2);
+  z-index: 2;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-size: 11px;
+  font-weight: var(--weight-bold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+}
+
+/* Tap hint — only show on first card */
+.sc-tap-hint {
+  position: absolute;
+  top: var(--sp-2);
+  right: var(--sp-2);
+  z-index: 2;
+  font-size: 9px;
+  font-weight: var(--weight-semibold);
+  color: rgba(255,255,255,0.8);
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(4px);
+  border-radius: var(--r-full);
+  padding: 2px var(--sp-2);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* Open/closed badge */
+.sc-open-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.sc-open-dot.open   { background: #4caf50; }
+.sc-open-dot.closed { background: #ef5350; }
+
+/* Used state — card has been discovered */
+.strip-card--used {
+  opacity: 0.45;
+  cursor: default;
+  filter: grayscale(0.3);
+}
+.strip-card--used .sc-slot {
+  background: var(--surface-3);
+  color: var(--text-3);
+}
+.strip-card--used:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+/* Skeleton / loading state */
+.strip-card--skeleton {
+  background: var(--surface-2);
+}
+
+.sc-shimmer {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    var(--surface-2) 0%,
+    var(--surface-3) 40%,
+    var(--surface-2) 60%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Category color accents on strip cards (subtle top border) */
+.strip-card[data-category="restaurants"] { border-top: 2px solid #ef5350; }
+.strip-card[data-category="cafes"]       { border-top: 2px solid #ff8f00; }
+.strip-card[data-category="bars"]        { border-top: 2px solid #7c4dff; }
+.strip-card[data-category="parks"]       { border-top: 2px solid #43a047; }
+.strip-card[data-category="museums"]     { border-top: 2px solid #1e88e5; }
+.strip-card[data-category="galleries"]   { border-top: 2px solid #e91e63; }
+.strip-card[data-category="bookstores"]  { border-top: 2px solid #6d4c41; }
+.strip-card[data-category="markets"]     { border-top: 2px solid #fb8c00; }

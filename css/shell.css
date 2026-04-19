@@ -60,10 +60,10 @@
   z-index: 1;
 }
 
-/* Bottom gradient scrim (covers navbar area) */
+/* Bottom gradient scrim (covers navbar + strip area) */
 #map-scrim-bottom {
   align-self: end;
-  height: clamp(7rem, 22dvh, 14rem);
+  height: clamp(10rem, 32dvh, 20rem);
   background: linear-gradient(to top, var(--bg) 0%, transparent 100%);
   pointer-events: none;
   z-index: 1;
@@ -123,6 +123,27 @@
   overflow-y: auto;
   pointer-events: auto;
   -webkit-overflow-scrolling: touch;
+}
+
+/* ── Home Discovery Strip — row 4, aligned bottom ────────────────────── */
+#home-strip {
+  grid-row: 4;
+  grid-column: 1;
+  align-self: end;
+  z-index: var(--z-catbar); /* above map, below sheet */
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  padding: 0 0 calc(var(--sp-2)) 0;
+  pointer-events: none;   /* cards themselves re-enable */
+  transition: opacity var(--dur-normal) var(--ease-out),
+              transform var(--dur-normal) var(--ease-spring);
+}
+
+#home-strip.strip--hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(12px);
 }
 
 /* ── Bottom Sheet — spans all rows ───────────────────────────────────── */

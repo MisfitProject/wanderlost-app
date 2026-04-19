@@ -121,6 +121,10 @@ function requestUserLocation() {
         addUserMarker();
       }
       console.log('[Map] Location acquired');
+      // Notify app.js so it can trigger the home strip pre-fetch
+      if (typeof window.__onLocationReady === 'function') {
+        window.__onLocationReady({ lat: _userLat, lng: _userLng });
+      }
     },
     err => console.warn('[Map] Geolocation failed:', err.message),
     { enableHighAccuracy: false, timeout: 8000, maximumAge: 60000 }

@@ -156,7 +156,20 @@
     <!-- ── PREMIUM GATE (spans all rows) ───────────────────────────── -->
     <div id="premium-gate" role="dialog" aria-label="Premium subscription" aria-modal="true"></div>
 
-    <!-- ── BOTTOM NAVBAR (row 5) ───────────────────────────────────── -->
+    <!-- ── HOME DISCOVERY STRIP (3 free teaser cards) ──────────────── -->
+    <div id="home-strip" aria-label="Your free discoveries" role="region">
+      <div class="strip-header">
+        <span class="strip-title">Your 3 free discoveries</span>
+        <span class="strip-sub">Tap to explore · Locally curated</span>
+      </div>
+      <div id="strip-track" class="strip-track no-scrollbar">
+        <!-- Skeleton placeholders shown until places load -->
+        <div class="strip-card strip-card--skeleton"><div class="sc-shimmer"></div></div>
+        <div class="strip-card strip-card--skeleton"><div class="sc-shimmer"></div></div>
+        <div class="strip-card strip-card--skeleton"><div class="sc-shimmer"></div></div>
+      </div>
+    </div>
+
     <nav id="navbar" role="navigation" aria-label="Main navigation">
       <button class="nav-item active" id="nav-map" data-page="map" aria-label="Map" aria-current="page">
         <span class="material-symbols-outlined">map</span>
