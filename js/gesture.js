@@ -105,6 +105,7 @@ function snapTo(position) {
     case 'dismiss':
       _surface.style.transform = `translateY(${vh}px)`;
       _sheet.classList.remove('sheet--open');
+      _sheet.setAttribute('aria-hidden', 'true');
       setTimeout(() => { if (_onDismiss) _onDismiss(); }, 360);
       break;
 
@@ -112,12 +113,14 @@ function snapTo(position) {
       // 55% visible → top at 45% of viewport
       _surface.style.transform = `translateY(${vh * 0.45}px)`;
       _sheet.classList.add('sheet--open');
+      _sheet.setAttribute('aria-hidden', 'false');
       break;
 
     case 'expand':
       // 88% visible → top at 12% of viewport
       _surface.style.transform = `translateY(${vh * 0.12}px)`;
       _sheet.classList.add('sheet--open');
+      _sheet.setAttribute('aria-hidden', 'false');
       break;
   }
 }

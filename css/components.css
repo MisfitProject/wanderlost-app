@@ -1491,3 +1491,152 @@
   0%, 100% { transform: scale(1); opacity: 0.5; }
   50%       { transform: scale(1.6); opacity: 0; }
 }
+
+/* ════════════════════════════════════════════════════════════════════════════
+   DISCOVERY CARD ADDITIONS (v4.1 gap fixes)
+   ════════════════════════════════════════════════════════════════════════════ */
+
+/* Fix 8: Hero photo */
+.discovery-photo {
+  width: calc(100% + calc(2 * var(--sp-4)));
+  margin: calc(-1 * var(--sp-4)) calc(-1 * var(--sp-4)) var(--sp-4);
+  aspect-ratio: 16 / 7;
+  background-size: cover;
+  background-position: center;
+  background-color: var(--surface-3);
+  border-radius: var(--r-lg) var(--r-lg) 0 0;
+  overflow: hidden;
+}
+
+/* Fix 10: Ghost share button */
+.btn-action--ghost {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-3);
+  border-radius: var(--r-lg);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--text-2);
+  flex-shrink: 0;
+  transition: background var(--dur-fast), color var(--dur-fast);
+}
+.btn-action--ghost:hover { background: var(--surface-3); color: var(--text); }
+
+/* ── Trip detail subpage ─────────────────────────────────────────────── */
+.subpage-header {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding-bottom: var(--sp-4);
+  border-bottom: 1px solid var(--border);
+  margin-bottom: var(--sp-4);
+}
+.subpage-title {
+  font-size: var(--text-xl);
+  font-weight: var(--weight-bold);
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+   TOAST NOTIFICATION  (Fix 3 / 6 / 10 / 12 / 14)
+   ════════════════════════════════════════════════════════════════════════════ */
+#wl-toast {
+  position: fixed;
+  bottom: calc(72px + var(--inset-bottom) + var(--sp-3));
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-3) var(--sp-5);
+  border-radius: var(--r-full);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  backdrop-filter: var(--glass-blur);
+  color: var(--text);
+  font-size: var(--text-base);
+  font-weight: var(--weight-medium);
+  white-space: nowrap;
+  z-index: 200;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-normal) var(--ease-out),
+              transform var(--dur-normal) var(--ease-spring);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+}
+#wl-toast.toast--visible { opacity: 1; transform: translateX(-50%) translateY(0); }
+#wl-toast.toast--success .material-symbols-outlined { color: var(--success); }
+#wl-toast.toast--error   .material-symbols-outlined { color: var(--danger); }
+#wl-toast.toast--info    .material-symbols-outlined { color: var(--accent); }
+
+/* ════════════════════════════════════════════════════════════════════════════
+   INLINE PROMPT / CONFIRM / TRIP PICKER MODALS  (Fix 4)
+   Replaces native prompt() — works in iOS PWA standalone mode
+   ════════════════════════════════════════════════════════════════════════════ */
+.inline-prompt-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.65);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 300;
+  padding: var(--sp-4);
+  opacity: 0;
+  transition: opacity var(--dur-normal) var(--ease-out);
+}
+.inline-prompt-overlay.overlay--visible { opacity: 1; }
+
+.inline-prompt-card {
+  width: 100%;
+  max-width: 26rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-2xl);
+  padding: var(--sp-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  transform: translateY(24px);
+  transition: transform var(--dur-normal) var(--ease-spring);
+  margin-bottom: calc(var(--sp-4) + var(--inset-bottom));
+}
+.inline-prompt-overlay.overlay--visible .inline-prompt-card { transform: translateY(0); }
+
+.inline-prompt-label {
+  font-size: var(--text-md);
+  font-weight: var(--weight-semibold);
+  color: var(--text);
+  line-height: 1.5;
+}
+
+.inline-prompt-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-3);
+}
+
+.trip-picker-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  max-height: 40vh;
+  overflow-y: auto;
+}
+
+.trip-picker-item {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  border-radius: var(--r-lg);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: var(--text-base);
+  text-align: left;
+  transition: background var(--dur-fast);
+}
+.trip-picker-item:hover { background: var(--surface-3); }
+.trip-picker-item > span:last-child { margin-left: auto; color: var(--text-3); font-size: var(--text-sm); }

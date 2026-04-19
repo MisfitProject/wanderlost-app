@@ -111,9 +111,15 @@ function isTouristHeavy(place) {
 }
 
 /* ── Batch state ──────────────────────────────────────────────────────── */
-let _batch  = [];
-let _bIdx   = 0;
-let _count  = 0; // session discovery count
+let _batch = [];
+let _bIdx  = 0;
+
+/* ── Daily persistent free-tier counter ──────────────────────────────── */
+// Uses a localStorage key that changes each UTC day.
+// This prevents refresh-to-bypass while keeping persistence client-side.
+function _dayKey() { return 'wl-disc-' + new Date().toISOString().slice(0, 10); }
+function _getCount() { return parseInt(localStorage.getItem(_dayKey()) || '0', 10); }
+function _setCount(n) { localStorage.setItem(_dayKey(), String(n)); }
 
 /* ── Haversine ────────────────────────────────────────────────────────── */
 
@@ -142,8 +148,8 @@ async function discover(userLocation, category = 'all', opts = {}) {
 
   const premium = Auth.isPremium();
 
-  // Gate: free user hit limit
-  if (!premium && _count >= FREE_DISCOVERIES) return { _needsPremium: true };
+  // Gate: free user hit daily limit (persists across refreshes)
+  if (!premium && _getCount() >= FREE_DISCOVERIES) return { _needsPremium: true };
 
   // Gate: non-all category requires premium (fires here, not at pill click)
   if (!premium && category !== 'all') return { _needsPremium: true, _reason: 'category' };
@@ -169,7 +175,7 @@ async function discover(userLocation, category = 'all', opts = {}) {
         'displayName','formattedAddress','location',
         'rating','userRatingCount','priceLevel',
         'editorialSummary','primaryTypeDisplayName','primaryType',
-        'regularOpeningHours','id','reviews',
+        'regularOpeningHours','id','reviews','photos',
       ],
       locationRestriction: {
         center: { lat: userLocation.lat, lng: userLocation.lng },
@@ -248,7 +254,7 @@ async function discoverNext(userLocation) {
 /* ── Helpers ──────────────────────────────────────────────────────────── */
 
 async function persistDiscovery(result) {
-  _count++;
+  _setCount(_getCount() + 1); // daily persistent counter
   const user = Auth.getUser();
   if (!user) return;
 
@@ -265,6 +271,7 @@ async function persistDiscovery(result) {
       address:     result.address,
       rating:      result.rating,
       priceLevel:  result.priceLevel,
+      photoUrl:    result.photoUrl || null,
       discoveredAt:serverTimestamp(),
     });
     await updateDoc(doc(db, 'users', user.uid), { totalDiscoveries: increment(1) });
@@ -282,6 +289,14 @@ function buildResult(place, userLocation) {
   let isOpen = null;
   try { isOpen = place.regularOpeningHours?.isOpen?.() ?? null; } catch { /* */ }
 
+  // Extract hero photo URL (Fix 8: place photos)
+  let photoUrl = null;
+  try {
+    if (place.photos?.length > 0) {
+      photoUrl = place.photos[0].getURI({ maxWidth: 600, maxHeight: 400 });
+    }
+  } catch { /* photos API unavailable */ }
+
   const prices = { FREE:'Free', INEXPENSIVE:'$', MODERATE:'$$', EXPENSIVE:'$$$', VERY_EXPENSIVE:'$$$$' };
 
   return {
@@ -297,17 +312,18 @@ function buildResult(place, userLocation) {
     rating:       place.rating || null,
     ratingCount:  place.userRatingCount || null,
     priceLevel:   prices[place.priceLevel] || null,
+    photoUrl,
   };
 }
 
 function resetBatch() { _batch = []; _bIdx = 0; }
-function getFreeRemaining() { return Math.max(0, FREE_DISCOVERIES - _count); }
-function getCount() { return _count; }
+function getFreeRemaining() { return Math.max(0, FREE_DISCOVERIES - _getCount()); }
+function getCount() { return _getCount(); }
 
 /* ── Mock Data (when Places API unavailable / localhost) ─────────────── */
 
 function discoverMock(userLocation, category, opts) {
-  if (!Auth.isPremium() && _count >= FREE_DISCOVERIES) return { _needsPremium: true };
+  if (!Auth.isPremium() && _getCount() >= FREE_DISCOVERIES) return { _needsPremium: true };
 
   const mocks = [
     { name:"Caru' cu Bere",       description:'Stunning Neo-Gothic beer hall with traditional Romanian cuisine, beloved by Bucharest locals since 1879.', category:'Restaurant', address:'Strada Stavropoleos 5, București', rating:4.9, priceLevel:'$$', isOpen:true },

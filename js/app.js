@@ -20,6 +20,7 @@ let _selectedCategory = 'all';
 let _openNow          = false;
 let _selectedPlan     = 'annual';
 let _lastDiscovery    = null;
+let _prevRoute        = 'map'; // Fix 18: context-aware back buttons
 
 /* ══════════════════════════════════════════════════════════════════════════
    PAGE RENDERERS
@@ -528,8 +529,14 @@ function renderDiscoveryCard(place) {
   const statusText  = place.isOpen === true ? 'Open' : place.isOpen === false ? 'Closed' : '';
   const statusClass = place.isOpen === true ? 'open' : place.isOpen === false ? 'closed' : '';
 
+  // Fix 8: hero photo
+  const heroHtml = place.photoUrl
+    ? `<div class="discovery-photo" style="background-image:url('${place.photoUrl}')"></div>`
+    : '';
+
   return `
     <div class="discovery-card">
+      ${heroHtml}
       <div class="discovery-meta">
         <span class="discovery-category">${place.category}</span>
         ${statusText
@@ -573,6 +580,9 @@ function renderDiscoveryCard(place) {
         <button class="btn-action btn-action--secondary" id="btn-save">
           <span class="material-symbols-outlined">bookmark_add</span>
           Save
+        </button>
+        <button class="btn-action btn-action--ghost" id="btn-share">
+          <span class="material-symbols-outlined">share</span>
         </button>
       </div>
     </div>
@@ -625,8 +635,9 @@ function renderTripsList(trips) {
     </div>
     ${emptyBtn}`;
 
+  // Fix 12: each trip card is clickable → trip detail
   return trips.map(t => `
-    <div class="trip-card">
+    <div class="trip-card" data-trip-id="${t.id}" style="cursor:pointer">
       <span class="material-symbols-outlined trip-card-icon">travel_explore</span>
       <div class="trip-card-info">
         <div class="trip-card-name">${t.name}</div>
@@ -657,24 +668,39 @@ function bindAuthEvents() {
     fLogin.style.display = 'none';     fReg.style.display = '';
   });
 
+  // Fix 5: loading state — disable button + show spinner text during auth calls
   fLogin?.addEventListener('submit', async e => {
     e.preventDefault();
     const errEl = $('#login-error');
+    const btn   = fLogin.querySelector('button[type=submit]');
     errEl.textContent = '';
+    btn.disabled = true;
+    btn.textContent = 'Signing in…';
     try {
       await Auth.signIn($('#login-email').value.trim(), $('#login-password').value);
-    } catch (ex) { errEl.textContent = friendlyError(ex.code); }
+    } catch (ex) {
+      errEl.textContent = friendlyError(ex.code);
+      btn.disabled = false;
+      btn.textContent = 'Log In';
+    }
   });
 
   fReg?.addEventListener('submit', async e => {
     e.preventDefault();
     const errEl = $('#register-error');
+    const btn   = fReg.querySelector('button[type=submit]');
     errEl.textContent = '';
     const pass = $('#reg-pass').value;
     if (pass !== $('#reg-pass2').value) { errEl.textContent = 'Passwords do not match.'; return; }
+    btn.disabled = true;
+    btn.textContent = 'Creating account…';
     try {
       await Auth.signUp($('#reg-email').value.trim(), pass, $('#reg-name').value.trim(), $('#reg-dob').value);
-    } catch (ex) { errEl.textContent = friendlyError(ex.code); }
+    } catch (ex) {
+      errEl.textContent = friendlyError(ex.code);
+      btn.disabled = false;
+      btn.textContent = 'Create Account';
+    }
   });
 
   $('#btn-forgot')?.addEventListener('click', async () => {
@@ -708,16 +734,68 @@ function bindDashboardEvents() {
     try {
       const trips = await Auth.getTrips();
       el.innerHTML = `<p class="list-section-title">My Trips</p>` + renderTripsList(trips);
+
+      // Fix 12: trip cards open a detail view
+      el.querySelectorAll('.trip-card[data-trip-id]').forEach(card => {
+        card.addEventListener('click', () => {
+          const trip = trips.find(t => t.id === card.dataset.tripId);
+          if (trip) renderTripDetail(el, trip, trips);
+        });
+      });
+
       $('#btn-create-trip')?.addEventListener('click', async () => {
-        const name = prompt('Trip name:');
+        const name = await showInlinePrompt('Trip name:', 'My Trip');
         if (!name?.trim()) return;
         try { await Auth.createTrip(name.trim()); $('#btn-itinerary')?.click(); }
-        catch { alert('Could not create trip.'); }
+        catch { showToast('Could not create trip.', 'error'); }
       });
     } catch { el.innerHTML = `<p class="form-error">Could not load trips.</p>`; }
   });
 
   $('#btn-join-premium')?.addEventListener('click', openPremiumGate);
+}
+
+// Fix 12: Render trip detail inline
+function renderTripDetail(container, trip, allTrips) {
+  const places = trip.places || [];
+  container.innerHTML = `
+    <div class="subpage-header" style="margin-bottom:var(--sp-4)">
+      <button id="btn-trip-back" class="icon-btn" aria-label="Back">
+        <span class="material-symbols-outlined">arrow_back</span>
+      </button>
+      <h2 class="subpage-title">${trip.name}</h2>
+    </div>
+    ${places.length === 0
+      ? `<div class="empty-state"><span class="material-symbols-outlined">location_off</span><p>No places saved yet</p></div>`
+      : places.map(p => `
+        <div class="list-item">
+          <div class="list-item-icon"><span class="material-symbols-outlined">location_on</span></div>
+          <div class="list-item-body">
+            <span class="list-item-name">${p.name}</span>
+            <span class="list-item-meta">${p.category}${p.address ? ' · ' + p.address : ''}</span>
+          </div>
+          <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.name)}"
+             target="_blank" class="icon-btn" aria-label="Navigate" style="flex-shrink:0">
+            <span class="material-symbols-outlined">directions</span>
+          </a>
+        </div>`).join('')
+    }`;
+  $('#btn-trip-back')?.addEventListener('click', () => {
+    container.innerHTML = `<p class="list-section-title">My Trips</p>` + renderTripsList(allTrips);
+    container.querySelectorAll('.trip-card[data-trip-id]').forEach(card => {
+      card.addEventListener('click', () => {
+        const t = allTrips.find(x => x.id === card.dataset.tripId);
+        if (t) renderTripDetail(container, t, allTrips);
+      });
+    });
+    const cb = document.getElementById('btn-create-trip');
+    cb?.addEventListener('click', async () => {
+      const name = await showInlinePrompt('Trip name:', 'My Trip');
+      if (!name?.trim()) return;
+      try { await Auth.createTrip(name.trim()); document.getElementById('btn-itinerary')?.click(); }
+      catch { showToast('Could not create trip.', 'error'); }
+    });
+  });
 }
 
 function bindSettingsEvents() {
@@ -748,16 +826,33 @@ function bindSettingsEvents() {
   });
 
   $('#btn-delete-data')?.addEventListener('click', async () => {
-    if (!confirm('Delete all your discoveries and trips? Your account stays.\n\nContinue?')) return;
-    try { await Auth.deleteUserData(); alert('Data deleted.'); Router.navigate('settings'); }
-    catch (e) { alert('Failed: ' + e.message); }
+    const ok = await showConfirm('Delete all your discoveries and trips? Your account stays.');
+    if (!ok) return;
+    try {
+      await Auth.deleteUserData();
+      showToast('All data deleted.');
+      Router.navigate('settings');
+    } catch (e) { showToast('Failed: ' + e.message, 'error'); }
   });
 
+  // Fix 6: handle requires-recent-login gracefully
   $('#btn-delete-account')?.addEventListener('click', async () => {
-    if (!confirm('Permanently delete your account AND all data? This is irreversible.')) return;
-    if (!confirm('FINAL WARNING: This cannot be undone. Confirm?')) return;
-    try { await Auth.deleteAccount(); Router.navigate('map'); }
-    catch (e) { alert('Could not delete account: ' + e.message); }
+    const ok1 = await showConfirm('Permanently delete your account AND all data? This is irreversible.');
+    if (!ok1) return;
+    const ok2 = await showConfirm('FINAL WARNING: This cannot be undone. Confirm?');
+    if (!ok2) return;
+    try {
+      await Auth.deleteAccount();
+      Router.navigate('map');
+    } catch (e) {
+      if (e.code === 'auth/requires-recent-login') {
+        showToast('Please sign out and sign back in, then try again.', 'error');
+        await Auth.signOut();
+        Router.navigate('account');
+      } else {
+        showToast('Could not delete account: ' + e.message, 'error');
+      }
+    }
   });
 }
 
@@ -786,9 +881,10 @@ function bindEditProfileEvents() {
 }
 
 function bindCheckoutEvents() {
-  $('#btn-back')?.addEventListener('click', () => Router.navigate('map'));
-  $('#btn-apple-pay')?.addEventListener('click', () => alert('Apple Pay integration coming soon!'));
-  $('#btn-google-pay')?.addEventListener('click', () => alert('Google Pay integration coming soon!'));
+  // Fix 18: back button returns to previous route, not always 'map'
+  $('#btn-back')?.addEventListener('click', () => Router.navigate(_prevRoute));
+  $('#btn-apple-pay')?.addEventListener('click', () => showToast('Apple Pay integration coming soon!', 'info'));
+  $('#btn-google-pay')?.addEventListener('click', () => showToast('Google Pay integration coming soon!', 'info'));
 
   const cardNum = $('#cc-number');
   cardNum?.addEventListener('input', e => {
@@ -805,7 +901,7 @@ function bindCheckoutEvents() {
 
   $('#checkout-form')?.addEventListener('submit', e => {
     e.preventDefault();
-    alert('Payment processing is a UI mockup. Real integration coming soon!');
+    showToast('Payment processing: coming soon with Stripe integration.', 'info');
   });
 }
 
@@ -815,6 +911,12 @@ function bindCheckoutEvents() {
 
 async function triggerDiscovery() {
   if (Router.getCurrent() !== 'map') Router.navigate('map');
+
+  // Fix 14: offline guard
+  if (!navigator.onLine) {
+    showToast('You’re offline. Connect to discover new places.', 'error');
+    return;
+  }
 
   const body = $('#sheet-body');
   if (body) body.innerHTML = renderSheetLoading();
@@ -880,37 +982,64 @@ function showResult(result) {
   const body = $('#sheet-body');
   if (body) body.innerHTML = renderDiscoveryCard(result);
 
-  Map.panToDiscovery(result.location.lat, result.location.lng, result.name);
+  // Fix 15: marker tap re-opens the sheet if it was closed
+  Map.panToDiscovery(result.location.lat, result.location.lng, result.name, () => {
+    if (!$('#discovery-sheet').classList.contains('sheet--open')) Gesture.open();
+  });
+
+  // Fix 3: update BOTH the FAB badge and the sheet counter
   updateFabBadge();
 
   $('#btn-save')?.addEventListener('click', saveCurrentPlace);
+  // Fix 10: share button
+  $('#btn-share')?.addEventListener('click', () => shareDiscovery(_lastDiscovery));
 }
 
 async function saveCurrentPlace() {
   if (!_lastDiscovery) return;
-  if (!Auth.isSignedIn()) { alert('Sign in to save places to a trip.'); return; }
+  if (!Auth.isSignedIn()) { showToast('Sign in to save places.', 'info'); return; }
   if (!Auth.isPremium()) { Gesture.dismiss(); openPremiumGate(); return; }
 
   try {
     const trips = await Auth.getTrips();
+
+    // Fix 4: in-app modal instead of prompt() — works on iOS PWA
+    let tripId;
     if (trips.length === 0) {
-      const name = prompt('Create a trip name:', 'My Trip');
-      if (!name) return;
-      const id = await Auth.createTrip(name.trim());
-      await Auth.addPlaceToTrip(id, _lastDiscovery);
+      const name = await showInlinePrompt('Name your first trip:', 'My Trip');
+      if (!name?.trim()) return;
+      tripId = await Auth.createTrip(name.trim());
     } else {
-      // Simple trip picker
-      const opts = trips.map((t, i) => `${i+1}. ${t.name}`).join('\n');
-      const idx  = parseInt(prompt(`Save to which trip?\n${opts}\n\nEnter number:`)) - 1;
-      if (idx >= 0 && idx < trips.length) await Auth.addPlaceToTrip(trips[idx].id, _lastDiscovery);
+      tripId = await showTripPicker(trips);
+      if (!tripId) return; // user cancelled
     }
 
+    await Auth.addPlaceToTrip(tripId, _lastDiscovery);
     const btn = $('#btn-save');
-    if (btn) { btn.innerHTML = '<span class="material-symbols-outlined">bookmark_added</span> Saved!'; btn.disabled = true; }
+    if (btn) {
+      btn.innerHTML = '<span class="material-symbols-outlined">bookmark_added</span> Saved!';
+      btn.disabled = true;
+    }
+    showToast('Place saved to your trip!');
   } catch (e) {
     console.error('[App] Save failed:', e);
-    alert('Could not save place. Try again.');
+    showToast('Could not save place. Try again.', 'error');
   }
+}
+
+// Fix 10: Share via Web Share API with clipboard fallback
+async function shareDiscovery(place) {
+  if (!place) return;
+  const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.name)}&query_place_id=${place.placeId}`;
+  const text = place.description || `Discovered on Wanderlost: ${place.name}`;
+  try {
+    if (navigator.share) {
+      await navigator.share({ title: place.name, text, url });
+    } else {
+      await navigator.clipboard.writeText(url);
+      showToast('Link copied to clipboard!');
+    }
+  } catch { /* user cancelled share */ }
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
@@ -935,6 +1064,7 @@ function openPremiumGate() {
 
   $('#btn-checkout-proceed')?.addEventListener('click', () => {
     closePremiumGate();
+    _prevRoute = Router.getCurrent(); // Fix 18: remember where user came from
     Router.navigate('checkout', { plan: _selectedPlan });
   });
 
@@ -952,19 +1082,18 @@ function closePremiumGate() {
 /* ── FAB badge ────────────────────────────────────────────────────────── */
 
 function updateFabBadge() {
-  const badge = $('#fab-badge');
-  if (!badge) return;
+  const badge   = $('#fab-badge');
+  const counter = $('#free-count'); // Fix 3: sheet counter
   const premium   = Auth.isPremium();
   const remaining = Discovery.getFreeRemaining();
 
   if (premium) {
-    badge.textContent = '∞';
-    badge.className = 'fab-badge unlimited';
+    if (badge)   { badge.textContent = '∞'; badge.className = 'fab-badge unlimited'; badge.style.display = 'flex'; }
+    if (counter) counter.textContent = '∞';
   } else {
-    badge.textContent = remaining;
-    badge.className   = 'fab-badge';
+    if (badge)   { badge.textContent = remaining; badge.className = 'fab-badge'; badge.style.display = remaining > 0 ? 'flex' : 'none'; }
+    if (counter) counter.textContent = remaining;
   }
-  badge.style.display = premium || remaining > 0 ? 'flex' : 'none';
 }
 
 /* ── Error messages ───────────────────────────────────────────────────── */
@@ -1114,7 +1243,12 @@ function init() {
   if (window.__mapsReady) Map.init();
 
   updateFabBadge();
-  console.log('[App] Wanderlost v4 initialised');
+
+  // Fix 14: online/offline toasts
+  window.addEventListener('online',  () => showToast('Back online!', 'success'));
+  window.addEventListener('offline', () => showToast('You\'re offline.', 'error'));
+
+  console.log('[App] Wanderlost v4.1 initialised ✓');
 }
 
 if (document.readyState === 'loading') {
