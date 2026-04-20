@@ -14,7 +14,7 @@
   <!-- Inline critical: theme applied before paint to prevent FOUC -->
   <script>
     (function () {
-      const t = localStorage.getItem('wanderlost-theme') || 'dark';
+      const t = localStorage.getItem('wanderlost-theme') || 'light';
       document.documentElement.setAttribute('data-theme', t);
     })();
   </script>
@@ -64,14 +64,21 @@
         <span class="topbar-title">Wanderlost</span>
       </div>
       <div class="topbar-actions">
-        <button id="btn-open-now" class="filter-chip" aria-pressed="false" aria-label="Filter: Open Now">
-          <span class="material-symbols-outlined">schedule</span>
-          Open Now
-        </button>
-        <button id="btn-menu" class="icon-btn" aria-label="Settings">
-          <span class="material-symbols-outlined">menu</span>
-        </button>
-      </div>
+  <button id="btn-open-now" class="filter-chip" aria-pressed="false" aria-label="Filter: Open Now">
+    <span class="material-symbols-outlined">schedule</span>
+    Open Now
+  </button>
+  <button id="btn-search" class="icon-btn" aria-label="Search">
+    <span class="material-symbols-outlined">search</span>
+  </button>
+  <button id="btn-menu" class="icon-btn" aria-label="Settings">
+    <span class="material-symbols-outlined">menu</span>
+  </button>
+  <div id="free-badge" class="free-badge" aria-label="Free discoveries remaining">
+    <span class="material-symbols-outlined">star</span>
+    <span id="free-count-badge">3</span>
+  </div>
+</div>
     </header>
 
     <!-- ── CATEGORY BAR (row 3) ────────────────────────────────────── -->

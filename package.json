@@ -1,0 +1,14 @@
+{
+  "name": "wanderlost-app",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build:css": "npx tailwindcss -i ./src/css/input.css -o ./css/tailwind.css",
+    "dev": "npm run build:css && npx -y serve@latest ./"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.0",
+    "postcss": "^8.4.31",
+    "autoprefixer": "^10.4.15"
+  }
+}

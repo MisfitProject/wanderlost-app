@@ -1,0 +1,71 @@
+module.exports = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        "on-tertiary-fixed-variant": "#656666",
+        "primary-fixed": "#e5e2e1",
+        "outline": "#757c7d",
+        "surface-tint": "#5f5e5e",
+        "secondary-fixed": "#e3e2e2",
+        "error": "#9f403d",
+        "on-primary": "#faf7f6",
+        "tertiary-fixed": "#f4f3f3",
+        "tertiary-container": "#f4f3f3",
+        "surface-container-highest": "#dde4e5",
+        "on-surface-variant": "#596061",
+        "tertiary": "#5e5f5f",
+        "surface-bright": "#f9f9f9",
+        "on-primary-container": "#525151",
+        "surface": "#f9f9f9",
+        "on-tertiary-fixed": "#484a4a",
+        "on-background": "#2d3435",
+        "on-secondary-container": "#515252",
+        "on-primary-fixed": "#403f3f",
+        "error-dim": "#4e0309",
+        "on-tertiary": "#f9f9f9",
+        "on-primary-fixed-variant": "#5c5b5b",
+        "primary-container": "#e5e2e1",
+        "primary-fixed-dim": "#d6d4d3",
+        "inverse-on-surface": "#9c9d9d",
+        "on-secondary-fixed-variant": "#5b5b5b",
+        "background": "#f9f9f9",
+        "surface-variant": "#dde4e5",
+        "on-error": "#fff7f6",
+        "surface-dim": "#d3dbdd",
+        "primary-dim": "#535252",
+        "error-container": "#fe8983",
+        "on-error-container": "#752121",
+        "secondary-dim": "#535353",
+        "inverse-surface": "#0c0f0f",
+        "on-tertiary-container": "#5a5c5c",
+        "secondary-fixed-dim": "#d5d4d4",
+        "tertiary-fixed-dim": "#e5e5e5",
+        "primary": "#5f5e5e",
+        "outline-variant": "#acb3b4",
+        "inverse-primary": "#ffffff",
+        "on-surface": "#2d3435",
+        "surface-container-low": "#f2f4f4",
+        "secondary-container": "#e3e2e2",
+        "on-secondary-fixed": "#3f3f3f",
+        "surface-container-lowest": "#ffffff",
+        "surface-container": "#ebeeef",
+        "secondary": "#5f5f5f",
+        "on-secondary": "#faf8f8",
+        "surface-container-high": "#e4e9ea",
+        "tertiary-dim": "#525354"
+      },
+      borderRadius: {
+        DEFAULT: "1rem",
+        lg: "2rem",
+        xl: "3rem",
+        full: "9999px"
+      },
+      fontFamily: {
+        headline: ["Manrope"],
+        body: ["Manrope"],
+        label: ["Manrope"]
+      }
+    }
+  }
+};
